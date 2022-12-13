@@ -13,6 +13,17 @@
 		0D1FB99E2948C483004C5F55 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB99C2948C483004C5F55 /* Main.storyboard */; };
 		0D1FB9A02948C484004C5F55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB99F2948C484004C5F55 /* Assets.xcassets */; };
 		0D1FB9A32948C484004C5F55 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB9A12948C484004C5F55 /* LaunchScreen.storyboard */; };
+		0D1FB9AD2948E70E004C5F55 /* StyleCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9AC2948E70E004C5F55 /* StyleCategory.swift */; };
+		0D1FB9AF2948E72E004C5F55 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9AE2948E72E004C5F55 /* Style.swift */; };
+		0D1FB9B12948E75F004C5F55 /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9B02948E75F004C5F55 /* ColorPalette.swift */; };
+		0D1FB9B42948E7B8004C5F55 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9B32948E7B8004C5F55 /* UIColor+Extension.swift */; };
+		0D1FB9B62948E815004C5F55 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9B52948E815004C5F55 /* ButtonStyles.swift */; };
+		0D1FB9B82948EA76004C5F55 /* FontPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9B72948EA76004C5F55 /* FontPalette.swift */; };
+		0D1FB9BA2948EABD004C5F55 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9B92948EABD004C5F55 /* Constants.swift */; };
+		0D1FB9BC2948EBEE004C5F55 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9BB2948EBEE004C5F55 /* UIView+Constraints.swift */; };
+		0D1FB9BE2948F069004C5F55 /* UIView+ShadowPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9BD2948F069004C5F55 /* UIView+ShadowPalette.swift */; };
+		0D1FB9C02948F0C2004C5F55 /* UIView+Shadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9BF2948F0C2004C5F55 /* UIView+Shadow.swift */; };
+		94FD116FABB06BA4CCA77E4D /* Pods_pdfexpert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +35,19 @@
 		0D1FB99F2948C484004C5F55 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0D1FB9A22948C484004C5F55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0D1FB9A42948C484004C5F55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0D1FB9AC2948E70E004C5F55 /* StyleCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleCategory.swift; sourceTree = "<group>"; };
+		0D1FB9AE2948E72E004C5F55 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		0D1FB9B02948E75F004C5F55 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
+		0D1FB9B32948E7B8004C5F55 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		0D1FB9B52948E815004C5F55 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		0D1FB9B72948EA76004C5F55 /* FontPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPalette.swift; sourceTree = "<group>"; };
+		0D1FB9B92948EABD004C5F55 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0D1FB9BB2948EBEE004C5F55 /* UIView+Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Constraints.swift"; sourceTree = "<group>"; };
+		0D1FB9BD2948F069004C5F55 /* UIView+ShadowPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ShadowPalette.swift"; sourceTree = "<group>"; };
+		0D1FB9BF2948F0C2004C5F55 /* UIView+Shadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shadow.swift"; sourceTree = "<group>"; };
+		20203D71B2C5DE4CC01CD2F9 /* Pods-pdfexpert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.debug.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.debug.xcconfig"; sourceTree = "<group>"; };
+		7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pdfexpert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A76B3419FA0696F28529B301 /* Pods-pdfexpert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.release.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +55,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94FD116FABB06BA4CCA77E4D /* Pods_pdfexpert.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A44D5A6BEF2A8437CBF74A7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				20203D71B2C5DE4CC01CD2F9 /* Pods-pdfexpert.debug.xcconfig */,
+				A76B3419FA0696F28529B301 /* Pods-pdfexpert.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		0D1FB98A2948C483004C5F55 = {
 			isa = PBXGroup;
 			children = (
 				0D1FB9952948C483004C5F55 /* pdfexpert */,
 				0D1FB9942948C483004C5F55 /* Products */,
+				0A44D5A6BEF2A8437CBF74A7 /* Pods */,
+				897480AB386A64A94D128B15 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +92,8 @@
 		0D1FB9952948C483004C5F55 /* pdfexpert */ = {
 			isa = PBXGroup;
 			children = (
+				0D1FB9B22948E79F004C5F55 /* Utility */,
+				0D1FB9AA2948E6CC004C5F55 /* UI */,
 				0D1FB9962948C483004C5F55 /* AppDelegate.swift */,
 				0D1FB9982948C483004C5F55 /* SceneDelegate.swift */,
 				0D1FB99A2948C483004C5F55 /* ViewController.swift */,
@@ -67,6 +105,46 @@
 			path = pdfexpert;
 			sourceTree = "<group>";
 		};
+		0D1FB9AA2948E6CC004C5F55 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				0D1FB9AB2948E6F6004C5F55 /* Style */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		0D1FB9AB2948E6F6004C5F55 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				0D1FB9AC2948E70E004C5F55 /* StyleCategory.swift */,
+				0D1FB9AE2948E72E004C5F55 /* Style.swift */,
+				0D1FB9B02948E75F004C5F55 /* ColorPalette.swift */,
+				0D1FB9B52948E815004C5F55 /* ButtonStyles.swift */,
+				0D1FB9B72948EA76004C5F55 /* FontPalette.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
+		0D1FB9B22948E79F004C5F55 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				0D1FB9B32948E7B8004C5F55 /* UIColor+Extension.swift */,
+				0D1FB9B92948EABD004C5F55 /* Constants.swift */,
+				0D1FB9BB2948EBEE004C5F55 /* UIView+Constraints.swift */,
+				0D1FB9BD2948F069004C5F55 /* UIView+ShadowPalette.swift */,
+				0D1FB9BF2948F0C2004C5F55 /* UIView+Shadow.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		897480AB386A64A94D128B15 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,9 +152,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D1FB9A72948C484004C5F55 /* Build configuration list for PBXNativeTarget "pdfexpert" */;
 			buildPhases = (
+				CC392BE7C90C08FBEDF1AF44 /* [CP] Check Pods Manifest.lock */,
 				0D1FB98F2948C483004C5F55 /* Sources */,
 				0D1FB9902948C483004C5F55 /* Frameworks */,
 				0D1FB9912948C483004C5F55 /* Resources */,
+				1CDCECF7B0B6AE1AF2849101 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -133,14 +213,66 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1CDCECF7B0B6AE1AF2849101 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-pdfexpert/Pods-pdfexpert-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-pdfexpert/Pods-pdfexpert-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-pdfexpert/Pods-pdfexpert-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC392BE7C90C08FBEDF1AF44 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-pdfexpert-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0D1FB98F2948C483004C5F55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D1FB9B42948E7B8004C5F55 /* UIColor+Extension.swift in Sources */,
 				0D1FB99B2948C483004C5F55 /* ViewController.swift in Sources */,
+				0D1FB9C02948F0C2004C5F55 /* UIView+Shadow.swift in Sources */,
+				0D1FB9AD2948E70E004C5F55 /* StyleCategory.swift in Sources */,
+				0D1FB9BE2948F069004C5F55 /* UIView+ShadowPalette.swift in Sources */,
 				0D1FB9972948C483004C5F55 /* AppDelegate.swift in Sources */,
+				0D1FB9B82948EA76004C5F55 /* FontPalette.swift in Sources */,
+				0D1FB9BA2948EABD004C5F55 /* Constants.swift in Sources */,
 				0D1FB9992948C483004C5F55 /* SceneDelegate.swift in Sources */,
+				0D1FB9B62948E815004C5F55 /* ButtonStyles.swift in Sources */,
+				0D1FB9AF2948E72E004C5F55 /* Style.swift in Sources */,
+				0D1FB9BC2948EBEE004C5F55 /* UIView+Constraints.swift in Sources */,
+				0D1FB9B12948E75F004C5F55 /* ColorPalette.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +414,7 @@
 		};
 		0D1FB9A82948C484004C5F55 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 20203D71B2C5DE4CC01CD2F9 /* Pods-pdfexpert.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -310,6 +443,7 @@
 		};
 		0D1FB9A92948C484004C5F55 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A76B3419FA0696F28529B301 /* Pods-pdfexpert.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

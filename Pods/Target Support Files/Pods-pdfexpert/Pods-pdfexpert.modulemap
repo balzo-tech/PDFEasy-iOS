@@ -1,0 +1,6 @@
+framework module Pods_pdfexpert {
+  umbrella header "Pods-pdfexpert-umbrella.h"
+
+  export *
+  module * { export * }
+}
