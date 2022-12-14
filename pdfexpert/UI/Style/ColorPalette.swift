@@ -27,14 +27,14 @@ enum ColorType: String, CaseIterable, CodingKey {
     
     var defaultColor: UIColor {
         switch self {
-        case .primary: return UIColor(hexRGB: 0x140F26)
-        case .secondary: return UIColor(hexRGB: 0xFFFFFF)
+        case .primary: return UIColor(hexRGB: 0x121315)
+        case .secondary: return UIColor(hexRGB: 0x232426)
         case .tertiary: return UIColor(hexRGB: 0x34CBD9)
         case .fourth: return UIColor(hexRGB: 0xF5F5F5)
-        case .primaryText: return UIColor(hexRGB: 0x303740)
-        case .secondaryText: return UIColor(hexRGB: 0xFFFFFF)
-        case .tertiaryText: return UIColor(hexRGB: 0x25AEC2)
-        case .fourthText: return UIColor(hexRGB: 0x828B93)
+        case .primaryText: return UIColor(hexRGB: 0xFFFFFF)
+        case .secondaryText: return UIColor(hexRGB: 0x00C3F6)
+        case .tertiaryText: return UIColor(hexRGB: 0xB9B9B9)
+        case .fourthText: return UIColor(hexRGB: 0xFFC700)
         case .primaryMenu: return UIColor(hexRGB: 0x140F26)
         case .secondaryMenu: return UIColor(hexRGB: 0xC4C4C4)
         case .active: return UIColor(hexRGB: 0x54C788)
