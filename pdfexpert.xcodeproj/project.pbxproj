@@ -30,6 +30,15 @@
 		0D1FB9CA294A1444004C5F55 /* NSAttributedString+Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9C9294A1444004C5F55 /* NSAttributedString+Palette.swift */; };
 		0D1FB9CC294A1462004C5F55 /* AttributedTextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9CB294A1462004C5F55 /* AttributedTextStyle.swift */; };
 		0D1FB9CE294A14B2004C5F55 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9CD294A14B2004C5F55 /* NSAttributedString+Extensions.swift */; };
+		0D1FB9D1294A3B92004C5F55 /* GenericButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9D0294A3B92004C5F55 /* GenericButtonView.swift */; };
+		0D1FB9D3294A3BCB004C5F55 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9D2294A3BCB004C5F55 /* GradientView.swift */; };
+		0D1FB9D5294A3CC4004C5F55 /* GradientView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9D4294A3CC4004C5F55 /* GradientView+Extensions.swift */; };
+		0D1FB9D8294B2DBF004C5F55 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9D7294B2DBF004C5F55 /* AnalyticsService.swift */; };
+		0D1FB9DB294B3144004C5F55 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9DA294B3144004C5F55 /* FirebaseAnalytics */; };
+		0D1FB9DD294B3144004C5F55 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9DC294B3144004C5F55 /* FirebaseAnalyticsSwift */; };
+		0D1FB9DF294B3144004C5F55 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9DE294B3144004C5F55 /* FirebaseCrashlytics */; };
+		0D1FB9E1294B3144004C5F55 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9E0294B3144004C5F55 /* FirebaseMessaging */; };
+		0D1FB9E3294B3144004C5F55 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9E2294B3144004C5F55 /* FirebasePerformance */; };
 		94FD116FABB06BA4CCA77E4D /* Pods_pdfexpert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +68,10 @@
 		0D1FB9C9294A1444004C5F55 /* NSAttributedString+Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Palette.swift"; sourceTree = "<group>"; };
 		0D1FB9CB294A1462004C5F55 /* AttributedTextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextStyle.swift; sourceTree = "<group>"; };
 		0D1FB9CD294A14B2004C5F55 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
+		0D1FB9D0294A3B92004C5F55 /* GenericButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericButtonView.swift; sourceTree = "<group>"; };
+		0D1FB9D2294A3BCB004C5F55 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		0D1FB9D4294A3CC4004C5F55 /* GradientView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GradientView+Extensions.swift"; sourceTree = "<group>"; };
+		0D1FB9D7294B2DBF004C5F55 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		20203D71B2C5DE4CC01CD2F9 /* Pods-pdfexpert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.debug.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.debug.xcconfig"; sourceTree = "<group>"; };
 		7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pdfexpert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76B3419FA0696F28529B301 /* Pods-pdfexpert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.release.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.release.xcconfig"; sourceTree = "<group>"; };
@@ -69,6 +82,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D1FB9DD294B3144004C5F55 /* FirebaseAnalyticsSwift in Frameworks */,
+				0D1FB9DF294B3144004C5F55 /* FirebaseCrashlytics in Frameworks */,
+				0D1FB9E3294B3144004C5F55 /* FirebasePerformance in Frameworks */,
+				0D1FB9E1294B3144004C5F55 /* FirebaseMessaging in Frameworks */,
+				0D1FB9DB294B3144004C5F55 /* FirebaseAnalytics in Frameworks */,
 				94FD116FABB06BA4CCA77E4D /* Pods_pdfexpert.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -122,6 +140,8 @@
 		0D1FB9AA2948E6CC004C5F55 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				0D1FB9D6294B2D97004C5F55 /* Services */,
+				0D1FB9CF294A3B7E004C5F55 /* Views */,
 				0D1FB9AB2948E6F6004C5F55 /* Style */,
 			);
 			path = UI;
@@ -154,9 +174,28 @@
 				0D1FB9C3294A0AF7004C5F55 /* UIView+Round.swift */,
 				0D1FB9C5294A0BA8004C5F55 /* UIStackView+Extensions.swift */,
 				0D1FB9CD294A14B2004C5F55 /* NSAttributedString+Extensions.swift */,
+				0D1FB9D2294A3BCB004C5F55 /* GradientView.swift */,
+				0D1FB9D4294A3CC4004C5F55 /* GradientView+Extensions.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
+		};
+		0D1FB9CF294A3B7E004C5F55 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0D1FB9D0294A3B92004C5F55 /* GenericButtonView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0D1FB9D6294B2D97004C5F55 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0D1FB9D7294B2DBF004C5F55 /* AnalyticsService.swift */,
+			);
+			name = Services;
+			path = pdfexpert/Services;
+			sourceTree = SOURCE_ROOT;
 		};
 		897480AB386A64A94D128B15 /* Frameworks */ = {
 			isa = PBXGroup;
@@ -184,6 +223,13 @@
 			dependencies = (
 			);
 			name = pdfexpert;
+			packageProductDependencies = (
+				0D1FB9DA294B3144004C5F55 /* FirebaseAnalytics */,
+				0D1FB9DC294B3144004C5F55 /* FirebaseAnalyticsSwift */,
+				0D1FB9DE294B3144004C5F55 /* FirebaseCrashlytics */,
+				0D1FB9E0294B3144004C5F55 /* FirebaseMessaging */,
+				0D1FB9E2294B3144004C5F55 /* FirebasePerformance */,
+			);
 			productName = pdfexpert;
 			productReference = 0D1FB9932948C483004C5F55 /* pdfexpert.app */;
 			productType = "com.apple.product-type.application";
@@ -212,6 +258,9 @@
 				Base,
 			);
 			mainGroup = 0D1FB98A2948C483004C5F55;
+			packageReferences = (
+				0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 0D1FB9942948C483004C5F55 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -283,6 +332,9 @@
 			files = (
 				0D1FB9CC294A1462004C5F55 /* AttributedTextStyle.swift in Sources */,
 				0D1FB9C4294A0AF7004C5F55 /* UIView+Round.swift in Sources */,
+				0D1FB9D8294B2DBF004C5F55 /* AnalyticsService.swift in Sources */,
+				0D1FB9D3294A3BCB004C5F55 /* GradientView.swift in Sources */,
+				0D1FB9D1294A3B92004C5F55 /* GenericButtonView.swift in Sources */,
 				0D1FB9C6294A0BA8004C5F55 /* UIStackView+Extensions.swift in Sources */,
 				0D1FB9CA294A1444004C5F55 /* NSAttributedString+Palette.swift in Sources */,
 				0D1FB9B42948E7B8004C5F55 /* UIColor+Extension.swift in Sources */,
@@ -295,6 +347,7 @@
 				0D1FB9972948C483004C5F55 /* AppDelegate.swift in Sources */,
 				0D1FB9B82948EA76004C5F55 /* FontPalette.swift in Sources */,
 				0D1FB9CE294A14B2004C5F55 /* NSAttributedString+Extensions.swift in Sources */,
+				0D1FB9D5294A3CC4004C5F55 /* GradientView+Extensions.swift in Sources */,
 				0D1FB9BA2948EABD004C5F55 /* Constants.swift in Sources */,
 				0D1FB9992948C483004C5F55 /* SceneDelegate.swift in Sources */,
 				0D1FB9B62948E815004C5F55 /* ButtonStyles.swift in Sources */,
@@ -520,6 +573,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0D1FB9DA294B3144004C5F55 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		0D1FB9DC294B3144004C5F55 /* FirebaseAnalyticsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsSwift;
+		};
+		0D1FB9DE294B3144004C5F55 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		0D1FB9E0294B3144004C5F55 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		0D1FB9E2294B3144004C5F55 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D1FB9D9294B3144004C5F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0D1FB98B2948C483004C5F55 /* Project object */;
 }
