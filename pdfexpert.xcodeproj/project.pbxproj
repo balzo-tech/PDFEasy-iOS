@@ -39,6 +39,8 @@
 		0D1FB9DF294B3144004C5F55 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9DE294B3144004C5F55 /* FirebaseCrashlytics */; };
 		0D1FB9E1294B3144004C5F55 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9E0294B3144004C5F55 /* FirebaseMessaging */; };
 		0D1FB9E3294B3144004C5F55 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 0D1FB9E2294B3144004C5F55 /* FirebasePerformance */; };
+		0D1FB9E5294B31FA004C5F55 /* FirebaseAnalyticsPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9E4294B31FA004C5F55 /* FirebaseAnalyticsPlatform.swift */; };
+		0D1FB9E7294B325E004C5F55 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9E6294B325E004C5F55 /* AnalyticsManager.swift */; };
 		94FD116FABB06BA4CCA77E4D /* Pods_pdfexpert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,6 +74,8 @@
 		0D1FB9D2294A3BCB004C5F55 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		0D1FB9D4294A3CC4004C5F55 /* GradientView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GradientView+Extensions.swift"; sourceTree = "<group>"; };
 		0D1FB9D7294B2DBF004C5F55 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		0D1FB9E4294B31FA004C5F55 /* FirebaseAnalyticsPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAnalyticsPlatform.swift; sourceTree = "<group>"; };
+		0D1FB9E6294B325E004C5F55 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		20203D71B2C5DE4CC01CD2F9 /* Pods-pdfexpert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.debug.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.debug.xcconfig"; sourceTree = "<group>"; };
 		7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pdfexpert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76B3419FA0696F28529B301 /* Pods-pdfexpert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.release.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.release.xcconfig"; sourceTree = "<group>"; };
@@ -192,6 +196,8 @@
 			isa = PBXGroup;
 			children = (
 				0D1FB9D7294B2DBF004C5F55 /* AnalyticsService.swift */,
+				0D1FB9E4294B31FA004C5F55 /* FirebaseAnalyticsPlatform.swift */,
+				0D1FB9E6294B325E004C5F55 /* AnalyticsManager.swift */,
 			);
 			name = Services;
 			path = pdfexpert/Services;
@@ -338,11 +344,13 @@
 				0D1FB9C6294A0BA8004C5F55 /* UIStackView+Extensions.swift in Sources */,
 				0D1FB9CA294A1444004C5F55 /* NSAttributedString+Palette.swift in Sources */,
 				0D1FB9B42948E7B8004C5F55 /* UIColor+Extension.swift in Sources */,
+				0D1FB9E5294B31FA004C5F55 /* FirebaseAnalyticsPlatform.swift in Sources */,
 				0D1FB99B2948C483004C5F55 /* ViewController.swift in Sources */,
 				0D1FB9C8294A1343004C5F55 /* UIStackView+Palette.swift in Sources */,
 				0D1FB9C02948F0C2004C5F55 /* UIView+Shadow.swift in Sources */,
 				0D1FB9AD2948E70E004C5F55 /* StyleCategory.swift in Sources */,
 				0D1FB9C2294A0AA6004C5F55 /* ScrollStackView.swift in Sources */,
+				0D1FB9E7294B325E004C5F55 /* AnalyticsManager.swift in Sources */,
 				0D1FB9BE2948F069004C5F55 /* UIView+ShadowPalette.swift in Sources */,
 				0D1FB9972948C483004C5F55 /* AppDelegate.swift in Sources */,
 				0D1FB9B82948EA76004C5F55 /* FontPalette.swift in Sources */,

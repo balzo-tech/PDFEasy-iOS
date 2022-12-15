@@ -16,6 +16,9 @@ enum AnalyticsParameter: String {
     case deviceId = "device_id"
     case accountType = "account_type"
     case option
+    case status
+    case allow
+    case revoke
 }
 
 enum AnalyticsScreens: String {
