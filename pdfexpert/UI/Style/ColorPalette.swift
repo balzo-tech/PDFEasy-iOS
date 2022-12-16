@@ -22,8 +22,8 @@ enum ColorType: String, CaseIterable, CodingKey {
     case secondaryMenu = "secondary_menu_color"
     case active = "active_color"
     case inactive = "deactive_color"
-    case gradientPrimaryEnd = "primary_color_end"
-    case gradientTertiaryEnd = "tertiary_color_end"
+    case gradientPrimaryStart = "gradient_primary_color_start"
+    case gradientPrimaryEnd = "gradient_primary_color_end"
     
     var defaultColor: UIColor {
         switch self {
@@ -39,8 +39,8 @@ enum ColorType: String, CaseIterable, CodingKey {
         case .secondaryMenu: return UIColor(hexRGB: 0xC4C4C4)
         case .active: return UIColor(hexRGB: 0x54C788)
         case .inactive: return UIColor(hexRGB: 0xDFDFDF)
-        case .gradientPrimaryEnd: return UIColor(hexRGB: 0x0B99AE)
-        case .gradientTertiaryEnd: return UIColor(hexRGB: 0x25B8C9)
+        case .gradientPrimaryStart: return UIColor(hexRGB: 0x00ABE8)
+        case .gradientPrimaryEnd: return UIColor(hexRGB: 0x3F91F8)
         }
     }
 }

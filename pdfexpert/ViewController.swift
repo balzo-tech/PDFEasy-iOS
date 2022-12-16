@@ -9,6 +9,27 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    private let convertPictureView: GradientView = {
+        return GradientView(colors: [UIColor.white, UIColor.white],
+                            locations: [0.0, 1.0],
+                            startPoint: CGPoint(x: 0.5, y: 0.0),
+                            endPoint: CGPoint(x: 0.5, y: 1.0))
+    }()
+    
+    private let convertWordView: GradientView = {
+        return GradientView(colors: [UIColor.white, UIColor.white],
+                            locations: [0.0, 1.0],
+                            startPoint: CGPoint(x: 0.5, y: 0.0),
+                            endPoint: CGPoint(x: 0.5, y: 1.0))
+    }()
+    
+    private let scannerView: GradientView = {
+        return GradientView(colors: [UIColor.white, UIColor.white],
+                            locations: [0.0, 1.0],
+                            startPoint: CGPoint(x: 0.5, y: 0.0),
+                            endPoint: CGPoint(x: 0.5, y: 1.0))
+    }()
+    
     private lazy var scrollStackView: ScrollStackView = {
         let scrollStackView = ScrollStackView(axis: .vertical, horizontalInset: 0.0)
         return scrollStackView
@@ -16,36 +37,140 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         
-        let spacing:CGFloat = 20
-        
         super.viewDidLoad()
         self.view.backgroundColor = ColorPalette.color(withType: .secondary)
+        self.composeView()
+        
+        //MARK: Convert Photo
+        let photoButton = UIButton()
+        photoButton.backgroundColor = ColorPalette.color(withType: .primaryText)
+        photoButton.setTitle("Convert Now", for: .normal)
+        photoButton.setTitleColor(ColorPalette.color(withType: .secondaryText), for: .normal)
+        photoButton.layer.cornerRadius = 8
+        photoButton.autoSetDimension(.height, toSize: 48.0)
+        photoButton.addTarget(self, action: #selector(self.convertPhotoPressed), for: .touchUpInside)
+        self.convertPictureView.addSubview(photoButton)
+        photoButton.autoAlignAxis(.vertical, toSameAxisOf: self.convertPictureView)
+        photoButton.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0,
+                                                                    left: 16.0,
+                                                                    bottom: 16.0,
+                                                                    right: 16.0),
+                                                 excludingEdge: .top)
+        
+        //MARK: Word Conversion
+        
+        let wordButton = UIButton()
+        wordButton.backgroundColor = ColorPalette.color(withType: .primaryText)
+        wordButton.setTitle("Convert Now", for: .normal)
+        wordButton.setTitleColor(ColorPalette.color(withType: .secondaryText), for: .normal)
+        wordButton.layer.cornerRadius = 8
+        wordButton.autoSetDimension(.height, toSize: 48.0)
+        wordButton.addTarget(self, action: #selector(self.convertWordPressed), for: .touchUpInside)
+        self.convertWordView.addSubview(wordButton)
+        wordButton.autoAlignAxis(.vertical, toSameAxisOf: self.convertWordView)
+        wordButton.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0,
+                                                                    left: 16.0,
+                                                                    bottom: 16.0,
+                                                                    right: 16.0),
+                                                 excludingEdge: .top)
+        
+        //MARK: Scanner Conversion
+        
+        let scannerButton = UIButton()
+        scannerButton.backgroundColor = ColorPalette.color(withType: .primaryText)
+        scannerButton.setTitle("Convert Now", for: .normal)
+        scannerButton.setTitleColor(ColorPalette.color(withType: .secondaryText), for: .normal)
+        scannerButton.layer.cornerRadius = 8
+        scannerButton.autoSetDimension(.height, toSize: 48.0)
+        scannerButton.addTarget(self, action: #selector(self.scannerPressed), for: .touchUpInside)
+        self.scannerView.addSubview(scannerButton)
+        scannerButton.autoAlignAxis(.vertical, toSameAxisOf: self.scannerView)
+        scannerButton.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0,
+                                                                    left: 16.0,
+                                                                    bottom: 16.0,
+                                                                    right: 16.0),
+                                                 excludingEdge: .top)
+    }
+    
+    //MARK: Actions
+    @objc private func convertPhotoPressed() {
+        print("Photo Pressed")
+    }
+    
+    @objc private func convertWordPressed() {
+        print("Word Pressed")
+    }
+    
+    @objc private func scannerPressed() {
+        print("Scanner Pressed")
+    }
+    
+    //MARK: Private Functions
+    
+    private func composeView() {
+        
+        let spacing:CGFloat = 0
+        let headerHeight:CGFloat = 167
+        let footerHeight:CGFloat = 90
+        
+        let headerView = UIView()
+        headerView.autoSetDimensions(to: CGSize(width: self.view.frame.width, height: headerHeight))
+        headerView.backgroundColor = .red
+        self.view.addSubview(headerView)
+        headerView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
+        
+        let footerView = UIView()
+        self.view.addSubview(footerView)
+        footerView.backgroundColor = .yellow
+        footerView.autoSetDimensions(to: CGSize(width: self.view.frame.width, height: footerHeight))
+        footerView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
                 
         let stackView = UIStackView.create(withAxis: .vertical)
         self.view.addSubview(stackView)
-        stackView.backgroundColor = .red
-        stackView.distribution = .equalSpacing
-        stackView.autoPinEdgesToSuperviewSafeArea(with: .zero)
-        stackView.spacing = 30
+        stackView.backgroundColor = ColorPalette.color(withType: .primary)
+        stackView.distribution = .fillEqually
+        stackView.autoPinEdge(.bottom,to: .top, of: footerView, withOffset: .zero)
+        stackView.autoPinEdge(.top, to: .bottom, of: headerView, withOffset: .zero)
+        stackView.autoPinEdge(toSuperviewEdge: .leading, withInset: Constants.Style.DefaultHorizontalMargins)
+        stackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: Constants.Style.DefaultHorizontalMargins)
 
-        
-        stackView.addBlankSpace(space: spacing)
+        stackView.spacing = spacing
 
-        stackView.addLabel(withText: "Bottone 1",
-                                           fontStyle: .title,
-                                           colorType: .primaryText)
-        stackView.addBlankSpace(space: spacing)
+        stackView.addArrangedSubview(self.convertPictureView,
+                                     horizontalInset: Constants.Style.DefaultHorizontalMargins,
+                                     verticalInset: Constants.Style.DefaultVerticalMargins)
 
-        stackView.addLabel(withText: "Bottone 2",
-                                           fontStyle: .title,
-                                           colorType: .primaryText)
-        stackView.addBlankSpace(space: spacing)
+        self.updateGradientView(gradientView: self.convertPictureView,
+                                startColor: ColorPalette.color(withType: .gradientPrimaryStart),
+                                endColor: ColorPalette.color(withType: .gradientPrimaryEnd),
+                                singleColor: ColorPalette.color(withType: .secondaryText))
 
-        stackView.addLabel(withText: "Bottone 3",
-                                           fontStyle: .title,
-                                           colorType: .primaryText)
-        stackView.addBlankSpace(space: spacing)
-        
+
+        stackView.addArrangedSubview(self.convertWordView,
+                                     horizontalInset: Constants.Style.DefaultHorizontalMargins,
+                                     verticalInset: Constants.Style.DefaultVerticalMargins)
+        self.updateGradientView(gradientView: self.convertWordView,
+                                startColor: ColorPalette.color(withType: .gradientPrimaryStart),
+                                endColor: ColorPalette.color(withType: .gradientPrimaryEnd),
+                                singleColor: ColorPalette.color(withType: .secondaryText))
+
+
+        stackView.addArrangedSubview(self.scannerView,
+                                     horizontalInset: Constants.Style.DefaultHorizontalMargins,
+                                     verticalInset: Constants.Style.DefaultVerticalMargins)
+        self.updateGradientView(gradientView: self.scannerView,
+                                startColor: ColorPalette.color(withType: .gradientPrimaryStart),
+                                endColor: ColorPalette.color(withType: .gradientPrimaryEnd),
+                                singleColor: ColorPalette.color(withType: .secondaryText))
+    }
+    
+    private func updateGradientView(gradientView: GradientView, startColor: UIColor?, endColor: UIColor?, singleColor: UIColor?) {
+        if let startColor = startColor, let endColor = endColor {
+            gradientView.updateParameters(colors: [startColor, endColor])
+        } else {
+            gradientView.updateParameters(colors: [singleColor ?? ColorPalette.color(withType: .primary),
+                                                        singleColor ?? ColorPalette.color(withType: .gradientPrimaryEnd)])
+        }
     }
 }
 
