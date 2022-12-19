@@ -13,21 +13,24 @@ class ViewController: UIViewController {
         return GradientView(colors: [UIColor.white, UIColor.white],
                             locations: [0.0, 1.0],
                             startPoint: CGPoint(x: 0.5, y: 0.0),
-                            endPoint: CGPoint(x: 0.5, y: 1.0))
+                            endPoint: CGPoint(x: 0.5, y: 1.0),
+                            cornerRadius: 10.0)
     }()
     
     private let convertWordView: GradientView = {
         return GradientView(colors: [UIColor.white, UIColor.white],
                             locations: [0.0, 1.0],
                             startPoint: CGPoint(x: 0.5, y: 0.0),
-                            endPoint: CGPoint(x: 0.5, y: 1.0))
+                            endPoint: CGPoint(x: 0.5, y: 1.0),
+                            cornerRadius: 10.0)
     }()
     
     private let scannerView: GradientView = {
         return GradientView(colors: [UIColor.white, UIColor.white],
                             locations: [0.0, 1.0],
                             startPoint: CGPoint(x: 0.5, y: 0.0),
-                            endPoint: CGPoint(x: 0.5, y: 1.0))
+                            endPoint: CGPoint(x: 0.5, y: 1.0),
+                            cornerRadius: 10.0)
     }()
     
     private lazy var scrollStackView: ScrollStackView = {
@@ -42,11 +45,26 @@ class ViewController: UIViewController {
         self.composeView()
         
         //MARK: Convert Photo
+        
+        let titlePhoto = UILabel()
+        titlePhoto.attributedText = NSAttributedString.create(withText: "Converti \nfoto in PDF",
+                                                         fontStyle: .title,
+                                                         colorType: .primaryText,
+                                                         textAlignment: .left)
+        titlePhoto.numberOfLines = 0
+        self.convertPictureView.addSubview(titlePhoto)
+        titlePhoto.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 16.0,
+                                                              left: 16.0,
+                                                              bottom: 0.0,
+                                                              right: 16.0),
+                                           excludingEdge: .bottom)
+        
         let photoButton = UIButton()
         photoButton.backgroundColor = ColorPalette.color(withType: .primaryText)
         photoButton.setTitle("Convert Now", for: .normal)
         photoButton.setTitleColor(ColorPalette.color(withType: .secondaryText), for: .normal)
         photoButton.layer.cornerRadius = 8
+        photoButton.titleLabel?.font = FontPalette.fontStyleData(forStyle: .titleButton).font
         photoButton.autoSetDimension(.height, toSize: 48.0)
         photoButton.addTarget(self, action: #selector(self.convertPhotoPressed), for: .touchUpInside)
         self.convertPictureView.addSubview(photoButton)
@@ -59,11 +77,25 @@ class ViewController: UIViewController {
         
         //MARK: Word Conversion
         
+        let titleWord = UILabel()
+        titleWord.attributedText = NSAttributedString.create(withText: "Converti \nWord in PDF",
+                                                         fontStyle: .title,
+                                                         colorType: .primaryText,
+                                                         textAlignment: .left)
+        titleWord.numberOfLines = 0
+        self.convertWordView.addSubview(titleWord)
+        titleWord.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 16.0,
+                                                              left: 16.0,
+                                                              bottom: 0.0,
+                                                              right: 16.0),
+                                           excludingEdge: .bottom)
+        
         let wordButton = UIButton()
         wordButton.backgroundColor = ColorPalette.color(withType: .primaryText)
         wordButton.setTitle("Convert Now", for: .normal)
         wordButton.setTitleColor(ColorPalette.color(withType: .secondaryText), for: .normal)
         wordButton.layer.cornerRadius = 8
+        wordButton.titleLabel?.font = FontPalette.fontStyleData(forStyle: .titleButton).font
         wordButton.autoSetDimension(.height, toSize: 48.0)
         wordButton.addTarget(self, action: #selector(self.convertWordPressed), for: .touchUpInside)
         self.convertWordView.addSubview(wordButton)
@@ -76,11 +108,25 @@ class ViewController: UIViewController {
         
         //MARK: Scanner Conversion
         
+        let titleScanner = UILabel()
+        titleScanner.attributedText = NSAttributedString.create(withText: "Scanner \nPDF",
+                                                         fontStyle: .title,
+                                                         colorType: .primaryText,
+                                                         textAlignment: .left)
+        titleScanner.numberOfLines = 0
+        self.scannerView.addSubview(titleScanner)
+        titleScanner.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 16.0,
+                                                              left: 16.0,
+                                                              bottom: 0.0,
+                                                              right: 16.0),
+                                           excludingEdge: .bottom)
+        
         let scannerButton = UIButton()
         scannerButton.backgroundColor = ColorPalette.color(withType: .primaryText)
         scannerButton.setTitle("Convert Now", for: .normal)
         scannerButton.setTitleColor(ColorPalette.color(withType: .secondaryText), for: .normal)
         scannerButton.layer.cornerRadius = 8
+        scannerButton.titleLabel?.font = FontPalette.fontStyleData(forStyle: .titleButton).font
         scannerButton.autoSetDimension(.height, toSize: 48.0)
         scannerButton.addTarget(self, action: #selector(self.scannerPressed), for: .touchUpInside)
         self.scannerView.addSubview(scannerButton)
@@ -135,7 +181,7 @@ class ViewController: UIViewController {
         stackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: Constants.Style.DefaultHorizontalMargins)
 
         stackView.spacing = spacing
-
+        
         stackView.addArrangedSubview(self.convertPictureView,
                                      horizontalInset: Constants.Style.DefaultHorizontalMargins,
                                      verticalInset: Constants.Style.DefaultVerticalMargins)
@@ -153,7 +199,6 @@ class ViewController: UIViewController {
                                 startColor: ColorPalette.color(withType: .gradientPrimaryStart),
                                 endColor: ColorPalette.color(withType: .gradientPrimaryEnd),
                                 singleColor: ColorPalette.color(withType: .secondaryText))
-
 
         stackView.addArrangedSubview(self.scannerView,
                                      horizontalInset: Constants.Style.DefaultHorizontalMargins,

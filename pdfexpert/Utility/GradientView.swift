@@ -12,7 +12,7 @@ public class GradientView: UIView {
     
     private let gradientMask: CAGradientLayer
     
-    init(colors: [UIColor], locations: [Double], startPoint: CGPoint, endPoint: CGPoint) {
+    init(colors: [UIColor], locations: [Double], startPoint: CGPoint, endPoint: CGPoint, cornerRadius: CGFloat = 0.0) {
         self.gradientMask = CAGradientLayer()
         super.init(frame: .zero)
         
@@ -20,6 +20,7 @@ public class GradientView: UIView {
         self.gradientMask.endPoint = endPoint
         self.gradientMask.colors = colors.map { $0.cgColor }
         self.gradientMask.locations = locations.map { NSNumber(value: $0)}
+        self.gradientMask.cornerRadius = cornerRadius
         
         self.layer.addSublayer(self.gradientMask)
     }
