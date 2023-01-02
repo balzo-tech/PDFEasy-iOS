@@ -152,7 +152,7 @@ class ViewController: UIViewController {
         actionSheet.addAction(Action(ActionData(title: "Camera", subtitle: "@remer88", image: UIImage(named: "camera")!), style: .default, handler: { action in
            // do something useful
         }))
-        actionSheet.addAction(Action(ActionData(title: "Gallery", subtitle: "@xmartlabs", image: UIImage(named: "camera")!), style: .default, handler: { action in
+        actionSheet.addAction(Action(ActionData(title: "Gallery", subtitle: "@xmartlabs", image: UIImage(named: "gallery")!), style: .default, handler: { action in
            // do something useful
         }))
         // present actionSheet like any other view controller
