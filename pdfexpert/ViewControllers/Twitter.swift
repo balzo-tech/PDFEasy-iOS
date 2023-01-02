@@ -56,14 +56,14 @@ open class TwitterActionControllerHeader: UICollectionReusableView {
     lazy var bottomLine: UIView = {
         let bottomLine = UIView()
         
-        bottomLine.backgroundColor = .lightGray
+        bottomLine.backgroundColor = ColorPalette.color(withType: .primary)
         return bottomLine
     }()
     
     lazy var upperLine: UIView = {
         let upperLine = UIView()
         
-        upperLine.backgroundColor = .blue
+        upperLine.backgroundColor = ColorPalette.color(withType: .primary)
         return upperLine
     }()
     
@@ -99,7 +99,7 @@ open class TwitterActionController: ActionController<TwitterCell, ActionData, Tw
         let height = contentHeight + TwitterActionController.bottomPadding + safeAreaInsets.bottom
         let hideBottomSpaceView = UIView(frame: CGRect.init(x: 0, y: 0, width: width, height: height))
         hideBottomSpaceView.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin, .flexibleHeight]
-        hideBottomSpaceView.backgroundColor = .blue
+        hideBottomSpaceView.backgroundColor = ColorPalette.color(withType: .secondary)
         return hideBottomSpaceView
     }()
 
