@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        self.view.backgroundColor = ColorPalette.color(withType: .secondary)
+        self.view.backgroundColor = ColorPalette.color(withType: .primary)
         self.composeView()
         
         //MARK: Convert Photo
@@ -146,13 +146,13 @@ class ViewController: UIViewController {
         // set up a header title
         actionSheet.headerData = "Select the source"
         // Add some actions, note that the first parameter of `Action` initializer is `ActionData`.
-        actionSheet.addAction(Action(ActionData(title: "File", subtitle: "@xmartlabs", image: UIImage(named: "tw-xmartlabs")!), style: .default, handler: { action in
+        actionSheet.addAction(Action(ActionData(title: "File", subtitle: "@xmartlabs", image: UIImage(named: "file")!), style: .default, handler: { action in
            // do something useful
         }))
-        actionSheet.addAction(Action(ActionData(title: "Camera", subtitle: "@remer88", image: UIImage(named: "tw-remer")!), style: .default, handler: { action in
+        actionSheet.addAction(Action(ActionData(title: "Camera", subtitle: "@remer88", image: UIImage(named: "camera")!), style: .default, handler: { action in
            // do something useful
         }))
-        actionSheet.addAction(Action(ActionData(title: "Gallery", subtitle: "@xmartlabs", image: UIImage(named: "tw-xmartlabs")!), style: .default, handler: { action in
+        actionSheet.addAction(Action(ActionData(title: "Gallery", subtitle: "@xmartlabs", image: UIImage(named: "camera")!), style: .default, handler: { action in
            // do something useful
         }))
         // present actionSheet like any other view controller
@@ -177,13 +177,13 @@ class ViewController: UIViewController {
         
         let headerView = UIView()
         headerView.autoSetDimensions(to: CGSize(width: self.view.frame.width, height: headerHeight))
-        headerView.backgroundColor = .red
+        headerView.backgroundColor = ColorPalette.color(withType: .primary)
         self.view.addSubview(headerView)
         headerView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         
         let footerView = UIView()
         self.view.addSubview(footerView)
-        footerView.backgroundColor = .yellow
+        footerView.backgroundColor = ColorPalette.color(withType: .primary)
         footerView.autoSetDimensions(to: CGSize(width: self.view.frame.width, height: footerHeight))
         footerView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
                 
