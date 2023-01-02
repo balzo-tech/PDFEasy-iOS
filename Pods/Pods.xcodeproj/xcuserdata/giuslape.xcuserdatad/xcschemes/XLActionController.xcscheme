@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "06F5CDD6235E25837519792853B145A1"
-               BuildableName = "PureLayout.framework"
-               BlueprintName = "PureLayout"
+               BlueprintIdentifier = "0B8CA00DBD1349A00128A00324035CA5"
+               BuildableName = "XLActionController.framework"
+               BlueprintName = "XLActionController"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

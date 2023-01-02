@@ -46,6 +46,8 @@
 		0D1FB9EF294C72AB004C5F55 /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB9EC294C72AB004C5F55 /* Montserrat-Medium.ttf */; };
 		0D1FB9F0294C72AB004C5F55 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB9ED294C72AB004C5F55 /* Montserrat-Regular.ttf */; };
 		0D1FB9F2294C8012004C5F55 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB9F1294C8012004C5F55 /* Montserrat-Bold.ttf */; };
+		0D1FB9F62950C9D8004C5F55 /* Twitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1FB9F52950C9D8004C5F55 /* Twitter.swift */; };
+		0D1FB9F82950CA10004C5F55 /* TwitterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D1FB9F72950CA10004C5F55 /* TwitterCell.xib */; };
 		94FD116FABB06BA4CCA77E4D /* Pods_pdfexpert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +88,8 @@
 		0D1FB9EC294C72AB004C5F55 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		0D1FB9ED294C72AB004C5F55 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		0D1FB9F1294C8012004C5F55 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		0D1FB9F52950C9D8004C5F55 /* Twitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Twitter.swift; sourceTree = "<group>"; };
+		0D1FB9F72950CA10004C5F55 /* TwitterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TwitterCell.xib; sourceTree = "<group>"; };
 		20203D71B2C5DE4CC01CD2F9 /* Pods-pdfexpert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.debug.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.debug.xcconfig"; sourceTree = "<group>"; };
 		7A80655F7C991C807A1C6667 /* Pods_pdfexpert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pdfexpert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76B3419FA0696F28529B301 /* Pods-pdfexpert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pdfexpert.release.xcconfig"; path = "Target Support Files/Pods-pdfexpert/Pods-pdfexpert.release.xcconfig"; sourceTree = "<group>"; };
@@ -138,6 +142,7 @@
 		0D1FB9952948C483004C5F55 /* pdfexpert */ = {
 			isa = PBXGroup;
 			children = (
+				0D1FB9F42950C9CF004C5F55 /* ViewControllers */,
 				0D1FB9EA294C729D004C5F55 /* fonts */,
 				0D1FB9E8294B39B5004C5F55 /* GoogleService-Info.plist */,
 				0D1FB9B22948E79F004C5F55 /* Utility */,
@@ -226,6 +231,15 @@
 			path = fonts;
 			sourceTree = "<group>";
 		};
+		0D1FB9F42950C9CF004C5F55 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0D1FB9F52950C9D8004C5F55 /* Twitter.swift */,
+				0D1FB9F72950CA10004C5F55 /* TwitterCell.xib */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
 		897480AB386A64A94D128B15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,6 +322,7 @@
 				0D1FB9A32948C484004C5F55 /* LaunchScreen.storyboard in Resources */,
 				0D1FB9F0294C72AB004C5F55 /* Montserrat-Regular.ttf in Resources */,
 				0D1FB9E9294B39B5004C5F55 /* GoogleService-Info.plist in Resources */,
+				0D1FB9F82950CA10004C5F55 /* TwitterCell.xib in Resources */,
 				0D1FB9F2294C8012004C5F55 /* Montserrat-Bold.ttf in Resources */,
 				0D1FB9A02948C484004C5F55 /* Assets.xcassets in Resources */,
 				0D1FB9EF294C72AB004C5F55 /* Montserrat-Medium.ttf in Resources */,
@@ -368,6 +383,7 @@
 				0D1FB9C4294A0AF7004C5F55 /* UIView+Round.swift in Sources */,
 				0D1FB9D8294B2DBF004C5F55 /* AnalyticsService.swift in Sources */,
 				0D1FB9D3294A3BCB004C5F55 /* GradientView.swift in Sources */,
+				0D1FB9F62950C9D8004C5F55 /* Twitter.swift in Sources */,
 				0D1FB9D1294A3B92004C5F55 /* GenericButtonView.swift in Sources */,
 				0D1FB9C6294A0BA8004C5F55 /* UIStackView+Extensions.swift in Sources */,
 				0D1FB9CA294A1444004C5F55 /* NSAttributedString+Palette.swift in Sources */,

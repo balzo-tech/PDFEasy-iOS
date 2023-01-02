@@ -1,16 +1,22 @@
 PODS:
   - PureLayout (3.1.9)
+  - XLActionController (5.1.0):
+    - XLActionController/Core (= 5.1.0)
+  - XLActionController/Core (5.1.0)
 
 DEPENDENCIES:
   - PureLayout
+  - XLActionController
 
 SPEC REPOS:
   trunk:
     - PureLayout
+    - XLActionController
 
 SPEC CHECKSUMS:
   PureLayout: 5fb5e5429519627d60d079ccb1eaa7265ce7cf88
+  XLActionController: 24140d835ab9e260270711afebc5efabebe9d392
 
-PODFILE CHECKSUM: 8ccec34d903dc7406a2225c48c8ba786aa1bc405
+PODFILE CHECKSUM: 141e79131e3c86bcceb9f44dd8141304fbcc6c7f
 
 COCOAPODS: 1.11.3

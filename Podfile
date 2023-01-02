@@ -5,5 +5,6 @@ use_frameworks!
 target 'pdfexpert' do
   
   pod 'PureLayout'
+  pod 'XLActionController'
 
 end

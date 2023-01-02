@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import XLActionController
 
 class ViewController: UIViewController {
     
@@ -140,7 +141,22 @@ class ViewController: UIViewController {
     
     //MARK: Actions
     @objc private func convertPhotoPressed() {
-        print("Photo Pressed")
+        // Instantiate custom action sheet controller
+        let actionSheet = TwitterActionController()
+        // set up a header title
+        actionSheet.headerData = "Select the source"
+        // Add some actions, note that the first parameter of `Action` initializer is `ActionData`.
+        actionSheet.addAction(Action(ActionData(title: "File", subtitle: "@xmartlabs", image: UIImage(named: "tw-xmartlabs")!), style: .default, handler: { action in
+           // do something useful
+        }))
+        actionSheet.addAction(Action(ActionData(title: "Camera", subtitle: "@remer88", image: UIImage(named: "tw-remer")!), style: .default, handler: { action in
+           // do something useful
+        }))
+        actionSheet.addAction(Action(ActionData(title: "Gallery", subtitle: "@xmartlabs", image: UIImage(named: "tw-xmartlabs")!), style: .default, handler: { action in
+           // do something useful
+        }))
+        // present actionSheet like any other view controller
+        present(actionSheet, animated: true, completion: nil)
     }
     
     @objc private func convertWordPressed() {
