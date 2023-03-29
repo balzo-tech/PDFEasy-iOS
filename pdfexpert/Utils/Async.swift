@@ -11,7 +11,7 @@ enum AsyncOperationStatus<T, E: LocalizedError> {
     case empty
     case data(T)
     case error(E)
-    case loading(Float)
+    case loading(Progress)
 }
 
 struct AsyncOperation<T, E: LocalizedError> {
@@ -20,10 +20,10 @@ struct AsyncOperation<T, E: LocalizedError> {
 
 extension AsyncOperation where E: LocalizedError {
     
-    func updateLoadingProgress(loadingProgress: Float, onlyIfLess: Bool = true) -> Self {
+    func updateLoadingProgress(loadingProgress: Progress, onlyIfLess: Bool = true) -> Self {
         switch self.status {
         case .loading(let progress):
-            if !onlyIfLess || progress < loadingProgress {
+            if !onlyIfLess || progress.completedUnitCount < loadingProgress.completedUnitCount {
                 return AsyncOperation(status: .loading(loadingProgress))
             } else {
                 return self

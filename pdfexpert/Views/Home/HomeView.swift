@@ -8,6 +8,7 @@
 import SwiftUI
 import Factory
 import PopupView
+import PhotosUI
 
 struct HomeView: View {
     
@@ -39,6 +40,14 @@ struct HomeView: View {
                 .closeOnTap(false)
                 .backgroundColor(ColorPalette.primaryBG.opacity(0.5))
         }
+        .fullScreenCover(isPresented: self.$homeViewModel.filePickerShow) {
+            FilePicker(onPickedFile: { self.homeViewModel.convertFile(fileUrl: $0) })
+        }
+        .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
+                      selection: self.$homeViewModel.imageSelection,
+                      matching: .images)
+        .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
+                   loadingView: { LottieView(filename: "pdf-scanning").loop(autoReverse: true) })
     }
 }
 

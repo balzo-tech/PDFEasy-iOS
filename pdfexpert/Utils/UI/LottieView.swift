@@ -33,9 +33,9 @@ struct LottieView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) {}
     
-    func loop() -> some UIViewRepresentable {
+    func loop(autoReverse: Bool = false) -> some UIViewRepresentable {
         let view = self
-        view.animationView.loopMode = .loop
+        view.animationView.loopMode = autoReverse ? .autoReverse : .loop
         return view
     }
     

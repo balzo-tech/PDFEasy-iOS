@@ -8,26 +8,51 @@
 import Foundation
 import SwiftUI
 
-struct AsyncView<T, E: LocalizedError>: View {
+extension View {
     
-    @Binding var asyncOperation: AsyncOperation<T, E>
+    func asyncView<DataType, ErrorType: LocalizedError>(
+        asyncOperation: Binding<AsyncOperation<DataType, ErrorType>>) -> some View {
+        return self.modifier(
+            AsyncView(asyncOperation: asyncOperation, loadingView: { ProgressView() })
+        )
+    }
     
-    var body: some View {
-        switch asyncOperation.status {
+    func asyncView<LoadingView: View, DataType, ErrorType: LocalizedError>(
+        asyncOperation: Binding<AsyncOperation<DataType, ErrorType>>,
+        @ViewBuilder loadingView: @escaping () -> LoadingView) -> some View {
+        return self.modifier(
+            AsyncView(asyncOperation: asyncOperation, loadingView: loadingView)
+        )
+    }
+}
+
+struct AsyncView<LoadingView: View, DataType, ErrorType: LocalizedError>: ViewModifier {
+    
+    @Binding var asyncOperation: AsyncOperation<DataType, ErrorType>
+    
+    var loadingView: (() -> LoadingView)
+    
+    init(asyncOperation: Binding<AsyncOperation<DataType, ErrorType>>,
+         loadingView: @escaping (() -> LoadingView)) {
+        self._asyncOperation = asyncOperation
+        self.loadingView = loadingView
+    }
+    
+    func body(content: Content) -> some View {
+        switch self.asyncOperation.status {
         case .empty:
-            return AnyView(Color(.clear))
-        case .loading: return
-            AnyView(
-                ZStack {
-                    Color(.black).opacity(0.5)
-                    ProgressView()
-                }
+            content
+        case .loading:
+            ZStack {
+                content
+                Color(.black).opacity(0.5)
                     .edgesIgnoringSafeArea(.all)
-            )
+                self.loadingView()
+            }
         case .error:
-            return AnyView(Color(.clear).errorAlert(asyncOperation: $asyncOperation))
+            content.errorAlert(asyncOperation: self.$asyncOperation)
         case .data:
-            return AnyView(Color(.clear))
+            content
         }
     }
 }
@@ -36,9 +61,10 @@ fileprivate enum AsyncViewError: LocalizedError {}
 
 struct AsyncView_Previews: PreviewProvider {
     
-    @State fileprivate static var testAsyncOperation = AsyncOperation<Void, AsyncViewError>(status: .loading(0.0))
+    @State fileprivate static var testAsyncOperation = AsyncOperation<Void, AsyncViewError>(status: .loading(Progress(totalUnitCount: 1)))
     
     static var previews: some View {
-        AsyncView(asyncOperation: $testAsyncOperation)
+        Color(.white)
+            .asyncView(asyncOperation: $testAsyncOperation)
     }
 }

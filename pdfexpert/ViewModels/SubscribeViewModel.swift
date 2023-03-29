@@ -47,7 +47,7 @@ class SubscribeViewModel: ObservableObject {
     @MainActor
     func refresh() {
         
-        self.asyncSubscriptionPlans = AsyncOperation(status: .loading(0.0))
+        self.asyncSubscriptionPlans = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
         Task {
             do {
@@ -74,7 +74,7 @@ class SubscribeViewModel: ObservableObject {
             return
         }
         
-        self.purchaseRequest = AsyncOperation(status: .loading(0.0))
+        self.purchaseRequest = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
         Task {
             do {
@@ -91,7 +91,7 @@ class SubscribeViewModel: ObservableObject {
     @MainActor
     func restorePurchases() {
         Task {
-            self.restorePurchaseRequest = AsyncOperation(status: .loading(0.0))
+            self.restorePurchaseRequest = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
             //This call displays a system prompt that asks users to authenticate with their App Store credentials.
             //Call this function only in response to an explicit user action, such as tapping a button.
             do {

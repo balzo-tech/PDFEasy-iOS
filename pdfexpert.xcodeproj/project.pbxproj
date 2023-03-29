@@ -13,6 +13,8 @@
 		89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */; };
 		89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */; };
 		89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 89923E6629D437F500E246FC /* FirebasePerformance */; };
+		89923E6929D46A9900E246FC /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89923E6829D46A9900E246FC /* FilePicker.swift */; };
+		89923E6B29D47B9E00E246FC /* pdf-scanning.json in Resources */ = {isa = PBXBuildFile; fileRef = 89923E6A29D47B9E00E246FC /* pdf-scanning.json */; };
 		8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694129D33B1300566EF4 /* HomeItemView.swift */; };
 		8995694429D3450300566EF4 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694329D3450300566EF4 /* HomeViewModel.swift */; };
 		8995694729D3470C00566EF4 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 8995694629D3470C00566EF4 /* PopupView */; };
@@ -75,6 +77,8 @@
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparencyImpl.swift; sourceTree = "<group>"; };
 		89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparency.swift; sourceTree = "<group>"; };
+		89923E6829D46A9900E246FC /* FilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
+		89923E6A29D47B9E00E246FC /* pdf-scanning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "pdf-scanning.json"; sourceTree = "<group>"; };
 		8995694129D33B1300566EF4 /* HomeItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeItemView.swift; sourceTree = "<group>"; };
 		8995694329D3450300566EF4 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		89CD7A9629D32855003F1C3A /* PdfExpert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PdfExpert.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -241,6 +245,7 @@
 		89CD7ACB29D329B1003F1C3A /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				89923E6A29D47B9E00E246FC /* pdf-scanning.json */,
 				89CD7ACC29D329B1003F1C3A /* loading.json */,
 			);
 			path = Animations;
@@ -266,6 +271,7 @@
 				89CD7AD129D329B1003F1C3A /* UnderlyingError.swift */,
 				89CD7AD229D329B1003F1C3A /* LottieView.swift */,
 				894D485B29D42FE1002B0230 /* RoundedCorner.swift */,
+				89923E6829D46A9900E246FC /* FilePicker.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -453,6 +459,7 @@
 				89CD7B3029D329B1003F1C3A /* Colors.xcassets in Resources */,
 				89CD7AA129D32856003F1C3A /* Preview Assets.xcassets in Resources */,
 				89CD7B3429D329B1003F1C3A /* Products.plist in Resources */,
+				89923E6B29D47B9E00E246FC /* pdf-scanning.json in Resources */,
 				89CD7B3629D329B1003F1C3A /* TestProducts.storekit in Resources */,
 				89CD7B9F29D32AB4003F1C3A /* Montserrat-ExtraBold.ttf in Resources */,
 				89CD7B4A29D329B1003F1C3A /* loading.json in Resources */,
@@ -504,6 +511,7 @@
 				89CD7B5129D329B1003F1C3A /* UIApplication+Extensions.swift in Sources */,
 				8995694429D3450300566EF4 /* HomeViewModel.swift in Sources */,
 				89CD7B9829D329B1003F1C3A /* SubscriptionViewUtility.swift in Sources */,
+				89923E6929D46A9900E246FC /* FilePicker.swift in Sources */,
 				894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */,
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
 				89CD7B6029D329B1003F1C3A /* Persistence.swift in Sources */,
@@ -666,6 +674,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -700,6 +710,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
