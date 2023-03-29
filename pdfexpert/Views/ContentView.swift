@@ -10,6 +10,7 @@ import Factory
 
 struct ContentView: View {
     
+    @Injected(\.appTrackingTransparancy) var appTrackingTransparency
     @InjectedObject(\.coordinator) var coordinator
     
     var body: some View {
@@ -22,6 +23,10 @@ struct ContentView: View {
                             .navigationBarHidden(true)
                     }
                 }
+        }.onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            Task {
+                await self.appTrackingTransparency.requestPermissionIfNeeded()
+            }
         }
     }
 }
