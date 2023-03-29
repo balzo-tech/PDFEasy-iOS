@@ -1,0 +1,128 @@
+{
+  "identifier" : "971B139C",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "17.99",
+      "familyShareable" : false,
+      "internalID" : "6446639893",
+      "localizations" : [
+        {
+          "description" : "A very large bundle of stories",
+          "displayName" : "Large Story Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "eu.balzo.storykidsai.large_bundle",
+      "referenceName" : "Large Story Bundle",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "8.99",
+      "familyShareable" : false,
+      "internalID" : "6446373575",
+      "localizations" : [
+        {
+          "description" : "A medium-sized bundle of stories",
+          "displayName" : "Medium Story Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "eu.balzo.storykidsai.medium_bundle",
+      "referenceName" : "Medium Story Bundle",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "6446373089",
+      "localizations" : [
+        {
+          "description" : "A Small Bundle of Stories",
+          "displayName" : "Small Story Bundle",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "eu.balzo.storykidsai.small_bundle",
+      "referenceName" : "Small Story Bundle",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6446164815",
+    "_developerTeamID" : "G6RAKRKZPR",
+    "_lastSynchronizedDate" : 701189495.26144195
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21268413",
+      "localizations" : [
+
+      ],
+      "name" : "Unlimited Stories",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6446164712",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlimited story generation",
+              "displayName" : "Premium Subscription Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "eu.balzo.storykidsai.unlimitedstories",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Unlimited Stories",
+          "subscriptionGroupID" : "21268413",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6446167791",
+          "introductoryOffer" : {
+            "internalID" : "CECBBD6D",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Unlimited stories generation",
+              "displayName" : "Premium Subscription Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "eu.balzo.storykidsai.unlimitedstories.free.trial",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Unlimited Stories Free Trial",
+          "subscriptionGroupID" : "21268413",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}
