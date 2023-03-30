@@ -7,15 +7,18 @@
 
 import Foundation
 import SwiftUI
+import UIKit
+import UniformTypeIdentifiers.UTType
 
 typealias FilePickerCallback = (URL) -> ()
 
 struct FilePicker: UIViewControllerRepresentable {
     
+    let fileTypes: [UTType]
     let onPickedFile: FilePickerCallback
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        let controller = UIDocumentPickerViewController(forOpeningContentTypes: [.image], asCopy: true)
+        let controller = UIDocumentPickerViewController(forOpeningContentTypes: self.fileTypes, asCopy: true)
         controller.allowsMultipleSelection = false
         controller.shouldShowFileExtensions = true
         controller.delegate = context.coordinator

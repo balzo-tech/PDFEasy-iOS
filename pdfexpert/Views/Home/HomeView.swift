@@ -19,18 +19,18 @@ struct HomeView: View {
             Spacer()
             HomeItemView(title: "Convert\npicture to PDF",
                          buttonText: "Start to convert",
-                         onButtonPressed: { self.homeViewModel.convertImageToPdf() })
+                         onButtonPressed: { self.homeViewModel.openImageInputPicker() })
             HomeItemView(title: "Convert\nWord to PDF",
                          buttonText: "Start to convert",
-                         onButtonPressed: { self.homeViewModel.convertWordToPdf() })
+                         onButtonPressed: { self.homeViewModel.openFileDocPicker() })
             HomeItemView(title: "PDF\nScanner",
                          buttonText: "Start to scan",
                          onButtonPressed: { self.homeViewModel.scanPdf() })
             Spacer()
         }
         .background(ColorPalette.primaryBG)
-        .popup(isPresented: self.$homeViewModel.imageToPdfPickerShow) {
-            ImportView(onFileImportPressed: { self.homeViewModel.openFilePicker() },
+        .popup(isPresented: self.$homeViewModel.imageInputPickerShow) {
+            ImportView(onFileImportPressed: { self.homeViewModel.openFileImagePicker() },
                        onCameraImportPressed: { self.homeViewModel.openCamera() },
                        onGalleryImportPressed: { self.homeViewModel.openGallery() })
         } customize: {
@@ -40,8 +40,13 @@ struct HomeView: View {
                 .closeOnTap(false)
                 .backgroundColor(ColorPalette.primaryBG.opacity(0.5))
         }
-        .fullScreenCover(isPresented: self.$homeViewModel.filePickerShow) {
-            FilePicker(onPickedFile: { self.homeViewModel.convertFile(fileUrl: $0) })
+        .fullScreenCover(isPresented: self.$homeViewModel.fileImagePickerShow) {
+            FilePicker(fileTypes: [.image],
+                       onPickedFile: { self.homeViewModel.convertFileImage(fileImageUrl: $0) })
+        }
+        .fullScreenCover(isPresented: self.$homeViewModel.fileDocPickerShow) {
+            FilePicker(fileTypes: K.Misc.DocFileTypes,
+                       onPickedFile: { self.homeViewModel.convertFileDoc(fileDocUrl: $0) })
         }
         .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
                       selection: self.$homeViewModel.imageSelection,
@@ -49,10 +54,10 @@ struct HomeView: View {
         .fullScreenCover(isPresented: self.$homeViewModel.cameraShow) {
             CameraView(model: Container.shared.cameraViewModel({ uiImage in
                 self.homeViewModel.cameraShow = false
-                self.homeViewModel.convertUiImage(uiImage: uiImage)
+                self.homeViewModel.convertUiImageToPdf(uiImage: uiImage)
             }))
         }
-        .sheet(isPresented: self.homeViewModel.asyncPdf.success) {
+        .sheet(isPresented: self.$homeViewModel.pdfExportShow) {
             ActivityViewController(activityItems: [self.homeViewModel.asyncPdf.data!])
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,

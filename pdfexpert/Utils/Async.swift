@@ -21,12 +21,12 @@ struct AsyncOperation<T, E: LocalizedError> {
 
 extension AsyncOperation where E: LocalizedError {
     
-    var success: Binding<Bool> {
+    var success: Bool {
         switch self.status {
-        case .empty: return .constant(false)
-        case .data: return .constant(true)
-        case .error: return .constant(false)
-        case .loading: return .constant(false)
+        case .empty: return false
+        case .data: return true
+        case .error: return false
+        case .loading: return false
         }
     }
     

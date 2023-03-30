@@ -6,13 +6,17 @@
 //
 
 import Foundation
+import UniformTypeIdentifiers
 
 struct K {
     struct Test {
         static let UseMockDB = true
     }
+    
     struct Misc {
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
+        
+        static let DocFileTypes: [UTType] = [UTType("com.microsoft.word.doc")!]
     }
 }

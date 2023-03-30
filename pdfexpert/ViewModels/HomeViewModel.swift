@@ -47,8 +47,9 @@ struct PickedImage: Transferable {
 
 public class HomeViewModel : ObservableObject {
     
-    @Published var imageToPdfPickerShow: Bool = false
-    @Published var filePickerShow: Bool = false
+    @Published var imageInputPickerShow: Bool = false
+    @Published var fileImagePickerShow: Bool = false
+    @Published var fileDocPickerShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -66,56 +67,67 @@ public class HomeViewModel : ObservableObject {
     
     @Published var cameraShow: Bool = false
     
-    @Published var asyncPdf: AsyncOperation<Data, SharedLocalizedError> = AsyncOperation(status: .empty)
+    @Published var asyncPdf: AsyncOperation<Data, SharedLocalizedError> = AsyncOperation(status: .empty) {
+        didSet {
+            if self.asyncPdf.success {
+                self.pdfExportShow = true
+            }
+        }
+    }
+    
+    @Published var pdfExportShow: Bool = false
     
 //    private var pdfDelegate: PDFDelegate?
 //    private var processor: Processor?
     
     @Injected(\.repository) var repository
     
-    func convertImageToPdf() {
-        self.imageToPdfPickerShow = true
-    }
-    
-    func convertWordToPdf() {
-        debugPrint(for: self, message: "TODO: Open File Picker")
+    func openImageInputPicker() {
+        self.imageInputPickerShow = true
     }
     
     func scanPdf() {
         debugPrint(for: self, message: "TODO: Open Scanner")
     }
     
-    func openFilePicker() {
-        self.imageToPdfPickerShow = false
-        self.filePickerShow = true
+    func openFileImagePicker() {
+        self.imageInputPickerShow = false
+        self.fileImagePickerShow = true
     }
     
     func openCamera() {
-        self.imageToPdfPickerShow = false
+        self.imageInputPickerShow = false
         self.cameraShow = true
     }
     
     func openGallery() {
-        self.imageToPdfPickerShow = false
+        self.imageInputPickerShow = false
         self.imagePickerShow = true
     }
     
-    func convertFile(fileUrl: URL) {
+    func openFileDocPicker() {
+        self.fileDocPickerShow = true
+    }
+    
+    func convertFileImage(fileImageUrl: URL) {
         do {
-            let fileData = try Data(contentsOf: fileUrl)
-            guard let uiImage = UIImage(data: fileData) else {
+            let imageData = try Data(contentsOf: fileImageUrl)
+            guard let uiImage = UIImage(data: imageData) else {
                 self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
                 return
             }
-            self.convertUiImage(uiImage: uiImage)
+            self.convertUiImageToPdf(uiImage: uiImage)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
             self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
         }
     }
     
-    func convertUiImage(uiImage: UIImage) {
-        
+    func convertFileDoc(fileDocUrl: URL) {
+        debugPrint(for: self, message: "TODO: Convert Doc File")
+    }
+    
+    func convertUiImageToPdf(uiImage: UIImage) {
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         let pdfDocument = PDFDocument()
         let pdfPage = PDFPage(image: uiImage)
@@ -146,18 +158,6 @@ public class HomeViewModel : ObservableObject {
                 }
             }
         }
-    }
-    
-    func convertUiImageToPdf(uiImage: UIImage) {
-        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        let pdfDocument = PDFDocument()
-        let pdfPage = PDFPage(image: uiImage)
-        pdfDocument.insert(pdfPage!, at: 0)
-        guard let data = pdfDocument.dataRepresentation() else {
-            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            return
-        }
-        self.asyncPdf = AsyncOperation(status: .data(data))
     }
 }
 
