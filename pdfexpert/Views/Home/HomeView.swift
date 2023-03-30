@@ -46,6 +46,12 @@ struct HomeView: View {
         .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
                       selection: self.$homeViewModel.imageSelection,
                       matching: .images)
+        .fullScreenCover(isPresented: self.$homeViewModel.cameraShow) {
+            CameraView(model: Container.shared.cameraViewModel({ uiImage in
+                self.homeViewModel.cameraShow = false
+                self.homeViewModel.convertUiImage(uiImage: uiImage)
+            }))
+        }
         .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
                    loadingView: { LottieView(filename: "pdf-scanning").loop(autoReverse: true) })
     }

@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		893E849129D5874D00F6B99A /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849029D5874D00F6B99A /* CameraView.swift */; };
+		893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849329D5878E00F6B99A /* CameraViewModel.swift */; };
+		893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */; };
+		893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849729D5944E00F6B99A /* CameraService+Enums.swift */; };
+		893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849829D5944E00F6B99A /* CameraPreviewView.swift */; };
+		893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849929D5944E00F6B99A /* ImageResizer.swift */; };
+		893E84A029D5944E00F6B99A /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849A29D5944E00F6B99A /* CameraService.swift */; };
+		893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */; };
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
 		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
@@ -72,6 +80,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		893E849029D5874D00F6B99A /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		893E849329D5878E00F6B99A /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureProcessor.swift; sourceTree = "<group>"; };
+		893E849729D5944E00F6B99A /* CameraService+Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Enums.swift"; sourceTree = "<group>"; };
+		893E849829D5944E00F6B99A /* CameraPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		893E849929D5944E00F6B99A /* ImageResizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageResizer.swift; sourceTree = "<group>"; };
+		893E849A29D5944E00F6B99A /* CameraService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Extensions.swift"; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -149,6 +165,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		893E849229D5877800F6B99A /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				893E849029D5874D00F6B99A /* CameraView.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		893E849529D5943D00F6B99A /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				893E849829D5944E00F6B99A /* CameraPreviewView.swift */,
+				893E849A29D5944E00F6B99A /* CameraService.swift */,
+				893E849729D5944E00F6B99A /* CameraService+Enums.swift */,
+				893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */,
+				893E849929D5944E00F6B99A /* ImageResizer.swift */,
+				893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
 		89923E6529D437F500E246FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +291,7 @@
 		89CD7ACD29D329B1003F1C3A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				893E849529D5943D00F6B99A /* Camera */,
 				89CD7ACE29D329B1003F1C3A /* UI */,
 				89CD7AD329D329B1003F1C3A /* ParentalCheck.swift */,
 				89CD7AD429D329B1003F1C3A /* Extensions */,
@@ -337,6 +375,7 @@
 			children = (
 				8995694329D3450300566EF4 /* HomeViewModel.swift */,
 				89CD7AFD29D329B1003F1C3A /* SubscribeViewModel.swift */,
+				893E849329D5878E00F6B99A /* CameraViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -344,6 +383,7 @@
 		89CD7B0329D329B1003F1C3A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				893E849229D5877800F6B99A /* Camera */,
 				8995694829D3473E00566EF4 /* Common */,
 				89CD7BB729D330B2003F1C3A /* Home */,
 				89CD7BB229D32E69003F1C3A /* Navigation */,
@@ -504,8 +544,12 @@
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
+				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
 				89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */,
 				89CD7B7329D329B1003F1C3A /* SubscribeViewModel.swift in Sources */,
+				893E849129D5874D00F6B99A /* CameraView.swift in Sources */,
+				893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */,
+				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
 				89CD7B6229D329B1003F1C3A /* Repository.swift in Sources */,
 				89CD7B5629D329B1003F1C3A /* Async.swift in Sources */,
 				89CD7B5129D329B1003F1C3A /* UIApplication+Extensions.swift in Sources */,
@@ -520,7 +564,9 @@
 				89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */,
 				89CD7B4E29D329B1003F1C3A /* LottieView.swift in Sources */,
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
+				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
 				89CD7B9729D329B1003F1C3A /* SharedLocalizedError.swift in Sources */,
+				893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,
 				89CD7BB629D32E69003F1C3A /* Coordinator.swift in Sources */,
 				894D485A29D42CC5002B0230 /* ImportView.swift in Sources */,
@@ -533,6 +579,8 @@
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				89CD7B5829D329B1003F1C3A /* RepositoryImpl.swift in Sources */,
+				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
+				893E84A029D5944E00F6B99A /* CameraService.swift in Sources */,
 				8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */,
 				894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */,
 				89CD7B4C29D329B1003F1C3A /* CircularProgressView.swift in Sources */,

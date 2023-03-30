@@ -69,6 +69,8 @@ public class HomeViewModel : ObservableObject {
     
     @Published var asyncImageLoading: AsyncOperation<Image, ImportImageError> = AsyncOperation(status: .empty)
     
+    @Published var cameraShow: Bool = false
+    
     @Injected(\.repository) var repository
     
     func convertImageToPdf() {
@@ -89,7 +91,8 @@ public class HomeViewModel : ObservableObject {
     }
     
     func openCamera() {
-        debugPrint(for: self, message: "TODO: Open Camera")
+        self.imageToPdfPickerShow = false
+        self.cameraShow = true
     }
     
     func openGallery() {
@@ -108,6 +111,10 @@ public class HomeViewModel : ObservableObject {
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
         }
+    }
+    
+    func convertUiImage(uiImage: UIImage) {
+        debugPrint(for: self, message: "TODO: Convert image to pdf")
     }
     
     private func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
