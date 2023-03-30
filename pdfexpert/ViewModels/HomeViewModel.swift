@@ -9,6 +9,8 @@ import Foundation
 import Factory
 import SwiftUI
 import PhotosUI
+//import PSPDFKit
+import PDFKit
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {
@@ -27,22 +29,15 @@ enum ImageTransferError: LocalizedError {
 }
 
 struct PickedImage: Transferable {
-    let image: Image
+    let uiImage: UIImage
     
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(importedContentType: .image) { data in
-        #if canImport(AppKit)
-            guard let nsImage = NSImage(data: data) else {
-                throw ImageTransferError.importFailed
-            }
-            let image = Image(nsImage: nsImage)
-            return PickedImage(image: image)
-        #elseif canImport(UIKit)
+        #if canImport(UIKit)
             guard let uiImage = UIImage(data: data) else {
                 throw ImageTransferError.importFailed
             }
-            let image = Image(uiImage: uiImage)
-            return PickedImage(image: image)
+            return PickedImage(uiImage: uiImage)
         #else
             throw ImageTransferError.importFailed
         #endif
@@ -67,9 +62,14 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
-    @Published var asyncImageLoading: AsyncOperation<Image, ImportImageError> = AsyncOperation(status: .empty)
+    @Published var asyncImageLoading: AsyncOperation<(), ImportImageError> = AsyncOperation(status: .empty)
     
     @Published var cameraShow: Bool = false
+    
+    @Published var asyncPdf: AsyncOperation<Data, SharedLocalizedError> = AsyncOperation(status: .empty)
+    
+//    private var pdfDelegate: PDFDelegate?
+//    private var processor: Processor?
     
     @Injected(\.repository) var repository
     
@@ -103,18 +103,28 @@ public class HomeViewModel : ObservableObject {
     func convertFile(fileUrl: URL) {
         do {
             let fileData = try Data(contentsOf: fileUrl)
-            let bcf = ByteCountFormatter()
-            bcf.allowedUnits = [.useMB]
-            bcf.countStyle = .file
-            let memorySize = bcf.string(fromByteCount: Int64(fileData.count))
-            debugPrint(for: self, message: "File fetched successfully. File size: \(memorySize)")
+            guard let uiImage = UIImage(data: fileData) else {
+                self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
+                return
+            }
+            self.convertUiImage(uiImage: uiImage)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
+            self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
         }
     }
     
     func convertUiImage(uiImage: UIImage) {
-        debugPrint(for: self, message: "TODO: Convert image to pdf")
+        
+        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        let pdfDocument = PDFDocument()
+        let pdfPage = PDFPage(image: uiImage)
+        pdfDocument.insert(pdfPage!, at: 0)
+        guard let data = pdfDocument.dataRepresentation() else {
+            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            return
+        }
+        self.asyncPdf = AsyncOperation(status: .data(data))
     }
     
     private func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
@@ -126,8 +136,8 @@ public class HomeViewModel : ObservableObject {
                 }
                 switch result {
                 case .success(let profileImage?):
-                    self.asyncImageLoading = AsyncOperation(status: .data(profileImage.image))
-                    self.convertImage(image: profileImage.image)
+                    self.asyncImageLoading = AsyncOperation(status: .data(()))
+                    self.convertUiImageToPdf(uiImage: profileImage.uiImage)
                 case .success(nil):
                     self.asyncImageLoading = AsyncOperation(status: .empty)
                 case .failure(let error):
@@ -138,8 +148,16 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
-    private func convertImage(image: Image) {
-        debugPrint(for: self, message: "TODO: Convert image to pdf")
+    func convertUiImageToPdf(uiImage: UIImage) {
+        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        let pdfDocument = PDFDocument()
+        let pdfPage = PDFPage(image: uiImage)
+        pdfDocument.insert(pdfPage!, at: 0)
+        guard let data = pdfDocument.dataRepresentation() else {
+            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            return
+        }
+        self.asyncPdf = AsyncOperation(status: .data(data))
     }
 }
 
@@ -160,3 +178,28 @@ enum ImportImageError: LocalizedError, UnderlyingError {
         }
     }
 }
+
+typealias PDFCreationSuccess = ((Data) -> ())
+typealias PDFCreationFailure = ((Error) -> ())
+
+//class PDFDelegate: NSObject, ProcessorDelegate {
+//
+//    var onPdfSuccess: PDFCreationSuccess
+//    var onPdfError: PDFCreationFailure
+//
+//    init(onPdfSuccess: @escaping PDFCreationSuccess, onPdfError: @escaping PDFCreationFailure) {
+//        self.onPdfSuccess = onPdfSuccess
+//        self.onPdfError = onPdfError
+//    }
+//
+//    func processor(_ processor: Processor, didProcessPage currentPage: UInt, totalPages: UInt) {
+//        if currentPage == totalPages {
+//            do {
+//                let pdfData = try processor.data()
+//                self.onPdfSuccess(pdfData)
+//            } catch {
+//                self.onPdfError(error)
+//            }
+//        }
+//    }
+//}

@@ -35,20 +35,6 @@ extension View {
         .padding(.top)
     }
     
-//    func getShopButton(onTap: @escaping () -> ()) -> some View {
-//        VStack {
-//            HStack {
-//                Spacer()
-//                Button(action: { onTap() }) {
-//                    Image("shop")
-//                }
-//            }
-//            .padding(.trailing)
-//            Spacer()
-//        }
-//        .padding(.top)
-//    }
-    
     static func getAttributedText(forUrlString urlString: String,
                                   text: String) -> AttributedString {
         var attributedString = try! AttributedString(markdown: "[\(text)](\(urlString))")

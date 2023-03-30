@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum AsyncOperationStatus<T, E: LocalizedError> {
     case empty
@@ -19,6 +20,24 @@ struct AsyncOperation<T, E: LocalizedError> {
 }
 
 extension AsyncOperation where E: LocalizedError {
+    
+    var success: Binding<Bool> {
+        switch self.status {
+        case .empty: return .constant(false)
+        case .data: return .constant(true)
+        case .error: return .constant(false)
+        case .loading: return .constant(false)
+        }
+    }
+    
+    var data: T? {
+        switch self.status {
+        case .empty: return nil
+        case .data(let data): return data
+        case .error: return nil
+        case .loading: return nil
+        }
+    }
     
     func updateLoadingProgress(loadingProgress: Progress, onlyIfLess: Bool = true) -> Self {
         switch self.status {

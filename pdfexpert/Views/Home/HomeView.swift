@@ -52,6 +52,11 @@ struct HomeView: View {
                 self.homeViewModel.convertUiImage(uiImage: uiImage)
             }))
         }
+        .sheet(isPresented: self.homeViewModel.asyncPdf.success) {
+            ActivityViewController(activityItems: [self.homeViewModel.asyncPdf.data!])
+        }
+        .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
+                   loadingView: { LottieView(filename: "pdf-scanning").loop(autoReverse: true) })
         .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
                    loadingView: { LottieView(filename: "pdf-scanning").loop(autoReverse: true) })
     }

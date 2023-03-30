@@ -15,6 +15,8 @@
 		893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849929D5944E00F6B99A /* ImageResizer.swift */; };
 		893E84A029D5944E00F6B99A /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849A29D5944E00F6B99A /* CameraService.swift */; };
 		893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */; };
+		893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */ = {isa = PBXBuildFile; productRef = 893E84A329D5BFBB00F6B99A /* PSPDFKit */; };
+		893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E84A529D5C5E200F6B99A /* ActivityViewController.swift */; };
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
 		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
@@ -88,6 +90,7 @@
 		893E849929D5944E00F6B99A /* ImageResizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageResizer.swift; sourceTree = "<group>"; };
 		893E849A29D5944E00F6B99A /* CameraService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Extensions.swift"; sourceTree = "<group>"; };
+		893E84A529D5C5E200F6B99A /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -154,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
+				893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */,
 				89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */,
 				89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */,
 				8995694729D3470C00566EF4 /* PopupView in Frameworks */,
@@ -310,6 +314,7 @@
 				89CD7AD229D329B1003F1C3A /* LottieView.swift */,
 				894D485B29D42FE1002B0230 /* RoundedCorner.swift */,
 				89923E6829D46A9900E246FC /* FilePicker.swift */,
+				893E84A529D5C5E200F6B99A /* ActivityViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -445,6 +450,7 @@
 				89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */,
 				8995694629D3470C00566EF4 /* PopupView */,
 				89923E6629D437F500E246FC /* FirebasePerformance */,
+				893E84A329D5BFBB00F6B99A /* PSPDFKit */,
 			);
 			productName = PdfExpert;
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
@@ -479,6 +485,7 @@
 				89CD7BA629D32C72003F1C3A /* XCRemoteSwiftPackageReference "Factory" */,
 				89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */,
+				893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
 			projectDirPath = "";
@@ -586,6 +593,7 @@
 				89CD7B4C29D329B1003F1C3A /* CircularProgressView.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */,
+				893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
 				89CD7B4F29D329B1003F1C3A /* ParentalCheck.swift in Sources */,
 				89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */,
@@ -806,6 +814,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PSPDFKit/PSPDFKit-SP";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/PopupView.git";
@@ -841,6 +857,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		893E84A329D5BFBB00F6B99A /* PSPDFKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */;
+			productName = PSPDFKit;
+		};
 		89923E6629D437F500E246FC /* FirebasePerformance */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
