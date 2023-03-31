@@ -20,6 +20,8 @@
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
 		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
+		895FE2C129D6D76300A99D5B /* WeScan in Frameworks */ = {isa = PBXBuildFile; productRef = 895FE2C029D6D76300A99D5B /* WeScan */; };
+		895FE2C429D6D7E500A99D5B /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895FE2C329D6D7E500A99D5B /* ScannerView.swift */; };
 		89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */; };
 		89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */; };
 		89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 89923E6629D437F500E246FC /* FirebasePerformance */; };
@@ -94,6 +96,7 @@
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		895FE2C329D6D7E500A99D5B /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparencyImpl.swift; sourceTree = "<group>"; };
 		89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparency.swift; sourceTree = "<group>"; };
 		89923E6829D46A9900E246FC /* FilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
@@ -163,6 +166,7 @@
 				8995694729D3470C00566EF4 /* PopupView in Frameworks */,
 				89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */,
 				89CD7BA829D32C72003F1C3A /* Factory in Frameworks */,
+				895FE2C129D6D76300A99D5B /* WeScan in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +192,14 @@
 				893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		895FE2C229D6D7D800A99D5B /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				895FE2C329D6D7E500A99D5B /* ScannerView.swift */,
+			);
+			path = Scan;
 			sourceTree = "<group>";
 		};
 		89923E6529D437F500E246FC /* Frameworks */ = {
@@ -388,6 +400,7 @@
 		89CD7B0329D329B1003F1C3A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				895FE2C229D6D7D800A99D5B /* Scan */,
 				893E849229D5877800F6B99A /* Camera */,
 				8995694829D3473E00566EF4 /* Common */,
 				89CD7BB729D330B2003F1C3A /* Home */,
@@ -451,6 +464,7 @@
 				8995694629D3470C00566EF4 /* PopupView */,
 				89923E6629D437F500E246FC /* FirebasePerformance */,
 				893E84A329D5BFBB00F6B99A /* PSPDFKit */,
+				895FE2C029D6D76300A99D5B /* WeScan */,
 			);
 			productName = PdfExpert;
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
@@ -486,6 +500,7 @@
 				89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */,
 				893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */,
+				895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
 			projectDirPath = "";
@@ -569,6 +584,7 @@
 				89CD7B5C29D329B1003F1C3A /* ImageManager.swift in Sources */,
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
 				89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */,
+				895FE2C429D6D7E500A99D5B /* ScannerView.swift in Sources */,
 				89CD7B4E29D329B1003F1C3A /* LottieView.swift in Sources */,
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
@@ -822,6 +838,14 @@
 				kind = branch;
 			};
 		};
+		895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WeTransfer/WeScan.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/PopupView.git";
@@ -861,6 +885,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */;
 			productName = PSPDFKit;
+		};
+		895FE2C029D6D76300A99D5B /* WeScan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */;
+			productName = WeScan;
 		};
 		89923E6629D437F500E246FC /* FirebasePerformance */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -11,6 +11,7 @@ import SwiftUI
 import PhotosUI
 import PSPDFKit
 import PDFKit
+import WeScan
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {
@@ -66,6 +67,7 @@ public class HomeViewModel : ObservableObject {
     @Published var asyncImageLoading: AsyncOperation<(), ImportImageError> = AsyncOperation(status: .empty)
     
     @Published var cameraShow: Bool = false
+    @Published var scannerShow: Bool = false
     
     @Published var asyncPdf: AsyncOperation<Data, SharedLocalizedError> = AsyncOperation(status: .empty) {
         didSet {
@@ -84,7 +86,7 @@ public class HomeViewModel : ObservableObject {
     }
     
     func scanPdf() {
-        debugPrint(for: self, message: "TODO: Open Scanner")
+        self.scannerShow = true
     }
     
     func openFileImagePicker() {
@@ -154,6 +156,40 @@ public class HomeViewModel : ObservableObject {
         }
         
         self.asyncPdf = AsyncOperation(status: .data(data))
+    }
+    
+    func convertScanToPdf(scannerResult: ScannerResult) {
+        
+        self.scannerShow = false
+        
+        guard let imageScannerResult = scannerResult.results else {
+            if let error = scannerResult.error {
+                debugPrint(for: self, message: "Scan failed. Error: \(error)")
+                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            } else {
+                self.asyncPdf = AsyncOperation(status: .empty)
+            }
+            return
+        }
+        
+        
+        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        
+        var scan = imageScannerResult.croppedScan
+        
+        if imageScannerResult.doesUserPreferEnhancedScan, let enhancedScan = imageScannerResult.enhancedScan {
+            scan = enhancedScan
+        }
+        
+        scan.generatePDFData { result in
+            switch result {
+            case .success(let data):
+                self.asyncPdf = AsyncOperation(status: .data(data))
+            case .failure(let error):
+                debugPrint(for: self, message: "Scan to pdf conversion failed. Error: \(error.localizedDescription)")
+                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            }
+        }
     }
     
     private func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {

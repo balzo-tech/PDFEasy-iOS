@@ -48,6 +48,9 @@ struct HomeView: View {
             FilePicker(fileTypes: K.Misc.DocFileTypes,
                        onPickedFile: { self.homeViewModel.convertFileDoc(fileDocUrl: $0) })
         }
+        .fullScreenCover(isPresented: self.$homeViewModel.scannerShow) {
+            ScannerView(onScannerResult: { self.homeViewModel.convertScanToPdf(scannerResult: $0) })
+        }
         .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
                       selection: self.$homeViewModel.imageSelection,
                       matching: .images)
