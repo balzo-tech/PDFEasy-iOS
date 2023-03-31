@@ -9,7 +9,7 @@ import Foundation
 import Factory
 import SwiftUI
 import PhotosUI
-//import PSPDFKit
+import PSPDFKit
 import PDFKit
 
 extension Container {
@@ -77,9 +77,6 @@ public class HomeViewModel : ObservableObject {
     
     @Published var pdfExportShow: Bool = false
     
-//    private var pdfDelegate: PDFDelegate?
-//    private var processor: Processor?
-    
     @Injected(\.repository) var repository
     
     func openImageInputPicker() {
@@ -124,18 +121,38 @@ public class HomeViewModel : ObservableObject {
     }
     
     func convertFileDoc(fileDocUrl: URL) {
-        debugPrint(for: self, message: "TODO: Convert Doc File")
+        
+        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        
+        Processor.generatePDF(from: fileDocUrl, options: [:]) { data, error in
+            if let error = error {
+                debugPrint(for: self, message: "Error converting word file. Error: \(error)")
+                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            } else if let data = data {
+                self.asyncPdf = AsyncOperation(status: .data(data))
+            } else {
+                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            }
+        }
     }
     
     func convertUiImageToPdf(uiImage: UIImage) {
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        
         let pdfDocument = PDFDocument()
-        let pdfPage = PDFPage(image: uiImage)
-        pdfDocument.insert(pdfPage!, at: 0)
+        
+        guard let pdfPage = PDFPage(image: uiImage) else {
+            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            return
+        }
+        
+        pdfDocument.insert(pdfPage, at: 0)
+        
         guard let data = pdfDocument.dataRepresentation() else {
             self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
             return
         }
+        
         self.asyncPdf = AsyncOperation(status: .data(data))
     }
     
@@ -178,28 +195,3 @@ enum ImportImageError: LocalizedError, UnderlyingError {
         }
     }
 }
-
-typealias PDFCreationSuccess = ((Data) -> ())
-typealias PDFCreationFailure = ((Error) -> ())
-
-//class PDFDelegate: NSObject, ProcessorDelegate {
-//
-//    var onPdfSuccess: PDFCreationSuccess
-//    var onPdfError: PDFCreationFailure
-//
-//    init(onPdfSuccess: @escaping PDFCreationSuccess, onPdfError: @escaping PDFCreationFailure) {
-//        self.onPdfSuccess = onPdfSuccess
-//        self.onPdfError = onPdfError
-//    }
-//
-//    func processor(_ processor: Processor, didProcessPage currentPage: UInt, totalPages: UInt) {
-//        if currentPage == totalPages {
-//            do {
-//                let pdfData = try processor.data()
-//                self.onPdfSuccess(pdfData)
-//            } catch {
-//                self.onPdfError(error)
-//            }
-//        }
-//    }
-//}
