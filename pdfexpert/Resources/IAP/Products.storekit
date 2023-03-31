@@ -1,67 +1,23 @@
 {
-  "identifier" : "971B139C",
+  "identifier" : "4215B0B5",
   "nonRenewingSubscriptions" : [
 
   ],
   "products" : [
-    {
-      "displayPrice" : "17.99",
-      "familyShareable" : false,
-      "internalID" : "6446639893",
-      "localizations" : [
-        {
-          "description" : "A very large bundle of stories",
-          "displayName" : "Large Story Bundle",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "eu.balzo.storykidsai.large_bundle",
-      "referenceName" : "Large Story Bundle",
-      "type" : "Consumable"
-    },
-    {
-      "displayPrice" : "8.99",
-      "familyShareable" : false,
-      "internalID" : "6446373575",
-      "localizations" : [
-        {
-          "description" : "A medium-sized bundle of stories",
-          "displayName" : "Medium Story Bundle",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "eu.balzo.storykidsai.medium_bundle",
-      "referenceName" : "Medium Story Bundle",
-      "type" : "Consumable"
-    },
-    {
-      "displayPrice" : "3.99",
-      "familyShareable" : false,
-      "internalID" : "6446373089",
-      "localizations" : [
-        {
-          "description" : "A Small Bundle of Stories",
-          "displayName" : "Small Story Bundle",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "eu.balzo.storykidsai.small_bundle",
-      "referenceName" : "Small Story Bundle",
-      "type" : "Consumable"
-    }
+
   ],
   "settings" : {
-    "_applicationInternalID" : "6446164815",
+    "_applicationInternalID" : "1659625843",
     "_developerTeamID" : "G6RAKRKZPR",
-    "_lastSynchronizedDate" : 701189495.26144195
+    "_lastSynchronizedDate" : 701949918.92859602
   },
   "subscriptionGroups" : [
     {
-      "id" : "21268413",
+      "id" : "21297792",
       "localizations" : [
 
       ],
-      "name" : "Unlimited Stories",
+      "name" : "Main",
       "subscriptions" : [
         {
           "adHocOffers" : [
@@ -70,22 +26,22 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "4.99",
+          "displayPrice" : "12.99",
           "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "6446164712",
+          "groupNumber" : 3,
+          "internalID" : "6447059846",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Unlimited story generation",
-              "displayName" : "Premium Subscription Weekly",
+              "description" : "Unlimited access to all app features.",
+              "displayName" : "Unlimited access",
               "locale" : "en_US"
             }
           ],
-          "productID" : "eu.balzo.storykidsai.unlimitedstories",
-          "recurringSubscriptionPeriod" : "P1W",
-          "referenceName" : "Unlimited Stories",
-          "subscriptionGroupID" : "21268413",
+          "productID" : "eu.balzo.pdfexpert.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21297792",
           "type" : "RecurringSubscription"
         },
         {
@@ -95,27 +51,82 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "4.99",
+          "displayPrice" : "12.99",
           "familyShareable" : false,
-          "groupNumber" : 2,
-          "internalID" : "6446167791",
+          "groupNumber" : 4,
+          "internalID" : "6447059881",
           "introductoryOffer" : {
-            "internalID" : "CECBBD6D",
+            "internalID" : "C784F4A5",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
           },
           "localizations" : [
             {
-              "description" : "Unlimited stories generation",
-              "displayName" : "Premium Subscription Weekly",
+              "description" : "Unlimited access to all app features.",
+              "displayName" : "Unlimited access",
               "locale" : "en_US"
             }
           ],
-          "productID" : "eu.balzo.storykidsai.unlimitedstories.free.trial",
-          "recurringSubscriptionPeriod" : "P1W",
-          "referenceName" : "Unlimited Stories Free Trial",
-          "subscriptionGroupID" : "21268413",
+          "productID" : "eu.balzo.pdfexpert.monthly.freetrial",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Free Trial",
+          "subscriptionGroupID" : "21297792",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "89.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6447059590",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlimited access to all app features.",
+              "displayName" : "Unlimited access",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "eu.balzo.pdfexpert.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly",
+          "subscriptionGroupID" : "21297792",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "89.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6447059831",
+          "introductoryOffer" : {
+            "internalID" : "49C6C72F",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Unlimited access to all app features.",
+              "displayName" : "Unlimited Access",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "eu.balzo.pdfexpert.yearly.freetrial",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly Free Trial",
+          "subscriptionGroupID" : "21297792",
           "type" : "RecurringSubscription"
         }
       ]

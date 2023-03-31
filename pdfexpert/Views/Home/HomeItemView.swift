@@ -15,11 +15,7 @@ struct HomeItemView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(colors: [
-                ColorPalette.buttonGradientStart,
-                ColorPalette.buttonGradientEnd,
-            ],startPoint: UnitPoint(x: 0, y: 0.5),
-                           endPoint: UnitPoint(x: 1, y: 0.5))
+            self.defaultGradientBackground
             .foregroundColor(ColorPalette.secondaryBG)
             .cornerRadius(10)
             .shadow(radius: 5)

@@ -48,6 +48,8 @@ struct PickedImage: Transferable {
 
 public class HomeViewModel : ObservableObject {
     
+    @Published var monetizationShow: Bool = false
+    
     @Published var imageInputPickerShow: Bool = false
     @Published var fileImagePickerShow: Bool = false
     @Published var fileDocPickerShow: Bool = false
@@ -79,14 +81,25 @@ public class HomeViewModel : ObservableObject {
     
     @Published var pdfExportShow: Bool = false
     
+    @Injected(\.store) private var store
     @Injected(\.repository) var repository
+    
+    func onAppear() {
+        Task {
+            try await self.store.refreshAll()
+        }
+    }
     
     func openImageInputPicker() {
         self.imageInputPickerShow = true
     }
     
     func scanPdf() {
-        self.scannerShow = true
+        if self.store.isPremium.value {
+            self.scannerShow = true
+        } else {
+            self.monetizationShow = true
+        }
     }
     
     func openFileImagePicker() {
@@ -105,9 +118,14 @@ public class HomeViewModel : ObservableObject {
     }
     
     func openFileDocPicker() {
-        self.fileDocPickerShow = true
+        if self.store.isPremium.value {
+            self.fileDocPickerShow = true
+        } else {
+            self.monetizationShow = true
+        }
     }
     
+    @MainActor
     func convertFileImage(fileImageUrl: URL) {
         do {
             let imageData = try Data(contentsOf: fileImageUrl)
@@ -122,6 +140,7 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
+    @MainActor
     func convertFileDoc(fileDocUrl: URL) {
         
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
@@ -138,6 +157,7 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
+    @MainActor
     func convertUiImageToPdf(uiImage: UIImage) {
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
@@ -158,6 +178,7 @@ public class HomeViewModel : ObservableObject {
         self.asyncPdf = AsyncOperation(status: .data(data))
     }
     
+    @MainActor
     func convertScanToPdf(scannerResult: ScannerResult) {
         
         self.scannerShow = false

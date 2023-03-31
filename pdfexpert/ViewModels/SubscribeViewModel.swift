@@ -9,16 +9,7 @@ import Foundation
 import StoreKit
 import Combine
 import Factory
-
-struct SubscriptionPlan: Hashable {
-    let product: Product?
-    let descriptionText: String
-}
-
-struct SubscriptionPlanDuo {
-    let defaultSubscriptionPlan: SubscriptionPlan
-    let freeTrialSubscriptionPlan: SubscriptionPlan?
-}
+import Collections
 
 extension Container {
     var subscribeViewModel: Factory<SubscribeViewModel> {
@@ -26,14 +17,43 @@ extension Container {
     }
 }
 
+struct SubscriptionPlan: Hashable {
+    let product: Product?
+    let title: String
+    let descriptionText: String
+    let fullDescriptionText: String
+}
+
+extension Product {
+    var subscriptionPlan: SubscriptionPlan? {
+        return SubscriptionPlan(product: self,
+                                title: self.title,
+                                descriptionText: self.descriptionText,
+                                fullDescriptionText: self.fullDescriptionText)
+    }
+}
+
+struct SubscriptionPlanPair {
+    let standardSubscriptionPlan: SubscriptionPlan?
+    let freeTrialSubscriptionPlan: SubscriptionPlan?
+}
+
+
 class SubscribeViewModel: ObservableObject {
     
-    @Published var subscribeParentalCheck: ParentalCheck<SubscriptionPlan>? = nil
     @Published var isPremium: Bool = false
-    
-    @Published var asyncSubscriptionPlans: AsyncOperation<SubscriptionPlanDuo, RefreshError> = AsyncOperation(status: .empty)
+    @Published var selectedSubscriptionPairIndex: Int = 0 {
+        didSet { self.updateCurrentSubscriptionPlan() }
+    }
+    @Published var isFreeTrialEnabled: Bool = false {
+        didSet { self.updateCurrentSubscriptionPlan() }
+    }
+    @Published var asyncSubscriptionPlanPairs: AsyncOperation<[SubscriptionPlanPair], RefreshError> = AsyncOperation(status: .empty) {
+        didSet { self.updateCurrentSubscriptionPlan() }
+    }
     @Published var restorePurchaseRequest: AsyncOperation<Bool, RestorePurchaseError> = AsyncOperation(status: .empty)
     @Published var purchaseRequest: AsyncOperation<(), PurchaseError> = AsyncOperation(status: .empty)
+    @Published var currentSubscriptionPlan: SubscriptionPlan?
     
     @Injected(\.store) private var store
     @Injected(\.coordinator) private var coordinator
@@ -47,29 +67,24 @@ class SubscribeViewModel: ObservableObject {
     @MainActor
     func refresh() {
         
-        self.asyncSubscriptionPlans = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        self.asyncSubscriptionPlanPairs = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
         Task {
             do {
                 try await self.store.refreshAll()
-                let subscriptionPlansDuo = try await Self.productsToSubscriptionPlanDuo(products: self.store.subscriptions)
-                self.asyncSubscriptionPlans = AsyncOperation(status: .data(subscriptionPlansDuo))
+                let subscriptionPlanPairs = try await Self.productsToSubscriptionPairs(products: self.store.subscriptions)
+                self.asyncSubscriptionPlanPairs = AsyncOperation(status: .data(subscriptionPlanPairs))
             } catch {
                 let convertedError = RefreshError.convertError(fromError: error)
-                self.asyncSubscriptionPlans = AsyncOperation(status: .error(convertedError))
+                self.asyncSubscriptionPlanPairs = AsyncOperation(status: .error(convertedError))
             }
         }
     }
     
     @MainActor
-    func subscribeParentalCheck(subscriptionPlan: SubscriptionPlan) {
-        self.subscribeParentalCheck = .checking(subscriptionPlan)
-    }
-    
-    @MainActor
-    func subscribe(subscriptionPlan: SubscriptionPlan) {
+    func subscribe() {
         
-        guard let product = subscriptionPlan.product else {
+        guard let product = self.currentSubscriptionPlan?.product else {
             self.purchaseRequest = AsyncOperation(status: .error(.unknownError))
             return
         }
@@ -117,26 +132,50 @@ class SubscribeViewModel: ObservableObject {
         }
     }
     
-    private static func productsToSubscriptionPlanDuo(products: [Product]) async throws -> SubscriptionPlanDuo {
+    private static func productsToSubscriptionPairs(products: [Product]) async throws -> [SubscriptionPlanPair] {
         let subscriptions = products.filter { $0.subscription != nil }
         
-        guard let defaultSubscription = subscriptions.first (where: { $0.subscription?.introductoryOffer == nil }) else {
-            throw RefreshError.missingDefaultSubscriptionPlanError
+        var groupedSubscriptions: OrderedDictionary<Int, [Product]> = subscriptions.reduce([:]) { partialResult, subscription in
+            var partialResult = partialResult
+            if let subscriptionInfo = subscription.subscription {
+                let key = subscriptionInfo.subscriptionPeriod.days
+                var subscriptions = partialResult[key] ?? []
+                subscriptions.append(subscription)
+                partialResult[key] = subscriptions
+            }
+            return partialResult
         }
         
-        let freeTrialSubscription = subscriptions.first (where: { $0.subscription?.introductoryOffer?.paymentMode == .freeTrial })
-        let eligibleForIntroductoryOffer = await freeTrialSubscription?.subscription?.isEligibleForIntroOffer ?? false
+        groupedSubscriptions.sort { pair1, pair2 in
+            pair1.key > pair2.key
+        }
         
-        let defaultSubscriptionPlan = SubscriptionPlan(product: defaultSubscription,
-                                                       descriptionText: defaultSubscription.descriptionText)
-        let freeTrialSubscriptionPlan: SubscriptionPlan? = {
-            guard let freeTrialSubscription = freeTrialSubscription, eligibleForIntroductoryOffer else {
-                return nil
+        let subscriptionPlanPairs: [SubscriptionPlanPair] = groupedSubscriptions.reduce([]) { partialResult, rawPair in
+            var partialResult = partialResult
+            let freeTrialSubscriptionPlan = rawPair.value.first (where: { $0.subscription?.introductoryOffer?.paymentMode == .freeTrial })?.subscriptionPlan
+            let standardSubscriptionPlan = rawPair.value.first (where: { $0.subscription?.introductoryOffer == nil })?.subscriptionPlan
+            if standardSubscriptionPlan != nil || freeTrialSubscriptionPlan != nil {
+                partialResult.append(SubscriptionPlanPair(standardSubscriptionPlan: standardSubscriptionPlan,
+                                                          freeTrialSubscriptionPlan: freeTrialSubscriptionPlan))
             }
-            return SubscriptionPlan(product: freeTrialSubscription,
-                               descriptionText: freeTrialSubscription.descriptionText)
-        }()
-        return SubscriptionPlanDuo(defaultSubscriptionPlan: defaultSubscriptionPlan, freeTrialSubscriptionPlan: freeTrialSubscriptionPlan)
+            return partialResult
+        }
+        
+        return subscriptionPlanPairs
+    }
+    
+    private func updateCurrentSubscriptionPlan() {
+        guard let subscriptionPlanPairs = self.asyncSubscriptionPlanPairs.data,
+              self.selectedSubscriptionPairIndex >= 0,
+              self.selectedSubscriptionPairIndex < subscriptionPlanPairs.count else {
+            return
+        }
+        let selectedSubscriptionPair = subscriptionPlanPairs[self.selectedSubscriptionPairIndex]
+        if self.isFreeTrialEnabled {
+            self.currentSubscriptionPlan = selectedSubscriptionPair.freeTrialSubscriptionPlan ?? selectedSubscriptionPair.standardSubscriptionPlan
+        } else {
+            self.currentSubscriptionPlan = selectedSubscriptionPair.standardSubscriptionPlan ?? selectedSubscriptionPair.freeTrialSubscriptionPlan
+        }
     }
 }
 

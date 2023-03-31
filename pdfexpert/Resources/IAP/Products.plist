@@ -2,9 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>unlimitedstories</key>
+	<key>yearly</key>
 	<string>standard_subscription</string>
-	<key>unlimitedstories.free.trial</key>
+	<key>yearly.freetrial</key>
+	<string>standard_subscription</string>
+	<key>monthly</key>
+	<string>standard_subscription</string>
+	<key>monthly.freetrial</key>
 	<string>standard_subscription</string>
 </dict>
 </plist>

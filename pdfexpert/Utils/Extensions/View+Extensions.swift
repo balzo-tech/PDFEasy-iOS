@@ -22,9 +22,9 @@ extension View {
         VStack {
             HStack {
                 Button(action: { onClose() }) {
-                    Image(systemName: "xmark.circle")
+                    Image(systemName: "xmark")
                         .resizable()
-                        .frame(width: 34, height: 34.0)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(color)
                 }
                 Spacer()

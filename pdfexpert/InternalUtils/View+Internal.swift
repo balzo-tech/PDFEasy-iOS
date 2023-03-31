@@ -16,6 +16,11 @@ enum DisclamerType: Hashable, Identifiable {
 
 extension View {
     
+    var defaultGradientBackground: some View {
+        LinearGradient(colors: [ColorPalette.buttonGradientStart, ColorPalette.buttonGradientEnd],
+                       startPoint: UnitPoint(x: 0.25, y: 0.5), endPoint: UnitPoint(x: 0.75, y: 0.5))
+    }
+    
     func getDisclamer(color: Color, onSelection: @escaping (DisclamerType) -> ()) -> some View {
         var attributedString = AttributedString("By continuing you accept our ")
         attributedString += Self.getAttributedText(forUrlString: K.Misc.TermsAndConditionsUrlString, text: "Terms and Conditions")

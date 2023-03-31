@@ -29,6 +29,12 @@ struct HomeView: View {
             Spacer()
         }
         .background(ColorPalette.primaryBG)
+        .onAppear() {
+            self.homeViewModel.onAppear()
+        }
+        .fullScreenCover(isPresented: self.$homeViewModel.monetizationShow) {
+            SubscriptionView(showModal: self.$homeViewModel.monetizationShow)
+        }
         .popup(isPresented: self.$homeViewModel.imageInputPickerShow) {
             ImportView(onFileImportPressed: { self.homeViewModel.openFileImagePicker() },
                        onCameraImportPressed: { self.homeViewModel.openCamera() },
@@ -64,9 +70,9 @@ struct HomeView: View {
             ActivityViewController(activityItems: [self.homeViewModel.asyncPdf.data!])
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
-                   loadingView: { LottieView(filename: "pdf-scanning").loop(autoReverse: true) })
+                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
         .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
-                   loadingView: { LottieView(filename: "pdf-scanning").loop(autoReverse: true) })
+                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
     }
 }
 

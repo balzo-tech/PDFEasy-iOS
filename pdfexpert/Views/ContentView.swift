@@ -12,6 +12,7 @@ struct ContentView: View {
     
     @Injected(\.appTrackingTransparancy) var appTrackingTransparency
     @InjectedObject(\.coordinator) var coordinator
+    @Injected(\.store) var store
     
     var body: some View {
         NavigationStack(path: self.$coordinator.path) {
@@ -23,7 +24,8 @@ struct ContentView: View {
                             .navigationBarHidden(true)
                     }
                 }
-        }.onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             Task {
                 await self.appTrackingTransparency.requestPermissionIfNeeded()
             }
