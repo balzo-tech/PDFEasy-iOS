@@ -12,6 +12,7 @@ struct SubscriptionView: View {
     
     @InjectedObject(\.subscribeViewModel) var subscribeViewModel
     @Binding var showModal: Bool
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
@@ -88,6 +89,11 @@ struct SubscriptionView: View {
         .onAppear() {
             self.subscribeViewModel.refresh()
         }
+        .onChange(of: self.subscribeViewModel.isPremium, perform: { newValue in
+            if newValue {
+                self.dismiss()
+            }
+        })
     }
     
     var restorePurchaseButton: some View {
