@@ -36,6 +36,10 @@ class Coordinator: ObservableObject {
     func dismissMonetizationView() {
         self.monetizationShown = false
     }
+    
+    func showProfile() {
+        self.path.append(.profile)
+    }
 }
 
 extension Container {

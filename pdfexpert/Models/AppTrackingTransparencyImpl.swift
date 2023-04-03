@@ -9,7 +9,7 @@
 import Foundation
 import AppTrackingTransparency
 #if FACEBOOK
-import FBSDKCoreKit
+import FacebookCore
 #endif
 import FirebaseAnalytics
 

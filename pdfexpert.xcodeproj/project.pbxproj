@@ -36,6 +36,8 @@
 		8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694129D33B1300566EF4 /* HomeItemView.swift */; };
 		8995694429D3450300566EF4 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694329D3450300566EF4 /* HomeViewModel.swift */; };
 		8995694729D3470C00566EF4 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 8995694629D3470C00566EF4 /* PopupView */; };
+		89B72A3029DAD4990076884F /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 89B72A2F29DAD4990076884F /* FacebookCore */; };
+		89B72A3329DADC790076884F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B72A3229DADC790076884F /* ProfileView.swift */; };
 		89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */; };
 		89CD7AA129D32856003F1C3A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AA029D32856003F1C3A /* Preview Assets.xcassets */; };
 		89CD7AA629D32856003F1C3A /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AA429D32856003F1C3A /* AppCoreData.xcdatamodeld */; };
@@ -112,6 +114,7 @@
 		8995694129D33B1300566EF4 /* HomeItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeItemView.swift; sourceTree = "<group>"; };
 		8995694329D3450300566EF4 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		89B72A2D29DACBBF0076884F /* EmptyProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = EmptyProducts.storekit; sourceTree = "<group>"; };
+		89B72A3229DADC790076884F /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		89CD7A9629D32855003F1C3A /* PdfExpert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PdfExpert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExpertApp.swift; sourceTree = "<group>"; };
 		89CD7AA029D32856003F1C3A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -168,6 +171,7 @@
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
 				893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */,
 				89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */,
+				89B72A3029DAD4990076884F /* FacebookCore in Frameworks */,
 				89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */,
 				8995694729D3470C00566EF4 /* PopupView in Frameworks */,
 				89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */,
@@ -233,6 +237,14 @@
 				894D485929D42CC5002B0230 /* ImportView.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		89B72A3129DADC6E0076884F /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				89B72A3229DADC790076884F /* ProfileView.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		89CD7A8D29D32855003F1C3A = {
@@ -417,6 +429,7 @@
 		89CD7B0329D329B1003F1C3A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				89B72A3129DADC6E0076884F /* Profile */,
 				89CD7BB229D32E69003F1C3A /* Navigation */,
 				8995694829D3473E00566EF4 /* Common */,
 				89CD7BB729D330B2003F1C3A /* Home */,
@@ -485,6 +498,7 @@
 				895FE2C029D6D76300A99D5B /* WeScan */,
 				895FE2CF29D7392F00A99D5B /* Collections */,
 				895FE2D129D7392F00A99D5B /* OrderedCollections */,
+				89B72A2F29DAD4990076884F /* FacebookCore */,
 			);
 			productName = PdfExpert;
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
@@ -522,6 +536,7 @@
 				893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */,
 				895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */,
 				895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */,
+				89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
 			projectDirPath = "";
@@ -620,6 +635,7 @@
 				89CD7AA629D32856003F1C3A /* AppCoreData.xcdatamodeld in Sources */,
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89CD7BB529D32E69003F1C3A /* Route.swift in Sources */,
+				89B72A3329DADC790076884F /* ProfileView.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				89CD7B5829D329B1003F1C3A /* RepositoryImpl.swift in Sources */,
@@ -695,6 +711,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -748,6 +765,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\"";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -767,6 +785,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Pro";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
@@ -774,6 +793,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -803,6 +823,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Pro";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
@@ -810,6 +831,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -883,6 +905,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		89CD7BA329D32C52003F1C3A /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
@@ -939,6 +969,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */;
 			productName = PopupView;
+		};
+		89B72A2F29DAD4990076884F /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
 		};
 		89CD7BA429D32C52003F1C3A /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;

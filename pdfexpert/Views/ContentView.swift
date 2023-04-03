@@ -21,10 +21,12 @@ struct ContentView: View {
                     switch route {
                     case .home:
                         HomeView()
-                            .navigationBarHidden(true)
+                    case .profile:
+                        ProfileView()
                     }
                 }
         }
+        .background(ColorPalette.primaryBG)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             Task {
                 await self.appTrackingTransparency.requestPermissionIfNeeded()

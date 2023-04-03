@@ -10,25 +10,53 @@ import Factory
 import PopupView
 import PhotosUI
 
+struct HomeItem: Identifiable {
+    let id = UUID()
+    let title: String
+    let buttonText: String
+    let buttonAction: (HomeViewModel) -> ()
+}
+
 struct HomeView: View {
     
     @InjectedObject(\.homeViewModel) var homeViewModel
+    @Injected(\.coordinator) var coordinator
+    
+    let items: [HomeItem] = [
+        HomeItem(title: "Convert\npicture to PDF",
+                 buttonText: "Start to convert",
+                 buttonAction: { $0.openImageInputPicker() }),
+        HomeItem(title: "Convert\nWord to PDF",
+                 buttonText: "Start to convert",
+                 buttonAction: { $0.openFileDocPicker() }),
+        HomeItem(title: "PDF\nScanner",
+                 buttonText: "Start to scan",
+                 buttonAction: { $0.scanPdf() })
+    ]
     
     var body: some View {
-        VStack(spacing: 40) {
-            Spacer()
-            HomeItemView(title: "Convert\npicture to PDF",
-                         buttonText: "Start to convert",
-                         onButtonPressed: { self.homeViewModel.openImageInputPicker() })
-            HomeItemView(title: "Convert\nWord to PDF",
-                         buttonText: "Start to convert",
-                         onButtonPressed: { self.homeViewModel.openFileDocPicker() })
-            HomeItemView(title: "PDF\nScanner",
-                         buttonText: "Start to scan",
-                         onButtonPressed: { self.homeViewModel.scanPdf() })
-            Spacer()
+        List(self.items, id: \.id) { item in
+            VStack {
+                HomeItemView(title: item.title,
+                             buttonText: item.buttonText,
+                             onButtonPressed: { item.buttonAction(self.homeViewModel) })
+                Spacer().frame(height: 40)
+            }
+            .listRowBackground(Color(.clear))
+            .listRowInsets(EdgeInsets())
         }
+        .padding(.top, 20)
+        .listStyle(.plain)
         .background(ColorPalette.primaryBG)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { self.coordinator.showProfile() }) {
+                    Image("profile")
+                }
+            }
+        }
         .onAppear() {
             self.homeViewModel.onAppear()
         }
@@ -78,6 +106,9 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        NavigationStack {
+            HomeView()
+        }
+        .background(ColorPalette.primaryBG)
     }
 }
