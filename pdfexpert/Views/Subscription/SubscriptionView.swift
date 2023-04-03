@@ -19,69 +19,7 @@ struct SubscriptionView: View {
             self.getCloseButton(color: ColorPalette.primaryText) {
                 self.showModal = false
             }
-            VStack(spacing: 0) {
-                restorePurchaseButton
-                VStack(spacing: 0) {
-                    Spacer()
-                    Spacer().frame(height: 20)
-                    Image("subscription")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 194)
-                    Spacer().frame(height: 20)
-                    Spacer()
-                }
-                VStack(spacing: 0) {
-                    Text("PDF PRO")
-                        .font(FontPalette.fontBold(withSize: 32))
-                        .foregroundColor(ColorPalette.primaryText)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Spacer().frame(height: 16)
-                    Text("Edit, convert PDFs and receive constant updates and advanced Premium features. ")
-                        .font(FontPalette.fontRegular(withSize: 15))
-                        .foregroundColor(ColorPalette.primaryText)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .multilineTextAlignment(.leading)
-                }
-                VStack(spacing: 0) {
-                    Spacer().frame(height: 42)
-                    self.subscriptionPlanPairsView
-                    Spacer().frame(height: 16)
-                }
-                Button(action: {
-                    self.onFreeTrialSwitchPressed()
-                }) {
-                    HStack {
-                        self.freeTrialDescriptionView
-                        self.checkMark
-                    }
-                    .padding([.leading, .trailing], 16)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 62)
-                .background(RoundedRectangle(cornerRadius: 10).foregroundColor(ColorPalette.secondaryBG))
-                .overlay(RoundedRectangle(cornerRadius: 10)
-                    .stroke(self.subscribeViewModel.isFreeTrialEnabled ? ColorPalette.buttonGradientStart : .clear,
-                            lineWidth: 2))
-                Spacer().frame(height: 20)
-                Button(action: {
-                    self.subscribeViewModel.subscribe()
-                }) {
-                    Text("Subscribe")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .font(FontPalette.fontBold(withSize: 16))
-                        .foregroundColor(ColorPalette.primaryText)
-                        .contentShape(Capsule())
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .background(self.defaultGradientBackground)
-                .cornerRadius(10)
-                self.currentSubscriptionPlanView
-            }
-            .padding([.leading, .trailing], 16)
+            self.content
         }
         .background(ColorPalette.primaryBG)
         .asyncView(asyncOperation: self.$subscribeViewModel.purchaseRequest)
@@ -96,6 +34,69 @@ struct SubscriptionView: View {
         })
     }
     
+    var content: some View {
+        switch self.subscribeViewModel.asyncSubscriptionPlanPairs.status {
+        case .empty: return AnyView(Spacer())
+        case .loading: return AnyView(AnimationType.dots.view)
+        case .data: return AnyView(self.mainView)
+        case .error: return AnyView(SubscriptionErrorView(onButtonPressed: {
+            self.subscribeViewModel.refresh()
+        }))
+        }
+    }
+    
+    var mainView: some View {
+        VStack(spacing: 0) {
+            self.restorePurchaseButton
+            VStack(spacing: 0) {
+                Spacer()
+                Spacer().frame(height: 20)
+                Image("subscription")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxHeight: 194)
+                Spacer().frame(height: 20)
+                Spacer()
+            }
+            VStack(spacing: 0) {
+                Text("PDF PRO")
+                    .font(FontPalette.fontBold(withSize: 32))
+                    .foregroundColor(ColorPalette.primaryText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer().frame(height: 16)
+                Text("Edit, convert PDFs and receive constant updates and advanced Premium features. ")
+                    .font(FontPalette.fontRegular(withSize: 15))
+                    .foregroundColor(ColorPalette.primaryText)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.5)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
+            }
+            VStack(spacing: 0) {
+                Spacer().frame(height: 42)
+                self.subscriptionPlanPairsView
+                Spacer().frame(height: 16)
+            }
+            self.freeTrialView
+            Spacer().frame(height: 20)
+            Button(action: {
+                self.subscribeViewModel.subscribe()
+            }) {
+                Text("Subscribe")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .font(FontPalette.fontBold(withSize: 16))
+                    .foregroundColor(ColorPalette.primaryText)
+                    .contentShape(Capsule())
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 48)
+            .background(self.defaultGradientBackground)
+            .cornerRadius(10)
+            self.currentSubscriptionPlanView
+        }
+        .padding([.leading, .trailing], 16)
+    }
+    
     var restorePurchaseButton: some View {
         Button(action: { self.subscribeViewModel.restorePurchases() }) {
             Text("Restore purchase")
@@ -106,6 +107,36 @@ struct SubscriptionView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 44)
+    }
+    
+    var freeTrialView: some View {
+        let view: AnyView
+        if let currentSubscriptionPlanPair = self.subscribeViewModel.currentSubscriptionPlanPair,
+           currentSubscriptionPlanPair.standardSubscriptionPlan != nil,
+           currentSubscriptionPlanPair.freeTrialSubscriptionPlan != nil {
+            view = AnyView(
+                Button(action: {
+                    self.onFreeTrialSwitchPressed()
+                }) {
+                    HStack {
+                        self.freeTrialDescriptionView
+                        self.checkMark
+                    }
+                    .padding([.leading, .trailing], 16)
+                }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 62)
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(ColorPalette.secondaryBG))
+                    .overlay(RoundedRectangle(cornerRadius: 10)
+                        .stroke(self.subscribeViewModel.isFreeTrialEnabled
+                                ? ColorPalette.buttonGradientStart
+                                : .clear,
+                                lineWidth: 2))
+            )
+        } else {
+            view = AnyView(Spacer())
+        }
+        return view.frame(height: 62)
     }
     
     var freeTrialDescriptionView: some View {

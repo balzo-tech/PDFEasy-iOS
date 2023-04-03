@@ -53,6 +53,8 @@ class SubscribeViewModel: ObservableObject {
     }
     @Published var restorePurchaseRequest: AsyncOperation<Bool, RestorePurchaseError> = AsyncOperation(status: .empty)
     @Published var purchaseRequest: AsyncOperation<(), PurchaseError> = AsyncOperation(status: .empty)
+    
+    @Published var currentSubscriptionPlanPair: SubscriptionPlanPair?
     @Published var currentSubscriptionPlan: SubscriptionPlan?
     
     @Injected(\.store) private var store
@@ -73,7 +75,11 @@ class SubscribeViewModel: ObservableObject {
             do {
                 try await self.store.refreshAll()
                 let subscriptionPlanPairs = try await Self.productsToSubscriptionPairs(products: self.store.subscriptions)
-                self.asyncSubscriptionPlanPairs = AsyncOperation(status: .data(subscriptionPlanPairs))
+                if subscriptionPlanPairs.count > 0 {
+                    self.asyncSubscriptionPlanPairs = AsyncOperation(status: .data(subscriptionPlanPairs))
+                } else {
+                    self.asyncSubscriptionPlanPairs = AsyncOperation(status: .error(.missingExpectedSubscriptionPlanError))
+                }
             } catch {
                 let convertedError = RefreshError.convertError(fromError: error)
                 self.asyncSubscriptionPlanPairs = AsyncOperation(status: .error(convertedError))
@@ -160,7 +166,6 @@ class SubscribeViewModel: ObservableObject {
             }
             return partialResult
         }
-        
         return subscriptionPlanPairs
     }
     
@@ -170,12 +175,13 @@ class SubscribeViewModel: ObservableObject {
               self.selectedSubscriptionPairIndex < subscriptionPlanPairs.count else {
             return
         }
-        let selectedSubscriptionPair = subscriptionPlanPairs[self.selectedSubscriptionPairIndex]
+        let currentSubscriptionPlanPair = subscriptionPlanPairs[self.selectedSubscriptionPairIndex]
         if self.isFreeTrialEnabled {
-            self.currentSubscriptionPlan = selectedSubscriptionPair.freeTrialSubscriptionPlan ?? selectedSubscriptionPair.standardSubscriptionPlan
+            self.currentSubscriptionPlan = currentSubscriptionPlanPair.freeTrialSubscriptionPlan ?? currentSubscriptionPlanPair.standardSubscriptionPlan
         } else {
-            self.currentSubscriptionPlan = selectedSubscriptionPair.standardSubscriptionPlan ?? selectedSubscriptionPair.freeTrialSubscriptionPlan
+            self.currentSubscriptionPlan = currentSubscriptionPlanPair.standardSubscriptionPlan ?? currentSubscriptionPlanPair.freeTrialSubscriptionPlan
         }
+        self.currentSubscriptionPlanPair = currentSubscriptionPlanPair
     }
 }
 
@@ -184,7 +190,7 @@ class SubscribeViewModel: ObservableObject {
 enum RefreshError: LocalizedError, UnderlyingError {
     case unknownError
     case underlyingError(errorDescription: String)
-    case missingDefaultSubscriptionPlanError
+    case missingExpectedSubscriptionPlanError
     
     static func getUnknownError() -> Self { Self.unknownError }
     
@@ -196,7 +202,7 @@ enum RefreshError: LocalizedError, UnderlyingError {
         switch self {
         case .unknownError: return "Internal Error. Please try again later"
         case .underlyingError(let errorMessage): return errorMessage
-        case .missingDefaultSubscriptionPlanError: return "Internal Error. Please try again later"
+        case .missingExpectedSubscriptionPlanError: return "Internal Error. Please try again later"
         }
     }
 }
