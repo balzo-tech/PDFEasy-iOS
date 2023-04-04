@@ -14,8 +14,14 @@ class Coordinator: ObservableObject {
     @Published var path: [Route] = []
     @Published var monetizationShown = false
     
+    @Injected(\.cacheManager) private var cacheManager
+    
     init() {
-        self.goHome()
+        if self.cacheManager.onboardingShown {
+            self.goHome()
+        } else {
+            self.goToWelcome()
+        }
     }
     
     func goToBack() {
@@ -23,6 +29,14 @@ class Coordinator: ObservableObject {
             return
         }
         self.path.removeLast()
+    }
+    
+    func goToWelcome() {
+        self.path = [.welcome]
+    }
+    
+    func showOnboarding() {
+        self.path.append(.onboarding)
     }
     
     func goHome() {

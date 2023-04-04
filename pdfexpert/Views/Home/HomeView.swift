@@ -61,7 +61,7 @@ struct HomeView: View {
             self.homeViewModel.onAppear()
         }
         .fullScreenCover(isPresented: self.$homeViewModel.monetizationShow) {
-            SubscriptionView(showModal: self.$homeViewModel.monetizationShow)
+            SubscriptionView(onComplete: { self.homeViewModel.monetizationShow = false })
         }
         .popup(isPresented: self.$homeViewModel.imageInputPickerShow) {
             ImportView(onFileImportPressed: { self.homeViewModel.openFileImagePicker() },

@@ -19,6 +19,10 @@ struct ContentView: View {
             Color(.clear)
                 .navigationDestination(for: Route.self) { route in
                     switch route {
+                    case .welcome:
+                        WelcomeView()
+                    case .onboarding:
+                        OnboardingView()
                     case .home:
                         HomeView()
                     case .profile:

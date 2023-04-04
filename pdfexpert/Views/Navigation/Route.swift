@@ -8,6 +8,8 @@
 import Foundation
 
 enum Route: Hashable {
+    case welcome
+    case onboarding
     case home
     case profile
 }

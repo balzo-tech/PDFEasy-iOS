@@ -11,13 +11,13 @@ import Factory
 struct SubscriptionView: View {
     
     @InjectedObject(\.subscribeViewModel) var subscribeViewModel
-    @Binding var showModal: Bool
+    var onComplete: () -> ()
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
             self.getCloseButton(color: ColorPalette.primaryText) {
-                self.showModal = false
+                self.onComplete()
             }
             self.content
         }
@@ -29,7 +29,7 @@ struct SubscriptionView: View {
         }
         .onChange(of: self.subscribeViewModel.isPremium, perform: { newValue in
             if newValue {
-                self.dismiss()
+                self.onComplete()
             }
         })
     }
@@ -209,6 +209,6 @@ struct SubscriptionView: View {
 
 struct SubscriptionView_Previews: PreviewProvider {
     static var previews: some View {
-        SubscriptionView(showModal: .constant(true))
+        SubscriptionView(onComplete: {})
     }
 }
