@@ -42,6 +42,7 @@ struct HomeView: View {
                              onButtonPressed: { item.buttonAction(self.homeViewModel) })
                 Spacer().frame(height: 40)
             }
+            .listRowSeparator(.hidden)
             .listRowBackground(Color(.clear))
             .listRowInsets(EdgeInsets())
         }

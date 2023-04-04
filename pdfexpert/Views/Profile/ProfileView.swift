@@ -34,6 +34,7 @@ struct ProfileView: View {
                             .foregroundColor(ColorPalette.primaryText)
                     }
                 }
+                .listRowSeparator(.hidden)
                 .listRowBackground(Color(.clear))
         }
         .padding(.top, 16)

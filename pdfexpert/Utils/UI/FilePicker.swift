@@ -21,6 +21,7 @@ struct FilePicker: UIViewControllerRepresentable {
         let controller = UIDocumentPickerViewController(forOpeningContentTypes: self.fileTypes, asCopy: true)
         controller.allowsMultipleSelection = false
         controller.shouldShowFileExtensions = true
+        controller.view.backgroundColor = UIColor(ColorPalette.primaryBG)
         controller.delegate = context.coordinator
         return controller
     }
