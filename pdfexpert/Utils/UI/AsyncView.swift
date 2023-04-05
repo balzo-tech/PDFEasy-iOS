@@ -50,7 +50,7 @@ struct AsyncView<LoadingView: View, DataType, ErrorType: LocalizedError>: ViewMo
                 self.loadingView()
             }
         case .error:
-            content.errorAlert(asyncOperation: self.$asyncOperation)
+            Group { content }.errorAlert(asyncOperation: self.$asyncOperation)
         case .data:
             content
         }

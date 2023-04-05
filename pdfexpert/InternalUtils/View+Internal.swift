@@ -32,17 +32,21 @@ extension View {
             .font(FontPalette.fontRegular(withSize: 12))
             .foregroundColor(color)
             .tint(color)
-//            .environment(\.openURL, OpenURLAction { url in
-//                switch url.absoluteString {
-//                case K.Misc.PrivacyPolicyUrlString:
-//                    onSelection(.privacyPolicy)
-//                    return .discarded
-//                case K.Misc.TermsAndConditionsUrlString:
-//                    onSelection(.privacyPolicy)
-//                    return .discarded
-//                default:
-//                    return .discarded
-//                }
-//            })
+    }
+    
+    func alertCameraPermission(isPresented: Binding<Bool>) -> some View {
+        self.alert("Unable to access camera",
+                   isPresented: isPresented) {
+            Button("Settings", role: .none) {
+                if let appSettingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(appSettingsUrl,
+                                              options: [:],
+                                              completionHandler: nil)
+                                          }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents.")
+        }
     }
 }

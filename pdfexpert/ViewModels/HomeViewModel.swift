@@ -70,6 +70,7 @@ public class HomeViewModel : ObservableObject {
     
     @Published var cameraShow: Bool = false
     @Published var scannerShow: Bool = false
+    @Published var cameraPermissionDeniedShow: Bool = false
     
     @Published var asyncPdf: AsyncOperation<Data, SharedLocalizedError> = AsyncOperation(status: .empty) {
         didSet {
@@ -84,6 +85,12 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.store) private var store
     @Injected(\.repository) var repository
     
+    var urlToImageToConvert: URL?
+    var urlToDocToConvert: URL?
+    var imageToConvert: UIImage?
+    var scannerResult: ScannerResult?
+    
+    @MainActor
     func onAppear() {
         Task {
             try await self.store.refreshAll()
@@ -96,7 +103,7 @@ public class HomeViewModel : ObservableObject {
     
     func scanPdf() {
         if self.store.isPremium.value {
-            self.scannerShow = true
+            self.showScanner()
         } else {
             self.monetizationShow = true
         }
@@ -126,7 +133,24 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    func convertFileImage(fileImageUrl: URL) {
+    func convert() {
+        if let urlToImageToConvert = self.urlToImageToConvert {
+            self.urlToImageToConvert = nil
+            self.convertFileImageByURL(fileImageUrl: urlToImageToConvert)
+        } else if let urlToDocToConvert = self.urlToDocToConvert {
+            self.urlToDocToConvert = nil
+            self.convertFileDocByUrl(fileDocUrl: urlToDocToConvert)
+        } else if let imageToConvert = self.imageToConvert {
+            self.imageToConvert = nil
+            self.convertUiImageToPdf(uiImage: imageToConvert)
+        } else if let scannerResult = self.scannerResult {
+            self.scannerResult = nil
+            self.convertScan(scannerResult: scannerResult)
+        }
+    }
+    
+    @MainActor
+    private func convertFileImageByURL(fileImageUrl: URL) {
         do {
             let imageData = try Data(contentsOf: fileImageUrl)
             guard let uiImage = UIImage(data: imageData) else {
@@ -141,7 +165,7 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    func convertFileDoc(fileDocUrl: URL) {
+    private func convertFileDocByUrl(fileDocUrl: URL) {
         
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
@@ -158,31 +182,7 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    func convertUiImageToPdf(uiImage: UIImage) {
-        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        
-        let pdfDocument = PDFDocument()
-        
-        guard let pdfPage = PDFPage(image: uiImage) else {
-            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            return
-        }
-        
-        pdfDocument.insert(pdfPage, at: 0)
-        
-        guard let data = pdfDocument.dataRepresentation() else {
-            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            return
-        }
-        
-        self.asyncPdf = AsyncOperation(status: .data(data))
-    }
-    
-    @MainActor
-    func convertScanToPdf(scannerResult: ScannerResult) {
-        
-        self.scannerShow = false
-        
+    func convertScan(scannerResult: ScannerResult) {
         guard let imageScannerResult = scannerResult.results else {
             if let error = scannerResult.error {
                 debugPrint(for: self, message: "Scan failed. Error: \(error)")
@@ -192,7 +192,6 @@ public class HomeViewModel : ObservableObject {
             }
             return
         }
-        
         
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
@@ -231,6 +230,36 @@ public class HomeViewModel : ObservableObject {
                     self.asyncImageLoading = AsyncOperation(status: .error(convertedError))
                 }
             }
+        }
+    }
+    
+    private func convertUiImageToPdf(uiImage: UIImage) {
+        
+        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        
+        let pdfDocument = PDFDocument()
+        
+        guard let pdfPage = PDFPage(image: uiImage) else {
+            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            return
+        }
+        
+        pdfDocument.insert(pdfPage, at: 0)
+        
+        guard let data = pdfDocument.dataRepresentation() else {
+            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            return
+        }
+        
+        self.asyncPdf = AsyncOperation(status: .data(data))
+    }
+    
+    private func showScanner() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized, .notDetermined:
+            self.scannerShow = true
+        default:
+            self.cameraPermissionDeniedShow = true
         }
     }
 }

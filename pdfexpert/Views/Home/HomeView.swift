@@ -75,26 +75,42 @@ struct HomeView: View {
                 .closeOnTap(false)
                 .backgroundColor(ColorPalette.primaryBG.opacity(0.5))
         }
+        // File picker for images
         .fullScreenCover(isPresented: self.$homeViewModel.fileImagePickerShow) {
             FilePicker(fileTypes: [.image],
-                       onPickedFile: { self.homeViewModel.convertFileImage(fileImageUrl: $0) })
+                       onPickedFile: {
+                // Callback is called on modal dismiss, thus we can assign and convert in a row
+                self.homeViewModel.urlToImageToConvert = $0
+                self.homeViewModel.convert()
+            })
         }
+        // File picker for doc files
         .fullScreenCover(isPresented: self.$homeViewModel.fileDocPickerShow) {
             FilePicker(fileTypes: K.Misc.DocFileTypes,
-                       onPickedFile: { self.homeViewModel.convertFileDoc(fileDocUrl: $0) })
+                       onPickedFile: {
+                // Callback is called on modal dismiss, thus we can assign and convert in a row
+                self.homeViewModel.urlToDocToConvert = $0
+                self.homeViewModel.convert()
+            })
         }
+        // WeScan scanner
         .fullScreenCover(isPresented: self.$homeViewModel.scannerShow) {
-            ScannerView(onScannerResult: { self.homeViewModel.convertScanToPdf(scannerResult: $0) })
+            ScannerView(onScannerResult: {
+                self.homeViewModel.scannerShow = false
+                self.homeViewModel.scannerResult = $0
+            }).onDisappear { self.homeViewModel.convert() }
         }
-        .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
-                      selection: self.$homeViewModel.imageSelection,
-                      matching: .images)
+        // Camera for image capture
         .fullScreenCover(isPresented: self.$homeViewModel.cameraShow) {
             CameraView(model: Container.shared.cameraViewModel({ uiImage in
                 self.homeViewModel.cameraShow = false
-                self.homeViewModel.convertUiImageToPdf(uiImage: uiImage)
-            }))
+                self.homeViewModel.imageToConvert = uiImage
+            })).onDisappear { self.homeViewModel.convert() }
         }
+        // Photo gallery picker
+        .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
+                      selection: self.$homeViewModel.imageSelection,
+                      matching: .images)
         .sheet(isPresented: self.$homeViewModel.pdfExportShow) {
             ActivityViewController(activityItems: [self.homeViewModel.asyncPdf.data!])
         }
@@ -102,6 +118,7 @@ struct HomeView: View {
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
         .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
+        .alertCameraPermission(isPresented: self.$homeViewModel.cameraPermissionDeniedShow)
     }
 }
 
