@@ -140,7 +140,7 @@ extension CameraError {
     
     var message: String {
         switch self {
-        case .permissionDenied: return "You denied permission to save photos your library. Please go to your phone Settings to change your photo gallery permission to save your photo"
+        case .permissionDenied: return "You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to take pictures of your documents."
         case .cameraUnavailable: return "Unable to access camera"
         }
     }

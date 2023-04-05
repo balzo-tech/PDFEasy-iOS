@@ -220,6 +220,9 @@ public class CameraService {
     
     /// - Tag: ChangeCamera
     public func changeCamera() {
+        guard self.setupResult == .success else {
+            return
+        }
         //        MARK: Here disable all camera operation related buttons due to configuration is due upon and must not be interrupted
         DispatchQueue.main.async {
             self.isCameraButtonDisabled = true
