@@ -83,7 +83,6 @@ public class HomeViewModel : ObservableObject {
     @Published var pdfExportShow: Bool = false
     
     @Injected(\.store) private var store
-    @Injected(\.repository) var repository
     
     var urlToImageToConvert: URL?
     var urlToDocToConvert: URL?

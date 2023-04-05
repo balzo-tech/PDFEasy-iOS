@@ -50,7 +50,6 @@
 		89B72A3329DADC790076884F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B72A3229DADC790076884F /* ProfileView.swift */; };
 		89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */; };
 		89CD7AA129D32856003F1C3A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AA029D32856003F1C3A /* Preview Assets.xcassets */; };
-		89CD7AA629D32856003F1C3A /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AA429D32856003F1C3A /* AppCoreData.xcdatamodeld */; };
 		89CD7B3029D329B1003F1C3A /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AAE29D329B1003F1C3A /* Colors.xcassets */; };
 		89CD7B3329D329B1003F1C3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AB229D329B1003F1C3A /* Assets.xcassets */; };
 		89CD7B3429D329B1003F1C3A /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AB429D329B1003F1C3A /* Products.plist */; };
@@ -68,10 +67,7 @@
 		89CD7B5529D329B1003F1C3A /* Enum+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7ADA29D329B1003F1C3A /* Enum+Extensions.swift */; };
 		89CD7B5629D329B1003F1C3A /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7ADB29D329B1003F1C3A /* Async.swift */; };
 		89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7ADC29D329B1003F1C3A /* DebugUtils.swift */; };
-		89CD7B5829D329B1003F1C3A /* RepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7ADE29D329B1003F1C3A /* RepositoryImpl.swift */; };
 		89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AE529D329B1003F1C3A /* StoreImpl.swift */; };
-		89CD7B6029D329B1003F1C3A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AE629D329B1003F1C3A /* Persistence.swift */; };
-		89CD7B6229D329B1003F1C3A /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AE829D329B1003F1C3A /* Repository.swift */; };
 		89CD7B6529D329B1003F1C3A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AEB29D329B1003F1C3A /* Store.swift */; };
 		89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AF629D329B1003F1C3A /* Constants.swift */; };
 		89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AF929D329B1003F1C3A /* FontPalette.swift */; };
@@ -142,7 +138,6 @@
 		89CD7A9629D32855003F1C3A /* PdfExpert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PdfExpert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExpertApp.swift; sourceTree = "<group>"; };
 		89CD7AA029D32856003F1C3A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		89CD7AA529D32856003F1C3A /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
 		89CD7AA729D32856003F1C3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		89CD7AAE29D329B1003F1C3A /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		89CD7AB229D329B1003F1C3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -161,10 +156,7 @@
 		89CD7ADA29D329B1003F1C3A /* Enum+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enum+Extensions.swift"; sourceTree = "<group>"; };
 		89CD7ADB29D329B1003F1C3A /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		89CD7ADC29D329B1003F1C3A /* DebugUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugUtils.swift; sourceTree = "<group>"; };
-		89CD7ADE29D329B1003F1C3A /* RepositoryImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepositoryImpl.swift; sourceTree = "<group>"; };
 		89CD7AE529D329B1003F1C3A /* StoreImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreImpl.swift; sourceTree = "<group>"; };
-		89CD7AE629D329B1003F1C3A /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		89CD7AE829D329B1003F1C3A /* Repository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		89CD7AEB29D329B1003F1C3A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		89CD7AF629D329B1003F1C3A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		89CD7AF929D329B1003F1C3A /* FontPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontPalette.swift; sourceTree = "<group>"; };
@@ -341,7 +333,6 @@
 		89CD7AAD29D329B1003F1C3A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				89CD7AA429D32856003F1C3A /* AppCoreData.xcdatamodeld */,
 				89CD7AAE29D329B1003F1C3A /* Colors.xcassets */,
 				89CD7AB229D329B1003F1C3A /* Assets.xcassets */,
 				89CD7AB329D329B1003F1C3A /* IAP */,
@@ -427,11 +418,8 @@
 			isa = PBXGroup;
 			children = (
 				89E55BE029DC66170073F268 /* Analytics */,
-				89CD7AE629D329B1003F1C3A /* Persistence.swift */,
 				89AAFE9F29DB2672002D348E /* CacheManager.swift */,
 				89AAFEA029DB2672002D348E /* CacheManagerImpl.swift */,
-				89CD7AE829D329B1003F1C3A /* Repository.swift */,
-				89CD7ADE29D329B1003F1C3A /* RepositoryImpl.swift */,
 				89CD7AEB29D329B1003F1C3A /* Store.swift */,
 				89CD7AE529D329B1003F1C3A /* StoreImpl.swift */,
 				89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */,
@@ -678,7 +666,6 @@
 				893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */,
 				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
 				89E55BE729DC70A80073F268 /* OnboardingQuestion.swift in Sources */,
-				89CD7B6229D329B1003F1C3A /* Repository.swift in Sources */,
 				895FE2CD29D724B900A99D5B /* SubscriptionItemView.swift in Sources */,
 				89CD7B5629D329B1003F1C3A /* Async.swift in Sources */,
 				8902898F29DC2208007E6372 /* OnboardingPageView.swift in Sources */,
@@ -688,7 +675,6 @@
 				89923E6929D46A9900E246FC /* FilePicker.swift in Sources */,
 				894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */,
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
-				89CD7B6029D329B1003F1C3A /* Persistence.swift in Sources */,
 				89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */,
 				895FE2C629D6E17600A99D5B /* AnimationPalette.swift in Sources */,
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
@@ -710,14 +696,12 @@
 				89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */,
 				89CD7B9929D329B1003F1C3A /* View+Preview.swift in Sources */,
 				89CD7B5429D329B1003F1C3A /* Color+Extensions.swift in Sources */,
-				89CD7AA629D32856003F1C3A /* AppCoreData.xcdatamodeld in Sources */,
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89CD7BB529D32E69003F1C3A /* Route.swift in Sources */,
 				89B72A3329DADC790076884F /* ProfileView.swift in Sources */,
 				8902899129DC298E007E6372 /* OnboardingOption.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
-				89CD7B5829D329B1003F1C3A /* RepositoryImpl.swift in Sources */,
 				89AAFE9E29DB1973002D348E /* OnboardingViewModel.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
 				893E84A029D5944E00F6B99A /* CameraService.swift in Sources */,
@@ -863,7 +847,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
@@ -871,6 +855,7 @@
 				INFOPLIST_FILE = PdfExpert/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Pro";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -901,7 +886,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
@@ -909,6 +894,7 @@
 				INFOPLIST_FILE = PdfExpert/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Pro";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1093,19 +1079,6 @@
 			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		89CD7AA429D32856003F1C3A /* AppCoreData.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				89CD7AA529D32856003F1C3A /* PdfExpert.xcdatamodel */,
-			);
-			currentVersion = 89CD7AA529D32856003F1C3A /* PdfExpert.xcdatamodel */;
-			path = AppCoreData.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 89CD7A8E29D32855003F1C3A /* Project object */;
 }
