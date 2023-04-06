@@ -18,5 +18,6 @@ struct K {
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
         static let DocFileTypes: [UTType] = [UTType("com.microsoft.word.doc")!]
+        static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
     }
 }

@@ -112,7 +112,9 @@ struct HomeView: View {
                       selection: self.$homeViewModel.imageSelection,
                       matching: .images)
         .sheet(isPresented: self.$homeViewModel.pdfExportShow) {
-            ActivityViewController(activityItems: [self.homeViewModel.asyncPdf.data!])
+            let exportedPdf = self.homeViewModel.asyncPdf.data!
+            ActivityViewController(activityItems: [exportedPdf.data],
+                                   thumbnail: exportedPdf.thumbnail)
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })

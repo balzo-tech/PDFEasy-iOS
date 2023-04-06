@@ -29,6 +29,11 @@ enum ImageTransferError: LocalizedError {
     }
 }
 
+struct ExportedPdf {
+    let data: Data
+    let thumbnail: UIImage?
+}
+
 struct PickedImage: Transferable {
     let uiImage: UIImage
     
@@ -72,7 +77,7 @@ public class HomeViewModel : ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     
-    @Published var asyncPdf: AsyncOperation<Data, SharedLocalizedError> = AsyncOperation(status: .empty) {
+    @Published var asyncPdf: AsyncOperation<ExportedPdf, SharedLocalizedError> = AsyncOperation(status: .empty) {
         didSet {
             if self.asyncPdf.success {
                 self.pdfExportShow = true
@@ -173,7 +178,7 @@ public class HomeViewModel : ObservableObject {
                 debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
             } else if let data = data {
-                self.asyncPdf = AsyncOperation(status: .data(data))
+                self.asyncPdf = AsyncOperation(status: .data(Self.exportPdf(pdfData: data)))
             } else {
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
             }
@@ -203,7 +208,7 @@ public class HomeViewModel : ObservableObject {
         scan.generatePDFData { result in
             switch result {
             case .success(let data):
-                self.asyncPdf = AsyncOperation(status: .data(data))
+                self.asyncPdf = AsyncOperation(status: .data(Self.exportPdf(pdfData: data)))
             case .failure(let error):
                 debugPrint(for: self, message: "Scan to pdf conversion failed. Error: \(error.localizedDescription)")
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
@@ -250,7 +255,7 @@ public class HomeViewModel : ObservableObject {
             return
         }
         
-        self.asyncPdf = AsyncOperation(status: .data(data))
+        self.asyncPdf = AsyncOperation(status: .data(Self.exportPdf(pdfData: data)))
     }
     
     private func showScanner() {
@@ -260,6 +265,16 @@ public class HomeViewModel : ObservableObject {
         default:
             self.cameraPermissionDeniedShow = true
         }
+    }
+    
+    static func exportPdf(pdfData: Data) -> ExportedPdf {
+        return ExportedPdf(data: pdfData, thumbnail: Self.generatePdfThumbnail(documentData: pdfData))
+    }
+    
+    static func generatePdfThumbnail(documentData: Data) -> UIImage? {
+        let pdfDocument = PDFDocument(data: documentData)
+        let pdfDocumentPage = pdfDocument?.page(at: 0)
+        return pdfDocumentPage?.thumbnail(of: K.Misc.ThumbnailSize, for: PDFDisplayBox.trimBox)
     }
 }
 
