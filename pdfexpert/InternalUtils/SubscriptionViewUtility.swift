@@ -51,7 +51,7 @@ extension Product.SubscriptionPeriod.Unit {
 }
 
 extension Product.SubscriptionPeriod {
-    var displayDuration: String {
+    var displayPeriodStartStatement: String {
         if self.value > 1 {
             return "\(self.value) \(self.unit.displayUnitMultiple)"
         } else {
@@ -60,6 +60,14 @@ extension Product.SubscriptionPeriod {
     }
     
     var displayPeriod: String {
+        if self.value > 1 {
+            return "\(self.value) \(self.unit.displayUnitMultiple)"
+        } else {
+            return self.unit.displayUnitSingle
+        }
+    }
+    
+    var displayPeriodWithNumber: String {
         return "\(self.value) \(self.value > 1 ? self.unit.displayUnitMultiple : self.unit.displayUnitSingle)"
     }
     
@@ -73,13 +81,13 @@ extension Product {
     var title: String {
         var text = "Premium"
         if let subscription = self.subscription {
-            text += " \(subscription.subscriptionPeriod.displayPeriod)"
+            text += " \(subscription.subscriptionPeriod.displayPeriodWithNumber)"
         }
         return text
     }
     
     var descriptionText: String {
-        var text = self.getPriceText(forUnitPeriod: .week)
+        var text = self.getPriceText(withCustomUnitPeriod: .week)
         text = text.capitalizingFirstLetter()
         return text
     }
@@ -87,20 +95,27 @@ extension Product {
     var fullDescriptionText: String {
         var text = ""
         if let introductortOffer = self.subscription?.introductoryOffer {
-            text += "\(introductortOffer.period.displayDuration) free, then "
+            text += "\(introductortOffer.period.displayPeriodStartStatement) free, then "
         }
-        text += self.getPriceText(forUnitPeriod: .week)
+        text += self.getPriceText()
         text = text.capitalizingFirstLetter()
         return text
     }
     
-    func getPriceText(forUnitPeriod unitPeriod: SubscriptionPeriod.Unit) -> String {
-        if let subscription = subscription {
-            let pricePerUnit = (self.price / Decimal(subscription.subscriptionPeriod.days)) * Decimal(unitPeriod.days)
-            let text = self.priceFormatStyle
-                .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 2...2))
-                .format(pricePerUnit)
-            return text + "/\(unitPeriod.displayUnitSingle)"
+    func getPriceText(withCustomUnitPeriod customUnitPeriod: SubscriptionPeriod.Unit? = nil) -> String {
+        if let subscription = self.subscription {
+            var text = ""
+            if let customUnitPeriod = customUnitPeriod {
+                let pricePerUnit = (self.price / Decimal(subscription.subscriptionPeriod.days)) * Decimal(customUnitPeriod.days)
+                text += self.priceFormatStyle
+                    .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 2...2))
+                    .format(pricePerUnit)
+                text += "/\(customUnitPeriod.displayUnitSingle)"
+            } else {
+                text += self.displayPrice
+                text += "/\(subscription.subscriptionPeriod.displayPeriod)"
+            }
+            return text
         } else {
             return self.displayPrice
         }
