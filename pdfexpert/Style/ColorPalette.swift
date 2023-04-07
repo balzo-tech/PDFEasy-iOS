@@ -15,6 +15,7 @@ class ColorPalette {
     static let primaryText = Color("PrimaryText")
     static let secondaryText = Color("SecondaryText")
     static let thirdText = Color("ThirdText")
+    static let fourthText = Color("FourthText")
     static let extra = Color("Extra")
     static let buttonGradientStart = Color("ButtonGradientStart")
     static let buttonGradientEnd = Color("ButtonGradientEnd")

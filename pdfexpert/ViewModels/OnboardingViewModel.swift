@@ -29,7 +29,7 @@ public class OnboardingViewModel : ObservableObject {
     private var selectedOptions: [OnboardingQuestion: OnboardingOption] = [:]
     
     func onMonetizationClose() {
-        self.coordinator.goHome()
+        self.coordinator.goToMain()
     }
     
     func selectOption(forQuestion question: OnboardingQuestion, option: OnboardingOption) {
@@ -40,7 +40,7 @@ public class OnboardingViewModel : ObservableObject {
             self.analyticsManager.track(event: .onboardingCompleted(results: self.selectedOptions))
             
             if self.store.isPremium.value {
-                self.coordinator.goHome()
+                self.coordinator.goToMain()
             } else {
                 self.monetizationShow = true
             }

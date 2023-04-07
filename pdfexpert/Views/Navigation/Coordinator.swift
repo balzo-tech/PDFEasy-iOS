@@ -9,38 +9,34 @@ import Foundation
 import SwiftUI
 import Factory
 
+enum RootView {
+    case onboarding
+    case main
+}
+
 class Coordinator: ObservableObject {
     
-    @Published var path: [Route] = []
+    @Published var rootView: RootView = .onboarding
+    
+    @Published var onboardingPath: [OnboardingRoute] = []
     @Published var monetizationShown = false
     
     @Injected(\.cacheManager) private var cacheManager
     
     init() {
         if self.cacheManager.onboardingShown {
-            self.goHome()
+            self.rootView = .main
         } else {
-            self.goToWelcome()
+            self.rootView = .onboarding
         }
-    }
-    
-    func goToBack() {
-        guard self.path.count > 1 else {
-            return
-        }
-        self.path.removeLast()
-    }
-    
-    func goToWelcome() {
-        self.path = [.welcome]
     }
     
     func showOnboarding() {
-        self.path.append(.onboarding)
+        self.onboardingPath.append(.onboarding)
     }
     
-    func goHome() {
-        self.path = [.home]
+    func goToMain() {
+        self.rootView = .main
     }
     
     func showMonetizationView() {
@@ -49,10 +45,6 @@ class Coordinator: ObservableObject {
     
     func dismissMonetizationView() {
         self.monetizationShown = false
-    }
-    
-    func showProfile() {
-        self.path.append(.profile)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  SettingsView.swift
 //  PdfExpert
 //
 //  Created by Leonardo Passeri on 03/04/23.
@@ -12,7 +12,7 @@ struct DisclamerItem: Hashable {
     let urlString: String
 }
 
-struct ProfileView: View {
+struct SettingsView: View {
     
     @Environment(\.dismiss) var dismiss
     
@@ -40,30 +40,15 @@ struct ProfileView: View {
         .padding(.top, 16)
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Settings")
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { self.dismiss() }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(.body, weight: .bold))
-                        .foregroundColor(ColorPalette.primaryText)
-                }
-            }
-            ToolbarItem(placement: .principal) {
-                    Text("Profile")
-                    .font(FontPalette.fontRegular(withSize: 16))
-                    .foregroundColor(ColorPalette.primaryText)
-                        .accessibilityAddTraits(.isHeader)
-                }
-        }
     }
 }
 
-struct ProfileView_Previews: PreviewProvider {
+struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ProfileView()
+            SettingsView()
         }
 
     }

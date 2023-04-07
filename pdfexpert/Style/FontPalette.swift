@@ -65,25 +65,25 @@ class FontPalette {
     }
     
     static func uiFontBlack(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-Black", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-Black", size: size) ?? UIFont.boldSystemFont(ofSize: size)
     }
     static func uiFontBlackItalic(withSize size: CGFloat) -> UIFont {
         return UIFont(name: "Montserrat-BlackItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
     }
     static func uiFontBold(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-Bold", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-Bold", size: size) ?? UIFont.boldSystemFont(ofSize: size)
     }
     static func uiFontBoldItalic(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-BoldItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-BoldItalic", size: size) ?? UIFont.boldSystemFont(ofSize: size)
     }
     static func uiFontExtraBold(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-ExtraBold", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-ExtraBold", size: size) ?? UIFont.boldSystemFont(ofSize: size)
     }
     static func uiFontExtraBoldItalic(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-ExtraBoldItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-ExtraBoldItalic", size: size) ?? UIFont.boldSystemFont(ofSize: size)
     }
     static func uiFontExtraLight(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-ExtraLight", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-ExtraLight", size: size) ?? UIFont.systemFont(ofSize: size)
     }
     static func uiFontExtraLightItalic(withSize size: CGFloat) -> UIFont {
         return UIFont(name: "Montserrat-ExtraLightItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
@@ -92,28 +92,28 @@ class FontPalette {
         return UIFont(name: "Montserrat-Italic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
     }
     static func uiFontLight(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-Light", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-Light", size: size) ?? UIFont.systemFont(ofSize: size)
     }
     static func uiFontLightItalic(withSize size: CGFloat) -> UIFont {
         return UIFont(name: "Montserrat-LightItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
     }
     static func uiFontMedium(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-Medium", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-Medium", size: size) ?? UIFont.systemFont(ofSize: size)
     }
     static func uiFontMediumItalic(withSize size: CGFloat) -> UIFont {
         return UIFont(name: "Montserrat-MediumItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
     }
     static func uiFontRegular(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-Regular", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-Regular", size: size) ?? UIFont.systemFont(ofSize: size)
     }
     static func uiFontSemiBold(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-SemiBold", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-SemiBold", size: size) ?? UIFont.boldSystemFont(ofSize: size)
     }
     static func uiFontSemiBoldItalic(withSize size: CGFloat) -> UIFont {
         return UIFont(name: "Montserrat-SemiBoldItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
     }
     static func uiFontThin(withSize size: CGFloat) -> UIFont {
-        return UIFont(name: "Montserrat-Thin", size: size) ?? UIFont.italicSystemFont(ofSize: size)
+        return UIFont(name: "Montserrat-Thin", size: size) ?? UIFont.systemFont(ofSize: size)
     }
     static func uiFontThinItalic(withSize size: CGFloat) -> UIFont {
         return UIFont(name: "Montserrat-ThinItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)

@@ -37,7 +37,7 @@ struct SubscriptionView: View {
     var content: some View {
         switch self.subscribeViewModel.asyncSubscriptionPlanPairs.status {
         case .empty: return AnyView(Spacer())
-        case .loading: return AnyView(AnimationType.dots.view)
+        case .loading: return AnyView(AnimationType.dots.view.loop())
         case .data: return AnyView(self.mainView)
         case .error: return AnyView(SubscriptionErrorView(onButtonPressed: {
             self.subscribeViewModel.refresh()

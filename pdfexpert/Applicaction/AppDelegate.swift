@@ -41,6 +41,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().backgroundColor = UIColor(ColorPalette.primaryBG)
         UINavigationBar.appearance().barTintColor = UIColor(ColorPalette.primaryBG)
         UINavigationBar.appearance().tintColor = UIColor(ColorPalette.primaryText)
+        UINavigationBar.appearance().largeTitleTextAttributes = [.font : FontPalette.uiFontBold(withSize: 30)]
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = UIColor(ColorPalette.secondaryBG)
+        tabBarAppearance.selectionIndicatorTintColor = UIColor(ColorPalette.buttonGradientStart)
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        UITabBar.appearance().standardAppearance = tabBarAppearance
     }
 }
 

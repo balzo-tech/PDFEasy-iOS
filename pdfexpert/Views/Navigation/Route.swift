@@ -7,9 +7,6 @@
 
 import Foundation
 
-enum Route: Hashable {
-    case welcome
+enum OnboardingRoute: Hashable {
     case onboarding
-    case home
-    case profile
 }

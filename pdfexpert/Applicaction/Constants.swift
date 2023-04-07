@@ -6,11 +6,21 @@
 //
 
 import Foundation
+import CoreData
 import UniformTypeIdentifiers
 
 struct K {
     struct Test {
-        static let UseMockDB = true
+        static let UseMockDB = false
+        static let NumberOfPdfs = 0
+        
+        static func GetDebugPdf(context: NSManagedObjectContext) -> Pdf? {
+            let testFileUrl = Bundle.main.url(forResource: "test", withExtension: "pdf")
+            guard let testFileUrl = testFileUrl,
+                  (try? testFileUrl.checkResourceIsReachable()) ?? false,
+                  let testFileData = try? Data(contentsOf: testFileUrl) else { return nil }
+            return Pdf(context: context, pdfData: testFileData)
+        }
     }
     
     struct Misc {
@@ -18,6 +28,6 @@ struct K {
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
         static let DocFileTypes: [UTType] = [UTType("com.microsoft.word.doc")!]
-        static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
+        static let ThumbnailSize: CGSize = CGSize(width: 512, height: 512)
     }
 }

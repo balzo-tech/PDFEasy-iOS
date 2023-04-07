@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "cloudkitsyncmonitor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ggruen/CloudKitSyncMonitor.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e1ba30a32815e36308e659775719386ade1853ce"
+      }
+    },
+    {
       "identity" : "facebook-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/facebook/facebook-ios-sdk",

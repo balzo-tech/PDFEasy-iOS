@@ -49,15 +49,7 @@ struct HomeView: View {
         .padding(.top, 20)
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { self.coordinator.showProfile() }) {
-                    Image("profile")
-                }
-            }
-        }
+        .navigationTitle("Convert")
         .onAppear() {
             self.homeViewModel.onAppear()
         }
@@ -113,7 +105,7 @@ struct HomeView: View {
                       matching: .images)
         .sheet(isPresented: self.$homeViewModel.pdfExportShow) {
             let exportedPdf = self.homeViewModel.asyncPdf.data!
-            ActivityViewController(activityItems: [exportedPdf.data],
+            ActivityViewController(activityItems: [exportedPdf.data!],
                                    thumbnail: exportedPdf.thumbnail)
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
