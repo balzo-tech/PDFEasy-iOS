@@ -35,8 +35,8 @@ struct SubscriptionItemView: View {
                     .multilineTextAlignment(.leading)
                 Spacer().frame(minHeight: 12)
                 Text(self.subscriptionPlan.descriptionText)
-                    .font(FontPalette.fontBold(withSize: 12))
-                    .foregroundColor(ColorPalette.primaryText)
+                    .font(FontPalette.fontRegular(withSize: 10))
+                    .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(maxWidth: .infinity)

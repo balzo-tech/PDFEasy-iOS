@@ -171,10 +171,11 @@ struct SubscriptionView: View {
     
     var currentSubscriptionPlanView: some View {
         Text(self.subscribeViewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-            .font(FontPalette.fontBold(withSize: 15))
+            .font(FontPalette.fontBold(withSize: 18))
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 40)
+            .minimumScaleFactor(0.5)
     }
     
     var subscriptionPlanPairsView: some View {

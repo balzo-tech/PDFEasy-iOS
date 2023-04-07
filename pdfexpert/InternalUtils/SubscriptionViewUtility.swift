@@ -87,8 +87,8 @@ extension Product {
     }
     
     var descriptionText: String {
-        var text = self.getPriceText()
-//        var text = self.getPriceText(withCustomUnitPeriod: .week)
+//        var text = self.getPriceText()
+        var text = self.getPriceText(withCustomUnitPeriod: .week)
         text = text.capitalizingFirstLetter()
         return text
     }
