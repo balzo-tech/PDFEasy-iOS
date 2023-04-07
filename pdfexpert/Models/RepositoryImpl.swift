@@ -69,6 +69,10 @@ class RepositoryImpl: Repository {
             throw LoadError.convertError(fromError: error)
         }
     }
+    
+    func delete(pdf: Pdf) {
+        self.persistence.container.viewContext.delete(pdf)
+    }
 }
 
 enum SaveError: UnderlyingError {

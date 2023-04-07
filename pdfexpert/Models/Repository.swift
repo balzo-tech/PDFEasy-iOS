@@ -14,4 +14,5 @@ protocol Repository {
     func saveChanges() throws
     func getDoPdfExist() throws -> Bool
     func loadPdfs() throws -> [Pdf]
+    func delete(pdf: Pdf)
 }

@@ -12,6 +12,9 @@ struct ArchiveView: View {
     
     @InjectedObject(\.archiveViewModel) var archiveViewModel
     
+    @State private var showingDeleteAlert = false
+    @State private var itemToDelete: Pdf? = nil
+    
     var body: some View {
         ZStack {
             self.content
@@ -19,19 +22,20 @@ struct ArchiveView: View {
                 AnyView(self.getLoadingView())
             }
         }
-            .background(ColorPalette.primaryBG)
-            .navigationTitle("File")
-            .onAppear() {
-                self.archiveViewModel.refresh()
-            }
-            .sheet(item: self.$archiveViewModel.pdfToBeShared) { pdf in
-                ActivityViewController(activityItems: [pdf.data!],
-                                       thumbnail: pdf.thumbnail)
-            }
+        .background(ColorPalette.primaryBG)
+        .navigationTitle("File")
+        .onAppear() {
+            self.archiveViewModel.refresh()
+        }
+        .sheet(item: self.$archiveViewModel.pdfToBeShared) { pdf in
+            ActivityViewController(activityItems: [pdf.data!],
+                                   thumbnail: pdf.thumbnail)
+        }
+        .asyncView(asyncOperation: self.$archiveViewModel.asyncItemDelete)
     }
     
     var content: some View {
-        switch self.archiveViewModel.items.status {
+        switch self.archiveViewModel.asyncItems.status {
         case .empty: return AnyView(Spacer())
         case .loading: return AnyView(self.getLoadingView())
         case .data(let items): return AnyView(self.getItemList(items: items))
@@ -75,6 +79,29 @@ struct ArchiveView: View {
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color(.clear))
+                    .swipeActions(allowsFullSwipe: false, content: {
+                        Button(role: .none, action: {
+                            self.itemToDelete = item
+                            self.showingDeleteAlert = true
+                        }, label: {
+                            Image(systemName: "trash")
+                        })
+                        .tint(Color.red)
+                    })
+                    .confirmationDialog(
+                                Text("Are you sure?"),
+                                isPresented: self.$showingDeleteAlert,
+                                titleVisibility: .visible
+                    ) {
+                        Button("Delete", role: .destructive) {
+                            self.showingDeleteAlert = false
+                            withAnimation {
+                                if let itemToDelete = self.itemToDelete {
+                                    self.archiveViewModel.delete(item: itemToDelete)
+                                }
+                            }
+                        }
+                    }
                 }
                     .listStyle(.plain)
             )

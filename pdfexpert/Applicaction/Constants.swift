@@ -12,7 +12,7 @@ import UniformTypeIdentifiers
 struct K {
     struct Test {
         static let UseMockDB = false
-        static let NumberOfPdfs = 0
+        static let NumberOfPdfs = 5
         
         static func GetDebugPdf(context: NSManagedObjectContext) -> Pdf? {
             let testFileUrl = Bundle.main.url(forResource: "test", withExtension: "pdf")

@@ -19,7 +19,8 @@ extension Container {
 
 class ArchiveViewModel: ObservableObject {
     
-    @Published var items: AsyncOperation<[Pdf], SharedLocalizedError> = AsyncOperation(status: .empty)
+    @Published var asyncItems: AsyncOperation<[Pdf], SharedLocalizedError> = AsyncOperation(status: .empty)
+    @Published var asyncItemDelete: AsyncOperation<(), SharedLocalizedError> = AsyncOperation(status: .empty)
     @Published var pdfToBeShared: Pdf?
     @Published var isLoading: Bool = false
     
@@ -51,13 +52,26 @@ class ArchiveViewModel: ObservableObject {
         self.pdfToBeShared = item
     }
     
+    func delete(item: Pdf) {
+        self.asyncItemDelete = AsyncOperation(status: .empty)
+        self.repository.delete(pdf: item)
+        do {
+            try self.repository.saveChanges()
+            self.asyncItemDelete = AsyncOperation(status: .empty)
+        } catch {
+            debugPrint(for: self, message: "Deletion failed. Error: \(error)")
+            self.asyncItemDelete = AsyncOperation(status: .error(.unknownError))
+        }
+        self.refresh()
+    }
+    
     func refresh() {
         do {
             let items = try self.repository.loadPdfs()
-            self.items = AsyncOperation(status: .data(items))
+            self.asyncItems = AsyncOperation(status: .data(items))
         } catch {
-            debugPrint(for: self, message: "Error: \(error)")
-            self.items = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+            debugPrint(for: self, message: "Refresh failed. Error: \(error)")
+            self.asyncItems = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
         }
     }
     
