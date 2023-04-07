@@ -19,6 +19,8 @@
 	<string>a1b20422ee4de34070073299d35bdbcb</string>
 	<key>FacebookDisplayName</key>
 	<string>PDF Pro</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-ExtraBold.ttf</string>
