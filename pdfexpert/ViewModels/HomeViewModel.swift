@@ -72,20 +72,17 @@ public class HomeViewModel : ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     
-    @Published var asyncPdf: AsyncOperation<Pdf, SharedLocalizedError> = AsyncOperation(status: .empty) {
+    @Published var asyncPdf: AsyncOperation<PdfEditable, SharedLocalizedError> = AsyncOperation(status: .empty) {
         didSet {
             if self.asyncPdf.success {
-                // TODO: Inform the user of the save failure somehow
-                try? self.repository.saveChanges()
-                self.pdfExportShow = true
+                self.pdfFlowShow = true
             }
         }
     }
     
-    @Published var pdfExportShow: Bool = false
+    @Published var pdfFlowShow: Bool = false
     
     @Injected(\.store) private var store
-    @Injected(\.repository) private var repository
     
     var urlToImageToConvert: URL?
     var urlToDocToConvert: URL?
@@ -175,8 +172,8 @@ public class HomeViewModel : ObservableObject {
             if let error = error {
                 debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            } else if let data = data {
-                self.asyncPdf = AsyncOperation(status: .data(Pdf(context: self.repository.pdfManagedContext, pdfData: data)))
+            } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
             } else {
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
             }
@@ -206,7 +203,11 @@ public class HomeViewModel : ObservableObject {
         scan.generatePDFData { result in
             switch result {
             case .success(let data):
-                self.asyncPdf = AsyncOperation(status: .data(Pdf(context: self.repository.pdfManagedContext, pdfData: data)))
+                guard let pdfEditable = PdfEditable(data: data) else {
+                    self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+                    return
+                }
+                self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
             case .failure(let error):
                 debugPrint(for: self, message: "Scan to pdf conversion failed. Error: \(error.localizedDescription)")
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
@@ -248,12 +249,7 @@ public class HomeViewModel : ObservableObject {
         
         pdfDocument.insert(pdfPage, at: 0)
         
-        guard let data = pdfDocument.dataRepresentation() else {
-            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            return
-        }
-        
-        self.asyncPdf = AsyncOperation(status: .data(Pdf(context: self.repository.pdfManagedContext, pdfData: data)))
+        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
     }
     
     private func showScanner() {

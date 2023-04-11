@@ -8,11 +8,17 @@
 import Foundation
 import CoreData
 import UniformTypeIdentifiers
+import PDFKit
+import Factory
 
 struct K {
     struct Test {
         static let UseMockDB = false
         static let NumberOfPdfs = 5
+        
+        static var DebugPdf: Pdf? {
+            GetDebugPdf(context: Container.shared.persistence().container.viewContext)
+        }
         
         static func GetDebugPdf(context: NSManagedObjectContext) -> Pdf? {
             let testFileUrl = Bundle.main.url(forResource: "test", withExtension: "pdf")
@@ -20,6 +26,15 @@ struct K {
                   (try? testFileUrl.checkResourceIsReachable()) ?? false,
                   let testFileData = try? Data(contentsOf: testFileUrl) else { return nil }
             return Pdf(context: context, pdfData: testFileData)
+        }
+        
+        static var DebugPdfEditable: PdfEditable? {
+            let testFileUrl = Bundle.main.url(forResource: "test", withExtension: "pdf")
+            guard let testFileUrl = testFileUrl,
+                  (try? testFileUrl.checkResourceIsReachable()) ?? false,
+                  let testFileData = try? Data(contentsOf: testFileUrl) else { return nil }
+            guard let testPdfDocument = PDFDocument(data: testFileData) else { return nil }
+            return PdfEditable(pdfDocument: testPdfDocument)
         }
     }
     

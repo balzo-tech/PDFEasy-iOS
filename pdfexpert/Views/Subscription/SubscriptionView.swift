@@ -12,7 +12,6 @@ struct SubscriptionView: View {
     
     @InjectedObject(\.subscribeViewModel) var subscribeViewModel
     var onComplete: () -> ()
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {

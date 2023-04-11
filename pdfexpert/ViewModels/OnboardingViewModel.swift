@@ -20,7 +20,7 @@ public class OnboardingViewModel : ObservableObject {
     @Published var pageIndex = 0
     
     @Injected(\.store) private var store
-    @Injected(\.coordinator) private var coordinator
+    @Injected(\.mainCoordinator) private var coordinator
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.analyticsManager) private var analyticsManager
     

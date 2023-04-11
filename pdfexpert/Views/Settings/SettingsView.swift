@@ -41,7 +41,6 @@ struct SettingsView: View {
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
         .navigationTitle("Settings")
-        .navigationBarBackButtonHidden(true)
     }
 }
 

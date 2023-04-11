@@ -10,7 +10,7 @@ import Factory
 
 struct WelcomeView: View {
     
-    @Injected(\.coordinator) private var coordinator
+    @Injected(\.mainCoordinator) private var coordinator
     
     var body: some View {
         ZStack {

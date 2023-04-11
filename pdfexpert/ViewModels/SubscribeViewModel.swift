@@ -58,7 +58,6 @@ class SubscribeViewModel: ObservableObject {
     @Published var currentSubscriptionPlan: SubscriptionPlan?
     
     @Injected(\.store) private var store
-    @Injected(\.coordinator) private var coordinator
     
     private var cancelBag = Set<AnyCancellable>()
     
@@ -127,15 +126,8 @@ class SubscribeViewModel: ObservableObject {
         }
     }
     
-    func close() {
-        self.coordinator.dismissMonetizationView()
-    }
-    
     private func onPremiumStateChanged(isPremium: Bool) {
         self.isPremium = isPremium
-        if isPremium {
-            self.coordinator.dismissMonetizationView()
-        }
     }
     
     private static func productsToSubscriptionPairs(products: [Product]) async throws -> [SubscriptionPlanPair] {

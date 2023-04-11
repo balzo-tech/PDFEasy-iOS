@@ -20,7 +20,6 @@ struct HomeItem: Identifiable {
 struct HomeView: View {
     
     @InjectedObject(\.homeViewModel) var homeViewModel
-    @Injected(\.coordinator) var coordinator
     
     let items: [HomeItem] = [
         HomeItem(title: "Convert\npicture to PDF",
@@ -103,10 +102,9 @@ struct HomeView: View {
         .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
                       selection: self.$homeViewModel.imageSelection,
                       matching: .images)
-        .sheet(isPresented: self.$homeViewModel.pdfExportShow) {
-            let exportedPdf = self.homeViewModel.asyncPdf.data!
-            ActivityViewController(activityItems: [exportedPdf.data!],
-                                   thumbnail: exportedPdf.thumbnail)
+        .sheet(isPresented: self.$homeViewModel.pdfFlowShow) {
+            let pdfEditable = self.homeViewModel.asyncPdf.data!
+            PdfFlowView(pdfEditable: pdfEditable)
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })

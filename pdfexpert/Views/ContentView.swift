@@ -11,7 +11,7 @@ import Factory
 struct ContentView: View {
     
     @Injected(\.appTrackingTransparancy) var appTrackingTransparency
-    @InjectedObject(\.coordinator) var coordinator
+    @InjectedObject(\.mainCoordinator) var coordinator
     @Injected(\.store) var store
     
     var body: some View {
@@ -28,9 +28,9 @@ struct ContentView: View {
         switch self.coordinator.rootView {
         case .onboarding:
             return AnyView(
-                NavigationStack(path: self.$coordinator.onboardingPath) {
+                NavigationStack(path: self.$coordinator.path) {
                     WelcomeView()
-                        .navigationDestination(for: OnboardingRoute.self) { route in
+                        .navigationDestination(for: MainCoordinator.Route.self) { route in
                             switch route {
                             case .onboarding: OnboardingView()
                             }

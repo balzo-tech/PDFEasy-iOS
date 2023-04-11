@@ -33,6 +33,13 @@
 		893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */ = {isa = PBXBuildFile; productRef = 893E84A329D5BFBB00F6B99A /* PSPDFKit */; };
 		893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E84A529D5C5E200F6B99A /* ActivityViewController.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
+		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
+		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
+		89436ABD29E5586600060605 /* PdfEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABC29E5586600060605 /* PdfEditView.swift */; };
+		89436ABF29E55EA000060605 /* PdfEditable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABE29E55EA000060605 /* PdfEditable.swift */; };
+		89436AC129E563AE00060605 /* PdfViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC029E563AE00060605 /* PdfViewerView.swift */; };
+		89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC229E59C0E00060605 /* PdfEditViewModel.swift */; };
+		89436AC529E5A2F800060605 /* PdfViewerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */; };
 		89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */; };
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
 		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
@@ -99,8 +106,7 @@
 		89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */; };
 		89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */; };
 		89CD7BAF29D32D06003F1C3A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */; };
-		89CD7BB529D32E69003F1C3A /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB329D32E69003F1C3A /* Route.swift */; };
-		89CD7BB629D32E69003F1C3A /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB429D32E69003F1C3A /* Coordinator.swift */; };
+		89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */; };
 		89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBA29D330FB003F1C3A /* HomeView.swift */; };
 		89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */; };
 		89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E55BD829DC64840073F268 /* AnalyticsManager.swift */; };
@@ -135,6 +141,13 @@
 		893E849A29D5944E00F6B99A /* CameraService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Extensions.swift"; sourceTree = "<group>"; };
 		893E84A529D5C5E200F6B99A /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
+		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
+		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
+		89436ABC29E5586600060605 /* PdfEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditView.swift; sourceTree = "<group>"; };
+		89436ABE29E55EA000060605 /* PdfEditable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditable.swift; sourceTree = "<group>"; };
+		89436AC029E563AE00060605 /* PdfViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfViewerView.swift; sourceTree = "<group>"; };
+		89436AC229E59C0E00060605 /* PdfEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditViewModel.swift; sourceTree = "<group>"; };
+		89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfViewerViewModel.swift; sourceTree = "<group>"; };
 		89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionErrorView.swift; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
@@ -196,8 +209,7 @@
 		89CD7B9D29D32AB4003F1C3A /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		89CD7B9E29D32AB4003F1C3A /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		89CD7BB329D32E69003F1C3A /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
-		89CD7BB429D32E69003F1C3A /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		89CD7BBA29D330FB003F1C3A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89E55BD829DC64840073F268 /* AnalyticsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
@@ -266,6 +278,16 @@
 				893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		89436AB929E5578300060605 /* Pdf */ = {
+			isa = PBXGroup;
+			children = (
+				89436ABA29E557D500060605 /* PdfFlowView.swift */,
+				89436ABC29E5586600060605 /* PdfEditView.swift */,
+				89436AC029E563AE00060605 /* PdfViewerView.swift */,
+			);
+			path = Pdf;
 			sourceTree = "<group>";
 		};
 		895FE2C229D6D7D800A99D5B /* Scan */ = {
@@ -491,6 +513,7 @@
 				893C8FE429DF0399000E35BD /* Pdf+CoreDataProperties.swift */,
 				89E55BE629DC70A80073F268 /* OnboardingQuestion.swift */,
 				8902899029DC298E007E6372 /* OnboardingOption.swift */,
+				89436ABE29E55EA000060605 /* PdfEditable.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -523,6 +546,8 @@
 				893E849329D5878E00F6B99A /* CameraViewModel.swift */,
 				89AAFE9D29DB1973002D348E /* OnboardingViewModel.swift */,
 				893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */,
+				89436AC229E59C0E00060605 /* PdfEditViewModel.swift */,
+				89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -530,6 +555,7 @@
 		89CD7B0329D329B1003F1C3A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				89436AB929E5578300060605 /* Pdf */,
 				899F484229DF123B00E7E1E4 /* Main */,
 				893C8FC729DED15B000E35BD /* Archive */,
 				89CD7BB229D32E69003F1C3A /* Navigation */,
@@ -561,8 +587,8 @@
 		89CD7BB229D32E69003F1C3A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
-				89CD7BB329D32E69003F1C3A /* Route.swift */,
-				89CD7BB429D32E69003F1C3A /* Coordinator.swift */,
+				89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */,
+				89436AB729E5556600060605 /* PdfCoordinator.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -719,8 +745,12 @@
 			files = (
 				89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */,
 				89CD7B5529D329B1003F1C3A /* Enum+Extensions.swift in Sources */,
+				89436ABF29E55EA000060605 /* PdfEditable.swift in Sources */,
+				89436AC529E5A2F800060605 /* PdfViewerViewModel.swift in Sources */,
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,
+				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
+				89436AC129E563AE00060605 /* PdfViewerView.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
@@ -744,6 +774,7 @@
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
 				89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */,
 				895FE2C629D6E17600A99D5B /* AnimationPalette.swift in Sources */,
+				89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */,
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
 				895FE2CB29D6E9B800A99D5B /* SubscriptionView.swift in Sources */,
 				89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */,
@@ -759,7 +790,7 @@
 				89AAFE9C29DB1842002D348E /* OnboardingView.swift in Sources */,
 				89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,
-				89CD7BB629D32E69003F1C3A /* Coordinator.swift in Sources */,
+				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
 				899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */,
 				8902899329DC2F88007E6372 /* OnboardingOption+View.swift in Sources */,
 				894D485A29D42CC5002B0230 /* ImportView.swift in Sources */,
@@ -767,10 +798,10 @@
 				89CD7B9929D329B1003F1C3A /* View+Preview.swift in Sources */,
 				89CD7B5429D329B1003F1C3A /* Color+Extensions.swift in Sources */,
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
-				89CD7BB529D32E69003F1C3A /* Route.swift in Sources */,
 				89B72A3329DADC790076884F /* SettingsView.swift in Sources */,
 				8902899129DC298E007E6372 /* OnboardingOption.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
+				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				89AAFE9E29DB1973002D348E /* OnboardingViewModel.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
@@ -785,6 +816,7 @@
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */,
+				89436ABD29E5586600060605 /* PdfEditView.swift in Sources */,
 				89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */,
 				893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
