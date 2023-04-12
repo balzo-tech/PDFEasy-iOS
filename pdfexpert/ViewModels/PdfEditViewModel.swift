@@ -7,7 +7,9 @@
 
 import Foundation
 import Factory
+import SwiftUI
 import UIKit
+import PhotosUI
 
 extension Container {
     var pdfEditViewModel: ParameterFactory<PdfEditable, PdfEditViewModel> {
@@ -22,9 +24,28 @@ class PdfEditViewModel: ObservableObject {
     @Published var pdfThumbnails: [UIImage?] = []
     @Published var pdfSaveError: PdfEditSaveError? = nil
     
+    @Published var fileImagePickerShow: Bool = false
+    @Published var cameraShow: Bool = false
+    @Published var imagePickerShow: Bool = false
+    
+    @Published var imageSelection: PhotosPickerItem? = nil {
+        didSet {
+            if let imageSelection {
+                let progress = self.loadTransferable(from: imageSelection)
+                self.asyncImageLoading = AsyncOperation(status: .loading(progress))
+            } else {
+                self.asyncImageLoading = AsyncOperation(status: .empty)
+            }
+        }
+    }
+    
+    @Published var asyncImageLoading: AsyncOperation<(), ImportImageError> = AsyncOperation(status: .empty)
     
     @Injected(\.repository) private var repository
     @Injected(\.pdfCoordinator) private var coordinator
+    
+    var urlToImageToConvert: URL?
+    var imageToConvert: UIImage?
     
     var pdf: Pdf? = nil
     
@@ -60,18 +81,15 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func openFileImagePicker() {
-        // TODO
-//        self.fileImagePickerShow = true
+        self.fileImagePickerShow = true
     }
     
     func openCamera() {
-        // TODO
-//        self.cameraShow = true
+        self.cameraShow = true
     }
     
     func openGallery() {
-        // TODO
-//        self.imagePickerShow = true
+        self.imagePickerShow = true
     }
     
     func save() {
@@ -102,6 +120,70 @@ class PdfEditViewModel: ObservableObject {
             return
         }
         self.coordinator.showViewer(pdf: pdf)
+    }
+    
+    func getCurrentPageImage(withSize size: CGSize) -> UIImage? {
+        guard let pdfCurrentPageIndex = self.pdfCurrentPageIndex else {
+            return nil
+        }
+        return PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
+                                               size: size,
+                                               forPageIndex: pdfCurrentPageIndex)
+    }
+    
+    @MainActor
+    func convert() {
+        if let urlToImageToConvert = self.urlToImageToConvert {
+            self.urlToImageToConvert = nil
+            self.convertFileImageByURL(fileImageUrl: urlToImageToConvert)
+        } else if let imageToConvert = self.imageToConvert {
+            self.imageToConvert = nil
+            self.appendUiImageToPdf(uiImage: imageToConvert)
+        }
+    }
+    
+    @MainActor
+    private func convertFileImageByURL(fileImageUrl: URL) {
+        do {
+            let imageData = try Data(contentsOf: fileImageUrl)
+            guard let uiImage = UIImage(data: imageData) else {
+                self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
+                return
+            }
+            self.appendUiImageToPdf(uiImage: uiImage)
+        } catch {
+            debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
+            self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
+        }
+    }
+    
+    private func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
+        return imageSelection.loadTransferable(type: PickedImage.self) { result in
+            DispatchQueue.main.async {
+                guard imageSelection == self.imageSelection else {
+                    print("Failed to get the selected item.")
+                    return
+                }
+                switch result {
+                case .success(let image?):
+                    self.asyncImageLoading = AsyncOperation(status: .data(()))
+                    self.appendUiImageToPdf(uiImage: image.uiImage)
+                case .success(nil):
+                    self.asyncImageLoading = AsyncOperation(status: .empty)
+                case .failure(let error):
+                    let convertedError = ImportImageError.convertError(fromError: error)
+                    self.asyncImageLoading = AsyncOperation(status: .error(convertedError))
+                }
+            }
+        }
+    }
+    
+    private func appendUiImageToPdf(uiImage: UIImage) {
+        PDFUtility.appendImageToPdfDocument(pdfDocument: self.pdfEditable.pdfDocument, uiImage: uiImage)
+        let image = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
+                                                    size: K.Misc.ThumbnailEditSize,
+                                                    forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
+        self.pdfThumbnails.append(image)
     }
 }
 

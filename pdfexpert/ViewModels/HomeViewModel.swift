@@ -10,7 +10,6 @@ import Factory
 import SwiftUI
 import PhotosUI
 import PSPDFKit
-import PDFKit
 import WeScan
 
 extension Container {
@@ -237,18 +236,7 @@ public class HomeViewModel : ObservableObject {
     }
     
     private func convertUiImageToPdf(uiImage: UIImage) {
-        
-        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        
-        let pdfDocument = PDFDocument()
-        
-        guard let pdfPage = PDFPage(image: uiImage) else {
-            self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            return
-        }
-        
-        pdfDocument.insert(pdfPage, at: 0)
-        
+        let pdfDocument = PDFUtility.convertUiImageToPdf(uiImage: uiImage)
         self.asyncPdf = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
     }
     

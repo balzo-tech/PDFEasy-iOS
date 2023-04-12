@@ -44,6 +44,7 @@ struct PdfKitView: UIViewRepresentable {
 
     func updateUIView(_ pdfView: UIViewType, context: Context) {
         pdfView.document = self.pdfDocument
+        pdfView.autoScales = true
         self.updateBackground(pdfView: pdfView)
         self.updateSinglePage(pdfView: pdfView)
         self.updatePageMargins(pdfView: pdfView)

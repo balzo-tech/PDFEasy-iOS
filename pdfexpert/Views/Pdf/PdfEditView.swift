@@ -7,10 +7,13 @@
 
 import SwiftUI
 import Factory
+import PhotosUI
 
 struct PdfEditView: View {
     
-    @StateObject var pdfEditViewModel: PdfEditViewModel
+    fileprivate static let cellSide: CGFloat = 80.0
+    
+    @StateObject var viewModel: PdfEditViewModel
     @State private var showingImageInputPicker = false
     @State private var showingDeleteConfermation = false
     @State private var indexToDelete: Int? = nil
@@ -25,59 +28,81 @@ struct PdfEditView: View {
         .background(ColorPalette.primaryBG)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { self.pdfEditViewModel.save() }) {
+                Button(action: { self.viewModel.save() }) {
                     Image(systemName: "square.and.arrow.down")
                         .foregroundColor(ColorPalette.primaryText)
                 }
             }
         }
         .alert("Error",
-               isPresented: .constant(self.pdfEditViewModel.pdfSaveError != nil),
-               presenting: self.pdfEditViewModel.pdfSaveError,
+               isPresented: .constant(self.viewModel.pdfSaveError != nil),
+               presenting: self.viewModel.pdfSaveError,
                actions: { pdfSaveError in
             Button("OK") {
-                self.pdfEditViewModel.pdfSaveError = nil
+                self.viewModel.pdfSaveError = nil
                 switch pdfSaveError {
                 case .unknown: break
-                case .saveFailed: self.pdfEditViewModel.viewPdf()
+                case .saveFailed: self.viewModel.viewPdf()
                 case .noPages: break
                 }
             }
             if pdfSaveError == .saveFailed {
-                Button("Cancel") { self.pdfEditViewModel.pdfSaveError = nil }
+                Button("Cancel") { self.viewModel.pdfSaveError = nil }
             }
         }, message: { pdfSaveError in
             Text(pdfSaveError.errorDescription ?? "")
         })
+        // File picker for images
+        .fullScreenCover(isPresented: self.$viewModel.fileImagePickerShow) {
+            FilePicker(fileTypes: [.image],
+                       onPickedFile: {
+                // Callback is called on modal dismiss, thus we can assign and convert in a row
+                self.viewModel.urlToImageToConvert = $0
+                self.viewModel.convert()
+            })
+        }
+        // Camera for image capture
+        .fullScreenCover(isPresented: self.$viewModel.cameraShow) {
+            CameraView(model: Container.shared.cameraViewModel({ uiImage in
+                self.viewModel.cameraShow = false
+                self.viewModel.imageToConvert = uiImage
+            })).onDisappear { self.viewModel.convert() }
+        }
+        // Photo gallery picker
+        .photosPicker(isPresented: self.$viewModel.imagePickerShow,
+                      selection: self.$viewModel.imageSelection,
+                      matching: .images)
+        .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
+                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
     }
     
     var pdfView: some View {
-        if let pdfCurrentPageIndex = self.pdfEditViewModel.pdfCurrentPageIndex {
-            return AnyView(
-                PdfKitView(
-                    pdfDocument: self.pdfEditViewModel.pdfEditable.pdfDocument,
-                    singlePage: true,
-                    pageMargins: nil,
-                    currentPage: pdfCurrentPageIndex,
-                    backgroundColor: UIColor(ColorPalette.primaryBG)
-                )
-            )
-        } else {
-            return AnyView(
-                VStack(spacing: 16) {
-                    Spacer()
-                    Image("archive_empty")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 80)
-                    Text("You have no pages")
-                        .font(FontPalette.fontRegular(withSize: 16))
-                        .foregroundColor(ColorPalette.primaryText)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .multilineTextAlignment(.center)
-                    Spacer()
-                }
-            )
+        GeometryReader { geometry in
+            if let image = self.viewModel.getCurrentPageImage(withSize: geometry.size) {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .position(x: geometry.size.width/2, y: geometry.size.height/2)
+            } else {
+                self.emptyView
+            }
+        }
+    }
+    
+    var emptyView: some View {
+        VStack(spacing: 16) {
+            Spacer()
+            Image("archive_empty")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 80)
+            Text("You have no pages")
+                .font(FontPalette.fontRegular(withSize: 16))
+                .foregroundColor(ColorPalette.primaryText)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .multilineTextAlignment(.center)
+            Spacer()
         }
     }
     
@@ -96,19 +121,19 @@ struct PdfEditView: View {
                             titleVisibility: .visible
                 ) {
                     Button("Photo Gallery") {
-                        self.pdfEditViewModel.openGallery()
+                        self.viewModel.openGallery()
                     }
                     Button("Camera") {
-                        self.pdfEditViewModel.openCamera()
+                        self.viewModel.openCamera()
                     }
                     Button("File") {
-                        self.pdfEditViewModel.openFileImagePicker()
+                        self.viewModel.openFileImagePicker()
                     }
                 }
-                ForEach(Array(self.pdfEditViewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
+                ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
                     Button(action: {
                         self.indexToDelete = index
-                        self.pdfEditViewModel.pdfCurrentPageIndex = index
+                        self.viewModel.pdfCurrentPageIndex = index
                         self.showingDeleteConfermation = true
                     }) {
                         self.getThumbnailCell(image: image)
@@ -123,7 +148,7 @@ struct PdfEditView: View {
                             self.showingDeleteConfermation = false
                             withAnimation {
                                 if let indexToDelete = self.indexToDelete {
-                                    self.pdfEditViewModel.deletePage(atIndex: indexToDelete)
+                                    self.viewModel.deletePage(atIndex: indexToDelete)
                                 }
                             }
                         }
@@ -131,7 +156,7 @@ struct PdfEditView: View {
                 }
             }
         }
-        .frame(height: 80)
+        .frame(height: Self.cellSide)
     }
     
     var addThumbnailCell: some View {
@@ -151,6 +176,7 @@ struct PdfEditView: View {
             return AnyView(
                 Image(uiImage: image)
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
             )
         } else {
             return AnyView(ColorPalette.primaryText)
@@ -161,7 +187,7 @@ struct PdfEditView: View {
 fileprivate extension View {
     func applyCellStyle() -> some View {
         self
-            .aspectRatio(1.0, contentMode: .fill)
+            .frame(width: PdfEditView.cellSide, height: PdfEditView.cellSide)
             .cornerRadius(16)
     }
 }
@@ -169,7 +195,7 @@ fileprivate extension View {
 struct PdfEditView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
-            AnyView(PdfEditView(pdfEditViewModel: Container.shared.pdfEditViewModel(pdfEditable)))
+            AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(pdfEditable)))
         } else {
             AnyView(Spacer())
         }

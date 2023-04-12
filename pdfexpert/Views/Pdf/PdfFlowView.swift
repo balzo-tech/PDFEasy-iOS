@@ -23,11 +23,11 @@ struct PdfFlowView: View {
         case .edit:
             return AnyView(
                 NavigationStack(path: self.$coordinator.path) {
-                    PdfEditView(pdfEditViewModel: Container.shared.pdfEditViewModel(self.pdfEditable))
+                    PdfEditView(viewModel: Container.shared.pdfEditViewModel(self.pdfEditable))
                         .navigationDestination(for: PdfCoordinator.Route.self) { route in
                             switch route {
                             case .viewer(let pdf):
-                                PdfViewerView(pdfViewerViewModel: Container.shared.pdfViewerViewModel(pdf))
+                                PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(pdf))
                                     .navigationBarBackButtonHidden()
                                     .toolbar {
                                         ToolbarItem(placement: .navigationBarLeading) {
