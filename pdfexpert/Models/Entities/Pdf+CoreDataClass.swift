@@ -21,7 +21,10 @@ public class Pdf: NSManagedObject {
         if let internalThumbnail = self.internalThumbnail {
             return internalThumbnail
         } else if let internalPdfDocument = self.pdfDocument {
-            let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: internalPdfDocument)
+            let thumbnail = PDFUtility.generatePdfThumbnail(
+                pdfDocument: internalPdfDocument,
+                size: K.Misc.ThumbnailSize
+            )
             self.internalThumbnail = thumbnail
             return thumbnail
         } else {

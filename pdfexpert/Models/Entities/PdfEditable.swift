@@ -15,10 +15,6 @@ struct PdfEditable {
         return self.pdfDocument.dataRepresentation()
     }
     
-    mutating func updatePdfDocument(pdfDocument: PDFDocument) {
-        self.pdfDocument = pdfDocument
-    }
-    
     init?(data: Data) {
         guard let pdfDocument = PDFDocument(data: data) else { return nil }
         self.pdfDocument = pdfDocument

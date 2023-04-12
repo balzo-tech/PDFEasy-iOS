@@ -7,51 +7,21 @@
 
 import SwiftUI
 import Factory
-import PDFKit
-
-struct PDFKitView: UIViewRepresentable {
-    typealias UIViewType = PDFView
-
-    let pdfDocument: PDFDocument?
-    let singlePage: Bool
-    let pageMargins: UIEdgeInsets?
-
-    init(pdfDocument: PDFDocument?,
-         singlePage: Bool = false,
-         pageMargins: UIEdgeInsets? = nil) {
-        self.pdfDocument = pdfDocument
-        self.singlePage = singlePage
-        self.pageMargins = pageMargins
-    }
-
-    func makeUIView(context: Context) -> UIViewType {
-        let pdfView = PDFView()
-        pdfView.document = self.pdfDocument
-        pdfView.autoScales = true
-        if self.singlePage {
-            pdfView.displayMode = .singlePage
-        }
-        if let pageMargins = self.pageMargins {
-            pdfView.pageBreakMargins = pageMargins
-        }
-        return pdfView
-    }
-
-    func updateUIView(_ pdfView: UIViewType, context: Context) {
-        pdfView.document = self.pdfDocument
-    }
-}
 
 struct PdfViewerView: View {
     
     @StateObject var pdfViewerViewModel: PdfViewerViewModel
     
     var body: some View {
-        PDFKitView(
+        PdfKitView(
             pdfDocument: self.pdfViewerViewModel.pdf.pdfDocument,
-            pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0)
+            singlePage: false,
+            pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
+            currentPage: nil,
+            backgroundColor: UIColor(ColorPalette.primaryBG)
         )
         .padding([.leading, .trailing], 16)
+        .background(ColorPalette.primaryBG)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { self.pdfViewerViewModel.share() }) {

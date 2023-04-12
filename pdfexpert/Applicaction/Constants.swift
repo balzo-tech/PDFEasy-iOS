@@ -44,5 +44,6 @@ struct K {
         
         static let DocFileTypes: [UTType] = [UTType("com.microsoft.word.doc")!]
         static let ThumbnailSize: CGSize = CGSize(width: 512, height: 512)
+        static let ThumbnailEditSize: CGSize = CGSize(width: 128, height: 128)
     }
 }
