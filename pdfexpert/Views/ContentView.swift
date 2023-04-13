@@ -13,6 +13,7 @@ struct ContentView: View {
     @Injected(\.appTrackingTransparancy) var appTrackingTransparency
     @InjectedObject(\.mainCoordinator) var coordinator
     @Injected(\.store) var store
+    @Injected(\.configService) var configService
     
     var body: some View {
         self.content
@@ -21,6 +22,7 @@ struct ContentView: View {
                 Task {
                     await self.appTrackingTransparency.requestPermissionIfNeeded()
                 }
+                self.configService.onApplicationDidBecomeActive()
             }
     }
     

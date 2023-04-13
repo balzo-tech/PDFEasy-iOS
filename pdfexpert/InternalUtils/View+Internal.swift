@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Factory
 
 enum DisclamerType: Hashable, Identifiable {
     case privacyPolicy, termsAndConditions
@@ -51,7 +52,7 @@ extension View {
     }
     
     func getSubscriptionView(onComplete: @escaping () -> ()) -> some View {
-        switch K.MonetizationK.subscriptionViewType {
+        switch Container.shared.configService().remoteConfigData.value.subcriptionViewType {
         case .pairs: return AnyView(SubscriptionPairsView(onComplete: onComplete))
         case .vertical: return AnyView(SubscriptionVerticalView(onComplete: onComplete))
         }

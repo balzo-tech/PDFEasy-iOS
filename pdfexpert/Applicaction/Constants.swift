@@ -11,7 +11,7 @@ import UniformTypeIdentifiers
 import PDFKit
 import Factory
 
-enum SubscriptionViewType {
+enum SubscriptionViewType: CaseIterable {
     case pairs
     case vertical
 }
@@ -44,7 +44,12 @@ struct K {
     }
     
     struct MonetizationK {
-        static let subscriptionViewType: SubscriptionViewType = .vertical
+        static let defaultSubscriptionViewType: SubscriptionViewType = .vertical
+    }
+    
+    struct RemoteConfigK {
+        static let DebugRemoteConfigExpirationDuration: TimeInterval = 30.0
+        static let DefaultRemoteConfigExpirationDuration: TimeInterval = 60.0 * 60.0
     }
     
     struct Misc {

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Factory
 import StoreKit
 import Combine
 
@@ -25,10 +24,4 @@ protocol Store {
     func updateCustomerProductStatus() async
     func getProductData(forProductId productId: String) -> Any?
     func sortByPrice(_ products: [Product]) -> [Product]
-}
-
-extension Container {
-    var store: Factory<Store> {
-        self { StoreImpl() }.singleton
-    }
 }

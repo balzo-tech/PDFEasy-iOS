@@ -8,6 +8,7 @@ The store class is responsible for requesting products from the App Store and st
 import Foundation
 import StoreKit
 import Combine
+import Factory
 
 typealias Transaction = StoreKit.Transaction
 typealias RenewalInfo = StoreKit.Product.SubscriptionInfo.RenewalInfo
@@ -24,6 +25,12 @@ public enum SubscriptionTier: Int, Comparable {
 
     public static func < (lhs: Self, rhs: Self) -> Bool {
         return lhs.rawValue < rhs.rawValue
+    }
+}
+
+extension Container {
+    var store: Factory<Store> {
+        self { StoreImpl() }.singleton
     }
 }
 
