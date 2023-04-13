@@ -1,5 +1,5 @@
 //
-//  SubscriptionView.swift
+//  SubscriptionPairsView.swift
 //  PdfExpert
 //
 //  Created by Leonardo Passeri on 31/03/23.
@@ -8,9 +8,9 @@
 import SwiftUI
 import Factory
 
-struct SubscriptionView: View {
+struct SubscriptionPairsView: View {
     
-    @InjectedObject(\.subscribeViewModel) var subscribeViewModel
+    @InjectedObject(\.subscribtionPairsViewModel) var viewModel
     var onComplete: () -> ()
     
     var body: some View {
@@ -21,12 +21,12 @@ struct SubscriptionView: View {
             self.content
         }
         .background(ColorPalette.primaryBG)
-        .asyncView(asyncOperation: self.$subscribeViewModel.purchaseRequest)
-        .asyncView(asyncOperation: self.$subscribeViewModel.restorePurchaseRequest)
+        .asyncView(asyncOperation: self.$viewModel.purchaseRequest)
+        .asyncView(asyncOperation: self.$viewModel.restorePurchaseRequest)
         .onAppear() {
-            self.subscribeViewModel.refresh()
+            self.viewModel.refresh()
         }
-        .onChange(of: self.subscribeViewModel.isPremium, perform: { newValue in
+        .onChange(of: self.viewModel.isPremium, perform: { newValue in
             if newValue {
                 self.onComplete()
             }
@@ -34,12 +34,12 @@ struct SubscriptionView: View {
     }
     
     var content: some View {
-        switch self.subscribeViewModel.asyncSubscriptionPlanPairs.status {
+        switch self.viewModel.asyncSubscriptionPlanPairs.status {
         case .empty: return AnyView(Spacer())
         case .loading: return AnyView(AnimationType.dots.view.loop())
         case .data: return AnyView(self.mainView)
         case .error: return AnyView(SubscriptionErrorView(onButtonPressed: {
-            self.subscribeViewModel.refresh()
+            self.viewModel.refresh()
         }))
         }
     }
@@ -79,7 +79,7 @@ struct SubscriptionView: View {
             self.freeTrialView
             Spacer().frame(height: 20)
             Button(action: {
-                self.subscribeViewModel.subscribe()
+                self.viewModel.subscribe()
             }) {
                 Text("Subscribe")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -97,7 +97,7 @@ struct SubscriptionView: View {
     }
     
     var restorePurchaseButton: some View {
-        Button(action: { self.subscribeViewModel.restorePurchases() }) {
+        Button(action: { self.viewModel.restorePurchases() }) {
             Text("Restore purchase")
                 .frame(maxHeight: .infinity)
                 .underline()
@@ -110,7 +110,7 @@ struct SubscriptionView: View {
     
     var freeTrialView: some View {
         let view: AnyView
-        if let currentSubscriptionPlanPair = self.subscribeViewModel.currentSubscriptionPlanPair,
+        if let currentSubscriptionPlanPair = self.viewModel.currentSubscriptionPlanPair,
            currentSubscriptionPlanPair.standardSubscriptionPlan != nil,
            currentSubscriptionPlanPair.freeTrialSubscriptionPlan != nil {
             view = AnyView(
@@ -127,7 +127,7 @@ struct SubscriptionView: View {
                     .frame(height: 62)
                     .background(RoundedRectangle(cornerRadius: 10).foregroundColor(ColorPalette.secondaryBG))
                     .overlay(RoundedRectangle(cornerRadius: 10)
-                        .stroke(self.subscribeViewModel.isFreeTrialEnabled
+                        .stroke(self.viewModel.isFreeTrialEnabled
                                 ? ColorPalette.buttonGradientStart
                                 : .clear,
                                 lineWidth: 2))
@@ -154,7 +154,7 @@ struct SubscriptionView: View {
     
     var checkMark: some View {
         let view: AnyView
-        if self.subscribeViewModel.isFreeTrialEnabled {
+        if self.viewModel.isFreeTrialEnabled {
             view = AnyView(
                 Image(systemName: "checkmark.circle")
                     .resizable()
@@ -169,7 +169,7 @@ struct SubscriptionView: View {
     }
     
     var currentSubscriptionPlanView: some View {
-        Text(self.subscribeViewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
+        Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
             .font(FontPalette.fontBold(withSize: 18))
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
@@ -178,13 +178,13 @@ struct SubscriptionView: View {
     }
     
     var subscriptionPlanPairsView: some View {
-        if let subscriptionPlanPairs = self.subscribeViewModel.asyncSubscriptionPlanPairs.data {
+        if let subscriptionPlanPairs = self.viewModel.asyncSubscriptionPlanPairs.data {
             return AnyView(HStack(spacing: 16) {
                 ForEach(Array(subscriptionPlanPairs.enumerated()), id: \.offset) { index, subscriptionPlanPair in
                     if let subscriptionPlan = self.getSubscriptionPlan(from: subscriptionPlanPair) {
-                        SubscriptionItemView(subscriptionPlan: subscriptionPlan,
-                                             isSelected: self.subscribeViewModel.selectedSubscriptionPairIndex == index,
-                                             onTap: { self.subscribeViewModel.selectedSubscriptionPairIndex = index })
+                        SubscriptionPairsItemView(subscriptionPlan: subscriptionPlan,
+                                             isSelected: self.viewModel.selectedSubscriptionPairIndex == index,
+                                             onTap: { self.viewModel.selectedSubscriptionPairIndex = index })
                     }
                 }
             }
@@ -195,11 +195,11 @@ struct SubscriptionView: View {
     }
     
     func onFreeTrialSwitchPressed() {
-        self.subscribeViewModel.isFreeTrialEnabled = !self.subscribeViewModel.isFreeTrialEnabled
+        self.viewModel.isFreeTrialEnabled = !self.viewModel.isFreeTrialEnabled
     }
     
-    func getSubscriptionPlan(from subscriptionPlanPair: SubscriptionPlanPair) -> SubscriptionPlan? {
-        if self.subscribeViewModel.isFreeTrialEnabled {
+    func getSubscriptionPlan(from subscriptionPlanPair: SubscriptionPlanPair) -> SubscriptionPlanPairItem? {
+        if self.viewModel.isFreeTrialEnabled {
             return subscriptionPlanPair.freeTrialSubscriptionPlan ?? subscriptionPlanPair.standardSubscriptionPlan
         } else {
             return subscriptionPlanPair.standardSubscriptionPlan ?? subscriptionPlanPair.freeTrialSubscriptionPlan
@@ -207,8 +207,8 @@ struct SubscriptionView: View {
     }
 }
 
-struct SubscriptionView_Previews: PreviewProvider {
+struct SubscriptionPairsView_Previews: PreviewProvider {
     static var previews: some View {
-        SubscriptionView(onComplete: {})
+        SubscriptionPairsView(onComplete: {})
     }
 }

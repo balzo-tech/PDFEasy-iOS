@@ -37,7 +37,9 @@ struct OnboardingView: View {
         .background(ColorPalette.primaryBG)
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: self.$onboardingViewModel.monetizationShow) {
-            SubscriptionView(onComplete: { self.onboardingViewModel.onMonetizationClose() })
+            self.getSubscriptionView(onComplete: {
+                self.onboardingViewModel.onMonetizationClose()
+            })
         }
     }
 }

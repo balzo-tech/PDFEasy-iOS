@@ -3,12 +3,51 @@
 <plist version="1.0">
 <dict>
 	<key>yearly</key>
-	<string>standard_subscription</string>
+	<dict>
+		<key>name</key>
+		<string>standard_subscription</string>
+		<key>views</key>
+		<array>
+			<string>pairs</string>
+		</array>
+	</dict>
 	<key>yearly.freetrial</key>
-	<string>standard_subscription</string>
+	<dict>
+		<key>name</key>
+		<string>standard_subscription</string>
+		<key>views</key>
+		<array>
+			<string>pairs</string>
+			<string>vertical</string>
+		</array>
+	</dict>
 	<key>monthly</key>
-	<string>standard_subscription</string>
+	<dict>
+		<key>name</key>
+		<string>standard_subscription</string>
+		<key>views</key>
+		<array>
+			<string>pairs</string>
+			<string>vertical</string>
+		</array>
+	</dict>
 	<key>monthly.freetrial</key>
-	<string>standard_subscription</string>
+	<dict>
+		<key>name</key>
+		<string>standard_subscription</string>
+		<key>views</key>
+		<array>
+			<string>pairs</string>
+		</array>
+	</dict>
+	<key>weekly</key>
+	<dict>
+		<key>name</key>
+		<string>standard_subscription</string>
+		<key>views</key>
+		<array>
+			<string>vertical</string>
+		</array>
+	</dict>
 </dict>
 </plist>

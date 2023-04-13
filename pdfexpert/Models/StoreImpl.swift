@@ -39,7 +39,7 @@ class StoreImpl: Store {
     
     var updateListenerTask: Task<Void, Error>? = nil
 
-    private let productIdToProduct: [String: String]
+    private let productIdToProduct: [String: Any]
 
     init() {
         self.productIdToProduct = Self.loadProductIdToProductData().reduce([:], {
@@ -69,10 +69,10 @@ class StoreImpl: Store {
         self.updateListenerTask?.cancel()
     }
     
-    static func loadProductIdToProductData() -> [String: String] {
+    static func loadProductIdToProductData() -> [String: Any] {
         guard let path = Bundle.main.path(forResource: "Products", ofType: "plist"),
               let plist = FileManager.default.contents(atPath: path),
-              let data = try? PropertyListSerialization.propertyList(from: plist, format: nil) as? [String: String] else {
+              let data = try? PropertyListSerialization.propertyList(from: plist, format: nil) as? [String: Any] else {
             return [:]
         }
         return data
@@ -235,7 +235,7 @@ class StoreImpl: Store {
         self.isPremium.send(Self.subscriptionStatusToIsPremium(subscriptionStatus: self.subscriptionGroupStatus))
     }
 
-    func productName(forProductId productId: String) -> String? {
+    func getProductData(forProductId productId: String) -> Any? {
         return self.productIdToProduct[productId]
     }
 

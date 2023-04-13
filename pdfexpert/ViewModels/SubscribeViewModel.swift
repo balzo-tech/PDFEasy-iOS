@@ -11,51 +11,17 @@ import Combine
 import Factory
 import Collections
 
-extension Container {
-    var subscribeViewModel: Factory<SubscribeViewModel> {
-        self { SubscribeViewModel() }.singleton
-    }
+protocol SubscriptionPlan: Hashable {
+    var product: Product? { get }
 }
 
-struct SubscriptionPlan: Hashable {
-    let product: Product?
-    let title: String
-    let descriptionText: String
-    let fullDescriptionText: String
-}
-
-extension Product {
-    var subscriptionPlan: SubscriptionPlan? {
-        return SubscriptionPlan(product: self,
-                                title: self.title,
-                                descriptionText: self.descriptionText,
-                                fullDescriptionText: self.fullDescriptionText)
-    }
-}
-
-struct SubscriptionPlanPair {
-    let standardSubscriptionPlan: SubscriptionPlan?
-    let freeTrialSubscriptionPlan: SubscriptionPlan?
-}
-
-
-class SubscribeViewModel: ObservableObject {
+class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
     
     @Published var isPremium: Bool = false
-    @Published var selectedSubscriptionPairIndex: Int = 0 {
-        didSet { self.updateCurrentSubscriptionPlan() }
-    }
-    @Published var isFreeTrialEnabled: Bool = false {
-        didSet { self.updateCurrentSubscriptionPlan() }
-    }
-    @Published var asyncSubscriptionPlanPairs: AsyncOperation<[SubscriptionPlanPair], RefreshError> = AsyncOperation(status: .empty) {
-        didSet { self.updateCurrentSubscriptionPlan() }
-    }
     @Published var restorePurchaseRequest: AsyncOperation<Bool, RestorePurchaseError> = AsyncOperation(status: .empty)
     @Published var purchaseRequest: AsyncOperation<(), PurchaseError> = AsyncOperation(status: .empty)
     
-    @Published var currentSubscriptionPlanPair: SubscriptionPlanPair?
-    @Published var currentSubscriptionPlan: SubscriptionPlan?
+    @Published var currentSubscriptionPlan: S?
     
     @Injected(\.store) private var store
     
@@ -63,27 +29,6 @@ class SubscribeViewModel: ObservableObject {
     
     init() {
         self.store.isPremium.sink { self.onPremiumStateChanged(isPremium: $0) }.store(in: &self.cancelBag)
-    }
-    
-    @MainActor
-    func refresh() {
-        
-        self.asyncSubscriptionPlanPairs = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        
-        Task {
-            do {
-                try await self.store.refreshAll()
-                let subscriptionPlanPairs = try await Self.productsToSubscriptionPairs(products: self.store.subscriptions)
-                if subscriptionPlanPairs.count > 0 {
-                    self.asyncSubscriptionPlanPairs = AsyncOperation(status: .data(subscriptionPlanPairs))
-                } else {
-                    self.asyncSubscriptionPlanPairs = AsyncOperation(status: .error(.missingExpectedSubscriptionPlanError))
-                }
-            } catch {
-                let convertedError = RefreshError.convertError(fromError: error)
-                self.asyncSubscriptionPlanPairs = AsyncOperation(status: .error(convertedError))
-            }
-        }
     }
     
     @MainActor
@@ -128,52 +73,6 @@ class SubscribeViewModel: ObservableObject {
     
     private func onPremiumStateChanged(isPremium: Bool) {
         self.isPremium = isPremium
-    }
-    
-    private static func productsToSubscriptionPairs(products: [Product]) async throws -> [SubscriptionPlanPair] {
-        let subscriptions = products.filter { $0.subscription != nil }
-        
-        var groupedSubscriptions: OrderedDictionary<Int, [Product]> = subscriptions.reduce([:]) { partialResult, subscription in
-            var partialResult = partialResult
-            if let subscriptionInfo = subscription.subscription {
-                let key = subscriptionInfo.subscriptionPeriod.days
-                var subscriptions = partialResult[key] ?? []
-                subscriptions.append(subscription)
-                partialResult[key] = subscriptions
-            }
-            return partialResult
-        }
-        
-        groupedSubscriptions.sort { pair1, pair2 in
-            pair1.key > pair2.key
-        }
-        
-        let subscriptionPlanPairs: [SubscriptionPlanPair] = groupedSubscriptions.reduce([]) { partialResult, rawPair in
-            var partialResult = partialResult
-            let freeTrialSubscriptionPlan = rawPair.value.first (where: { $0.subscription?.introductoryOffer?.paymentMode == .freeTrial })?.subscriptionPlan
-            let standardSubscriptionPlan = rawPair.value.first (where: { $0.subscription?.introductoryOffer == nil })?.subscriptionPlan
-            if standardSubscriptionPlan != nil || freeTrialSubscriptionPlan != nil {
-                partialResult.append(SubscriptionPlanPair(standardSubscriptionPlan: standardSubscriptionPlan,
-                                                          freeTrialSubscriptionPlan: freeTrialSubscriptionPlan))
-            }
-            return partialResult
-        }
-        return subscriptionPlanPairs
-    }
-    
-    private func updateCurrentSubscriptionPlan() {
-        guard let subscriptionPlanPairs = self.asyncSubscriptionPlanPairs.data,
-              self.selectedSubscriptionPairIndex >= 0,
-              self.selectedSubscriptionPairIndex < subscriptionPlanPairs.count else {
-            return
-        }
-        let currentSubscriptionPlanPair = subscriptionPlanPairs[self.selectedSubscriptionPairIndex]
-        if self.isFreeTrialEnabled {
-            self.currentSubscriptionPlan = currentSubscriptionPlanPair.freeTrialSubscriptionPlan ?? currentSubscriptionPlanPair.standardSubscriptionPlan
-        } else {
-            self.currentSubscriptionPlan = currentSubscriptionPlanPair.standardSubscriptionPlan ?? currentSubscriptionPlanPair.freeTrialSubscriptionPlan
-        }
-        self.currentSubscriptionPlanPair = currentSubscriptionPlanPair
     }
 }
 

@@ -49,4 +49,11 @@ extension View {
             Text("You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents.")
         }
     }
+    
+    func getSubscriptionView(onComplete: @escaping () -> ()) -> some View {
+        switch K.MonetizationK.subscriptionViewType {
+        case .pairs: return AnyView(SubscriptionPairsView(onComplete: onComplete))
+        case .vertical: return AnyView(SubscriptionVerticalView(onComplete: onComplete))
+        }
+    }
 }

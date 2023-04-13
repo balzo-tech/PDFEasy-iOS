@@ -23,7 +23,7 @@ protocol Store {
     func isPurchased(_ product: Product) async throws -> Bool
     func checkVerified<T>(_ result: VerificationResult<T>) throws -> T
     func updateCustomerProductStatus() async
-    func productName(forProductId productId: String) -> String?
+    func getProductData(forProductId productId: String) -> Any?
     func sortByPrice(_ products: [Product]) -> [Product]
 }
 

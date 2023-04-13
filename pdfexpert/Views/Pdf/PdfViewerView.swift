@@ -31,7 +31,9 @@ struct PdfViewerView: View {
             }
         }
         .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
-            SubscriptionView(onComplete: { self.viewModel.monetizationShow = false })
+            self.getSubscriptionView(onComplete: {
+                self.viewModel.monetizationShow = false
+            })
         }
         .sheet(item: self.$viewModel.pdfToBeShared) { pdf in
             ActivityViewController(activityItems: [pdf.data!],

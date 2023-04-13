@@ -28,7 +28,9 @@ struct ArchiveView: View {
             self.archiveViewModel.refresh()
         }
         .fullScreenCover(isPresented: self.$archiveViewModel.monetizationShow) {
-            SubscriptionView(onComplete: { self.archiveViewModel.monetizationShow = false })
+            self.getSubscriptionView(onComplete: {
+                self.archiveViewModel.monetizationShow = false
+            })
         }
         .sheet(item: self.$archiveViewModel.pdfToBeShared) { pdf in
             ActivityViewController(activityItems: [pdf.data!],

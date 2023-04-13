@@ -1,5 +1,5 @@
 //
-//  SubscriptionItemView.swift
+//  SubscriptionPairsItemView.swift
 //  PdfExpert
 //
 //  Created by Leonardo Passeri on 31/03/23.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct SubscriptionItemView: View {
+struct SubscriptionPairsItemView: View {
     
-    let subscriptionPlan: SubscriptionPlan
+    let subscriptionPlan: SubscriptionPlanPairItem
     let isSelected: Bool
     let onTap: (() -> ())
     
@@ -35,7 +35,7 @@ struct SubscriptionItemView: View {
                     .multilineTextAlignment(.leading)
                 Spacer().frame(minHeight: 12)
                 Text(self.subscriptionPlan.descriptionText)
-                    .font(FontPalette.fontRegular(withSize: 10))
+                    .font(FontPalette.fontMedium(withSize: 10))
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -62,23 +62,27 @@ struct SubscriptionItemView: View {
     }
 }
 
-struct SubscriptionItemView_Previews: PreviewProvider {
+struct SubscriptionPairsItemView_Previews: PreviewProvider {
     
-    private static let subscriptionPlanYearly = SubscriptionPlan(product: nil,
-                                                           title: "Premium 1 year",
-                                                           descriptionText: "$1,38/week",
-                                                           fullDescriptionText: "")
-    private static let subscriptionPlanMonthly = SubscriptionPlan(product: nil,
-                                                           title: "Premium 1 month",
-                                                           descriptionText: "$2,09/week",
-                                                           fullDescriptionText: "")
+    private static let subscriptionPlanYearly = {
+        SubscriptionPlanPairItem(product: nil,
+                                 title: "Premium 1 year",
+                                 descriptionText: "$1,38/week",
+                                 fullDescriptionText: "")
+    }()
+    private static let subscriptionPlanMonthly = {
+        SubscriptionPlanPairItem(product: nil,
+                                 title: "Premium 1 month",
+                                 descriptionText: "$2,09/week",
+                                 fullDescriptionText: "")
+    }()
     
     static var previews: some View {
         HStack(spacing: 16) {
-            SubscriptionItemView(subscriptionPlan: Self.subscriptionPlanYearly,
+            SubscriptionPairsItemView(subscriptionPlan: Self.subscriptionPlanYearly,
                                  isSelected: true,
                                  onTap: {})
-            SubscriptionItemView(subscriptionPlan: Self.subscriptionPlanMonthly,
+            SubscriptionPairsItemView(subscriptionPlan: Self.subscriptionPlanMonthly,
                                  isSelected: false,
                                  onTap: {})
         }

@@ -11,6 +11,11 @@ import UniformTypeIdentifiers
 import PDFKit
 import Factory
 
+enum SubscriptionViewType {
+    case pairs
+    case vertical
+}
+
 struct K {
     struct Test {
         static let UseMockDB = false
@@ -36,6 +41,10 @@ struct K {
             guard let testPdfDocument = PDFDocument(data: testFileData) else { return nil }
             return PdfEditable(pdfDocument: testPdfDocument)
         }
+    }
+    
+    struct MonetizationK {
+        static let subscriptionViewType: SubscriptionViewType = .vertical
     }
     
     struct Misc {

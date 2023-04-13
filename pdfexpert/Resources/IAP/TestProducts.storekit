@@ -1,5 +1,5 @@
 {
-  "identifier" : "2C8627F3",
+  "identifier" : "610606E8",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -54,7 +54,7 @@
           "groupNumber" : 4,
           "internalID" : "6447059881",
           "introductoryOffer" : {
-            "internalID" : "CC020939",
+            "internalID" : "5AC93103",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
@@ -69,6 +69,31 @@
           "productID" : "eu.balzo.pdfexpert.monthly.freetrial",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly Free Trial",
+          "subscriptionGroupID" : "21297792",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 5,
+          "internalID" : "6447692196",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlimited access to all app features.",
+              "displayName" : "Unlimited access",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "eu.balzo.pdfexpert.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Weekly",
           "subscriptionGroupID" : "21297792",
           "type" : "RecurringSubscription"
         },
@@ -109,7 +134,7 @@
           "groupNumber" : 2,
           "internalID" : "6447059831",
           "introductoryOffer" : {
-            "internalID" : "8CBE1B27",
+            "internalID" : "D369907B",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
