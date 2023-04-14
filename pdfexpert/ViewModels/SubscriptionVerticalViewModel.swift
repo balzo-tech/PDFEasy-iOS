@@ -45,7 +45,9 @@ class SubscriptionVerticalViewModel: SubscribeViewModel<SubscriptionPlanVertical
         didSet { self.updateCurrentSubscriptionPlan() }
     }
     
-    @Published var selectedSubscriptionItemIndex: Int = 0
+    @Published var selectedSubscriptionItemIndex: Int = 0 {
+        didSet { self.updateCurrentSubscriptionPlan() }
+    }
     
     @Injected(\.store) private var store
     

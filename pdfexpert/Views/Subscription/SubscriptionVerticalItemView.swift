@@ -35,7 +35,7 @@ struct SubscriptionVerticalItemView: View {
                             .lineLimit(1)
                         Text(self.subscriptionPlan.descriptionText)
                             .font(FontPalette.fontMedium(withSize: 10))
-                            .foregroundColor(ColorPalette.primaryText)
+                            .foregroundColor(ColorPalette.thirdText)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(1)
                     }

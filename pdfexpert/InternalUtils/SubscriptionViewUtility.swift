@@ -8,6 +8,11 @@
 import Foundation
 import StoreKit
 
+fileprivate struct InternalSubscriptionPeriod {
+    let unit: Product.SubscriptionPeriod.Unit
+    let value: Int
+}
+
 extension Product.SubscriptionPeriod.Unit {
     var displayUnitSingle: String {
         switch self {
@@ -60,7 +65,8 @@ extension Product.SubscriptionPeriod.Unit {
     }
 }
 
-extension Product.SubscriptionPeriod {
+fileprivate extension InternalSubscriptionPeriod {
+    
     // period == 1 ? "a day" : "5 days"
     var displayPeriodStartStatement: String {
         if self.value > 1 {
@@ -81,14 +87,25 @@ extension Product.SubscriptionPeriod {
     
     // period == 1 ? "1 day" : "5 days"
     var displayPeriodWithNumber: String {
-        return "\(self.value) \(self.value > 1 ? self.unit.displayUnitMultiple : self.unit.displayUnitSingle)"
+        "\(self.value) \(self.value > 1 ? self.unit.displayUnitMultiple : self.unit.displayUnitSingle)"
     }
+}
+
+extension Product.SubscriptionPeriod {
     
     // 3 days => 3, 3 weeks => 21, 2 months => 62, ...
     // Not reliable for legal information or date calculations,
     // since months and years are fixed on 31 and 365 respectively
     var days: Int {
         return self.unit.days * self.value
+    }
+    
+    fileprivate func getInternalPeriod(weekFrom7days: Bool) -> InternalSubscriptionPeriod {
+        if weekFrom7days, self.value == 7, self.unit == .day {
+            return InternalSubscriptionPeriod(unit: .week, value: 1)
+        } else {
+            return InternalSubscriptionPeriod(unit: self.unit, value: self.value)
+        }
     }
 }
 
@@ -97,7 +114,7 @@ extension Product {
     var title: String {
         var text = "Premium"
         if let subscription = self.subscription {
-            text += " \(subscription.subscriptionPeriod.displayPeriodWithNumber)"
+            text += " \(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).displayPeriodWithNumber)"
         }
         return text
     }
@@ -105,14 +122,14 @@ extension Product {
     var titleShort: String {
         var text = ""
         if let subscription = self.subscription {
-            text += "\(subscription.subscriptionPeriod.unit.displayUnitPeriod)"
+            text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).unit.displayUnitPeriod)"
         }
         text = text.capitalizingFirstLetter()
         return text
     }
     
     var descriptionText: String {
-        var text = self.getPriceText(withCustomUnitPeriod: .week)
+        var text = self.getPriceText(weekFrom7days: false, customUnitPeriod: .week)
         text = text.capitalizingFirstLetter()
         return text
     }
@@ -120,16 +137,16 @@ extension Product {
     var fullDescriptionText: String {
         var text = ""
         if let introductortOffer = self.subscription?.introductoryOffer {
-            text += "\(introductortOffer.period.displayPeriodStartStatement) free, then "
+            text += "\(introductortOffer.period.getInternalPeriod(weekFrom7days: false).displayPeriodStartStatement) free, then "
         }
-        text += self.getPriceText()
+        text += self.getPriceText(weekFrom7days: true)
         text = text.capitalizingFirstLetter()
         return text
     }
     
     var freeTrialText: String? {
         if let introductoryOffer = self.subscription?.introductoryOffer, introductoryOffer.paymentMode == .freeTrial {
-            let freeTrialDuration = introductoryOffer.period.displayPeriodWithNumber
+            let freeTrialDuration = introductoryOffer.period.getInternalPeriod(weekFrom7days: false).displayPeriodWithNumber
             return "FREE TRIAL for \(freeTrialDuration)"
         } else {
             return nil
@@ -197,7 +214,7 @@ extension Product {
     // otherwise
     // <price in custom unit period>(= (price / period days) * custom unit period days)/<display period of custom unit period>
     // E.g.: custom unit period == week => 89.99€/year => 1.73€/week
-    private func getPriceText(withCustomUnitPeriod customUnitPeriod: SubscriptionPeriod.Unit? = nil) -> String {
+    private func getPriceText(weekFrom7days: Bool, customUnitPeriod: SubscriptionPeriod.Unit? = nil) -> String {
         if let subscription = self.subscription {
             var text = ""
             if let customUnitPeriod = customUnitPeriod {
@@ -208,7 +225,7 @@ extension Product {
                 text += "/\(customUnitPeriod.displayUnitSingle)"
             } else {
                 text += self.displayPrice
-                text += "/\(subscription.subscriptionPeriod.displayPeriod)"
+                text += "/\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: weekFrom7days).displayPeriod)"
             }
             return text
         } else {
