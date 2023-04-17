@@ -108,7 +108,7 @@ struct SubscriptionVerticalView: View {
     
     var currentSubscriptionPlanView: some View {
         Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-            .font(FontPalette.fontBold(withSize: 18))
+            .font(FontPalette.fontBold(withSize: 20))
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 40)

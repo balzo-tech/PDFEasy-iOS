@@ -23,13 +23,13 @@ struct SubscriptionVerticalItemView: View {
                     VStack(spacing: 4) {
                         if let freeTrialText = self.subscriptionPlan.freeTrialText {
                             Text(freeTrialText)
-                                .font(FontPalette.fontBold(withSize: 16))
+                                .font(FontPalette.fontBold(withSize: 14))
                                 .foregroundColor(ColorPalette.extra)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .lineLimit(1)
                         }
                         Text(self.subscriptionPlan.titleShort)
-                            .font(FontPalette.fontBold(withSize: 16))
+                            .font(FontPalette.fontBold(withSize: 14))
                             .foregroundColor(ColorPalette.primaryText)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(1)
@@ -42,8 +42,9 @@ struct SubscriptionVerticalItemView: View {
                 }
                 .padding([.leading, .trailing], 16)
                 .frame(maxHeight: .infinity)
+                .background(RoundedRectangle(cornerRadius: 10).foregroundColor(isSelected ? ColorPalette.secondaryBG : .clear))
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(
-                    isSelected ? ColorPalette.buttonGradientStart : ColorPalette.thirdText,
+                    ColorPalette.secondaryBG,
                     lineWidth: 2)
                 )
                 if let discountText = self.subscriptionPlan.discountText {
@@ -86,7 +87,7 @@ struct SubscriptionVerticalItemView: View {
             } else {
                 Image(systemName: "circle")
                     .resizable()
-                    .foregroundColor(ColorPalette.thirdText)
+                    .foregroundColor(ColorPalette.fourthText)
             }
         }.frame(width: 24, height: 24)
     }
