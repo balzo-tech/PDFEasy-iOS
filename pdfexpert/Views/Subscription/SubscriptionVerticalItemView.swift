@@ -33,11 +33,13 @@ struct SubscriptionVerticalItemView: View {
                             .foregroundColor(ColorPalette.primaryText)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(1)
-                        Text(self.subscriptionPlan.descriptionText)
-                            .font(FontPalette.fontMedium(withSize: 10))
-                            .foregroundColor(ColorPalette.thirdText)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(1)
+                        if let discountText = self.subscriptionPlan.discountText {
+                            Text(discountText)
+                                .font(FontPalette.fontMedium(withSize: 10))
+                                .foregroundColor(ColorPalette.thirdText)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(1)
+                        }
                     }
                 }
                 .padding([.leading, .trailing], 16)
@@ -47,13 +49,13 @@ struct SubscriptionVerticalItemView: View {
                     ColorPalette.secondaryBG,
                     lineWidth: 2)
                 )
-                if let discountText = self.subscriptionPlan.discountText {
+                if let bestDiscountText = self.subscriptionPlan.bestDiscountText {
                     HStack {
                         Spacer()
                         GeometryReader { geometry in
                             HStack {
                                 Spacer()
-                                Text(discountText)
+                                Text(bestDiscountText)
                                     .font(FontPalette.fontBold(withSize: 12))
                                     .foregroundColor(.black)
                                     .frame(alignment: .trailing)
@@ -100,7 +102,8 @@ struct SubscriptionVerticalItemView_Previews: PreviewProvider {
                                      descriptionText: "$1,38/week",
                                      fullDescriptionText: "Free for 7 days, then $89.99/year",
                                      freeTrialText: "FREE TRIAL for 7 days",
-                                     discountText: "53% DISCOUNT"
+                                     bestDiscountText: "53% DISCOUNT",
+                                     discountText: "12 months at $1.99, save 53%"
         )
     }()
     private static let subscriptionPlanMonthly = {
@@ -109,7 +112,8 @@ struct SubscriptionVerticalItemView_Previews: PreviewProvider {
                                      descriptionText: "$2,47/week",
                                      fullDescriptionText: "$89.99/month",
                                      freeTrialText: nil,
-                                     discountText: nil
+                                     bestDiscountText: nil,
+                                     discountText: "4 weeks at $1.92, save 20%"
         )
     }()
     private static let subscriptionPlanWeekly = {
@@ -118,6 +122,7 @@ struct SubscriptionVerticalItemView_Previews: PreviewProvider {
                                      descriptionText: "$4,99/week",
                                      fullDescriptionText: "$4,99/week",
                                      freeTrialText: nil,
+                                     bestDiscountText: nil,
                                      discountText: nil
         )
     }()

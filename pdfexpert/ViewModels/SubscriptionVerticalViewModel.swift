@@ -23,17 +23,19 @@ struct SubscriptionPlanVerticalItem: SubscriptionPlan {
     let descriptionText: String
     let fullDescriptionText: String
     let freeTrialText: String?
+    let bestDiscountText: String?
     let discountText: String?
 }
 
 fileprivate extension Product {
     func getSubscriptionPlanVerticalItem(totalProducts: [Product]) -> SubscriptionPlanVerticalItem {
         return SubscriptionPlanVerticalItem(product: self,
-                                titleShort: self.titleShort,
-                                descriptionText: self.descriptionText,
-                                fullDescriptionText: self.fullDescriptionText,
-                                freeTrialText: self.freeTrialText,
-                                discountText: self.getDiscountPercentage(forProducts: totalProducts))
+                                            titleShort: self.titleShort,
+                                            descriptionText: self.descriptionText,
+                                            fullDescriptionText: self.fullDescriptionText,
+                                            freeTrialText: self.freeTrialText,
+                                            bestDiscountText: self.getBestDiscount(forProducts: totalProducts),
+                                            discountText: self.getDiscount(forProducts: totalProducts))
     }
 }
 

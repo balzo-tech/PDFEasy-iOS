@@ -58,14 +58,28 @@ extension Product.SubscriptionPeriod.Unit {
         switch self {
         case .day: return 1
         case .week: return 7
-        case .month: return 31
+        case .month: return 30
         case .year: return 365
         default: return 0
+        }
+    }
+    
+    var previousUnit: Self? {
+        switch self {
+        case .day: return nil
+        case .week: return .day
+        case .month: return .week
+        case .year: return .month
+        default: return nil
         }
     }
 }
 
 fileprivate extension InternalSubscriptionPeriod {
+    
+    var days: Int {
+        return self.unit.days * self.value
+    }
     
     // period == 1 ? "a day" : "5 days"
     var displayPeriodStartStatement: String {
@@ -89,15 +103,19 @@ fileprivate extension InternalSubscriptionPeriod {
     var displayPeriodWithNumber: String {
         "\(self.value) \(self.value > 1 ? self.unit.displayUnitMultiple : self.unit.displayUnitSingle)"
     }
+    
+    func convert(toUnit unit: Product.SubscriptionPeriod.Unit) -> Self {
+        return InternalSubscriptionPeriod(unit: unit, value: self.days/unit.days)
+    }
 }
 
 extension Product.SubscriptionPeriod {
     
-    // 3 days => 3, 3 weeks => 21, 2 months => 62, ...
+    // 3 days => 3, 3 weeks => 21, 2 months => 60, ...
     // Not reliable for legal information or date calculations,
-    // since months and years are fixed on 31 and 365 respectively
+    // since months and years are fixed on 30 and 365 respectively
     var days: Int {
-        return self.unit.days * self.value
+        return InternalSubscriptionPeriod(unit: self.unit, value: self.value).days
     }
     
     fileprivate func getInternalPeriod(weekFrom7days: Bool) -> InternalSubscriptionPeriod {
@@ -124,6 +142,7 @@ extension Product {
         if let subscription = self.subscription {
             text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).unit.displayUnitPeriod)"
         }
+        text += " \(self.displayPrice)"
         text = text.capitalizingFirstLetter()
         return text
     }
@@ -157,48 +176,71 @@ extension Product {
     // - The current product is a subscription
     // - The current product is the most convenient one
     // - There is another product which is a subscription and is less convenient
-    func getDiscountPercentage(forProducts products: [Product]) -> String? {
-        let mostConvenientProduct = Self.getMostConvenientSubscription(fromProducts: products)
-        
-        guard let mostConvenientProduct = mostConvenientProduct, mostConvenientProduct == self else {
+    func getBestDiscount(forProducts products: [Product]) -> String? {
+        guard self == Self.getMostConvenientSubscription(fromProducts: products) else {
             return nil
         }
-        
-        let remainingProducts = products.filter { $0 != mostConvenientProduct }
-        let secondMostConvenientProduct = Self.getMostConvenientSubscription(fromProducts: remainingProducts)
-        
-        guard let secondMostConvenientProduct = secondMostConvenientProduct else {
+        guard let discountPercentage = self.getDiscountPercentage(forProducts: products) else {
             return nil
         }
-        guard let mostConvenientPriceYearly = mostConvenientProduct.priceYearly,
-              let secondMostConvenientPriceYearly = secondMostConvenientProduct.priceYearly else {
-            return nil
-        }
-        
-        let discount = Decimal(1) - mostConvenientPriceYearly / secondMostConvenientPriceYearly
-        let discountPercentage = discount.formatted(.percent
-            .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 0...0)))
-        return "\(discountPercentage) DISCOUNT"
+        return "SAVE \(discountPercentage)"
     }
     
-    private static func getMostConvenientSubscription(fromProducts products: [Product]) -> Product? {
-        var mostConvenientProduct: Product? = nil
-        for product in products {
-            if let currentProductPriceYearly = product.priceYearly {
-                if let mostConvenient = mostConvenientProduct {
-                    if let mostConvenientPriceYearly = mostConvenient.priceYearly {
-                        if currentProductPriceYearly < mostConvenientPriceYearly {
-                            mostConvenientProduct = product
-                        }
-                    } else {
-                        assertionFailure("Unexpectedly missing mostConvenientPriceYearly for existing mostConvenientProduct")
-                    }
-                } else {
-                    mostConvenientProduct = product
-                }
-            }
+    // Returned only if:
+    // - The current product is a subscription
+    // - There is another product which is a subscription and is less convenient
+    func getDiscount(forProducts products: [Product]) -> String? {
+        guard let subscription = self.subscription else {
+            return nil
         }
-        return mostConvenientProduct
+        guard let discountPercentage = self.getDiscountPercentage(forProducts: products) else {
+            return nil
+        }
+        guard let previousUnit = subscription.subscriptionPeriod.unit.previousUnit else {
+            return nil
+        }
+        let periodInPreviousUnit = subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: false).convert(toUnit: previousUnit)
+        var text = periodInPreviousUnit.displayPeriodWithNumber
+        text += " at "
+        text += self.getPriceText(weekFrom7days: false, customUnitPeriod: previousUnit, showTrailing: false)
+        text = text.capitalizingFirstLetter()
+        text += ", save \(discountPercentage)"
+        return text
+    }
+    
+    private func getDiscountPercentage(forProducts products: [Product]) -> String? {
+        let nextMostConvenientProduct = Self.getMostConvenientSubscription(fromProducts: products, worseThan: self)
+        
+        guard let nextMostConvenientProduct = nextMostConvenientProduct else {
+            return nil
+        }
+        guard let priceYearly = self.priceYearly,
+              let nextMostConvenientProductPriceYearly = nextMostConvenientProduct.priceYearly else {
+            return nil
+        }
+        
+        let discount = Decimal(1) - priceYearly / nextMostConvenientProductPriceYearly
+        let discountPercentage = discount.formatted(.percent
+            .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 0...0)))
+        return discountPercentage
+    }
+    
+    private static func sortedSubscriptionsBasedOnConvenience(fromProducts products: [Product]) -> [Product] {
+        return products.filter { $0.priceYearly != nil }.sorted { $0.priceYearly ?? 0 < $1.priceYearly ?? 0 }
+    }
+    
+    private static func getMostConvenientSubscription(fromProducts products: [Product], worseThan referenceProduct: Product? = nil) -> Product? {
+        let sortedProducts = Self.sortedSubscriptionsBasedOnConvenience(fromProducts: products)
+        if let referenceProduct = referenceProduct, let index = sortedProducts.firstIndex(of: referenceProduct) {
+            let nextProductIndex = index + 1
+            if nextProductIndex < sortedProducts.count {
+                return sortedProducts[nextProductIndex]
+            } else {
+                return nil
+            }
+        } else {
+            return sortedProducts.first
+        }
     }
     
     private var priceYearly: Decimal? {
@@ -214,7 +256,7 @@ extension Product {
     // otherwise
     // <price in custom unit period>(= (price / period days) * custom unit period days)/<display period of custom unit period>
     // E.g.: custom unit period == week => 89.99€/year => 1.73€/week
-    private func getPriceText(weekFrom7days: Bool, customUnitPeriod: SubscriptionPeriod.Unit? = nil) -> String {
+    private func getPriceText(weekFrom7days: Bool, customUnitPeriod: SubscriptionPeriod.Unit? = nil, showTrailing: Bool = true) -> String {
         if let subscription = self.subscription {
             var text = ""
             if let customUnitPeriod = customUnitPeriod {
@@ -222,10 +264,14 @@ extension Product {
                 text += self.priceFormatStyle
                     .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 2...2))
                     .format(pricePerUnit)
-                text += "/\(customUnitPeriod.displayUnitSingle)"
+                if showTrailing {
+                    text += "/\(customUnitPeriod.displayUnitSingle)"
+                }
             } else {
                 text += self.displayPrice
-                text += "/\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: weekFrom7days).displayPeriod)"
+                if showTrailing {
+                    text += "/\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: weekFrom7days).displayPeriod)"
+                }
             }
             return text
         } else {
