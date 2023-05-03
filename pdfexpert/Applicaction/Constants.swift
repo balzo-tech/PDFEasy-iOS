@@ -25,20 +25,27 @@ struct K {
             GetDebugPdf(context: Container.shared.persistence().container.viewContext)
         }
         
+        static var DebugPdfDocumentUrl: URL? {
+            return Bundle.main.url(forResource: "test", withExtension: "pdf")
+        }
+        
+        static var DebugPdfDocumentData: Data? {
+            guard let testFileUrl = DebugPdfDocumentUrl, (try? testFileUrl.checkResourceIsReachable()) ?? false else { return nil }
+            return try? Data(contentsOf: testFileUrl)
+        }
+        
+        static var DebugPdfDocument: PDFDocument? {
+            guard let testFileDataUrl = DebugPdfDocumentData else { return nil }
+            return PDFDocument(data: testFileDataUrl)
+        }
+        
         static func GetDebugPdf(context: NSManagedObjectContext) -> Pdf? {
-            let testFileUrl = Bundle.main.url(forResource: "test", withExtension: "pdf")
-            guard let testFileUrl = testFileUrl,
-                  (try? testFileUrl.checkResourceIsReachable()) ?? false,
-                  let testFileData = try? Data(contentsOf: testFileUrl) else { return nil }
+            guard let testFileData = DebugPdfDocumentData else { return nil }
             return Pdf(context: context, pdfData: testFileData)
         }
         
         static var DebugPdfEditable: PdfEditable? {
-            let testFileUrl = Bundle.main.url(forResource: "test", withExtension: "pdf")
-            guard let testFileUrl = testFileUrl,
-                  (try? testFileUrl.checkResourceIsReachable()) ?? false,
-                  let testFileData = try? Data(contentsOf: testFileUrl) else { return nil }
-            guard let testPdfDocument = PDFDocument(data: testFileData) else { return nil }
+            guard let testPdfDocument = DebugPdfDocument else { return nil }
             return PdfEditable(pdfDocument: testPdfDocument)
         }
     }
@@ -59,5 +66,16 @@ struct K {
         static let DocFileTypes: [UTType] = [UTType("com.microsoft.word.doc")!]
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
+        static let PdfMarginsColor: UIColor = .white
+    }
+}
+
+extension PdfEditViewModel.MarginsOption {
+    var horizontalMargin: CGFloat {
+        switch self {
+        case .noMargins: return 0.0
+        case .mediumMargins: return 20.0
+        case .heavyMargins: return 40.0
+        }
     }
 }

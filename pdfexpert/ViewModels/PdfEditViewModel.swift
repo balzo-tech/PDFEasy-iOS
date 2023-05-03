@@ -19,6 +19,14 @@ extension Container {
 
 class PdfEditViewModel: ObservableObject {
     
+    enum EditMode: CaseIterable {
+        case add, margins
+    }
+    
+    enum MarginsOption: CaseIterable {
+        case noMargins, mediumMargins, heavyMargins
+    }
+    
     @Published var pdfEditable: PdfEditable
     @Published var pdfCurrentPageIndex: Int? = 0
     @Published var pdfThumbnails: [UIImage?] = []
@@ -27,6 +35,8 @@ class PdfEditViewModel: ObservableObject {
     @Published var fileImagePickerShow: Bool = false
     @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
+    @Published var editMode: EditMode = .add
+    @Published var marginsOption: MarginsOption = .noMargins
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -97,7 +107,10 @@ class PdfEditViewModel: ObservableObject {
             self.pdfSaveError = .noPages
             return
         }
-        guard let data = self.pdfEditable.rawData else {
+        
+        let pdfDocument = PDFUtility.addMargins(toPdfDocument: self.pdfEditable.pdfDocument, horizontalMargin: self.marginsOption.horizontalMargin)
+        
+        guard let data = pdfDocument.dataRepresentation() else {
             debugPrint(for: self, message: "Couldn't convert pdf document to data")
             self.pdfSaveError = .unknown
             return

@@ -22,7 +22,8 @@ struct PdfEditView: View {
     var body: some View {
         VStack(spacing: 30) {
             self.pdfView
-            self.pageListView
+            self.editView
+            self.editOptionsView
         }
         .padding([.leading, .trailing], 16)
         .background(ColorPalette.primaryBG)
@@ -106,6 +107,35 @@ struct PdfEditView: View {
         }
     }
     
+    @ViewBuilder var editView: some View {
+        VStack {
+            Spacer()
+            switch self.viewModel.editMode {
+            case .add: self.pageListView
+            case .margins: self.marginOptionsView
+            }
+            Spacer()
+        }.frame(height: 88)
+    }
+    
+    var editOptionsView: some View {
+        HStack {
+            ForEach(PdfEditViewModel.EditMode.allCases, id:\.self) { editMode in
+                Button(action: { self.viewModel.editMode = editMode }) {
+                    VStack {
+                        editMode.iconImage
+                            .foregroundColor(self.viewModel.editMode == editMode
+                                             ? ColorPalette.buttonGradientStart
+                                             : ColorPalette.fourthText)
+                        Text(editMode.name)
+                            .foregroundColor(ColorPalette.primaryText)
+                            .font(FontPalette.fontRegular(withSize: 14))
+                    }.frame(maxWidth: .infinity)
+                }
+            }
+        }
+    }
+    
     var pageListView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
@@ -182,6 +212,22 @@ struct PdfEditView: View {
             return AnyView(ColorPalette.primaryText)
         }
     }
+    
+    var marginOptionsView: some View {
+        HStack(spacing: 16) {
+            ForEach(PdfEditViewModel.MarginsOption.allCases, id:\.self) { marginsOption in
+                Button(action: { self.viewModel.marginsOption = marginsOption }) {
+                    marginsOption.iconImage
+                        .padding(EdgeInsets(top: 13, leading: 9, bottom: 13, trailing: 9))
+                        .frame(width: 60, height: 88)
+                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(
+                            self.viewModel.marginsOption == marginsOption
+                            ? ColorPalette.buttonGradientStart
+                            : .clear, lineWidth: 2))
+                }
+            }
+        }
+    }
 }
 
 fileprivate extension View {
@@ -192,6 +238,40 @@ fileprivate extension View {
     }
 }
 
+fileprivate extension PdfEditViewModel.EditMode {
+    
+    var name: String {
+        switch self {
+        case .add: return "Add"
+        case .margins: return "Margins"
+        }
+    }
+    
+    var iconImage: Image {
+        switch self {
+        case .add: return Image("edit_add_file")
+        case .margins: return Image("edit_margins")
+        }
+    }
+}
+
+fileprivate extension PdfEditViewModel.MarginsOption {
+    
+    var iconImage: some View {
+        let insets: EdgeInsets = {
+            switch self {
+            case .noMargins: return EdgeInsets(top: 4, leading: 3, bottom: 4, trailing: 3)
+            case .mediumMargins: return EdgeInsets(top: 8, leading: 6, bottom: 8, trailing: 6)
+            case .heavyMargins: return EdgeInsets(top: 12, leading: 9, bottom: 12, trailing: 9)
+            }
+        }()
+        return ColorPalette.fourthText
+            .cornerRadius(4)
+            .padding(insets)
+            .overlay(RoundedRectangle(cornerRadius: 5).stroke(ColorPalette.primaryText, lineWidth: 2))
+    }
+}
+
 struct PdfEditView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
@@ -199,6 +279,5 @@ struct PdfEditView_Previews: PreviewProvider {
         } else {
             AnyView(Spacer())
         }
-        
     }
 }
