@@ -67,7 +67,6 @@
 		89923E6B29D47B9E00E246FC /* pdf-scanning.json in Resources */ = {isa = PBXBuildFile; fileRef = 89923E6A29D47B9E00E246FC /* pdf-scanning.json */; };
 		8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694129D33B1300566EF4 /* HomeItemView.swift */; };
 		8995694429D3450300566EF4 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694329D3450300566EF4 /* HomeViewModel.swift */; };
-		8995694729D3470C00566EF4 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 8995694629D3470C00566EF4 /* PopupView */; };
 		899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899F484329DF128200E7E1E4 /* MainTabView.swift */; };
 		89AAFE9C29DB1842002D348E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFE9B29DB1842002D348E /* OnboardingView.swift */; };
 		89AAFE9E29DB1973002D348E /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFE9D29DB1973002D348E /* OnboardingViewModel.swift */; };
@@ -250,7 +249,6 @@
 				89B72A3029DAD4990076884F /* FacebookCore in Frameworks */,
 				891A07E929E028EE0002FA3A /* CloudKitSyncMonitor in Frameworks */,
 				89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */,
-				8995694729D3470C00566EF4 /* PopupView in Frameworks */,
 				89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */,
 				895FE2D029D7392F00A99D5B /* Collections in Frameworks */,
 				89CD7BA829D32C72003F1C3A /* Factory in Frameworks */,
@@ -661,7 +659,6 @@
 				89CD7BA729D32C72003F1C3A /* Factory */,
 				89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */,
 				89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */,
-				8995694629D3470C00566EF4 /* PopupView */,
 				89923E6629D437F500E246FC /* FirebasePerformance */,
 				893E84A329D5BFBB00F6B99A /* PSPDFKit */,
 				895FE2C029D6D76300A99D5B /* WeScan */,
@@ -704,7 +701,6 @@
 				89CD7BA329D32C52003F1C3A /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				89CD7BA629D32C72003F1C3A /* XCRemoteSwiftPackageReference "Factory" */,
 				89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */,
 				893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */,
 				895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */,
 				895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */,
@@ -1135,14 +1131,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/exyte/PopupView.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
@@ -1217,11 +1205,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebasePerformance;
-		};
-		8995694629D3470C00566EF4 /* PopupView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8995694529D3470C00566EF4 /* XCRemoteSwiftPackageReference "PopupView" */;
-			productName = PopupView;
 		};
 		89B72A2F29DAD4990076884F /* FacebookCore */ = {
 			isa = XCSwiftPackageProductDependency;

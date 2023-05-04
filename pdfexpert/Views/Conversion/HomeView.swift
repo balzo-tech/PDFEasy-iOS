@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Factory
-import PopupView
 import PhotosUI
 
 struct HomeItem: Identifiable {
@@ -57,16 +56,11 @@ struct HomeView: View {
                 self.homeViewModel.monetizationShow = false
             })
         }
-        .popup(isPresented: self.$homeViewModel.imageInputPickerShow) {
+        .sheet(isPresented: self.$homeViewModel.imageInputPickerShow) {
             ImportView(onFileImportPressed: { self.homeViewModel.openFileImagePicker() },
                        onCameraImportPressed: { self.homeViewModel.openCamera() },
                        onGalleryImportPressed: { self.homeViewModel.openGallery() })
-        } customize: {
-            $0
-                .type(.toast)
-                .closeOnTapOutside(true)
-                .closeOnTap(false)
-                .backgroundColor(ColorPalette.primaryBG.opacity(0.5))
+            .presentationDetents([.height(400)])
         }
         // File picker for images
         .fullScreenCover(isPresented: self.$homeViewModel.fileImagePickerShow) {
