@@ -8,6 +8,7 @@
 import SwiftUI
 import Factory
 import PhotosUI
+import WeScan
 
 struct PdfEditView: View {
     
@@ -53,6 +54,11 @@ struct PdfEditView: View {
         }, message: { pdfSaveError in
             Text(pdfSaveError.errorDescription ?? "")
         })
+        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
+            self.getSubscriptionView(onComplete: {
+                self.viewModel.monetizationShow = false
+            })
+        }
         // File picker for images
         .fullScreenCover(isPresented: self.$viewModel.fileImagePickerShow) {
             FilePicker(fileTypes: [.image],
@@ -73,8 +79,18 @@ struct PdfEditView: View {
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
                       selection: self.$viewModel.imageSelection,
                       matching: .images)
+        // WeScan scanner
+        .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
+            ScannerView(onScannerResult: {
+                self.viewModel.scannerShow = false
+                self.viewModel.scannerResult = $0
+            }).onDisappear { self.viewModel.convert() }
+        }
+        .asyncView(asyncOperation: self.$viewModel.asyncPdf,
+                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
+        .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     
     var pdfView: some View {
@@ -159,6 +175,9 @@ struct PdfEditView: View {
                     }
                     Button("File") {
                         self.viewModel.openFileImagePicker()
+                    }
+                    Button("Scan") {
+                        self.viewModel.openScanner()
                     }
                 }
                 ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in

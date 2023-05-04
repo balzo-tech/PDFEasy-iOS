@@ -26,6 +26,27 @@ class PDFUtility {
         }
     }
     
+    static func appendPdfDocument(_ pdfDocument: PDFDocument, toPdfDocument: PDFDocument) {
+        for pageIndex in 0..<pdfDocument.pageCount {
+            if let page = pdfDocument.page(at: pageIndex) {
+                toPdfDocument.insert(page, at: toPdfDocument.pageCount)
+            } else {
+                assertionFailure("Missing expected page at index: \(pageIndex)")
+            }
+        }
+    }
+    
+    static func generatePdfThumbnails(pdfDocument: PDFDocument, size: CGSize) -> [UIImage?] {
+        var thumbnails: [UIImage?] = []
+        for index in 0..<pdfDocument.pageCount {
+            let image = Self.generatePdfThumbnail(pdfDocument: pdfDocument,
+                                                  size: size,
+                                                  forPageIndex: index)
+            thumbnails.append(image)
+        }
+        return thumbnails
+    }
+    
     static func generatePdfThumbnail(documentData: Data,
                                      size: CGSize,
                                      forPageIndex pageIndex: Int = 0) -> UIImage? {

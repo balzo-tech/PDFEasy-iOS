@@ -143,7 +143,7 @@ public class HomeViewModel : ObservableObject {
             self.convertUiImageToPdf(uiImage: imageToConvert)
         } else if let scannerResult = self.scannerResult {
             self.scannerResult = nil
-            self.convertScan(scannerResult: scannerResult)
+            PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
     }
     

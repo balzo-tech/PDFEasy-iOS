@@ -12,6 +12,7 @@
 		8902899129DC298E007E6372 /* OnboardingOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8902899029DC298E007E6372 /* OnboardingOption.swift */; };
 		8902899329DC2F88007E6372 /* OnboardingOption+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8902899229DC2F88007E6372 /* OnboardingOption+View.swift */; };
 		891A07E929E028EE0002FA3A /* CloudKitSyncMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = 891A07E829E028EE0002FA3A /* CloudKitSyncMonitor */; };
+		891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -43,6 +44,7 @@
 		89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC229E59C0E00060605 /* PdfEditViewModel.swift */; };
 		89436AC529E5A2F800060605 /* PdfViewerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */; };
 		89436AC729E5B99100060605 /* PdfKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC629E5B99100060605 /* PdfKitView.swift */; };
+		8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */; };
 		89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */; };
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
@@ -129,6 +131,7 @@
 		8902898E29DC2208007E6372 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		8902899029DC298E007E6372 /* OnboardingOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOption.swift; sourceTree = "<group>"; };
 		8902899229DC2F88007E6372 /* OnboardingOption+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OnboardingOption+View.swift"; sourceTree = "<group>"; };
+		891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableObject+Extensions.swift"; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -160,6 +163,7 @@
 		89436AC229E59C0E00060605 /* PdfEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditViewModel.swift; sourceTree = "<group>"; };
 		89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfViewerViewModel.swift; sourceTree = "<group>"; };
 		89436AC629E5B99100060605 /* PdfKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitView.swift; sourceTree = "<group>"; };
+		8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfScanUtility.swift; sourceTree = "<group>"; };
 		89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionErrorView.swift; sourceTree = "<group>"; };
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
@@ -504,6 +508,7 @@
 				89CD7AD929D329B1003F1C3A /* Color+Extensions.swift */,
 				89CD7ADA29D329B1003F1C3A /* Enum+Extensions.swift */,
 				894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */,
+				891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -604,6 +609,7 @@
 				89CD7B2E29D329B1003F1C3A /* View+Preview.swift */,
 				89CD7B2F29D329B1003F1C3A /* View+Internal.swift */,
 				893C8FDD29DED7F4000E35BD /* PdfUtility.swift */,
+				8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */,
 			);
 			path = InternalUtils;
 			sourceTree = "<group>";
@@ -776,6 +782,7 @@
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
 				89436AC129E563AE00060605 /* PdfViewerView.swift in Sources */,
 				894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */,
+				891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
@@ -832,6 +839,7 @@
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89B72A3329DADC790076884F /* SettingsView.swift in Sources */,
 				8902899129DC298E007E6372 /* OnboardingOption.swift in Sources */,
+				8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,

@@ -35,6 +35,9 @@ class PdfEditViewModel: ObservableObject {
     @Published var fileImagePickerShow: Bool = false
     @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
+    @Published var scannerShow: Bool = false
+    @Published var monetizationShow: Bool = false
+    @Published var cameraPermissionDeniedShow: Bool = false
     @Published var editMode: EditMode = .add
     @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
     @Published var quality: CGFloat = K.Misc.PdfDefaultQuality
@@ -51,24 +54,29 @@ class PdfEditViewModel: ObservableObject {
     }
     
     @Published var asyncImageLoading: AsyncOperation<(), ImportImageError> = AsyncOperation(status: .empty)
+    @Published var asyncPdf: AsyncOperation<PdfEditable, SharedLocalizedError> = AsyncOperation(status: .empty) {
+        didSet {
+            if let pdfEditable = self.asyncPdf.data  {
+                self.appendPdfEditableToPdf(pdfEditable: pdfEditable)
+                self.asyncPdf = AsyncOperation(status: .empty)
+            }
+        }
+    }
     
     @Injected(\.repository) private var repository
     @Injected(\.pdfCoordinator) private var coordinator
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.store) private var store
     
     var urlToImageToConvert: URL?
     var imageToConvert: UIImage?
+    var scannerResult: ScannerResult?
     
     var pdf: Pdf? = nil
     
     init(pdfEditable: PdfEditable) {
         self.pdfEditable = pdfEditable
-        for index in 0..<pdfEditable.pdfDocument.pageCount {
-            let image = PDFUtility.generatePdfThumbnail(pdfDocument: pdfEditable.pdfDocument,
-                                                        size: K.Misc.ThumbnailEditSize,
-                                                        forPageIndex: index)
-            self.pdfThumbnails.append(image)
-        }
+        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
     }
     
     func deletePage(atIndex index: Int) {
@@ -102,6 +110,14 @@ class PdfEditViewModel: ObservableObject {
     
     func openGallery() {
         self.imagePickerShow = true
+    }
+    
+    func openScanner() {
+        if self.store.isPremium.value {
+            self.showScanner()
+        } else {
+            self.monetizationShow = true
+        }
     }
     
     func save() {
@@ -157,6 +173,9 @@ class PdfEditViewModel: ObservableObject {
         } else if let imageToConvert = self.imageToConvert {
             self.imageToConvert = nil
             self.appendUiImageToPdf(uiImage: imageToConvert)
+        } else if let scannerResult = self.scannerResult {
+            self.scannerResult = nil
+            PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
     }
     
@@ -202,6 +221,21 @@ class PdfEditViewModel: ObservableObject {
                                                     size: K.Misc.ThumbnailEditSize,
                                                     forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
         self.pdfThumbnails.append(image)
+    }
+    
+    private func appendPdfEditableToPdf(pdfEditable: PdfEditable) {
+        PDFUtility.appendPdfDocument(pdfEditable.pdfDocument, toPdfDocument: self.pdfEditable.pdfDocument)
+        let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
+        self.pdfThumbnails.append(contentsOf: thumbnails)
+    }
+    
+    private func showScanner() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized, .notDetermined:
+            self.scannerShow = true
+        default:
+            self.cameraPermissionDeniedShow = true
+        }
     }
 }
 

@@ -15,8 +15,12 @@ public func debugPrintElapsedTimeSince(operationName: String, startTime: CFAbsol
     return currentTime
 }
 
+public func debugPrint(for type: Any.Type, message: String, function: String = #function) {
+    print("\(String(describing: type)) - \(function) - \(message)")
+}
+
 public func debugPrint(for instance: Any, message: String, function: String = #function) {
-    print("\(String(describing: type(of: instance))) - \(function) - \(message)")
+    debugPrint(for: type(of: instance), message: message)
 }
 
 public func isPreview() -> Bool {
