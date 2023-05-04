@@ -67,10 +67,12 @@ struct K {
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
         static let PdfMarginsColor: UIColor = .white
+        static let PdfDefaultMarginOption: MarginsOption = .noMargins
+        static let PdfDefaultQuality: CGFloat = 1.0
     }
 }
 
-extension PdfEditViewModel.MarginsOption {
+extension MarginsOption {
     var horizontalMargin: CGFloat {
         switch self {
         case .noMargins: return 0.0

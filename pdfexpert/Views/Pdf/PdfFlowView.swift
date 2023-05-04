@@ -26,8 +26,11 @@ struct PdfFlowView: View {
                     PdfEditView(viewModel: Container.shared.pdfEditViewModel(self.pdfEditable))
                         .navigationDestination(for: PdfCoordinator.Route.self) { route in
                             switch route {
-                            case .viewer(let pdf):
-                                PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(pdf))
+                            case .viewer(let pdf, let marginsOption, let quality):
+                                let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
+                                                                                       marginsOption: marginsOption,
+                                                                                       quality: quality)
+                                PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
                                     .navigationBarBackButtonHidden()
                                     .toolbar {
                                         ToolbarItem(placement: .navigationBarLeading) {

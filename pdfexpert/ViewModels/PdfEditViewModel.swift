@@ -17,14 +17,14 @@ extension Container {
     }
 }
 
+enum MarginsOption: CaseIterable {
+    case noMargins, mediumMargins, heavyMargins
+}
+
 class PdfEditViewModel: ObservableObject {
     
     enum EditMode: CaseIterable {
-        case add, margins
-    }
-    
-    enum MarginsOption: CaseIterable {
-        case noMargins, mediumMargins, heavyMargins
+        case add, margins, quality
     }
     
     @Published var pdfEditable: PdfEditable
@@ -36,7 +36,8 @@ class PdfEditViewModel: ObservableObject {
     @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
     @Published var editMode: EditMode = .add
-    @Published var marginsOption: MarginsOption = .noMargins
+    @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
+    @Published var quality: CGFloat = K.Misc.PdfDefaultQuality
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -53,6 +54,7 @@ class PdfEditViewModel: ObservableObject {
     
     @Injected(\.repository) private var repository
     @Injected(\.pdfCoordinator) private var coordinator
+    @Injected(\.analyticsManager) private var analyticsManager
     
     var urlToImageToConvert: URL?
     var imageToConvert: UIImage?
@@ -108,7 +110,9 @@ class PdfEditViewModel: ObservableObject {
             return
         }
         
-        let pdfDocument = PDFUtility.addMargins(toPdfDocument: self.pdfEditable.pdfDocument, horizontalMargin: self.marginsOption.horizontalMargin)
+        let pdfDocument = PDFUtility.applyPostProcess(toPdfDocument: self.pdfEditable.pdfDocument,
+                                                      horizontalMargin: self.marginsOption.horizontalMargin,
+                                                      quality: self.quality)
         
         guard let data = pdfDocument.dataRepresentation() else {
             debugPrint(for: self, message: "Couldn't convert pdf document to data")
@@ -132,7 +136,8 @@ class PdfEditViewModel: ObservableObject {
             self.pdfSaveError = .unknown
             return
         }
-        self.coordinator.showViewer(pdf: pdf)
+        self.analyticsManager.track(event: .pdfEditCompleted(marginsOption: self.marginsOption, qualityValue: self.quality))
+        self.coordinator.showViewer(pdf: pdf, marginOption: self.marginsOption, quality: self.quality)
     }
     
     func getCurrentPageImage(withSize size: CGSize) -> UIImage? {

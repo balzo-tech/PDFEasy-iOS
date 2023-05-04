@@ -15,14 +15,14 @@ class PdfCoordinator: ObservableObject {
     }
     
     enum Route: Hashable {
-        case viewer(pdf: Pdf)
+        case viewer(pdf: Pdf, marginOption: MarginsOption, quality: CGFloat)
     }
     
     @Published var rootView: RootView = .edit
     @Published var path: [Route] = []
     
-    func showViewer(pdf: Pdf) {
-        self.path.append(.viewer(pdf: pdf))
+    func showViewer(pdf: Pdf, marginOption: MarginsOption, quality: CGFloat) {
+        self.path.append(.viewer(pdf: pdf, marginOption: marginOption, quality: quality))
     }
     
     func goBack(fromRoute route: Route) {

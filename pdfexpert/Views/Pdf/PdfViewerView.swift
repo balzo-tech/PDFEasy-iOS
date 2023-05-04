@@ -44,9 +44,21 @@ struct PdfViewerView: View {
 
 struct PdfViewerView_Previews: PreviewProvider {
     
-    static var previews: some View {
+    static let inputParameter: PdfViewerViewModel.InputParameter? = {
         if let pdf = K.Test.DebugPdf {
-            AnyView(PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(pdf)))
+            let marginOption = K.Misc.PdfDefaultMarginOption
+            let quality = K.Misc.PdfDefaultQuality
+            return PdfViewerViewModel.InputParameter(pdf: pdf,
+                                                     marginsOption: marginOption,
+                                                     quality: quality)
+        } else {
+            return nil
+        }
+    }()
+    
+    static var previews: some View {
+        if let inputParameter = Self.inputParameter {
+            AnyView(PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter)))
         } else {
             AnyView(Spacer())
         }

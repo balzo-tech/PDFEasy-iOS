@@ -45,9 +45,9 @@ class PDFUtility {
         return pdfDocumentPage?.thumbnail(of: nativeSize, for: PDFDisplayBox.trimBox)
     }
     
-    static func addMargins(toPdfDocument pdfDocument: PDFDocument, horizontalMargin: CGFloat) -> PDFDocument {
+    static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, horizontalMargin: CGFloat, quality: CGFloat) -> PDFDocument {
         
-        guard horizontalMargin > 0, pdfDocument.pageCount > 0 else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
+        guard pdfDocument.pageCount > 0 else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
         
         let newPdfDocument = PDFDocument()
         for pageIndex in 0..<pdfDocument.pageCount {
@@ -64,20 +64,31 @@ class PDFUtility {
             let newHeight = (originalSize.height / originalSize.width) * newWidth
             
             let renderer = UIGraphicsImageRenderer(size: originalSize)
-            let newImage = renderer.image { ctx in
+            var newImage = renderer.image { ctx in
+                
                 // Set and fill the background color.
                 K.Misc.PdfMarginsColor.set()
                 ctx.fill(pageRect)
-
+                
                 // Translate the context so that we only draw the `cropRect`.
                 ctx.cgContext.translateBy(x: -pageRect.origin.x + horizontalMargin,
                                           y: originalSize.height - pageRect.origin.y - (originalSize.height - newHeight)/2)
 
                 // Flip the context vertically because the Core Graphics coordinate system starts from the bottom.
                 ctx.cgContext.scaleBy(x: newWidth / originalSize.width, y: -newHeight / originalSize.height)
-
+                
                 // Draw the PDF page.
                 page.draw(with: .mediaBox, to: ctx.cgContext)
+            }
+            
+            if quality < 1.0, let jpegData = newImage.jpegData(compressionQuality: quality) {
+                let nsJpegData = NSData(data: jpegData)
+                let unsafePointer = UnsafePointer<UInt8>(nsJpegData.bytes.bindMemory(to: UInt8.self, capacity: nsJpegData.length))
+                if let dataPtr = CFDataCreate(kCFAllocatorDefault, unsafePointer, nsJpegData.length),
+                   let dataProvider = CGDataProvider(data: dataPtr),
+                   let cgImage = CGImage(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) {
+                    newImage = UIImage(cgImage: cgImage)
+                }
             }
             
             if let pdfPage = PDFPage(image: newImage) {
@@ -102,7 +113,7 @@ fileprivate extension UIImage {
         let renderer = UIGraphicsPDFRenderer(bounds: pageBounds)
         
         // This procedure for rendering pdf pages (copied from WeScan) is the only one that seems
-        // to make the addMargins method to work. Creating PDFPage instances with PDFPage.init(_ image: UIImage)
+        // to make the applyPostProcess method to work. Creating PDFPage instances with PDFPage.init(_ image: UIImage)
         // causes the PDFPage.draw method to draw a black page.
         let data = renderer.pdfData { ctx in
             ctx.beginPage()

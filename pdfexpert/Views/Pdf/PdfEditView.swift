@@ -113,6 +113,7 @@ struct PdfEditView: View {
             switch self.viewModel.editMode {
             case .add: self.pageListView
             case .margins: self.marginOptionsView
+            case .quality: self.qualitySliderView
             }
             Spacer()
         }.frame(height: 88)
@@ -215,7 +216,7 @@ struct PdfEditView: View {
     
     var marginOptionsView: some View {
         HStack(spacing: 16) {
-            ForEach(PdfEditViewModel.MarginsOption.allCases, id:\.self) { marginsOption in
+            ForEach(MarginsOption.allCases, id:\.self) { marginsOption in
                 Button(action: { self.viewModel.marginsOption = marginsOption }) {
                     marginsOption.iconImage
                         .padding(EdgeInsets(top: 13, leading: 9, bottom: 13, trailing: 9))
@@ -227,6 +228,20 @@ struct PdfEditView: View {
                 }
             }
         }
+    }
+    
+    var qualitySliderView: some View {
+        HStack(spacing: 12) {
+            Text("0")
+                .foregroundColor(ColorPalette.primaryText)
+                .font(FontPalette.fontRegular(withSize: 14))
+            Slider(value: self.$viewModel.quality)
+                .tint(ColorPalette.buttonGradientStart)
+            Text("100")
+                .foregroundColor(ColorPalette.primaryText)
+                .font(FontPalette.fontRegular(withSize: 14))
+        }
+        .padding([.leading, .trailing], 16)
     }
 }
 
@@ -244,6 +259,7 @@ fileprivate extension PdfEditViewModel.EditMode {
         switch self {
         case .add: return "Add"
         case .margins: return "Margins"
+        case .quality: return "Quality"
         }
     }
     
@@ -251,11 +267,12 @@ fileprivate extension PdfEditViewModel.EditMode {
         switch self {
         case .add: return Image("edit_add_file")
         case .margins: return Image("edit_margins")
+        case .quality: return Image("edit_quality")
         }
     }
 }
 
-fileprivate extension PdfEditViewModel.MarginsOption {
+fileprivate extension MarginsOption {
     
     var iconImage: some View {
         let insets: EdgeInsets = {
