@@ -107,6 +107,9 @@ struct HomeView: View {
         .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
         .alertCameraPermission(isPresented: self.$homeViewModel.cameraPermissionDeniedShow)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            self.homeViewModel.onDidBecomeActive()
+        }
     }
 }
 

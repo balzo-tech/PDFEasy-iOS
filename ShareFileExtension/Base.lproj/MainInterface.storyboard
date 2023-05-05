@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="j1y-V4-xli">
+    <device id="retina6_12" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Share View Controller-->
+        <scene sceneID="ceB-am-kn3">
+            <objects>
+                <viewController id="j1y-V4-xli" customClass="ShareViewController" customModule="ShareFileExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="wbc-yd-nQP">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udp-n4-U3L" userLabel="PdfContainerView">
+                                <rect key="frame" x="0.0" y="159" width="393" height="559"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="LoB-cg-3Nl" userLabel="ActivityIndicator">
+                                <rect key="frame" x="186.66666666666666" y="428.66666666666669" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="md1-kw-C6s" userLabel="OpenButton">
+                                <rect key="frame" x="16" y="740" width="361" height="48"/>
+                                <color key="backgroundColor" name="ButtonGradientEnd"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="jhC-lL-wjN"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="16"/>
+                                <color key="tintColor" name="AccentColor"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Open in PDF Pro"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="1Xd-am-t49"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Udp-n4-U3L" firstAttribute="leading" secondItem="1Xd-am-t49" secondAttribute="leading" id="6vG-gl-vKq"/>
+                            <constraint firstItem="1Xd-am-t49" firstAttribute="trailing" secondItem="md1-kw-C6s" secondAttribute="trailing" constant="16" id="Ion-cX-dfF"/>
+                            <constraint firstItem="LoB-cg-3Nl" firstAttribute="centerY" secondItem="1Xd-am-t49" secondAttribute="centerY" id="PSB-Qe-bRS"/>
+                            <constraint firstItem="Udp-n4-U3L" firstAttribute="top" secondItem="1Xd-am-t49" secondAttribute="top" constant="100" id="WE5-10-z7f"/>
+                            <constraint firstItem="LoB-cg-3Nl" firstAttribute="centerX" secondItem="1Xd-am-t49" secondAttribute="centerX" id="Y6X-rb-27W"/>
+                            <constraint firstItem="1Xd-am-t49" firstAttribute="bottom" secondItem="md1-kw-C6s" secondAttribute="bottom" constant="30" id="b0O-G2-bVJ"/>
+                            <constraint firstItem="1Xd-am-t49" firstAttribute="trailing" secondItem="Udp-n4-U3L" secondAttribute="trailing" id="jD3-5L-qBn"/>
+                            <constraint firstItem="md1-kw-C6s" firstAttribute="leading" secondItem="1Xd-am-t49" secondAttribute="leading" constant="16" id="zV3-Kf-RpC"/>
+                            <constraint firstItem="md1-kw-C6s" firstAttribute="centerX" secondItem="1Xd-am-t49" secondAttribute="centerX" id="zl2-pc-a5K"/>
+                            <constraint firstItem="1Xd-am-t49" firstAttribute="bottom" secondItem="Udp-n4-U3L" secondAttribute="bottom" constant="100" id="zr2-mg-6uf"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicatorView" destination="LoB-cg-3Nl" id="7Id-do-2HB"/>
+                        <outlet property="openButton" destination="md1-kw-C6s" id="hT4-1f-WNq"/>
+                        <outlet property="pdfContainerView" destination="Udp-n4-U3L" id="IKz-ab-Rq7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CEy-Cv-SGf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="140" y="-2"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.24705882352941178" green="0.56862745098039214" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="ButtonGradientEnd">
+            <color red="0.24705882352941178" green="0.56862745098039214" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

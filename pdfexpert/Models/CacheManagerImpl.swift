@@ -69,6 +69,18 @@ class CacheManagerImpl: CacheManager {
         return nil
     }
     
+    private func saveData(_ value: Data?, forKey key: String) {
+        if let value = value {
+            self.mainUserDefaults.set(value, forKey: key)
+        } else {
+            self.reset(forKey: key)
+        }
+    }
+    
+    private func getData(forKey key: String) -> Data? {
+        return self.mainUserDefaults.data(forKey: key)
+    }
+    
     private func saveString(_ value: String?, forKey key: String) {
         if let value = value {
             self.mainUserDefaults.set(value, forKey: key)

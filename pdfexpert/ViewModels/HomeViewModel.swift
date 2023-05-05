@@ -73,9 +73,7 @@ public class HomeViewModel : ObservableObject {
     
     @Published var asyncPdf: AsyncOperation<PdfEditable, SharedLocalizedError> = AsyncOperation(status: .empty) {
         didSet {
-            if self.asyncPdf.success {
-                self.pdfFlowShow = true
-            }
+            self.pdfFlowShow = self.asyncPdf.success
         }
     }
     
@@ -92,6 +90,13 @@ public class HomeViewModel : ObservableObject {
     func onAppear() {
         Task {
             try await self.store.refreshAll()
+        }
+    }
+    
+    @MainActor
+    func onDidBecomeActive() {
+        Task {
+            try await self.checkShareExtensionPdf()
         }
     }
     
@@ -247,6 +252,25 @@ public class HomeViewModel : ObservableObject {
         default:
             self.cameraPermissionDeniedShow = true
         }
+    }
+    
+    @MainActor
+    private func checkShareExtensionPdf() async throws {
+        let pdfData = SharedStorage.pdfDataShareExtension
+        guard let pdfData = pdfData,
+              let pdfEditable = PdfEditable(data: pdfData) else {
+            return
+        }
+        // TODO: Ask the user whether to discard the current pdf or not
+        if self.asyncPdf.data != nil {
+            self.asyncPdf = AsyncOperation(status: .empty)
+            // This is a workaround to force swiftui to update its state and dismiss
+            // the current modal for the pdf edit flow, so that the new one can be
+            // shown in its place.
+            try await Task.sleep(until: .now + .seconds(0.5), clock: .continuous)
+        }
+        SharedStorage.pdfDataShareExtension = nil
+        self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
     }
 }
 
