@@ -35,19 +35,8 @@ struct WelcomeView: View {
             }
             VStack {
                 Spacer()
-                Button(action: {
-                    self.coordinator.showOnboarding()
-                }) {
-                    Text("Start")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .font(FontPalette.fontBold(withSize: 16))
-                        .foregroundColor(ColorPalette.primaryText)
-                        .contentShape(Capsule())
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .background(self.defaultGradientBackground)
-                .cornerRadius(10)
+                self.getDefaultButton(text: "Start",
+                                      onButtonPressed: self.coordinator.showOnboarding)
             }
         }
         .padding([.leading, .trailing], 16)

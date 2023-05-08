@@ -47,6 +47,8 @@
 		8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */; };
 		89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */; };
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
+		894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */; };
+		894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */; };
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
 		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
@@ -195,6 +197,8 @@
 		8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfScanUtility.swift; sourceTree = "<group>"; };
 		89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionErrorView.swift; sourceTree = "<group>"; };
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
+		894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialView.swift; sourceTree = "<group>"; };
+		894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialPageView.swift; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -350,6 +354,15 @@
 				89436AC029E563AE00060605 /* PdfViewerView.swift */,
 			);
 			path = Pdf;
+			sourceTree = "<group>";
+		};
+		894B019D2A0902A000FF6198 /* ImportTutorial */ = {
+			isa = PBXGroup;
+			children = (
+				894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */,
+				894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */,
+			);
+			path = ImportTutorial;
 			sourceTree = "<group>";
 		};
 		895C1BAE2A04FA53005EA190 /* ShareFileExtension */ = {
@@ -651,6 +664,7 @@
 				893E849229D5877800F6B99A /* Camera */,
 				89B72A3129DADC6E0076884F /* Settings */,
 				895FE2C929D6E98100A99D5B /* Subscription */,
+				894B019D2A0902A000FF6198 /* ImportTutorial */,
 				89CD7B2629D329B1003F1C3A /* ContentView.swift */,
 			);
 			path = Views;
@@ -886,6 +900,7 @@
 				895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */,
 				89CD7B7329D329B1003F1C3A /* SubscribeViewModel.swift in Sources */,
 				893E849129D5874D00F6B99A /* CameraView.swift in Sources */,
+				894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */,
 				893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */,
 				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
 				89E55BE729DC70A80073F268 /* OnboardingQuestion.swift in Sources */,
@@ -942,6 +957,7 @@
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				89AAFE9E29DB1973002D348E /* OnboardingViewModel.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
+				894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */,
 				893E84A029D5944E00F6B99A /* CameraService.swift in Sources */,
 				893C8FDE29DED7F4000E35BD /* PdfUtility.swift in Sources */,
 				8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */,

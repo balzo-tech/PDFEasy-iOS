@@ -22,10 +22,7 @@ extension View {
         VStack {
             HStack {
                 Button(action: { onClose() }) {
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(color)
+                    Self.getSystemClose(color: color)
                 }
                 Spacer()
             }
@@ -35,11 +32,46 @@ extension View {
         .padding(.top)
     }
     
+    @ViewBuilder func getCustomBackButton(color: Color, onPress: @escaping () -> ()) -> some View {
+        self.navigationBarBackButtonHidden()
+            .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { onPress() }) {
+                    Self.getSystemChevron(color: color, directionRight: false)
+                }
+            }
+        }
+    }
+    
     static func getAttributedText(forUrlString urlString: String,
                                   text: String) -> AttributedString {
         var attributedString = try! AttributedString(markdown: "[\(text)](\(urlString))")
         attributedString.underlineStyle = .single
         return attributedString
+    }
+    
+    static func getSystemChevron(color: Color, directionRight: Bool = true) -> some View {
+        Image(systemName: directionRight ? "chevron.right" : "chevron.left")
+            .font(.system(size: 20, weight: .medium, design: .default))
+            .foregroundColor(color)
+    }
+    
+    static func getSystemClose(color: Color) -> some View {
+        Image(systemName: "xmark")
+            .resizable()
+            .frame(width: 20, height: 20)
+            .foregroundColor(color)
+    }
+    
+    func addSystemCloseButton(color: Color, onPress: @escaping () -> ()) -> some View {
+        self.navigationBarBackButtonHidden()
+            .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { onPress() }) {
+                    Self.getSystemClose(color: color)
+                }
+            }
+        }
     }
 }
 

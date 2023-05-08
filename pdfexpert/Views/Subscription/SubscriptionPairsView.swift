@@ -78,19 +78,8 @@ struct SubscriptionPairsView: View {
             }
             self.freeTrialView
             Spacer().frame(height: 20)
-            Button(action: {
-                self.viewModel.subscribe()
-            }) {
-                Text("Subscribe")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .font(FontPalette.fontBold(withSize: 16))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .contentShape(Capsule())
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 48)
-            .background(self.defaultGradientBackground)
-            .cornerRadius(10)
+            self.getDefaultButton(text: "Subscribe",
+                                  onButtonPressed: { self.viewModel.subscribe() })
             self.currentSubscriptionPlanView
         }
         .padding([.leading, .trailing], 16)

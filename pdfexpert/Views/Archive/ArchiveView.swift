@@ -14,10 +14,17 @@ struct ArchiveView: View {
     
     @State private var showingDeleteAlert = false
     @State private var itemToDelete: Pdf? = nil
+    @State private var importTutorialShow: Bool = false
     
     var body: some View {
         ZStack {
-            self.content
+            self.content            
+            VStack(spacing: 0) {
+                Spacer()
+                self.getDefaultButton(text: "Convert from any file",
+                                      onButtonPressed: { self.importTutorialShow = true })
+                .padding(EdgeInsets(top: 0, leading: 32, bottom: 32, trailing: 32))
+            }
             if self.archiveViewModel.isLoading {
                 AnyView(self.getLoadingView())
             }
@@ -37,6 +44,9 @@ struct ArchiveView: View {
                                    thumbnail: pdf.thumbnail)
         }
         .asyncView(asyncOperation: self.$archiveViewModel.asyncItemDelete)
+        .fullScreenCover(isPresented: self.$importTutorialShow) {
+            ImportTutorialView()
+        }
     }
     
     var content: some View {
@@ -152,19 +162,8 @@ struct ArchiveView: View {
                 .foregroundColor(ColorPalette.primaryText)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
-            Button(action: {
-                self.archiveViewModel.refresh()
-            }) {
-                Text("Retry")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .font(FontPalette.fontBold(withSize: 16))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .contentShape(Capsule())
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 48)
-            .background(self.defaultGradientBackground)
-            .cornerRadius(10)
+            self.getDefaultButton(text: "Retry",
+                                  onButtonPressed: self.archiveViewModel.refresh)
             Spacer()
         }
         .padding([.leading, .trailing], 16)

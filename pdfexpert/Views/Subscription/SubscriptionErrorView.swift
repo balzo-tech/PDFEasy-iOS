@@ -28,19 +28,8 @@ struct SubscriptionErrorView: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
             Spacer()
-            Button(action: {
-                self.onButtonPressed()
-            }) {
-                Text("Retry")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .font(FontPalette.fontBold(withSize: 16))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .contentShape(Capsule())
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 48)
-            .background(self.defaultGradientBackground)
-            .cornerRadius(10)
+            self.getDefaultButton(text: "Retry",
+                                  onButtonPressed: self.onButtonPressed)
         }
         .padding([.leading, .trailing], 16)
         .padding([.top, .bottom], 64)
