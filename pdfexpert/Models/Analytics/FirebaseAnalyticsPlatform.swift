@@ -38,6 +38,8 @@ class FirebaseAnalyticsPlatform: AnalyticsPlatform {
                             FirebaseEventCustomParameters.marginOption.rawValue: marginsOption,
                             FirebaseEventCustomParameters.quality.rawValue: qualityValue
                            ])
+        case .reportNonFatalError(let error):
+            Crashlytics.crashlytics().record(error: error.nsError)
         }
     }
     
@@ -66,5 +68,22 @@ extension MarginsOption {
         case .mediumMargins: return "medium_margins"
         case .heavyMargins: return "heavy_margins"
         }
+    }
+}
+
+extension AnalyticsError {
+    
+    var errorDescription: String {
+        switch self {
+        case .shareExtensionPdfMissingRawData: return "Share Extension Pdf raw data missing while existance flag was true"
+        case .shareExtensionPdfCannotDecode: return "Share Extension Pdf raw data existed but could not be converted to PdfDocument"
+        }
+    }
+    
+    var nsError: NSError {
+        var userInfo: [String: Any] = [
+            "error_description": self.errorDescription
+        ]
+        return NSError(domain: "AnalyticsError", code: 0, userInfo: userInfo)
     }
 }

@@ -80,6 +80,7 @@ public class HomeViewModel : ObservableObject {
     @Published var pdfFlowShow: Bool = false
     
     @Injected(\.store) private var store
+    @Injected(\.analyticsManager) private var analyticsManager
     
     var urlToImageToConvert: URL?
     var urlToDocToConvert: URL?
@@ -256,11 +257,29 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     private func checkShareExtensionPdf() async throws {
+        let pdfDataExpected = SharedStorage.pdfDataShareExtensionExistanceFlag
         let pdfData = SharedStorage.pdfDataShareExtension
-        guard let pdfData = pdfData,
+        
+        if let pdfData = pdfData {
+            let fileSizeWithUnit = ByteCountFormatter.string(fromByteCount: Int64(pdfData.count), countStyle: .file)
+            debugPrint("Share Extension - Loaded pdf data with size: \(fileSizeWithUnit)")
+        }
+        
+        guard pdfDataExpected, let pdfData = pdfData,
               let pdfEditable = PdfEditable(data: pdfData) else {
+            if pdfDataExpected {
+                if let pdfData = pdfData {
+                    self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecode))
+                    SharedStorage.pdfDataShareExtension = nil
+                } else {
+                    self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfMissingRawData))
+                }
+                SharedStorage.pdfDataShareExtensionExistanceFlag = false
+            }
             return
         }
+        SharedStorage.pdfDataShareExtension = nil
+        SharedStorage.pdfDataShareExtensionExistanceFlag = false
         // TODO: Ask the user whether to discard the current pdf or not
         if self.asyncPdf.data != nil {
             self.asyncPdf = AsyncOperation(status: .empty)
@@ -269,7 +288,7 @@ public class HomeViewModel : ObservableObject {
             // shown in its place.
             try await Task.sleep(until: .now + .seconds(0.5), clock: .continuous)
         }
-        SharedStorage.pdfDataShareExtension = nil
+        
         self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
     }
 }

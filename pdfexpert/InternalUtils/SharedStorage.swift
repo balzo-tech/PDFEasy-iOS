@@ -10,16 +10,42 @@ import Foundation
 class SharedStorage {
     
     enum UserDefaultsKey: String {
+        case pdfDataShareExtensionExistanceFlag
         case pdfDataShareExtension
     }
     
-    private static let userDefaults = UserDefaults(suiteName: "group.eu.balzo.pdfexpert")
+    private static let appGroup = "group.eu.balzo.pdfexpert"
+    private static let userDefaults = UserDefaults(suiteName: appGroup)
+    
+    static var cacheDirectory: URL? {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Self.appGroup)?.appending(path: "Library/Caches",
+                                                                                                          directoryHint: .isDirectory)
+    }
+    
+    static var pdfDataShareExtensionExistanceFlag: Bool {
+        get { Self.userDefaults?.bool(forKey: UserDefaultsKey.pdfDataShareExtensionExistanceFlag.rawValue) ?? false }
+        set {
+            Self.userDefaults?.set(newValue, forKey: UserDefaultsKey.pdfDataShareExtensionExistanceFlag.rawValue)
+            Self.userDefaults?.synchronize()
+        }
+    }
+    
+    private static var pdfDataShareExtensionFilePath: URL? {
+        Self.cacheDirectory?.appending(component: UserDefaultsKey.pdfDataShareExtension.rawValue).appendingPathExtension(for: .pdf)
+    }
     
     static var pdfDataShareExtension: Data? {
-        get { Self.userDefaults?.object(forKey: UserDefaultsKey.pdfDataShareExtension.rawValue) as? Data }
+        get {
+            guard let url = Self.pdfDataShareExtensionFilePath else { return nil }
+            return try? Data(contentsOf: url)
+        }
         set {
-            Self.userDefaults?.set(newValue, forKey: UserDefaultsKey.pdfDataShareExtension.rawValue)
-            Self.userDefaults?.synchronize()
+            guard let url = Self.pdfDataShareExtensionFilePath else { return }
+            if let newValue = newValue {
+                try? newValue.write(to: url)
+            } else {
+                try? FileManager.default.removeItem(at: url)
+            }
         }
     }
 }

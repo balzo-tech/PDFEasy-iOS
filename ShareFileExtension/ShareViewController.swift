@@ -130,7 +130,10 @@ class ShareViewController: UIViewController {
             assertionFailure("Cannot create url to app")
             return
         }
+        SharedStorage.pdfDataShareExtensionExistanceFlag = true
         SharedStorage.pdfDataShareExtension = pdfDocumentData
+        let fileSizeWithUnit = ByteCountFormatter.string(fromByteCount: Int64(pdfDocumentData.count), countStyle: .file)
+        debugPrint("Share Extension - Saved pdf data with size: \(fileSizeWithUnit)")
         if self.openURL(url) {
             extensionContext.completeRequest(returningItems: [], completionHandler: nil)
         } else {
