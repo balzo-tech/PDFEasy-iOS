@@ -31,25 +31,15 @@ struct PdfFlowView: View {
                                                                                        marginsOption: marginsOption,
                                                                                        quality: quality)
                                 PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
-                                    .navigationBarBackButtonHidden()
-                                    .toolbar {
-                                        ToolbarItem(placement: .navigationBarLeading) {
-                                            Button(action: { self.coordinator.goBack(fromRoute: route) }) {
-                                                Image(systemName: "chevron.backward")
-                                                    .foregroundColor(ColorPalette.primaryText)
-                                            }
-                                        }
-                                    }
+                                    .addCustomBackButton(color: ColorPalette.primaryText,
+                                                         onPress: {
+                                        self.coordinator.goBack(fromRoute: route)
+                                    })
                             }
                         }
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Button(action: { self.dismiss() }) {
-                                    Image(systemName: "xmark")
-                                        .foregroundColor(ColorPalette.primaryText)
-                                }
-                            }
-                        }
+                        .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                            self.dismiss()
+                        })
                 }
             )
         }

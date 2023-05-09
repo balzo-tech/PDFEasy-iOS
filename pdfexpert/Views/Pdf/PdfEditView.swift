@@ -19,9 +19,6 @@ struct PdfEditView: View {
     @State private var showingDeleteConfermation = false
     @State private var indexToDelete: Int? = nil
     @State private var showingSaveErrorAlert = false
-    @State var passwordTextFieldShow: Bool = false
-    @State var removePasswordAlertShow: Bool = false
-    @State private var passwordText: String = ""
     
     var body: some View {
         VStack(spacing: 30) {
@@ -33,7 +30,6 @@ struct PdfEditView: View {
         .background(ColorPalette.primaryBG)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                self.passwordButton
                 self.saveButton
             }
         }
@@ -264,42 +260,11 @@ struct PdfEditView: View {
         .padding([.leading, .trailing], 16)
     }
     
-    @ViewBuilder var passwordButton: some View {
-        Group {
-            if self.viewModel.pdfEditable.password != nil {
-                Button(action: { self.removePasswordAlertShow = true }) {
-                    Image("password_entered")
-                        .foregroundColor(ColorPalette.primaryText)
-                }
-            } else {
-                Button(action: { self.passwordTextFieldShow = true }) {
-                    Image("password_missing")
-                        .foregroundColor(ColorPalette.primaryText)
-                }
-            }
-        }
-        .alert("Would you like to remove your password?", isPresented: self.$removePasswordAlertShow, actions: {
-            Button("Delete", role: .destructive, action: { self.viewModel.removePassword() })
-            Button("Cancel", role: .cancel, action: {})
-        }, message: {
-            Text("If you decide to remove the password, your PDF will no longer be protected.")
-        })
-        .alert("Protect PDF using password", isPresented: self.$passwordTextFieldShow, actions: {
-            SecureField("Enter Password", text: self.$passwordText)
-            Button("Confirm", action: {
-                self.viewModel.setPassword(self.passwordText)
-                self.passwordText = ""
-            })
-            Button("Cancel", role: .cancel, action: {})
-        }, message: {
-            Text("Enter a password to protect your PDF file.")
-        })
-    }
-    
     var saveButton: some View {
         Button(action: { self.viewModel.save() }) {
             Image(systemName: "square.and.arrow.down")
                 .foregroundColor(ColorPalette.primaryText)
+                .font(.system(size: 16).bold())
         }
     }
 }

@@ -179,16 +179,6 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
-    func setPassword(_ password: String) {
-        self.pdfEditable = PdfEditable(pdfDocument: self.pdfEditable.pdfDocument, password: password)
-        debugPrint(for: self, message: "New password: \(password)")
-    }
-    
-    func removePassword() {
-        self.pdfEditable = PdfEditable(pdfDocument: self.pdfEditable.pdfDocument, password: nil)
-        debugPrint(for: self, message: "Password removed")
-    }
-    
     @MainActor
     private func convertFileImageByURL(fileImageUrl: URL) {
         do {

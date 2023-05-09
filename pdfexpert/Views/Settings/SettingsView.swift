@@ -29,9 +29,8 @@ struct SettingsView: View {
                             .font(FontPalette.fontRegular(withSize: 16))
                             .foregroundColor(ColorPalette.primaryText)
                         Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.body)
-                            .foregroundColor(ColorPalette.primaryText)
+                        Self.getSystemChevron(color: ColorPalette.primaryText,
+                                              directionRight: true)
                     }
                 }
                 .listRowSeparator(.hidden)

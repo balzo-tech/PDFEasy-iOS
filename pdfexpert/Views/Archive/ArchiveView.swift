@@ -28,18 +28,20 @@ struct ArchiveView: View {
         .onAppear() {
             self.archiveViewModel.refresh()
         }
-        .fullScreenCover(isPresented: self.$archiveViewModel.monetizationShow) {
-            self.getSubscriptionView(onComplete: {
-                self.archiveViewModel.monetizationShow = false
-            })
-        }
-        .sheet(item: self.$archiveViewModel.pdfToBeShared) { pdf in
-            ActivityViewController(activityItems: [pdf.shareData!],
-                                   thumbnail: pdf.thumbnail)
-        }
         .asyncView(asyncOperation: self.$archiveViewModel.asyncItemDelete)
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
+        }
+        .sheet(item: self.$archiveViewModel.pdfToBeReviewed) { pdf in
+            NavigationStack {
+                let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
+                                                                       marginsOption: nil,
+                                                                       quality: nil)
+                PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
+                    .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                        self.archiveViewModel.pdfToBeReviewed = nil
+                    })
+            }
         }
     }
     
@@ -56,7 +58,7 @@ struct ArchiveView: View {
         if items.count > 0 {
             return AnyView(
                 List(items) { item in
-                    Button(action: { self.archiveViewModel.shareItem(item: item) }) {
+                    Button(action: { self.archiveViewModel.pdfToBeReviewed = item }) {
                         HStack(spacing: 16) {
                             self.getPdfThumbnail(forPdf: item)
                                 .frame(width: 86)
@@ -70,14 +72,21 @@ struct ArchiveView: View {
                                     .minimumScaleFactor(0.5)
                                     .lineLimit(1)
                                 Spacer().frame(height: 16)
-                                Text(item.pageCountText)
-                                    .font(FontPalette.fontRegular(withSize: 15))
-                                    .foregroundColor(ColorPalette.fourthText)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                HStack(spacing: 16) {
+                                    Text(item.pageCountText)
+                                        .font(FontPalette.fontRegular(withSize: 15))
+                                        .foregroundColor(ColorPalette.fourthText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    if item.password != nil {
+                                        Image("password_entered")
+                                    }
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.system(size: 20).bold())
+                                }
+                                
                                 Spacer()
                             }
                             .frame(maxWidth: .infinity)
-                            Image(systemName: "square.and.arrow.up")
                         }
                         .padding(.trailing, 16)
                         .background(ColorPalette.secondaryBG)

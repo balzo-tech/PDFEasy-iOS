@@ -32,7 +32,7 @@ extension View {
         .padding(.top)
     }
     
-    @ViewBuilder func getCustomBackButton(color: Color, onPress: @escaping () -> ()) -> some View {
+    @ViewBuilder func addCustomBackButton(color: Color, onPress: @escaping () -> ()) -> some View {
         self.navigationBarBackButtonHidden()
             .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -58,8 +58,7 @@ extension View {
     
     static func getSystemClose(color: Color) -> some View {
         Image(systemName: "xmark")
-            .resizable()
-            .frame(width: 20, height: 20)
+            .font(.system(size: 16).bold())
             .foregroundColor(color)
     }
     

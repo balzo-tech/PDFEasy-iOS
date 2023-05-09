@@ -27,17 +27,9 @@ class FirebaseAnalyticsPlatform: AnalyticsPlatform {
         case .onboardingCompleted(let results):
             self.onboardingCompleted(results)
         case .pdfEditCompleted(let marginsOption, let qualityValue):
-            self.sendEvent(withEventName: FirebaseEventCustomName.pdfEditCompleted.rawValue,
-                           parameters: [
-                            FirebaseEventCustomParameters.marginOption.rawValue: marginsOption,
-                            FirebaseEventCustomParameters.quality.rawValue: qualityValue
-                           ])
+            self.pdfEditCompleted(marginsOption: marginsOption, qualityValue: qualityValue)
         case .pdfShared(let marginsOption, let qualityValue):
-            self.sendEvent(withEventName: FirebaseEventCustomName.pdfShared.rawValue,
-                           parameters: [
-                            FirebaseEventCustomParameters.marginOption.rawValue: marginsOption,
-                            FirebaseEventCustomParameters.quality.rawValue: qualityValue
-                           ])
+            self.pdfShared(marginsOption: marginsOption, qualityValue: qualityValue)
         case .reportNonFatalError(let error):
             Crashlytics.crashlytics().record(error: error.nsError)
         }
@@ -50,6 +42,25 @@ class FirebaseAnalyticsPlatform: AnalyticsPlatform {
             .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
         self.sendEvent(withEventName: FirebaseEventCustomName.onboardingCompleted.rawValue,
                        parameters: parameters)
+    }
+    
+    private func pdfEditCompleted(marginsOption: MarginsOption, qualityValue: CGFloat) {
+        self.sendEvent(withEventName: FirebaseEventCustomName.pdfEditCompleted.rawValue,
+                       parameters: [
+                        FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
+                        FirebaseEventCustomParameters.quality.rawValue: qualityValue
+                       ])
+    }
+    
+    private func pdfShared(marginsOption: MarginsOption?, qualityValue: CGFloat?) {
+        var parameters: [String: Any] = [:]
+        if let marginsOption = marginsOption {
+            parameters[FirebaseEventCustomParameters.marginOption.rawValue] = marginsOption.trackingParameterValue
+        }
+        if let qualityValue = qualityValue {
+            parameters[FirebaseEventCustomParameters.quality.rawValue] = qualityValue
+        }
+        self.sendEvent(withEventName: FirebaseEventCustomName.pdfEditCompleted.rawValue, parameters: parameters)
     }
     
     private func sendEvent(withEventName eventName: String, parameters: [String: Any]? = nil) {

@@ -37,8 +37,8 @@ class PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<K.Test.NumberOfPdfs {
-            _ = K.Test.GetDebugPdf(context: viewContext)
+        for index in 0..<K.Test.NumberOfPdfs {
+            _ = K.Test.GetDebugPdf(context: viewContext, password: (index % 2 > 0) ? "Test" : nil)
         }
         do {
             try viewContext.save()

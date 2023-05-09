@@ -22,7 +22,7 @@ struct K {
         static let NumberOfPdfs = 5
         
         static var DebugPdf: Pdf? {
-            GetDebugPdf(context: Container.shared.persistence().container.viewContext)
+            GetDebugPdf(context: Container.shared.persistence().container.viewContext, password: nil)
         }
         
         static var DebugPdfDocumentUrl: URL? {
@@ -39,9 +39,9 @@ struct K {
             return PDFDocument(data: testFileDataUrl)
         }
         
-        static func GetDebugPdf(context: NSManagedObjectContext) -> Pdf? {
+        static func GetDebugPdf(context: NSManagedObjectContext, password: String?) -> Pdf? {
             guard let testFileData = DebugPdfDocumentData else { return nil }
-            return Pdf(context: context, pdfData: testFileData, password: nil)
+            return Pdf(context: context, pdfData: testFileData, password: password)
         }
         
         static var DebugPdfEditable: PdfEditable? {

@@ -21,8 +21,7 @@ class ArchiveViewModel: ObservableObject {
     
     @Published var asyncItems: AsyncOperation<[Pdf], SharedLocalizedError> = AsyncOperation(status: .empty)
     @Published var asyncItemDelete: AsyncOperation<(), SharedLocalizedError> = AsyncOperation(status: .empty)
-    @Published var pdfToBeShared: Pdf?
-    @Published var monetizationShow: Bool = false
+    @Published var pdfToBeReviewed: Pdf?
     @Published var isLoading: Bool = false
     
     @Injected(\.repository) private var repository
@@ -50,12 +49,8 @@ class ArchiveViewModel: ObservableObject {
         }.store(in: &self.cancelBag)
     }
     
-    func shareItem(item: Pdf) {
-        if self.store.isPremium.value {
-            self.pdfToBeShared = item
-        } else {
-            self.monetizationShow = true
-        }
+    func reviewItem(item: Pdf) {
+        self.pdfToBeReviewed = item
     }
     
     func delete(item: Pdf) {

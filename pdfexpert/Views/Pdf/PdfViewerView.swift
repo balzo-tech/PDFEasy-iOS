@@ -11,6 +11,9 @@ import Factory
 struct PdfViewerView: View {
     
     @StateObject var viewModel: PdfViewerViewModel
+    @State var passwordTextFieldShow: Bool = false
+    @State var removePasswordAlertShow: Bool = false
+    @State private var passwordText: String = ""
     
     var body: some View {
         PdfKitView(
@@ -23,11 +26,9 @@ struct PdfViewerView: View {
         .padding([.leading, .trailing], 16)
         .background(ColorPalette.primaryBG)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { self.viewModel.share() }) {
-                    Image(systemName: "square.and.arrow.up")
-                        .foregroundColor(ColorPalette.primaryText)
-                }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                self.passwordButton
+                self.shareButton
             }
         }
         .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
@@ -38,6 +39,54 @@ struct PdfViewerView: View {
         .sheet(item: self.$viewModel.pdfToBeShared) { pdf in
             ActivityViewController(activityItems: [pdf.shareData!],
                                    thumbnail: pdf.thumbnail)
+        }
+        .alert("Error",
+               isPresented: .constant(self.viewModel.pdfSaveError != nil),
+               presenting: self.viewModel.pdfSaveError,
+               actions: { pdfSaveError in
+            Button("Cancel") { self.viewModel.pdfSaveError = nil }
+        }, message: { pdfSaveError in
+            Text(pdfSaveError.errorDescription ?? "")
+        })
+    }
+    
+    @ViewBuilder var passwordButton: some View {
+        Group {
+            if self.viewModel.pdf.password != nil {
+                Button(action: { self.removePasswordAlertShow = true }) {
+                    Image("password_entered")
+                        .foregroundColor(ColorPalette.primaryText)
+                }
+            } else {
+                Button(action: { self.passwordTextFieldShow = true }) {
+                    Image("password_missing")
+                        .foregroundColor(ColorPalette.primaryText)
+                }
+            }
+        }
+        .alert("Would you like to remove your password?", isPresented: self.$removePasswordAlertShow, actions: {
+            Button("Delete", role: .destructive, action: { self.viewModel.removePassword() })
+            Button("Cancel", role: .cancel, action: {})
+        }, message: {
+            Text("If you decide to remove the password, your PDF will no longer be protected.")
+        })
+        .alert("Protect PDF using password", isPresented: self.$passwordTextFieldShow, actions: {
+            SecureField("Enter Password", text: self.$passwordText)
+            Button("Confirm", action: {
+                self.viewModel.setPassword(self.passwordText)
+                self.passwordText = ""
+            })
+            Button("Cancel", role: .cancel, action: {})
+        }, message: {
+            Text("Enter a password to protect your PDF file.")
+        })
+    }
+    
+    var shareButton: some View {
+        Button(action: { self.viewModel.share() }) {
+            Image(systemName: "square.and.arrow.up")
+                .foregroundColor(ColorPalette.primaryText)
+                .font(.system(size: 16).bold())
         }
     }
 }
