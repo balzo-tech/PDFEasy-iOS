@@ -18,6 +18,7 @@ extension Pdf {
 
     @NSManaged public var creationDate: Date?
     @NSManaged public var data: Data?
+    @NSManaged public var password: String?
 
 }
 

@@ -10,17 +10,20 @@ import PDFKit
 
 struct PdfEditable {
     private(set) var pdfDocument: PDFDocument
+    private(set) var password: String?
     
     var rawData: Data? {
         return self.pdfDocument.dataRepresentation()
     }
     
-    init?(data: Data) {
+    init?(data: Data, password: String? = nil) {
         guard let pdfDocument = PDFDocument(data: data) else { return nil }
         self.pdfDocument = pdfDocument
+        self.password = password
     }
     
-    init(pdfDocument: PDFDocument) {
+    init(pdfDocument: PDFDocument, password: String? = nil) {
         self.pdfDocument = pdfDocument
+        self.password = password
     }
 }

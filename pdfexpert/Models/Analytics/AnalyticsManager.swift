@@ -9,7 +9,12 @@ import Foundation
 
 enum AnalyticsError {
     case shareExtensionPdfMissingRawData
+    case shareExtensionPdfExistingUnexpectedRawData
     case shareExtensionPdfCannotDecode
+    case shareExtensionPdfInvalidPasswordForLockedFile
+    case shareExtensionPdfMissingDataForUnlockedFile
+    case shareExtensionPdfDecryptionFailed
+    case shareExtensionPdfCannotDecodeDecryptedData
 }
 
 enum AnalyticsEvent {

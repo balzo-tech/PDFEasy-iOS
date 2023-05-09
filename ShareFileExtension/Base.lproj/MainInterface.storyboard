@@ -12,6 +12,9 @@
         <array key="Montserrat-Bold.ttf">
             <string>Montserrat-Bold</string>
         </array>
+        <array key="Montserrat-Regular.ttf">
+            <string>Montserrat-Regular</string>
+        </array>
     </customFonts>
     <scenes>
         <!--Share View Controller-->
@@ -22,21 +25,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udp-n4-U3L" userLabel="PdfContainerView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udp-n4-U3L" userLabel="Pdf Container View">
                                 <rect key="frame" x="0.0" y="159" width="393" height="559"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="LoB-cg-3Nl" userLabel="ActivityIndicator">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="LoB-cg-3Nl" userLabel="Activity Indicator View">
                                 <rect key="frame" x="186.66666666666666" y="428.66666666666669" width="20" height="20"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="md1-kw-C6s" userLabel="OpenButton">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="md1-kw-C6s" userLabel="Button">
                                 <rect key="frame" x="16" y="740" width="361" height="48"/>
                                 <color key="backgroundColor" name="ButtonGradientEnd"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="jhC-lL-wjN"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="16"/>
-                                <color key="tintColor" name="AccentColor"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Open in PDF Pro"/>
                                 <userDefinedRuntimeAttributes>
@@ -45,16 +47,36 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="LWe-jE-eXY" userLabel="Password View">
+                                <rect key="frame" x="46" y="396.66666666666669" width="301" height="83.666666666666686"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This document is password protected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TEi-fC-wqT" userLabel="Password Description Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="301" height="19.666666666666668"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="16"/>
+                                        <color key="textColor" name="PrimaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Mhr-1M-pA1" userLabel="Password Text Field">
+                                        <rect key="frame" x="0.0" y="49.666666666666629" width="301" height="34"/>
+                                        <color key="backgroundColor" name="SecondaryBG"/>
+                                        <color key="textColor" name="PrimaryText"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" secureTextEntry="YES" textContentType="password"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1Xd-am-t49"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="LWe-jE-eXY" firstAttribute="centerY" secondItem="1Xd-am-t49" secondAttribute="centerY" id="5aa-8c-GSl"/>
                             <constraint firstItem="Udp-n4-U3L" firstAttribute="leading" secondItem="1Xd-am-t49" secondAttribute="leading" id="6vG-gl-vKq"/>
                             <constraint firstItem="1Xd-am-t49" firstAttribute="trailing" secondItem="md1-kw-C6s" secondAttribute="trailing" constant="16" id="Ion-cX-dfF"/>
                             <constraint firstItem="LoB-cg-3Nl" firstAttribute="centerY" secondItem="1Xd-am-t49" secondAttribute="centerY" id="PSB-Qe-bRS"/>
                             <constraint firstItem="Udp-n4-U3L" firstAttribute="top" secondItem="1Xd-am-t49" secondAttribute="top" constant="100" id="WE5-10-z7f"/>
                             <constraint firstItem="LoB-cg-3Nl" firstAttribute="centerX" secondItem="1Xd-am-t49" secondAttribute="centerX" id="Y6X-rb-27W"/>
                             <constraint firstItem="1Xd-am-t49" firstAttribute="bottom" secondItem="md1-kw-C6s" secondAttribute="bottom" constant="30" id="b0O-G2-bVJ"/>
+                            <constraint firstItem="LWe-jE-eXY" firstAttribute="centerX" secondItem="1Xd-am-t49" secondAttribute="centerX" id="d9B-XK-8hX"/>
                             <constraint firstItem="1Xd-am-t49" firstAttribute="trailing" secondItem="Udp-n4-U3L" secondAttribute="trailing" id="jD3-5L-qBn"/>
                             <constraint firstItem="md1-kw-C6s" firstAttribute="leading" secondItem="1Xd-am-t49" secondAttribute="leading" constant="16" id="zV3-Kf-RpC"/>
                             <constraint firstItem="md1-kw-C6s" firstAttribute="centerX" secondItem="1Xd-am-t49" secondAttribute="centerX" id="zl2-pc-a5K"/>
@@ -63,7 +85,9 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicatorView" destination="LoB-cg-3Nl" id="7Id-do-2HB"/>
-                        <outlet property="openButton" destination="md1-kw-C6s" id="hT4-1f-WNq"/>
+                        <outlet property="button" destination="md1-kw-C6s" id="dU4-XV-0F1"/>
+                        <outlet property="passwordTextField" destination="Mhr-1M-pA1" id="k55-QT-b18"/>
+                        <outlet property="passwordView" destination="LWe-jE-eXY" id="Keg-cJ-2PI"/>
                         <outlet property="pdfContainerView" destination="Udp-n4-U3L" id="IKz-ab-Rq7"/>
                     </connections>
                 </viewController>
@@ -73,11 +97,14 @@
         </scene>
     </scenes>
     <resources>
-        <namedColor name="AccentColor">
-            <color red="0.24705882352941178" green="0.56862745098039214" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="ButtonGradientEnd">
             <color red="0.24705882352941178" green="0.56862745098039214" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="PrimaryText">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="SecondaryBG">
+            <color red="0.13725490196078433" green="0.14117647058823529" blue="0.14901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

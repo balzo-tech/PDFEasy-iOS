@@ -76,12 +76,17 @@ extension AnalyticsError {
     var errorDescription: String {
         switch self {
         case .shareExtensionPdfMissingRawData: return "Share Extension Pdf raw data missing while existance flag was true"
+        case .shareExtensionPdfExistingUnexpectedRawData: return "Share Extension Pdf raw data but the existance flag was false"
         case .shareExtensionPdfCannotDecode: return "Share Extension Pdf raw data existed but could not be converted to PdfDocument"
+        case .shareExtensionPdfInvalidPasswordForLockedFile: return "Share Extension Pdf cannot be unlocked with the stored password"
+        case .shareExtensionPdfMissingDataForUnlockedFile: return "Share Extension Pdf was unlocked but failed to provide data"
+        case .shareExtensionPdfDecryptionFailed: return "Share Extension Pdf was unlocked but could not be decrypted"
+        case .shareExtensionPdfCannotDecodeDecryptedData: return "Share Extension Pdf was decrypted but could not be converted to PdfDocument"
         }
     }
     
     var nsError: NSError {
-        var userInfo: [String: Any] = [
+        let userInfo: [String: Any] = [
             "error_description": self.errorDescription
         ]
         return NSError(domain: "AnalyticsError", code: 0, userInfo: userInfo)

@@ -40,7 +40,7 @@ struct ArchiveView: View {
             })
         }
         .sheet(item: self.$archiveViewModel.pdfToBeShared) { pdf in
-            ActivityViewController(activityItems: [pdf.data!],
+            ActivityViewController(activityItems: [pdf.shareData!],
                                    thumbnail: pdf.thumbnail)
         }
         .asyncView(asyncOperation: self.$archiveViewModel.asyncItemDelete)

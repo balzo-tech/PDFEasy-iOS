@@ -260,26 +260,61 @@ public class HomeViewModel : ObservableObject {
         let pdfDataExpected = SharedStorage.pdfDataShareExtensionExistanceFlag
         let pdfData = SharedStorage.pdfDataShareExtension
         
+        let resetSharedStorage = {
+            SharedStorage.pdfDataShareExtension = nil
+            SharedStorage.pdfDataShareExtensionExistanceFlag = false
+            SharedStorage.pdfDataShareExtensionPassword = nil
+        }
+        
         if let pdfData = pdfData {
             let fileSizeWithUnit = ByteCountFormatter.string(fromByteCount: Int64(pdfData.count), countStyle: .file)
             debugPrint("Share Extension - Loaded pdf data with size: \(fileSizeWithUnit)")
         }
         
-        guard pdfDataExpected, let pdfData = pdfData,
-              let pdfEditable = PdfEditable(data: pdfData) else {
+        guard pdfDataExpected, let pdfData = pdfData else {
             if pdfDataExpected {
-                if let pdfData = pdfData {
-                    self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecode))
-                    SharedStorage.pdfDataShareExtension = nil
-                } else {
-                    self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfMissingRawData))
-                }
-                SharedStorage.pdfDataShareExtensionExistanceFlag = false
+                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfMissingRawData))
+                resetSharedStorage()
+            } else if pdfData != nil {
+                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfExistingUnexpectedRawData))
+                resetSharedStorage()
             }
             return
         }
-        SharedStorage.pdfDataShareExtension = nil
-        SharedStorage.pdfDataShareExtensionExistanceFlag = false
+        
+        guard var pdfEditable = PdfEditable(data: pdfData) else {
+            self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecode))
+            resetSharedStorage()
+            return
+        }
+        
+        if pdfEditable.pdfDocument.isEncrypted {
+            let password = SharedStorage.pdfDataShareExtensionPassword ?? ""
+            
+            guard pdfEditable.pdfDocument.unlock(withPassword: password) else {
+                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfInvalidPasswordForLockedFile))
+                resetSharedStorage()
+                return
+            }
+            
+            guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
+                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfMissingDataForUnlockedFile))
+                resetSharedStorage()
+                return
+            }
+            guard let pdfDecryptedData = try? PDFUtility.removePassword(data: pdfEncryptedData, existingPDFPassword: password) else {
+                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfDecryptionFailed))
+                resetSharedStorage()
+                return
+            }
+            guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
+                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecodeDecryptedData))
+                resetSharedStorage()
+                return
+            }
+            pdfEditable = pdfDecryptedEditable
+        }
+        resetSharedStorage()
         // TODO: Ask the user whether to discard the current pdf or not
         if self.asyncPdf.data != nil {
             self.asyncPdf = AsyncOperation(status: .empty)

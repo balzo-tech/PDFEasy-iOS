@@ -118,6 +118,71 @@ class PDFUtility {
         }
         return newPdfDocument
     }
+    
+    static func encryptPdf(pdfDocument: PDFDocument, password: String) -> PDFDocument? {
+        let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false)
+        let encryptedFileURL = documentDirectory.appendingPathComponent("temp_encrypted_pdf_file").appendingPathExtension(for: .pdf)
+        
+        // Write with password protection
+        pdfDocument.write(to: encryptedFileURL, withOptions: [PDFDocumentWriteOption.userPasswordOption : password,
+                                                              PDFDocumentWriteOption.ownerPasswordOption : password])
+        
+        // Get a new encrypted PdfDocument from the created file
+        let encryptedPdfDocument = PDFDocument(url: encryptedFileURL)
+        
+        // Clean up
+        try? FileManager.default.removeItem(at: encryptedFileURL)
+        
+        return encryptedPdfDocument
+    }
+    
+    static func unlock(data: Data, password: String) -> CGPDFDocument? {
+        if let pdf = CGPDFDocument(CGDataProvider(data: data as CFData)!) {
+            guard pdf.isEncrypted == true else { return pdf }
+            guard pdf.unlockWithPassword("") == false else { return pdf }
+            
+            if let cPasswordString = password.cString(using: String.Encoding.utf8) {
+                if pdf.unlockWithPassword(cPasswordString) {
+                    return pdf
+                }
+            }
+        }
+        return nil
+    }
+    
+    static func removePassword(data: Data, existingPDFPassword: String) throws -> Data? {
+        
+        if let pdf = unlock(data: data, password: existingPDFPassword) {
+            let data = NSMutableData()
+            
+            autoreleasepool {
+                let pageCount = pdf.numberOfPages
+                UIGraphicsBeginPDFContextToData(data, .zero, nil)
+                
+                for index in 1...pageCount {
+                    
+                    let page = pdf.page(at: index)
+                    let pageRect = page?.getBoxRect(CGPDFBox.mediaBox)
+                    
+                    
+                    UIGraphicsBeginPDFPageWithInfo(pageRect!, nil)
+                    let ctx = UIGraphicsGetCurrentContext()
+                    ctx?.interpolationQuality = .high
+                    // Draw existing page
+                    ctx!.saveGState()
+                    ctx!.scaleBy(x: 1, y: -1)
+                    ctx!.translateBy(x: 0, y: -(pageRect?.size.height)!)
+                    ctx!.drawPDFPage(page!)
+                    ctx!.restoreGState()
+                    
+                }
+                
+                UIGraphicsEndPDFContext()
+            }
+            return data as Data
+        }
+        return nil
+    }
 }
 
 fileprivate extension UIImage {

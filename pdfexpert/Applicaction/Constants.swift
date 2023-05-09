@@ -41,7 +41,7 @@ struct K {
         
         static func GetDebugPdf(context: NSManagedObjectContext) -> Pdf? {
             guard let testFileData = DebugPdfDocumentData else { return nil }
-            return Pdf(context: context, pdfData: testFileData)
+            return Pdf(context: context, pdfData: testFileData, password: nil)
         }
         
         static var DebugPdfEditable: PdfEditable? {

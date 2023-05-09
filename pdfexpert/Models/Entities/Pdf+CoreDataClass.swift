@@ -48,9 +48,26 @@ public class Pdf: NSManagedObject {
         return self.pdfDocument?.pageCount
     }
     
-    convenience init(context: NSManagedObjectContext, pdfData: Data) {
+    var shareData: Data? {
+        if let password = self.password, let pdfDocument = self.pdfDocument {
+            if let encryptedPdfDocument = PDFUtility.encryptPdf(pdfDocument: pdfDocument, password: password) {
+                if encryptedPdfDocument.unlock(withPassword: password) {
+                    return encryptedPdfDocument.dataRepresentation() ?? self.data
+                } else {
+                    return self.data
+                }
+            } else {
+                return self.data
+            }
+        } else {
+            return self.data
+        }
+    }
+    
+    convenience init(context: NSManagedObjectContext, pdfData: Data, password: String?) {
         self.init(context: context)
         self.data = pdfData
         self.creationDate = Date()
+        self.password = password
     }
 }

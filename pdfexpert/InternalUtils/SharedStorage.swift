@@ -11,6 +11,10 @@ class SharedStorage {
     
     enum UserDefaultsKey: String {
         case pdfDataShareExtensionExistanceFlag
+        case pdfDataShareExtensionPassword
+    }
+    
+    enum FileName: String {
         case pdfDataShareExtension
     }
     
@@ -30,8 +34,16 @@ class SharedStorage {
         }
     }
     
+    static var pdfDataShareExtensionPassword: String? {
+        get { Self.userDefaults?.string(forKey: UserDefaultsKey.pdfDataShareExtensionPassword.rawValue) }
+        set {
+            Self.userDefaults?.set(newValue, forKey: UserDefaultsKey.pdfDataShareExtensionPassword.rawValue)
+            Self.userDefaults?.synchronize()
+        }
+    }
+    
     private static var pdfDataShareExtensionFilePath: URL? {
-        Self.cacheDirectory?.appending(component: UserDefaultsKey.pdfDataShareExtension.rawValue).appendingPathExtension(for: .pdf)
+        Self.cacheDirectory?.appending(component: FileName.pdfDataShareExtension.rawValue).appendingPathExtension(for: .pdf)
     }
     
     static var pdfDataShareExtension: Data? {

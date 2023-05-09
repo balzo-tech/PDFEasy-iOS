@@ -136,7 +136,7 @@ class PdfEditViewModel: ObservableObject {
             return
         }
         do {
-            let pdf = Pdf(context: self.repository.pdfManagedContext, pdfData: data)
+            let pdf = Pdf(context: self.repository.pdfManagedContext, pdfData: data, password: self.pdfEditable.password)
             self.pdf = pdf
             try self.repository.saveChanges()
             self.viewPdf()
@@ -177,6 +177,16 @@ class PdfEditViewModel: ObservableObject {
             self.scannerResult = nil
             PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
+    }
+    
+    func setPassword(_ password: String) {
+        self.pdfEditable = PdfEditable(pdfDocument: self.pdfEditable.pdfDocument, password: password)
+        debugPrint(for: self, message: "New password: \(password)")
+    }
+    
+    func removePassword() {
+        self.pdfEditable = PdfEditable(pdfDocument: self.pdfEditable.pdfDocument, password: nil)
+        debugPrint(for: self, message: "Password removed")
     }
     
     @MainActor

@@ -36,7 +36,7 @@ struct PdfViewerView: View {
             })
         }
         .sheet(item: self.$viewModel.pdfToBeShared) { pdf in
-            ActivityViewController(activityItems: [pdf.data!],
+            ActivityViewController(activityItems: [pdf.shareData!],
                                    thumbnail: pdf.thumbnail)
         }
     }
