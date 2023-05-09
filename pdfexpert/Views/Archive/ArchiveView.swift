@@ -18,13 +18,7 @@ struct ArchiveView: View {
     
     var body: some View {
         ZStack {
-            self.content            
-            VStack(spacing: 0) {
-                Spacer()
-                self.getDefaultButton(text: "Convert from any file",
-                                      onButtonPressed: { self.importTutorialShow = true })
-                .padding(EdgeInsets(top: 0, leading: 32, bottom: 32, trailing: 32))
-            }
+            self.content
             if self.archiveViewModel.isLoading {
                 AnyView(self.getLoadingView())
             }
@@ -118,7 +112,12 @@ struct ArchiveView: View {
                         }
                     }
                 }
-                    .listStyle(.plain)
+                    .listStyle(.inset)
+                    .safeAreaInset(edge: .bottom) {
+                        self.getDefaultButton(text: "Convert from any file",
+                                              onButtonPressed: { self.importTutorialShow = true })
+                        .padding(EdgeInsets(top: 0, leading: 32, bottom: 32, trailing: 32))
+                    }
             )
         } else {
             return AnyView(self.getEmptyView)
