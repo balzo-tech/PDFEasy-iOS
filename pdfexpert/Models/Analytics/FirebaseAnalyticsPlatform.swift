@@ -9,66 +9,27 @@ import Foundation
 import FirebaseAnalytics
 import FirebaseCrashlytics
 
-private enum FirebaseEventCustomName: String {
-    case onboardingCompleted = "onboarding_completed"
-    case pdfEditCompleted = "pdf_edit_completed"
-    case pdfShared = "pdf_shared"
-}
-
 private enum FirebaseEventCustomParameters: String {
     case quality = "quality"
     case marginOption = "margin_option"
+    case pdfInputType = "pdf_input_type"
 }
 
 class FirebaseAnalyticsPlatform: AnalyticsPlatform {
     
     func track(event: AnalyticsEvent) {
         switch event {
-        case .onboardingCompleted(let results):
-            self.onboardingCompleted(results)
-        case .pdfEditCompleted(let marginsOption, let qualityValue):
-            self.pdfEditCompleted(marginsOption: marginsOption, qualityValue: qualityValue)
-        case .pdfShared(let marginsOption, let qualityValue):
-            self.pdfShared(marginsOption: marginsOption, qualityValue: qualityValue)
         case .reportNonFatalError(let error):
             Crashlytics.crashlytics().record(error: error.nsError)
+        default:
+            self.sendEvent(withEventName: event.firebaseCustomEventName, parameters: event.firebaseParameters)
         }
     }
     
     // MARK: - Private Methods
     
-    private func onboardingCompleted(_ results: [OnboardingQuestion: OnboardingOption]) {
-        let parameters: [String: String] = Dictionary(uniqueKeysWithValues: results
-            .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
-        self.sendEvent(withEventName: FirebaseEventCustomName.onboardingCompleted.rawValue,
-                       parameters: parameters)
-    }
-    
-    private func pdfEditCompleted(marginsOption: MarginsOption, qualityValue: CGFloat) {
-        self.sendEvent(withEventName: FirebaseEventCustomName.pdfEditCompleted.rawValue,
-                       parameters: [
-                        FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
-                        FirebaseEventCustomParameters.quality.rawValue: qualityValue
-                       ])
-    }
-    
-    private func pdfShared(marginsOption: MarginsOption?, qualityValue: CGFloat?) {
-        var parameters: [String: Any] = [:]
-        if let marginsOption = marginsOption {
-            parameters[FirebaseEventCustomParameters.marginOption.rawValue] = marginsOption.trackingParameterValue
-        }
-        if let qualityValue = qualityValue {
-            parameters[FirebaseEventCustomParameters.quality.rawValue] = qualityValue
-        }
-        self.sendEvent(withEventName: FirebaseEventCustomName.pdfEditCompleted.rawValue, parameters: parameters)
-    }
-    
     private func sendEvent(withEventName eventName: String, parameters: [String: Any]? = nil) {
         Analytics.logEvent(eventName, parameters: parameters)
-    }
-    
-    private func reportNonFatalError(_ nsError: NSError) {
-        Crashlytics.crashlytics().record(error: nsError)
     }
 }
 
@@ -78,6 +39,77 @@ extension MarginsOption {
         case .noMargins: return "no_margins"
         case .mediumMargins: return "medium_margins"
         case .heavyMargins: return "heavy_margins"
+        }
+    }
+}
+
+extension AnalyticsScreen {
+    var name: String {
+        switch self {
+        case .convert: return "Convert"
+        case .files: return "File"
+        case .settings: return "Settings"
+        case .subscription: return "Subscription"
+        case .importTutorial: return "ImportTutorial"
+        }
+    }
+}
+
+extension AnalyticsEvent {
+    var firebaseCustomEventName: String {
+        switch self {
+        case .onboardingCompleted: return "onboarding_completed"
+        case .conversionToPdfChosen: return "conversion_to_pdf_chosen"
+        case .conversionToPdfCompleted: return "conversion_to_pdf_completed"
+        case .pageAdded: return "page_added"
+        case .pageRemoved: return "page_remove"
+        case .passwordAdded: return "password_added"
+        case .passwordRemoved: return "password_remove"
+        case .pdfListShown: return "pdf_list_shown"
+        case .existingPdfOpened: return "existing_pdf_opened"
+        case .existingPdfRemoved: return "existing_pdf_removed"
+        case .importTutorialCompleted: return "import_tutorial_completed"
+        case .pdfEditCompleted: return "pdf_edit_completed"
+        case .pdfShared: return "pdf_shared"
+        case .reportScreen: return AnalyticsEventScreenView
+        case .reportNonFatalError: return ""
+        }
+    }
+    
+    var firebaseParameters: [String: Any]? {
+        switch self {
+        case .onboardingCompleted(let results):
+            return Dictionary(uniqueKeysWithValues: results
+                .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
+        case .conversionToPdfChosen(let pdfInputType):
+            return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+        case .conversionToPdfCompleted(let pdfInputType):
+            return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+        case .pageAdded(let pdfInputType):
+            return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+        case .pageRemoved: return nil
+        case .passwordAdded: return nil
+        case .passwordRemoved: return nil
+        case .pdfListShown: return nil
+        case .existingPdfOpened: return nil
+        case .existingPdfRemoved: return nil
+        case .importTutorialCompleted: return nil
+        case .pdfEditCompleted(let marginsOption, let qualityValue):
+            return [
+             FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
+             FirebaseEventCustomParameters.quality.rawValue: qualityValue
+            ]
+        case .pdfShared(let marginsOption, let qualityValue):
+            var parameters: [String: Any] = [:]
+            if let marginsOption = marginsOption {
+                parameters[FirebaseEventCustomParameters.marginOption.rawValue] = marginsOption.trackingParameterValue
+            }
+            if let qualityValue = qualityValue {
+                parameters[FirebaseEventCustomParameters.quality.rawValue] = qualityValue
+            }
+            return parameters
+        case .reportScreen(let screen): return [AnalyticsParameterScreenName: screen.name]
+        case .reportNonFatalError: return nil
         }
     }
 }
@@ -101,5 +133,19 @@ extension AnalyticsError {
             "error_description": self.errorDescription
         ]
         return NSError(domain: "AnalyticsError", code: 0, userInfo: userInfo)
+    }
+}
+
+fileprivate extension AnalyticsPdfInputType {
+    
+    var trackingParameterValue: String {
+        switch self {
+        case .camera: return "camera"
+        case .gallery: return "gallery"
+        case .file: return "file"
+        case .word: return "word"
+        case .scan: return "scan"
+        case .appExtension: return "app_extension"
+        }
     }
 }

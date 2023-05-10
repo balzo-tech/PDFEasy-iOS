@@ -24,12 +24,16 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
     @Published var currentSubscriptionPlan: S?
     
     @Injected(\.store) private var store
+    @Injected(\.analyticsManager) private var analyticsManager
     
     private var cancelBag = Set<AnyCancellable>()
     
     init() {
         self.store.isPremium.sink { self.onPremiumStateChanged(isPremium: $0) }.store(in: &self.cancelBag)
     }
+    
+    @MainActor
+    open func refresh() {}
     
     @MainActor
     func subscribe() {
@@ -69,6 +73,12 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
                 self.restorePurchaseRequest = AsyncOperation(status: .error(convertedError))
             }
         }
+    }
+    
+    @MainActor
+    func onAppear() {
+        self.analyticsManager.track(event: .reportScreen(.subscription))
+        self.refresh()
     }
     
     private func onPremiumStateChanged(isPremium: Bool) {

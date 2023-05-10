@@ -74,6 +74,8 @@ class PdfEditViewModel: ObservableObject {
     
     var pdf: Pdf? = nil
     
+    var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
+    
     init(pdfEditable: PdfEditable) {
         self.pdfEditable = pdfEditable
         self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
@@ -98,21 +100,27 @@ class PdfEditViewModel: ObservableObject {
         if nil != self.pdfCurrentPageIndex, index >= newMaxIndex {
             self.pdfCurrentPageIndex = (newMaxIndex > 0) ? newMaxIndex - 1 : nil
         }
+        
+        self.analyticsManager.track(event: .pageRemoved)
     }
     
     func openFileImagePicker() {
         self.fileImagePickerShow = true
+        self.currentAnalyticsPdfInputType = .file
     }
     
     func openCamera() {
         self.cameraShow = true
+        self.currentAnalyticsPdfInputType = .camera
     }
     
     func openGallery() {
         self.imagePickerShow = true
+        self.currentAnalyticsPdfInputType = .gallery
     }
     
     func openScanner() {
+        self.currentAnalyticsPdfInputType = .scan
         if self.store.isPremium.value {
             self.showScanner()
         } else {
@@ -221,12 +229,14 @@ class PdfEditViewModel: ObservableObject {
                                                     size: K.Misc.ThumbnailEditSize,
                                                     forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
         self.pdfThumbnails.append(image)
+        self.trackPageAddedEvent()
     }
     
     private func appendPdfEditableToPdf(pdfEditable: PdfEditable) {
         PDFUtility.appendPdfDocument(pdfEditable.pdfDocument, toPdfDocument: self.pdfEditable.pdfDocument)
         let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
         self.pdfThumbnails.append(contentsOf: thumbnails)
+        self.trackPageAddedEvent()
     }
     
     private func showScanner() {
@@ -236,6 +246,15 @@ class PdfEditViewModel: ObservableObject {
         default:
             self.cameraPermissionDeniedShow = true
         }
+    }
+    
+    private func trackPageAddedEvent() {
+        guard let currentAnalyticsPdfInputType = self.currentAnalyticsPdfInputType else {
+            assertionFailure("Missing exptected analytics pdf input type")
+            return
+        }
+        self.analyticsManager.track(event: .pageAdded(pdfInputType: currentAnalyticsPdfInputType))
+        self.currentAnalyticsPdfInputType = nil
     }
 }
 

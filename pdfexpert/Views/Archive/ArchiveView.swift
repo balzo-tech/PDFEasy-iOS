@@ -26,7 +26,7 @@ struct ArchiveView: View {
         .background(ColorPalette.primaryBG)
         .navigationTitle("File")
         .onAppear() {
-            self.archiveViewModel.refresh()
+            self.archiveViewModel.onAppear()
         }
         .asyncView(asyncOperation: self.$archiveViewModel.asyncItemDelete)
         .fullScreenCover(isPresented: self.$importTutorialShow) {
@@ -58,7 +58,7 @@ struct ArchiveView: View {
         if items.count > 0 {
             return AnyView(
                 List(items) { item in
-                    Button(action: { self.archiveViewModel.pdfToBeReviewed = item }) {
+                    Button(action: { self.archiveViewModel.reviewItem(item: item) }) {
                         HStack(spacing: 16) {
                             self.getPdfThumbnail(forPdf: item)
                                 .frame(width: 86)

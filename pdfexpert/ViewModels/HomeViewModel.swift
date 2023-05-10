@@ -73,7 +73,12 @@ public class HomeViewModel : ObservableObject {
     
     @Published var asyncPdf: AsyncOperation<PdfEditable, SharedLocalizedError> = AsyncOperation(status: .empty) {
         didSet {
-            self.pdfFlowShow = self.asyncPdf.success
+            if self.asyncPdf.success {
+                self.trackPdfConversionCompletedEvent()
+                self.pdfFlowShow = true
+            } else {
+                self.pdfFlowShow = false
+            }
         }
     }
     
@@ -87,11 +92,14 @@ public class HomeViewModel : ObservableObject {
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
     
+    var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
+    
     @MainActor
     func onAppear() {
         Task {
             try await self.store.refreshAll()
         }
+        self.analyticsManager.track(event: .reportScreen(.convert))
     }
     
     @MainActor
@@ -106,6 +114,7 @@ public class HomeViewModel : ObservableObject {
     }
     
     func scanPdf() {
+        self.trackPdfConversionChosenEvent(inputType: .scan)
         if self.store.isPremium.value {
             self.showScanner()
         } else {
@@ -114,21 +123,25 @@ public class HomeViewModel : ObservableObject {
     }
     
     func openFileImagePicker() {
+        self.trackPdfConversionChosenEvent(inputType: .file)
         self.imageInputPickerShow = false
         self.fileImagePickerShow = true
     }
     
     func openCamera() {
+        self.trackPdfConversionChosenEvent(inputType: .camera)
         self.imageInputPickerShow = false
         self.cameraShow = true
     }
     
     func openGallery() {
+        self.trackPdfConversionChosenEvent(inputType: .gallery)
         self.imageInputPickerShow = false
         self.imagePickerShow = true
     }
     
     func openFileDocPicker() {
+        self.trackPdfConversionChosenEvent(inputType: .word)
         if self.store.isPremium.value {
             self.fileDocPickerShow = true
         } else {
@@ -324,7 +337,22 @@ public class HomeViewModel : ObservableObject {
             try await Task.sleep(until: .now + .seconds(0.5), clock: .continuous)
         }
         
+        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: .appExtension))
         self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
+    }
+    
+    private func trackPdfConversionChosenEvent(inputType: AnalyticsPdfInputType) {
+        self.currentAnalyticsPdfInputType = inputType
+        self.analyticsManager.track(event: .conversionToPdfChosen(pdfInputType: inputType))
+    }
+    
+    private func trackPdfConversionCompletedEvent() {
+        guard let currentAnalyticsPdfInputType = self.currentAnalyticsPdfInputType else {
+            assertionFailure("Missing exptected analytics pdf input type")
+            return
+        }
+        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: currentAnalyticsPdfInputType))
+        self.currentAnalyticsPdfInputType = nil
     }
 }
 

@@ -52,11 +52,13 @@ class PdfViewerViewModel: ObservableObject {
     func setPassword(_ password: String) {
         self.internalSetPassword(password)
         debugPrint(for: self, message: "New password: \(password)")
+        self.analyticsManager.track(event: .passwordAdded)
     }
     
     func removePassword() {
         self.internalSetPassword(nil)
         debugPrint(for: self, message: "Password removed")
+        self.analyticsManager.track(event: .passwordRemoved)
     }
     
     private func internalSetPassword(_ password: String?) {

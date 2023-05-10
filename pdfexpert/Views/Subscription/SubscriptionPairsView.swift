@@ -24,7 +24,7 @@ struct SubscriptionPairsView: View {
         .asyncView(asyncOperation: self.$viewModel.purchaseRequest)
         .asyncView(asyncOperation: self.$viewModel.restorePurchaseRequest)
         .onAppear() {
-            self.viewModel.refresh()
+            self.viewModel.onAppear()
         }
         .onChange(of: self.viewModel.isPremium, perform: { newValue in
             if newValue {

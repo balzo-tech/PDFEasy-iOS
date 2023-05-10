@@ -57,7 +57,7 @@ class SubscriptionPairsViewModel: SubscribeViewModel<SubscriptionPlanPairItem> {
     @Injected(\.store) private var store
     
     @MainActor
-    func refresh() {
+    override func refresh() {
         
         self.asyncSubscriptionPlanPairs = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         

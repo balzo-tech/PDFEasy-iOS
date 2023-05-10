@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Factory
 
 struct DisclamerItem: Hashable {
     let text: String
@@ -40,6 +41,9 @@ struct SettingsView: View {
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
         .navigationTitle("Settings")
+        .onAppear() {
+            Container.shared.analyticsManager().track(event: .reportScreen(.settings))
+        }
     }
 }
 

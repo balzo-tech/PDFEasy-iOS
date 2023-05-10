@@ -65,6 +65,9 @@ struct ImportTutorialView: View {
             .padding(.bottom, 30)
             .background(ColorPalette.primaryBG)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: { self.dismiss() })
+            .onAppear() {
+                Container.shared.analyticsManager().track(event: .reportScreen(.importTutorial))
+            }
         }
     }
     
@@ -76,6 +79,7 @@ struct ImportTutorialView: View {
         if self.pageIndex + 1 < self.pageCount {
             self.pageIndex += 1
         } else {
+            Container.shared.analyticsManager().track(event: .importTutorialCompleted)
             self.dismiss()
         }
     }

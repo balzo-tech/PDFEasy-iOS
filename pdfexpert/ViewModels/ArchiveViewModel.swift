@@ -26,6 +26,7 @@ class ArchiveViewModel: ObservableObject {
     
     @Injected(\.repository) private var repository
     @Injected(\.store) private var store
+    @Injected(\.analyticsManager) private var analyticsManager
     
     let syncMonitor = SyncMonitor.shared
     
@@ -50,6 +51,7 @@ class ArchiveViewModel: ObservableObject {
     }
     
     func reviewItem(item: Pdf) {
+        self.analyticsManager.track(event: .existingPdfOpened)
         self.pdfToBeReviewed = item
     }
     
@@ -59,10 +61,16 @@ class ArchiveViewModel: ObservableObject {
         do {
             try self.repository.saveChanges()
             self.asyncItemDelete = AsyncOperation(status: .empty)
+            self.analyticsManager.track(event: .existingPdfRemoved)
         } catch {
             debugPrint(for: self, message: "Deletion failed. Error: \(error)")
             self.asyncItemDelete = AsyncOperation(status: .error(.unknownError))
         }
+        self.refresh()
+    }
+    
+    func onAppear() {
+        self.analyticsManager.track(event: .reportScreen(.files))
         self.refresh()
     }
     
