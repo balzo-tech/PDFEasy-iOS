@@ -62,6 +62,7 @@ class RepositoryImpl: Repository {
     
     func loadPdfs() throws -> [Pdf] {
         let fetchRequest = Pdf.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         do {
             return try self.persistence.container.viewContext.fetch(fetchRequest)
         } catch {
