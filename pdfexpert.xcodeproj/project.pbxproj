@@ -1188,7 +1188,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "PDF Pro";
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
@@ -1228,7 +1228,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "PDF Pro";
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
