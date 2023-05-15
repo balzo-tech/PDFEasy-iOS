@@ -13,6 +13,7 @@ private enum FirebaseEventCustomParameters: String {
     case compression = "compression"
     case marginOption = "margin_option"
     case pdfInputType = "pdf_input_type"
+    case pdfInputTypeExtension = "pdf_input_type_extension"
 }
 
 class FirebaseAnalyticsPlatform: AnalyticsPlatform {
@@ -83,10 +84,18 @@ extension AnalyticsEvent {
                 .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
         case .conversionToPdfChosen(let pdfInputType):
             return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
-        case .conversionToPdfCompleted(let pdfInputType):
-            return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
-        case .pageAdded(let pdfInputType):
-            return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+        case .conversionToPdfCompleted(let pdfInputType, let fileExtension):
+            var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+            if let fileExtension = fileExtension {
+                parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
+            }
+            return parameters
+        case .pageAdded(let pdfInputType, let fileExtension):
+            var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+            if let fileExtension = fileExtension {
+                parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
+            }
+            return parameters
         case .pageRemoved: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil
@@ -142,8 +151,8 @@ fileprivate extension AnalyticsPdfInputType {
         switch self {
         case .camera: return "camera"
         case .gallery: return "gallery"
+        case .fileImage: return "file_image"
         case .file: return "file"
-        case .word: return "word"
         case .scan: return "scan"
         case .appExtension: return "app_extension"
         }

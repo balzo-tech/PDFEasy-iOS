@@ -51,7 +51,7 @@ public class HomeViewModel : ObservableObject {
     
     @Published var imageInputPickerShow: Bool = false
     @Published var fileImagePickerShow: Bool = false
-    @Published var fileDocPickerShow: Bool = false
+    @Published var filePickerShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -88,11 +88,12 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     
     var urlToImageToConvert: URL?
-    var urlToDocToConvert: URL?
+    var urlToFileToConvert: URL?
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
+    var currentInputFileExtension: String? = nil
     
     @MainActor
     func onAppear() {
@@ -123,7 +124,7 @@ public class HomeViewModel : ObservableObject {
     }
     
     func openFileImagePicker() {
-        self.trackPdfConversionChosenEvent(inputType: .file)
+        self.trackPdfConversionChosenEvent(inputType: .fileImage)
         self.imageInputPickerShow = false
         self.fileImagePickerShow = true
     }
@@ -140,10 +141,10 @@ public class HomeViewModel : ObservableObject {
         self.imagePickerShow = true
     }
     
-    func openFileDocPicker() {
-        self.trackPdfConversionChosenEvent(inputType: .word)
+    func openFilePicker() {
+        self.trackPdfConversionChosenEvent(inputType: .file)
         if self.store.isPremium.value {
-            self.fileDocPickerShow = true
+            self.filePickerShow = true
         } else {
             self.monetizationShow = true
         }
@@ -154,9 +155,9 @@ public class HomeViewModel : ObservableObject {
         if let urlToImageToConvert = self.urlToImageToConvert {
             self.urlToImageToConvert = nil
             self.convertFileImageByURL(fileImageUrl: urlToImageToConvert)
-        } else if let urlToDocToConvert = self.urlToDocToConvert {
-            self.urlToDocToConvert = nil
-            self.convertFileDocByUrl(fileDocUrl: urlToDocToConvert)
+        } else if let urlToFileToConvert = self.urlToFileToConvert {
+            self.urlToFileToConvert = nil
+            self.convertFileByUrl(fileUrl: urlToFileToConvert)
         } else if let imageToConvert = self.imageToConvert {
             self.imageToConvert = nil
             self.convertUiImageToPdf(uiImage: imageToConvert)
@@ -174,6 +175,7 @@ public class HomeViewModel : ObservableObject {
                 self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
                 return
             }
+            self.currentInputFileExtension = fileImageUrl.pathExtension
             self.convertUiImageToPdf(uiImage: uiImage)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
@@ -182,52 +184,18 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    private func convertFileDocByUrl(fileDocUrl: URL) {
+    private func convertFileByUrl(fileUrl: URL) {
         
         self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
-        Processor.generatePDF(from: fileDocUrl, options: [:]) { data, error in
+        Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
             if let error = error {
                 debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
             } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                self.currentInputFileExtension = fileUrl.pathExtension
                 self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
             } else {
-                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            }
-        }
-    }
-    
-    @MainActor
-    func convertScan(scannerResult: ScannerResult) {
-        guard let imageScannerResult = scannerResult.results else {
-            if let error = scannerResult.error {
-                debugPrint(for: self, message: "Scan failed. Error: \(error)")
-                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-            } else {
-                self.asyncPdf = AsyncOperation(status: .empty)
-            }
-            return
-        }
-        
-        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        
-        var scan = imageScannerResult.croppedScan
-        
-        if imageScannerResult.doesUserPreferEnhancedScan, let enhancedScan = imageScannerResult.enhancedScan {
-            scan = enhancedScan
-        }
-        
-        scan.generatePDFData { result in
-            switch result {
-            case .success(let data):
-                guard let pdfEditable = PdfEditable(data: data) else {
-                    self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
-                    return
-                }
-                self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
-            case .failure(let error):
-                debugPrint(for: self, message: "Scan to pdf conversion failed. Error: \(error.localizedDescription)")
                 self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
             }
         }
@@ -337,7 +305,7 @@ public class HomeViewModel : ObservableObject {
             try await Task.sleep(until: .now + .seconds(0.5), clock: .continuous)
         }
         
-        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: .appExtension))
+        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: .appExtension, fileExtension: "pdf"))
         self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
     }
     
@@ -347,12 +315,12 @@ public class HomeViewModel : ObservableObject {
     }
     
     private func trackPdfConversionCompletedEvent() {
-        guard let currentAnalyticsPdfInputType = self.currentAnalyticsPdfInputType else {
-            assertionFailure("Missing exptected analytics pdf input type")
-            return
+        if let currentAnalyticsPdfInputType = self.currentAnalyticsPdfInputType {
+            self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: currentAnalyticsPdfInputType,
+                                                                         fileExtension: self.currentInputFileExtension))
+            self.currentAnalyticsPdfInputType = nil
+            self.currentInputFileExtension = nil
         }
-        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: currentAnalyticsPdfInputType))
-        self.currentAnalyticsPdfInputType = nil
     }
 }
 

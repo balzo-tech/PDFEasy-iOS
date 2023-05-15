@@ -75,6 +75,7 @@ class PdfEditViewModel: ObservableObject {
     var pdf: Pdf? = nil
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
+    var currentInputFileExtension: String? = nil
     
     init(pdfEditable: PdfEditable) {
         self.pdfEditable = pdfEditable
@@ -106,7 +107,7 @@ class PdfEditViewModel: ObservableObject {
     
     func openFileImagePicker() {
         self.fileImagePickerShow = true
-        self.currentAnalyticsPdfInputType = .file
+        self.currentAnalyticsPdfInputType = .fileImage
     }
     
     func openCamera() {
@@ -195,6 +196,7 @@ class PdfEditViewModel: ObservableObject {
                 self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
                 return
             }
+            self.currentInputFileExtension = fileImageUrl.pathExtension
             self.appendUiImageToPdf(uiImage: uiImage)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
@@ -253,8 +255,9 @@ class PdfEditViewModel: ObservableObject {
             assertionFailure("Missing exptected analytics pdf input type")
             return
         }
-        self.analyticsManager.track(event: .pageAdded(pdfInputType: currentAnalyticsPdfInputType))
+        self.analyticsManager.track(event: .pageAdded(pdfInputType: currentAnalyticsPdfInputType, fileExtension: self.currentInputFileExtension))
         self.currentAnalyticsPdfInputType = nil
+        self.currentInputFileExtension = nil
     }
 }
 

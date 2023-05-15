@@ -63,7 +63,12 @@ struct K {
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
-        static let DocFileTypes: [UTType] = [UTType("com.microsoft.word.doc")!]
+        static let ImportFileTypes: [UTType?] = [
+            .presentation,
+            .spreadsheet,
+            UTType("com.microsoft.word.doc"),
+            UTType("com.apple.iwork.pages.sffpages")
+        ]
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
         static let PdfMarginsColor: UIColor = .white

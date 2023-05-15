@@ -24,9 +24,9 @@ struct HomeView: View {
         HomeItem(title: "Convert\npicture to PDF",
                  buttonText: "Start to convert",
                  buttonAction: { $0.openImageInputPicker() }),
-        HomeItem(title: "Convert\nWord to PDF",
+        HomeItem(title: "Convert\nFile to PDF",
                  buttonText: "Start to convert",
-                 buttonAction: { $0.openFileDocPicker() }),
+                 buttonAction: { $0.openFilePicker() }),
         HomeItem(title: "PDF\nScanner",
                  buttonText: "Start to scan",
                  buttonAction: { $0.scanPdf() })
@@ -71,12 +71,12 @@ struct HomeView: View {
                 self.homeViewModel.convert()
             })
         }
-        // File picker for doc files
-        .fullScreenCover(isPresented: self.$homeViewModel.fileDocPickerShow) {
-            FilePicker(fileTypes: K.Misc.DocFileTypes,
+        // File picker for files
+        .fullScreenCover(isPresented: self.$homeViewModel.filePickerShow) {
+            FilePicker(fileTypes: K.Misc.ImportFileTypes.compactMap { $0 },
                        onPickedFile: {
                 // Callback is called on modal dismiss, thus we can assign and convert in a row
-                self.homeViewModel.urlToDocToConvert = $0
+                self.homeViewModel.urlToFileToConvert = $0
                 self.homeViewModel.convert()
             })
         }
