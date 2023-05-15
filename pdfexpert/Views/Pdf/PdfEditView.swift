@@ -126,7 +126,7 @@ struct PdfEditView: View {
             switch self.viewModel.editMode {
             case .add: self.pageListView
             case .margins: self.marginOptionsView
-            case .quality: self.qualitySliderView
+            case .compression: self.compressionSliderView
             }
             Spacer()
         }.frame(height: 88)
@@ -246,12 +246,12 @@ struct PdfEditView: View {
         }
     }
     
-    var qualitySliderView: some View {
+    var compressionSliderView: some View {
         HStack(spacing: 12) {
             Text("0")
                 .foregroundColor(ColorPalette.primaryText)
                 .font(FontPalette.fontRegular(withSize: 14))
-            Slider(value: self.$viewModel.quality)
+            Slider(value: self.$viewModel.compression)
                 .tint(ColorPalette.buttonGradientStart)
             Text("100")
                 .foregroundColor(ColorPalette.primaryText)
@@ -283,7 +283,7 @@ fileprivate extension PdfEditViewModel.EditMode {
         switch self {
         case .add: return "Add"
         case .margins: return "Margins"
-        case .quality: return "Quality"
+        case .compression: return "Compression"
         }
     }
     
@@ -291,7 +291,7 @@ fileprivate extension PdfEditViewModel.EditMode {
         switch self {
         case .add: return Image("edit_add_file")
         case .margins: return Image("edit_margins")
-        case .quality: return Image("edit_quality")
+        case .compression: return Image("edit_compression")
         }
     }
 }

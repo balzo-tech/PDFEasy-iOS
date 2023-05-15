@@ -24,7 +24,7 @@ enum MarginsOption: CaseIterable {
 class PdfEditViewModel: ObservableObject {
     
     enum EditMode: CaseIterable {
-        case add, margins, quality
+        case add, margins, compression
     }
     
     @Published var pdfEditable: PdfEditable
@@ -40,7 +40,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var editMode: EditMode = .add
     @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
-    @Published var quality: CGFloat = K.Misc.PdfDefaultQuality
+    @Published var compression: CGFloat = K.Misc.PdfDefaultCompression
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -136,7 +136,7 @@ class PdfEditViewModel: ObservableObject {
         
         let pdfDocument = PDFUtility.applyPostProcess(toPdfDocument: self.pdfEditable.pdfDocument,
                                                       horizontalMargin: self.marginsOption.horizontalMargin,
-                                                      quality: self.quality)
+                                                      quality: 1.0 - self.compression)
         
         guard let data = pdfDocument.dataRepresentation() else {
             debugPrint(for: self, message: "Couldn't convert pdf document to data")
@@ -160,8 +160,8 @@ class PdfEditViewModel: ObservableObject {
             self.pdfSaveError = .unknown
             return
         }
-        self.analyticsManager.track(event: .pdfEditCompleted(marginsOption: self.marginsOption, qualityValue: self.quality))
-        self.coordinator.showViewer(pdf: pdf, marginOption: self.marginsOption, quality: self.quality)
+        self.analyticsManager.track(event: .pdfEditCompleted(marginsOption: self.marginsOption, compressionValue: self.compression))
+        self.coordinator.showViewer(pdf: pdf, marginOption: self.marginsOption, compression: self.compression)
     }
     
     func getCurrentPageImage(withSize size: CGSize) -> UIImage? {

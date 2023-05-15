@@ -19,7 +19,7 @@ class PdfViewerViewModel: ObservableObject {
     struct InputParameter {
         let pdf: Pdf
         let marginsOption: MarginsOption?
-        let quality: CGFloat?
+        let compression: CGFloat?
     }
     
     @Published var pdf: Pdf
@@ -32,18 +32,18 @@ class PdfViewerViewModel: ObservableObject {
     @Injected(\.repository) private var repository
     
     private let marginsOption: MarginsOption?
-    private let quality: CGFloat?
+    private let compression: CGFloat?
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
         self.marginsOption = inputParameter.marginsOption
-        self.quality = inputParameter.quality
+        self.compression = inputParameter.compression
     }
     
     func share() {
         if self.store.isPremium.value {
             self.pdfToBeShared = self.pdf
-            self.analyticsManager.track(event: .pdfShared(marginsOption: self.marginsOption, qualityValue: self.quality))
+            self.analyticsManager.track(event: .pdfShared(marginsOption: self.marginsOption, compressionValue: self.compression))
         } else {
             self.monetizationShow = true
         }

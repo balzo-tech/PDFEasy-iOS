@@ -96,10 +96,10 @@ struct PdfViewerView_Previews: PreviewProvider {
     static let inputParameter: PdfViewerViewModel.InputParameter? = {
         if let pdf = K.Test.DebugPdf {
             let marginOption = K.Misc.PdfDefaultMarginOption
-            let quality = K.Misc.PdfDefaultQuality
+            let compression = K.Misc.PdfDefaultCompression
             return PdfViewerViewModel.InputParameter(pdf: pdf,
                                                      marginsOption: marginOption,
-                                                     quality: quality)
+                                                     compression: compression)
         } else {
             return nil
         }

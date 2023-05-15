@@ -37,8 +37,8 @@ enum AnalyticsEvent {
     case existingPdfOpened
     case existingPdfRemoved
     case importTutorialCompleted
-    case pdfEditCompleted(marginsOption: MarginsOption, qualityValue: CGFloat)
-    case pdfShared(marginsOption: MarginsOption?, qualityValue: CGFloat?)
+    case pdfEditCompleted(marginsOption: MarginsOption, compressionValue: CGFloat)
+    case pdfShared(marginsOption: MarginsOption?, compressionValue: CGFloat?)
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

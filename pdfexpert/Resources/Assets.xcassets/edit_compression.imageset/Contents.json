@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "quality.png",
+      "filename" : "edit_compression.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "quality@2x.png",
+      "filename" : "edit_compression@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "quality@3x.png",
+      "filename" : "edit_compression@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

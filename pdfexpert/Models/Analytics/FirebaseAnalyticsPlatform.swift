@@ -10,7 +10,7 @@ import FirebaseAnalytics
 import FirebaseCrashlytics
 
 private enum FirebaseEventCustomParameters: String {
-    case quality = "quality"
+    case compression = "compression"
     case marginOption = "margin_option"
     case pdfInputType = "pdf_input_type"
 }
@@ -94,18 +94,18 @@ extension AnalyticsEvent {
         case .existingPdfOpened: return nil
         case .existingPdfRemoved: return nil
         case .importTutorialCompleted: return nil
-        case .pdfEditCompleted(let marginsOption, let qualityValue):
+        case .pdfEditCompleted(let marginsOption, let compressionValue):
             return [
              FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
-             FirebaseEventCustomParameters.quality.rawValue: qualityValue
+             FirebaseEventCustomParameters.compression.rawValue: compressionValue
             ]
-        case .pdfShared(let marginsOption, let qualityValue):
+        case .pdfShared(let marginsOption, let compressionValue):
             var parameters: [String: Any] = [:]
             if let marginsOption = marginsOption {
                 parameters[FirebaseEventCustomParameters.marginOption.rawValue] = marginsOption.trackingParameterValue
             }
-            if let qualityValue = qualityValue {
-                parameters[FirebaseEventCustomParameters.quality.rawValue] = qualityValue
+            if let compressionValue = compressionValue {
+                parameters[FirebaseEventCustomParameters.compression.rawValue] = compressionValue
             }
             return parameters
         case .reportScreen(let screen): return [AnalyticsParameterScreenName: screen.name]

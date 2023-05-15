@@ -36,7 +36,7 @@ struct ArchiveView: View {
             NavigationStack {
                 let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
                                                                        marginsOption: nil,
-                                                                       quality: nil)
+                                                                       compression: nil)
                 PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
                     .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                         self.archiveViewModel.pdfToBeReviewed = nil

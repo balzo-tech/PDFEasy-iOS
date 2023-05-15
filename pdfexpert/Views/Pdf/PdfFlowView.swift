@@ -26,10 +26,10 @@ struct PdfFlowView: View {
                     PdfEditView(viewModel: Container.shared.pdfEditViewModel(self.pdfEditable))
                         .navigationDestination(for: PdfCoordinator.Route.self) { route in
                             switch route {
-                            case .viewer(let pdf, let marginsOption, let quality):
+                            case .viewer(let pdf, let marginsOption, let compression):
                                 let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
                                                                                        marginsOption: marginsOption,
-                                                                                       quality: quality)
+                                                                                       compression: compression)
                                 PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
                                     .addCustomBackButton(color: ColorPalette.primaryText,
                                                          onPress: {
