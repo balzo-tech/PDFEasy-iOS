@@ -20,7 +20,7 @@ struct WelcomeView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 132)
-                    Text("Welcome in\nPDF Easy: Convert, Edit,\n& Share")
+                    Text("Welcome in PDF Easy:\nConvert & Edit")
                         .font(FontPalette.fontBold(withSize: 24))
                         .foregroundColor(ColorPalette.primaryText)
                         .multilineTextAlignment(.center)
