@@ -48,6 +48,6 @@ struct ImportTutorialPageView_Previews: PreviewProvider {
                                description: "Select the pdf and press the button \"Open in\" or menu")
         ImportTutorialPageView(title: "Convert PDF from\nyour app",
                                imageName: "import_tutorial_3",
-                               description: "Select the PDF Pro app to import the PDF")
+                               description: "Select the PDF Easy app to import the PDF")
     }
 }

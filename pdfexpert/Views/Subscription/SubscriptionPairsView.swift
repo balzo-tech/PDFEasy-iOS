@@ -58,7 +58,7 @@ struct SubscriptionPairsView: View {
                 Spacer()
             }
             VStack(spacing: 0) {
-                Text("PDF PRO")
+                Text("PDF Easy")
                     .font(FontPalette.fontBold(withSize: 32))
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
