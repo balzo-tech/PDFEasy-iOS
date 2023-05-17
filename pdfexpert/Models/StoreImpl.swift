@@ -47,6 +47,8 @@ class StoreImpl: Store {
     var updateListenerTask: Task<Void, Error>? = nil
 
     private let productIdToProduct: [String: Any]
+    
+    @Injected(\.analyticsManager) var analyticsManager
 
     init() {
         self.productIdToProduct = Self.loadProductIdToProductData().reduce([:], {
@@ -165,6 +167,10 @@ class StoreImpl: Store {
 
             //Always finish a transaction.
             await transaction.finish()
+            
+            // Sent custom method to analytics because free trials are not always automatically tracked
+            // (e.g.: Firebase)
+            self.analyticsManager.track(event: .checkoutCompleted(subscriptionPlanProduct: product))
 
             return transaction
         case .userCancelled, .pending:

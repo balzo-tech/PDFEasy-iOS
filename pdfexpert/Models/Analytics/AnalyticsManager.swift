@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import StoreKit
 
 enum AnalyticsError {
     case shareExtensionPdfMissingRawData
@@ -26,6 +27,7 @@ enum AnalyticsScreen {
 }
 
 enum AnalyticsEvent {
+    case checkoutCompleted(subscriptionPlanProduct: Product)
     case onboardingCompleted(results: [OnboardingQuestion: OnboardingOption])
     case conversionToPdfChosen(pdfInputType: AnalyticsPdfInputType)
     case conversionToPdfCompleted(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)

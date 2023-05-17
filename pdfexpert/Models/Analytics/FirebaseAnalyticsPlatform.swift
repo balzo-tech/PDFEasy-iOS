@@ -14,6 +14,9 @@ private enum FirebaseEventCustomParameters: String {
     case marginOption = "margin_option"
     case pdfInputType = "pdf_input_type"
     case pdfInputTypeExtension = "pdf_input_type_extension"
+    case productId = "product_identifier"
+    case productPrice = "product_price"
+    case subscriptionPlanIsFreeTrial = "subscription_is_free_trial"
 }
 
 class FirebaseAnalyticsPlatform: AnalyticsPlatform {
@@ -59,6 +62,7 @@ extension AnalyticsScreen {
 extension AnalyticsEvent {
     var firebaseCustomEventName: String {
         switch self {
+        case .checkoutCompleted: return "checkout_completed"
         case .onboardingCompleted: return "onboarding_completed"
         case .conversionToPdfChosen: return "conversion_to_pdf_chosen"
         case .conversionToPdfCompleted: return "conversion_to_pdf_completed"
@@ -79,6 +83,12 @@ extension AnalyticsEvent {
     
     var firebaseParameters: [String: Any]? {
         switch self {
+        case .checkoutCompleted(let subscriptionPlanProduct):
+            return [
+                FirebaseEventCustomParameters.productId.rawValue: subscriptionPlanProduct.id,
+                FirebaseEventCustomParameters.productPrice.rawValue: subscriptionPlanProduct.displayPrice,
+                FirebaseEventCustomParameters.subscriptionPlanIsFreeTrial.rawValue: subscriptionPlanProduct.subscription?.introductoryOffer?.paymentMode == .freeTrial
+            ]
         case .onboardingCompleted(let results):
             return Dictionary(uniqueKeysWithValues: results
                 .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
