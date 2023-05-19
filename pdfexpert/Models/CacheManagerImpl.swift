@@ -20,13 +20,20 @@ class CacheManagerImpl: CacheManager {
         case onboardingShown
     }
     
+    enum FileName: String {
+        case signature
+    }
+    
     private let mainUserDefaults = UserDefaults.standard
     
     var onboardingShown: Bool {
         get { self.getBool(forKey: CacheManagerKey.onboardingShown.rawValue) ?? false }
-        set {
-            self.saveBool(newValue, forKey: CacheManagerKey.onboardingShown.rawValue)
-        }
+        set { self.saveBool(newValue, forKey: CacheManagerKey.onboardingShown.rawValue) }
+    }
+    
+    var signatureData: Data? {
+        get { Self.getFileData(forFileName: .signature) }
+        set { Self.saveFileData(newValue, forFileName: .signature) }
     }
         
     // MARK: - Private methods
@@ -127,5 +134,22 @@ class CacheManagerImpl: CacheManager {
     
     private func reset(forKey key: String) {
         self.mainUserDefaults.removeObject(forKey: key)
+    }
+    
+    private static func saveFileData(_ fileData: Data?, forFileName fileName: FileName) {
+        let url = Self.getFilePathInDocument(fileName: fileName)
+        if let fileData = fileData {
+            try? fileData.write(to: url)
+        } else {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+    
+    private static func getFileData(forFileName fileName: FileName) -> Data? {
+        return FileManager.default.contents(atPath: Self.getFilePathInDocument(fileName: fileName).path)
+    }
+    
+    private static func getFilePathInDocument(fileName: FileName) -> URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(component: fileName.rawValue)
     }
 }

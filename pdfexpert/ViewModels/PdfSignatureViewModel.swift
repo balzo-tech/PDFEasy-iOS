@@ -9,6 +9,7 @@ import Foundation
 import Factory
 import PDFKit
 import UIKit
+import PencilKit
 
 extension Container {
     var pdfSignatureViewModel: ParameterFactory<PdfSignatureViewModel.InputParameter, PdfSignatureViewModel> {
@@ -25,17 +26,19 @@ class PdfSignatureViewModel: ObservableObject {
         let onConfirm: PdfSignatureCallback
     }
     
+    @Published var pdfView: PDFView = PDFView()
     @Published var pdfEditable: PdfEditable
-    @Published var editingSignature: Bool = false
+    @Published var isCreatingSignature: Bool = false
     @Published var signatureRect: CGRect = .zero
-    @Published var image: UIImage? = UIImage(named: "gallery")
+    @Published var signatureImage: UIImage? = nil
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    var signaturePageRect: CGRect = .zero
+    var pageScrollingAllowed: Bool { !self.isPositioningSignature && !self.isCreatingSignature }
+    
+    var isPositioningSignature: Bool { self.signatureImage != nil }
     
     private var onConfirm: PdfSignatureCallback
-    private var currentPage: PDFPage?
     
     init(inputParameter: InputParameter) {
         self.pdfEditable = inputParameter.pdfEditable
@@ -44,22 +47,26 @@ class PdfSignatureViewModel: ObservableObject {
     
     func onConfirmButtonPressed() {
         
-        if let currentPage = self.currentPage, let image = self.image {
-            let signatureAnnotation = ImageStampAnnotation(with: image, forBounds: self.signaturePageRect, withProperties: nil)
+        if let currentPage = self.pdfView.currentPage, let signatureImage = self.signatureImage {
+            let signaturePageRect = self.pdfView.convert(signatureRect, to: currentPage)
+            let signatureAnnotation = ImageStampAnnotation(with: signatureImage, forBounds: signaturePageRect, withProperties: nil)
             currentPage.addAnnotation(signatureAnnotation)
         }
         
         self.onConfirm(self.pdfEditable)
     }
     
-    func tapOnPdfView(page: PDFPage, pdfViewSize: CGSize) {
-        if let image = self.image {
-            let imageSize: CGSize = image.size
-            self.signatureRect = CGRect(origin: CGPoint(x: pdfViewSize.width * 0.5 - imageSize.width / 2,
-                                                        y: pdfViewSize.height * 0.5 - imageSize.height / 2) ,
-                                        size: imageSize)
-            self.currentPage = page
-            self.editingSignature = true
+    func tapOnPdfView() {
+        if !self.isPositioningSignature && !self.isCreatingSignature {
+            self.isCreatingSignature = true
         }
+    }
+    
+    func onSignatureCreated(signatureImage: UIImage) {
+        self.signatureImage = signatureImage
+        self.signatureRect = CGRect(origin: CGPoint(x: self.pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
+                                                    y: self.pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
+                                    size: signatureImage.size)
+        self.isCreatingSignature = false
     }
 }
