@@ -13,6 +13,9 @@
 		8902899329DC2F88007E6372 /* OnboardingOption+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8902899229DC2F88007E6372 /* OnboardingOption+View.swift */; };
 		891A07E929E028EE0002FA3A /* CloudKitSyncMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = 891A07E829E028EE0002FA3A /* CloudKitSyncMonitor */; };
 		891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */; };
+		892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */; };
+		892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */; };
+		892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -66,6 +69,7 @@
 		895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 895FE2D129D7392F00A99D5B /* OrderedCollections */; };
 		897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */; };
 		897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */; };
+		89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */; };
 		8991485129E851B500DD01F2 /* ConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8991485029E851B500DD01F2 /* ConfigService.swift */; };
 		8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */; };
 		8991485629E85DE500DD01F2 /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 8991485529E85DE500DD01F2 /* CombineExt */; };
@@ -163,6 +167,9 @@
 		8902899029DC298E007E6372 /* OnboardingOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOption.swift; sourceTree = "<group>"; };
 		8902899229DC2F88007E6372 /* OnboardingOption+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OnboardingOption+View.swift"; sourceTree = "<group>"; };
 		891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableObject+Extensions.swift"; sourceTree = "<group>"; };
+		892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnnotationStamp.swift; sourceTree = "<group>"; };
+		892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureView.swift; sourceTree = "<group>"; };
+		892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureViewModel.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -215,6 +222,7 @@
 		895FE2CC29D724B900A99D5B /* SubscriptionPairsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPairsItemView.swift; sourceTree = "<group>"; };
 		897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalView.swift; sourceTree = "<group>"; };
 		897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalItemView.swift; sourceTree = "<group>"; };
+		89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResizableView.swift; sourceTree = "<group>"; };
 		8991485029E851B500DD01F2 /* ConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigService.swift; sourceTree = "<group>"; };
 		8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
 		89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparencyImpl.swift; sourceTree = "<group>"; };
@@ -352,6 +360,7 @@
 				89436ABA29E557D500060605 /* PdfFlowView.swift */,
 				89436ABC29E5586600060605 /* PdfEditView.swift */,
 				89436AC029E563AE00060605 /* PdfViewerView.swift */,
+				892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -562,6 +571,8 @@
 				893E84A529D5C5E200F6B99A /* ActivityViewController.swift */,
 				8902898C29DC1F10007E6372 /* PageControl.swift */,
 				89436AC629E5B99100060605 /* PdfKitView.swift */,
+				892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */,
+				89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -645,6 +656,7 @@
 				893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */,
 				89436AC229E59C0E00060605 /* PdfEditViewModel.swift */,
 				89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */,
+				892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -907,6 +919,7 @@
 				893DE8DC29E7F9A10043C02C /* SubscriptionVerticalViewModel.swift in Sources */,
 				895FE2CD29D724B900A99D5B /* SubscriptionPairsItemView.swift in Sources */,
 				893C8FE529DF0399000E35BD /* Pdf+CoreDataClass.swift in Sources */,
+				892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */,
 				897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */,
 				89CD7B5629D329B1003F1C3A /* Async.swift in Sources */,
 				8902898F29DC2208007E6372 /* OnboardingPageView.swift in Sources */,
@@ -936,6 +949,7 @@
 				89CD7B9729D329B1003F1C3A /* SharedLocalizedError.swift in Sources */,
 				893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */,
 				89AAFE9C29DB1842002D348E /* OnboardingView.swift in Sources */,
+				892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */,
 				89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,
 				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
@@ -958,6 +972,7 @@
 				89AAFE9E29DB1973002D348E /* OnboardingViewModel.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
 				894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */,
+				892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */,
 				893E84A029D5944E00F6B99A /* CameraService.swift in Sources */,
 				893C8FDE29DED7F4000E35BD /* PdfUtility.swift in Sources */,
 				8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */,
@@ -966,6 +981,7 @@
 				89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */,
 				893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */,
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
+				89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */,

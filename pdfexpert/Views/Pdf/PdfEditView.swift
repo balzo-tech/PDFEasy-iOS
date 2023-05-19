@@ -30,6 +30,7 @@ struct PdfEditView: View {
         .background(ColorPalette.primaryBG)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                self.showAddSignatureButton
                 self.saveButton
             }
         }
@@ -82,6 +83,12 @@ struct PdfEditView: View {
                 self.viewModel.scannerShow = false
                 self.viewModel.scannerResult = $0
             }).onDisappear { self.viewModel.convert() }
+        }
+        .fullScreenCover(isPresented: self.$viewModel.signatureAddViewShow) {
+            let inputParameter = PdfSignatureViewModel
+                .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                                onConfirm: { self.viewModel.updatePdfWithSignatures(pdfEditable: $0) })
+            PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
         }
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
@@ -258,6 +265,12 @@ struct PdfEditView: View {
                 .font(FontPalette.fontRegular(withSize: 14))
         }
         .padding([.leading, .trailing], 16)
+    }
+    
+    var showAddSignatureButton: some View {
+        Button(action: { self.viewModel.showAddSignature() }) {
+            Image("signature")
+        }
     }
     
     var saveButton: some View {

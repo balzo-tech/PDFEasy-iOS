@@ -27,7 +27,7 @@ class PdfEditViewModel: ObservableObject {
         case add, margins, compression
     }
     
-    @Published var pdfEditable: PdfEditable
+    @Published private(set)var pdfEditable: PdfEditable
     @Published var pdfCurrentPageIndex: Int? = 0
     @Published var pdfThumbnails: [UIImage?] = []
     @Published var pdfSaveError: PdfEditSaveError? = nil
@@ -38,6 +38,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var monetizationShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
+    @Published var signatureAddViewShow: Bool = false
     @Published var editMode: EditMode = .add
     @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
     @Published var compression: CGFloat = K.Misc.PdfDefaultCompression
@@ -155,6 +156,10 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
+    func showAddSignature() {
+        self.signatureAddViewShow = true
+    }
+    
     func viewPdf() {
         guard let pdf = self.pdf else {
             debugPrint(for: self, message: "Missing expected pdf")
@@ -186,6 +191,12 @@ class PdfEditViewModel: ObservableObject {
             self.scannerResult = nil
             PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
+    }
+    
+    func updatePdfWithSignatures(pdfEditable: PdfEditable) {
+        // TODO: Update thumbnails only for pages with new signatures added
+        self.pdfEditable = pdfEditable
+        self.refreshThumbnails()
     }
     
     @MainActor
@@ -248,6 +259,10 @@ class PdfEditViewModel: ObservableObject {
         default:
             self.cameraPermissionDeniedShow = true
         }
+    }
+    
+    private func refreshThumbnails() {
+        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
     }
     
     private func trackPageAddedEvent() {
