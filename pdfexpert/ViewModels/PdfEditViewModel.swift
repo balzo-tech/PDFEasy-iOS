@@ -242,6 +242,9 @@ class PdfEditViewModel: ObservableObject {
                                                     size: K.Misc.ThumbnailEditSize,
                                                     forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
         self.pdfThumbnails.append(image)
+        if self.pdfCurrentPageIndex == nil {
+            self.pdfCurrentPageIndex = 0
+        }
         self.trackPageAddedEvent()
     }
     
@@ -249,6 +252,9 @@ class PdfEditViewModel: ObservableObject {
         PDFUtility.appendPdfDocument(pdfEditable.pdfDocument, toPdfDocument: self.pdfEditable.pdfDocument)
         let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
         self.pdfThumbnails.append(contentsOf: thumbnails)
+        if self.pdfCurrentPageIndex == nil {
+            self.pdfCurrentPageIndex = 0
+        }
         self.trackPageAddedEvent()
     }
     

@@ -23,6 +23,7 @@ class PdfSignatureViewModel: ObservableObject {
     
     struct InputParameter {
         let pdfEditable: PdfEditable
+        let currentPageIndex: Int
         let onConfirm: PdfSignatureCallback
     }
     
@@ -42,7 +43,12 @@ class PdfSignatureViewModel: ObservableObject {
     
     init(inputParameter: InputParameter) {
         self.pdfEditable = inputParameter.pdfEditable
+        
         self.onConfirm = inputParameter.onConfirm
+        self.pdfView.document = inputParameter.pdfEditable.pdfDocument
+        if let page = inputParameter.pdfEditable.pdfDocument.page(at: inputParameter.currentPageIndex) {
+            self.pdfView.go(to: page)
+        }
     }
     
     func onConfirmButtonPressed() {

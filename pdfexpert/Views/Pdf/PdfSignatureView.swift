@@ -19,10 +19,8 @@ struct PdfSignatureView: View {
                 GeometryReader { geometryReader in
                     PdfKitViewBinder(
                         pdfView: self.$viewModel.pdfView,
-                        pdfDocument: self.viewModel.pdfEditable.pdfDocument,
                         singlePage: false,
                         pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
-                        currentPage: nil,
                         backgroundColor: UIColor(ColorPalette.primaryBG),
                         usePaginator: true
                     )
@@ -75,6 +73,7 @@ struct PdfSignatureView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
             let inputParameter = PdfSignatureViewModel.InputParameter(pdfEditable: pdfEditable,
+                                                                      currentPageIndex: 0,
                                                                       onConfirm: { _ in })
             AnyView(PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter)))
         } else {
@@ -89,27 +88,21 @@ struct PdfKitViewBinder: UIViewRepresentable {
     typealias UIViewType = PDFView
 
     @Binding var pdfView: PDFView
-    let pdfDocument: PDFDocument?
     let singlePage: Bool
     let pageMargins: UIEdgeInsets?
-    let currentPage: Int?
     let backgroundColor: UIColor?
     let usePaginator: Bool
 
     init(
         pdfView: Binding<PDFView>,
-        pdfDocument: PDFDocument?,
         singlePage: Bool = false,
         pageMargins: UIEdgeInsets? = nil,
-        currentPage: Int? = nil,
         backgroundColor: UIColor? = nil,
         usePaginator: Bool = false
     ) {
         self._pdfView = pdfView
-        self.pdfDocument = pdfDocument
         self.singlePage = singlePage
         self.pageMargins = pageMargins
-        self.currentPage = currentPage
         self.backgroundColor = backgroundColor
         self.usePaginator = usePaginator
     }
@@ -124,12 +117,10 @@ struct PdfKitViewBinder: UIViewRepresentable {
     }
     
     private func updatePdfView(_ pdfView: UIViewType) {
-        pdfView.document = self.pdfDocument
         pdfView.autoScales = true
         self.updateBackground(pdfView: pdfView)
         self.updateSinglePage(pdfView: pdfView)
         self.updatePageMargins(pdfView: pdfView)
-        self.updateCurrentPage(pdfView: pdfView)
         self.updateUsePaginator(pdfView: pdfView)
     }
     
@@ -151,15 +142,6 @@ struct PdfKitViewBinder: UIViewRepresentable {
         }
     }
     
-    private func updateCurrentPage(pdfView: UIViewType) {
-        if let currentPage = self.currentPage,
-           currentPage >= 0,
-           currentPage < self.pdfDocument?.pageCount ?? 0,
-           let page = self.pdfDocument?.page(at: currentPage) {
-            pdfView.go(to: page)
-        }
-    }
-    
     private func updateUsePaginator(pdfView: UIViewType) {
         pdfView.usePageViewController(self.usePaginator)
     }
@@ -167,15 +149,17 @@ struct PdfKitViewBinder: UIViewRepresentable {
 
 struct PdfKitViewBinder_Previews: PreviewProvider {
     
-    static let pdfView = PDFView()
+    static let pdfView = {
+        let pdfView = PDFView()
+        pdfView.document = K.Test.DebugPdfDocument
+        return pdfView
+    }()
     
     static var previews: some View {
         PdfKitViewBinder(
             pdfView: .constant(pdfView),
-            pdfDocument: K.Test.DebugPdfDocument,
             singlePage: false,
             pageMargins: nil,
-            currentPage: nil,
             backgroundColor: nil,
             usePaginator: true
         )

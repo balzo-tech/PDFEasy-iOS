@@ -30,7 +30,9 @@ struct PdfEditView: View {
         .background(ColorPalette.primaryBG)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                self.showAddSignatureButton
+                if self.viewModel.pdfEditable.pdfDocument.pageCount > 0 {
+                    self.showAddSignatureButton
+                }
                 self.saveButton
             }
         }
@@ -87,6 +89,7 @@ struct PdfEditView: View {
         .fullScreenCover(isPresented: self.$viewModel.signatureAddViewShow) {
             let inputParameter = PdfSignatureViewModel
                 .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex ?? 0,
                                 onConfirm: { self.viewModel.updatePdfWithSignatures(pdfEditable: $0) })
             PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
         }
