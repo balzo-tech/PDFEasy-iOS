@@ -139,7 +139,7 @@ struct PdfKitView_Previews: PreviewProvider {
             currentPage: nil,
             backgroundColor: nil,
             usePaginator: true,
-            onTapPage: { _ in print("Test Tap") }
+            onTapPage: { page in print("Test Tap. Page hash: \(page.hashValue)") }
         )
     }
 }

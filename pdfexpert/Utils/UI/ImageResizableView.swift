@@ -25,6 +25,8 @@ struct ImageResizableView: View {
     @State var topLeft: CGPoint
     @State var topRight: CGPoint
     
+    @State var tapImageOffset: CGPoint? = nil
+    
     var computedCenter: CGPoint {
         CGPoint(x: self.bottomLeft.x + (self.bottomRight.x - self.bottomLeft.x) / 2,
                 y: self.topLeft.y + (self.bottomLeft.y - self.topLeft.y) / 2)
@@ -68,6 +70,14 @@ struct ImageResizableView: View {
                         .background(Rectangle().stroke(self.borderColor, lineWidth: self.borderWidth))
                         .position(self.computedCenter)
                         .frame(width: self.computedSize.width, height: self.computedSize.height)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { gesture in
+                                    self.OnDragImage(dragGestureValue: gesture,
+                                                     parentViewSize: parentGeometryReader.size)
+                                }
+                                .onEnded { _ in self.tapImageOffset = nil }
+                        )
                 }
                 self.getHandle(handlePosition: .bottomLeft,
                                parentViewSize: parentGeometryReader.size)
@@ -79,6 +89,39 @@ struct ImageResizableView: View {
                                parentViewSize: parentGeometryReader.size)
             }
         }
+    }
+    
+    private func OnDragImage(dragGestureValue: DragGesture.Value, parentViewSize: CGSize) {
+        
+        let location = dragGestureValue.location
+        let center = self.computedCenter
+        let size = self.computedSize
+        
+        if self.tapImageOffset == nil {
+            self.tapImageOffset = CGPoint(x: dragGestureValue.startLocation.x - center.x,
+                                          y: dragGestureValue.startLocation.y - center.y)
+        }
+        
+        guard let tapImageOffset = self.tapImageOffset else {
+            return
+        }
+        
+        var newCenterX = location.x - tapImageOffset.x
+        newCenterX = max(min(newCenterX, parentViewSize.width - size.width / 2), size.width / 2)
+        var newCenterY = location.y - tapImageOffset.y
+        newCenterY = max(min(newCenterY, parentViewSize.height - size.height / 2), size.height / 2)
+        
+        let currentEventTranslation: CGPoint = CGPoint(x: newCenterX - center.x,
+                                                       y: newCenterY - center.y)
+        self.bottomLeft = CGPoint(x: self.bottomLeft.x + currentEventTranslation.x,
+                                  y: self.bottomLeft.y + currentEventTranslation.y)
+        self.bottomRight = CGPoint(x: self.bottomRight.x + currentEventTranslation.x,
+                                   y: self.bottomRight.y + currentEventTranslation.y)
+        self.topLeft = CGPoint(x: self.topLeft.x + currentEventTranslation.x,
+                               y: self.topLeft.y + currentEventTranslation.y)
+        self.topRight = CGPoint(x: self.topRight.x + currentEventTranslation.x,
+                                y: self.topRight.y + currentEventTranslation.y)
+        self.updateRect()
     }
     
     private func OnDrag(handlePosition: HandlePosition,

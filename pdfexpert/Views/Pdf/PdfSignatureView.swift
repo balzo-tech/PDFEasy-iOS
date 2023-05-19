@@ -32,6 +32,7 @@ struct PdfSignatureView: View {
                         viewRect: self.$viewModel.signatureRect,
                         viewToPageRectConversionCallback: { self.viewModel.signaturePageRect = $0 }
                     )
+                    .allowsHitTesting(!self.viewModel.editingSignature)
                 }
                 if self.viewModel.editingSignature, let image = self.viewModel.image {
                     ImageResizableView(
