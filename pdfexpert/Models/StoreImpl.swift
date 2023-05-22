@@ -273,3 +273,13 @@ class StoreImpl: Store {
         }
     }
 }
+
+//fileprivate extension String {
+//    func removeEnvironmentSuffix() -> String {
+//        #if STAGING
+//        self.replacingOccurrences(of: ".staging", with: "")
+//        #else
+//        self
+//        #endif
+//    }
+//}

@@ -130,7 +130,6 @@
 		89CD7BA829D32C72003F1C3A /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BA729D32C72003F1C3A /* Factory */; };
 		89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */; };
 		89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */; };
-		89CD7BAF29D32D06003F1C3A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */; };
 		89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */; };
 		89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBA29D330FB003F1C3A /* HomeView.swift */; };
 		89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */; };
@@ -191,7 +190,7 @@
 		893C8FE429DF0399000E35BD /* Pdf+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pdf+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		893DE8D929E7F85C0043C02C /* SubscriptionPairsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPairsViewModel.swift; sourceTree = "<group>"; };
 		893DE8DB29E7F9A10043C02C /* SubscriptionVerticalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalViewModel.swift; sourceTree = "<group>"; };
-		893DE8DD29E832B90043C02C /* TestProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestProducts.storekit; sourceTree = "<group>"; };
+		893DE8DD29E832B90043C02C /* LocalProductionProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = LocalProductionProducts.storekit; sourceTree = "<group>"; };
 		893E849029D5874D00F6B99A /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		893E849329D5878E00F6B99A /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureProcessor.swift; sourceTree = "<group>"; };
@@ -225,11 +224,12 @@
 		895C1BBF2A051261005EA190 /* SharedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStorage.swift; sourceTree = "<group>"; };
 		895FE2C329D6D7E500A99D5B /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		895FE2C529D6E17600A99D5B /* AnimationPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationPalette.swift; sourceTree = "<group>"; };
-		895FE2C729D6E7D900A99D5B /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
+		895FE2C729D6E7D900A99D5B /* ProductionProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductionProducts.storekit; sourceTree = "<group>"; };
 		895FE2CA29D6E9B800A99D5B /* SubscriptionPairsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPairsView.swift; sourceTree = "<group>"; };
 		895FE2CC29D724B900A99D5B /* SubscriptionPairsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPairsItemView.swift; sourceTree = "<group>"; };
 		897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalView.swift; sourceTree = "<group>"; };
 		897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalItemView.swift; sourceTree = "<group>"; };
+		89847AE02A1BA947000EC14B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResizableView.swift; sourceTree = "<group>"; };
 		8991485029E851B500DD01F2 /* ConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigService.swift; sourceTree = "<group>"; };
 		8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
@@ -240,6 +240,8 @@
 		8995694129D33B1300566EF4 /* HomeItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeItemView.swift; sourceTree = "<group>"; };
 		8995694329D3450300566EF4 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		899F484329DF128200E7E1E4 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		89AA36082A1BC5FD0077A70A /* StagingProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StagingProducts.storekit; sourceTree = "<group>"; };
+		89AA360A2A1BC8560077A70A /* LocalStagingProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = LocalStagingProducts.storekit; sourceTree = "<group>"; };
 		89AAFE9B29DB1842002D348E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		89AAFE9D29DB1973002D348E /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		89AAFE9F29DB2672002D348E /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
@@ -414,6 +416,22 @@
 			path = Subscription;
 			sourceTree = "<group>";
 		};
+		89847ADE2A1BA8CC000EC14B /* Production */ = {
+			isa = PBXGroup;
+			children = (
+				89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */,
+			);
+			path = Production;
+			sourceTree = "<group>";
+		};
+		89847ADF2A1BA8CC000EC14B /* Staging */ = {
+			isa = PBXGroup;
+			children = (
+				89847AE02A1BA947000EC14B /* GoogleService-Info.plist */,
+			);
+			path = Staging;
+			sourceTree = "<group>";
+		};
 		89923E6529D437F500E246FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -467,7 +485,6 @@
 		89CD7A8D29D32855003F1C3A = {
 			isa = PBXGroup;
 			children = (
-				89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */,
 				89CD7A9829D32855003F1C3A /* PdfExpert */,
 				895C1BAE2A04FA53005EA190 /* ShareFileExtension */,
 				89CD7A9729D32855003F1C3A /* Products */,
@@ -496,7 +513,6 @@
 				89CD7B2B29D329B1003F1C3A /* InternalUtils */,
 				89CD7ACD29D329B1003F1C3A /* Utils */,
 				89CD7AAD29D329B1003F1C3A /* Resources */,
-				89CD7AA729D32856003F1C3A /* Info.plist */,
 				89CD7A9F29D32856003F1C3A /* Preview Content */,
 			);
 			path = PdfExpert;
@@ -513,6 +529,9 @@
 		89CD7AAD29D329B1003F1C3A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				89CD7AA729D32856003F1C3A /* Info.plist */,
+				89847ADE2A1BA8CC000EC14B /* Production */,
+				89847ADF2A1BA8CC000EC14B /* Staging */,
 				893C8FDF29DEDAE8000E35BD /* Test */,
 				893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */,
 				89CD7AAE29D329B1003F1C3A /* Colors.xcassets */,
@@ -528,8 +547,10 @@
 			isa = PBXGroup;
 			children = (
 				89CD7AB429D329B1003F1C3A /* Products.plist */,
-				895FE2C729D6E7D900A99D5B /* Products.storekit */,
-				893DE8DD29E832B90043C02C /* TestProducts.storekit */,
+				895FE2C729D6E7D900A99D5B /* ProductionProducts.storekit */,
+				89AA36082A1BC5FD0077A70A /* StagingProducts.storekit */,
+				893DE8DD29E832B90043C02C /* LocalProductionProducts.storekit */,
+				89AA360A2A1BC8560077A70A /* LocalStagingProducts.storekit */,
 				89B72A2D29DACBBF0076884F /* EmptyProducts.storekit */,
 			);
 			path = IAP;
@@ -763,6 +784,7 @@
 			buildPhases = (
 				89CD7A9229D32855003F1C3A /* Sources */,
 				89CD7A9329D32855003F1C3A /* Frameworks */,
+				89AA36072A1BB0280077A70A /* Setup Firebase Environment GoogleService-Info.plist */,
 				89CD7A9429D32855003F1C3A /* Resources */,
 				89923E6429D437B400E246FC /* ShellScript */,
 				895C1BB82A04FA53005EA190 /* Embed Foundation Extensions */,
@@ -854,7 +876,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89CD7BAF29D32D06003F1C3A /* GoogleService-Info.plist in Resources */,
 				89CD7BA129D32AB4003F1C3A /* Montserrat-Regular.ttf in Resources */,
 				89CD7B3029D329B1003F1C3A /* Colors.xcassets in Resources */,
 				89CD7AA129D32856003F1C3A /* Preview Assets.xcassets in Resources */,
@@ -890,6 +911,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+		89AA36072A1BB0280077A70A /* Setup Firebase Environment GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Firebase Environment GoogleService-Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_STAGING=${PROJECT_DIR}/${TARGET_NAME}/Resources/Staging/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Resources/Production/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the staging version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_STAGING}\"\nif [ ! -f $GOOGLESERVICE_INFO_STAGING ]\nthen\n    echo \"No Staging GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\n    echo \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Production builds\nif [ \"${CONFIGURATION}\" == \"Production Release\" ] || [ \"${CONFIGURATION}\" == \"Production Debug\" ]\nthen\n    echo \"Using ${GOOGLESERVICE_INFO_PROD}\"\n    cp \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\nelse\n    echo \"Using ${GOOGLESERVICE_INFO_STAGING}\"\n    cp \"${GOOGLESERVICE_INFO_STAGING}\" \"${PLIST_DESTINATION}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1035,7 +1074,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		895C1BB92A04FA53005EA190 /* Debug */ = {
+		895C1BB92A04FA53005EA190 /* Production Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
@@ -1060,9 +1099,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = "Production Debug";
 		};
-		895C1BBA2A04FA53005EA190 /* Release */ = {
+		895C1BBA2A04FA53005EA190 /* Production Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
@@ -1086,9 +1125,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Release;
+			name = "Production Release";
 		};
-		89CD7AA829D32856003F1C3A /* Debug */ = {
+		89AA35FE2A1BAC100077A70A /* Staging Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1143,14 +1182,81 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\"";
+				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"STAGING\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Staging Debug";
 		};
-		89CD7AA929D32856003F1C3A /* Release */ = {
+		89AA35FF2A1BAC100077A70A /* Staging Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconStaging;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy Staging";
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.staging;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Staging Debug";
+		};
+		89AA36002A1BAC100077A70A /* Staging Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShareFileExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.staging.ShareFileExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Staging Debug";
+		};
+		89AA36022A1BAC1A0077A70A /* Staging Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1198,15 +1304,199 @@
 				MARKETING_VERSION = 1.8;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\"";
+				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"STAGING\"";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Staging Release";
 		};
-		89CD7AAB29D32856003F1C3A /* Debug */ = {
+		89AA36032A1BAC1A0077A70A /* Staging Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconStaging;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy Staging";
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data will be used to facilitate access and show you content that is more relevant to you.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.staging;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Staging Release";
+		};
+		89AA36042A1BAC1A0077A70A /* Staging Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShareFileExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.staging.ShareFileExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Staging Release";
+		};
+		89CD7AA829D32856003F1C3A /* Production Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.8;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"PRODUCTION\"";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Production Debug";
+		};
+		89CD7AA929D32856003F1C3A /* Production Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.8;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"PRODUCTION\"";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Production Release";
+		};
+		89CD7AAB29D32856003F1C3A /* Production Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1219,7 +1509,7 @@
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PdfExpert/Info.plist;
+				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
@@ -1244,9 +1534,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Debug;
+			name = "Production Debug";
 		};
-		89CD7AAC29D32856003F1C3A /* Release */ = {
+		89CD7AAC29D32856003F1C3A /* Production Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1259,7 +1549,7 @@
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PdfExpert/Info.plist;
+				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
@@ -1284,7 +1574,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Release;
+			name = "Production Release";
 		};
 /* End XCBuildConfiguration section */
 
@@ -1292,29 +1582,35 @@
 		895C1BBB2A04FA54005EA190 /* Build configuration list for PBXNativeTarget "ShareFileExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				895C1BB92A04FA53005EA190 /* Debug */,
-				895C1BBA2A04FA53005EA190 /* Release */,
+				895C1BB92A04FA53005EA190 /* Production Debug */,
+				89AA36002A1BAC100077A70A /* Staging Debug */,
+				895C1BBA2A04FA53005EA190 /* Production Release */,
+				89AA36042A1BAC1A0077A70A /* Staging Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Production Release";
 		};
 		89CD7A9129D32855003F1C3A /* Build configuration list for PBXProject "PdfExpert" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				89CD7AA829D32856003F1C3A /* Debug */,
-				89CD7AA929D32856003F1C3A /* Release */,
+				89CD7AA829D32856003F1C3A /* Production Debug */,
+				89AA35FE2A1BAC100077A70A /* Staging Debug */,
+				89CD7AA929D32856003F1C3A /* Production Release */,
+				89AA36022A1BAC1A0077A70A /* Staging Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Production Release";
 		};
 		89CD7AAA29D32856003F1C3A /* Build configuration list for PBXNativeTarget "PdfExpert" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				89CD7AAB29D32856003F1C3A /* Debug */,
-				89CD7AAC29D32856003F1C3A /* Release */,
+				89CD7AAB29D32856003F1C3A /* Production Debug */,
+				89AA35FF2A1BAC100077A70A /* Staging Debug */,
+				89CD7AAC29D32856003F1C3A /* Production Release */,
+				89AA36032A1BAC1A0077A70A /* Staging Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Production Release";
 		};
 /* End XCConfigurationList section */
 

@@ -24,6 +24,9 @@ class AnalyticsManagerImpl: AnalyticsManager {
     
     func track(event: AnalyticsEvent) {
         print("Analytics - Tracked event: \(event)")
+        #if PRODUCTION && DEBUG
+        #else
         self.platforms.forEach({ $0.track(event: event) })
+        #endif
     }
 }

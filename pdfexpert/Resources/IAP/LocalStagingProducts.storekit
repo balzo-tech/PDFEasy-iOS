@@ -1,0 +1,142 @@
+{
+  "identifier" : "4F24126A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21342828",
+      "localizations" : [
+
+      ],
+      "name" : "Main",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "11.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6449435879",
+          "introductoryOffer" : null,
+          "localizations" : [
+
+          ],
+          "productID" : "eu.balzo.pdfexpert.staging.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21342828",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "11.99",
+          "familyShareable" : false,
+          "groupNumber" : 6,
+          "internalID" : "6449436432",
+          "introductoryOffer" : {
+            "internalID" : "D91BFEE9",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+
+          ],
+          "productID" : "eu.balzo.pdfexpert.staging.monthly.freetrial",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Free Trial",
+          "subscriptionGroupID" : "21342828",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6449436136",
+          "introductoryOffer" : null,
+          "localizations" : [
+
+          ],
+          "productID" : "eu.balzo.pdfexpert.staging.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Weekly",
+          "subscriptionGroupID" : "21342828",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "79.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6449436141",
+          "introductoryOffer" : null,
+          "localizations" : [
+
+          ],
+          "productID" : "eu.balzo.pdfexpert.staging.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly",
+          "subscriptionGroupID" : "21342828",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "79.99",
+          "familyShareable" : false,
+          "groupNumber" : 5,
+          "internalID" : "6449436302",
+          "introductoryOffer" : {
+            "internalID" : "6D245617",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+
+          ],
+          "productID" : "eu.balzo.pdfexpert.staging.yearly.freetrial",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly Free Trial",
+          "subscriptionGroupID" : "21342828",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}
