@@ -9,7 +9,7 @@ import CoreData
 import Factory
 import CloudKit
 
-private var CloudKitContainerIdentifier: String { CKContainer.default().containerIdentifier ?? "" }
+private var CloudKitContainerIdentifier: String = "iCloud.eu.balzo.pdfexpert"
 private var InitializeCloudKitSchema: Bool = false
 
 extension Container {
