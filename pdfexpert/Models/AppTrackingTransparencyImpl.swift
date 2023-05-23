@@ -11,7 +11,7 @@ import AppTrackingTransparency
 #if FACEBOOK
 import FacebookCore
 #endif
-import FirebaseAnalytics
+import Factory
 
 class AppTrackingTransparencyImpl: AppTrackingTransparency {
     
@@ -30,6 +30,8 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
             return true
         }
     }
+    
+    @Injected(\.analyticsManager) var analyticsManager
     
     init() {
         self.updateFacebookAdvertiseTrackingSettings()
@@ -66,7 +68,7 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
         switch authorizationStatus {
           case .authorized:
             debugPrint(for: self, message: "Authorization Granted")
-            Analytics.logEvent("tracking_authorized", parameters: nil)
+            self.analyticsManager.track(event: .appTrackingTransparancyAuthorized)
           default:
             debugPrint(for: self, message: "Authorization not granted")
             break

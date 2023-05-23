@@ -27,6 +27,7 @@ enum AnalyticsScreen {
 }
 
 enum AnalyticsEvent {
+    case appTrackingTransparancyAuthorized
     case checkoutCompleted(subscriptionPlanProduct: Product)
     case onboardingCompleted(results: [OnboardingQuestion: OnboardingOption])
     case conversionToPdfChosen(pdfInputType: AnalyticsPdfInputType)

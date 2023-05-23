@@ -62,6 +62,7 @@ extension AnalyticsScreen {
 extension AnalyticsEvent {
     var firebaseCustomEventName: String {
         switch self {
+        case .appTrackingTransparancyAuthorized: return "tracking_authorized"
         case .checkoutCompleted: return "checkout_completed"
         case .onboardingCompleted: return "onboarding_completed"
         case .conversionToPdfChosen: return "conversion_to_pdf_chosen"
@@ -83,6 +84,7 @@ extension AnalyticsEvent {
     
     var firebaseParameters: [String: Any]? {
         switch self {
+        case .appTrackingTransparancyAuthorized: return nil
         case .checkoutCompleted(let subscriptionPlanProduct):
             return [
                 FirebaseEventCustomParameters.productId.rawValue: subscriptionPlanProduct.id,
