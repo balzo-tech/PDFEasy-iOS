@@ -123,22 +123,34 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
+    @MainActor
     func openFileImagePicker() {
         self.trackPdfConversionChosenEvent(inputType: .fileImage)
         self.imageInputPickerShow = false
-        self.fileImagePickerShow = true
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            self.fileImagePickerShow = true
+        }
     }
     
+    @MainActor
     func openCamera() {
         self.trackPdfConversionChosenEvent(inputType: .camera)
         self.imageInputPickerShow = false
-        self.cameraShow = true
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            self.cameraShow = true
+        }
     }
     
+    @MainActor
     func openGallery() {
         self.trackPdfConversionChosenEvent(inputType: .gallery)
         self.imageInputPickerShow = false
-        self.imagePickerShow = true
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            self.imagePickerShow = true
+        }
     }
     
     func openFilePicker() {
