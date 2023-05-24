@@ -51,12 +51,18 @@ class PdfSignatureViewModel: ObservableObject {
         }
     }
     
+    func onAppear() {
+        self.analyticsManager.track(event: .reportScreen(.signature))
+    }
+    
     func onConfirmButtonPressed() {
         
         if let currentPage = self.pdfView.currentPage, let signatureImage = self.signatureImage {
             let signaturePageRect = self.pdfView.convert(signatureRect, to: currentPage)
             let signatureAnnotation = ImageStampAnnotation(with: signatureImage, forBounds: signaturePageRect, withProperties: nil)
             currentPage.addAnnotation(signatureAnnotation)
+            
+            self.analyticsManager.track(event: .signatureAdded)
         }
         
         self.onConfirm(self.pdfEditable)
@@ -69,6 +75,7 @@ class PdfSignatureViewModel: ObservableObject {
     }
     
     func onSignatureCreated(signatureImage: UIImage) {
+        self.analyticsManager.track(event: .signatureCreated)
         self.signatureImage = signatureImage
         self.signatureRect = CGRect(origin: CGPoint(x: self.pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
                                                     y: self.pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,

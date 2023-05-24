@@ -66,6 +66,7 @@ struct PdfSignatureView: View {
                 .presentationDetents([.height(400)])
             }
         }
+        .onAppear(perform: self.viewModel.onAppear)
     }
 }
 

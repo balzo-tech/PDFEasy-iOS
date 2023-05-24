@@ -55,6 +55,7 @@ extension AnalyticsScreen {
         case .settings: return "Settings"
         case .subscription: return "Subscription"
         case .importTutorial: return "ImportTutorial"
+        case .signature: return "Signature"
         }
     }
 }
@@ -77,6 +78,8 @@ extension AnalyticsEvent {
         case .importTutorialCompleted: return "import_tutorial_completed"
         case .pdfEditCompleted: return "pdf_edit_completed"
         case .pdfShared: return "pdf_shared"
+        case .signatureCreated: return "signature_created"
+        case .signatureAdded: return "signature_added"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -115,6 +118,8 @@ extension AnalyticsEvent {
         case .existingPdfOpened: return nil
         case .existingPdfRemoved: return nil
         case .importTutorialCompleted: return nil
+        case .signatureCreated: return nil
+        case .signatureAdded: return nil
         case .pdfEditCompleted(let marginsOption, let compressionValue):
             return [
              FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
