@@ -12,6 +12,7 @@ struct PdfSignatureView: View {
     
     @StateObject var viewModel: PdfSignatureViewModel
     @Environment(\.dismiss) var dismiss
+    @State var showCancelWarningDialog: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -44,7 +45,13 @@ struct PdfSignatureView: View {
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Tap where you wish to sign")
-            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: { self.dismiss() })
+            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                if self.viewModel.isPositioningSignature {
+                    self.showCancelWarningDialog = true
+                } else {
+                    self.dismiss()
+                }
+            })
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -65,6 +72,14 @@ struct PdfSignatureView: View {
                 .cornerRadius(20, corners: [.topLeft, .topRight])
                 .presentationDetents([.height(400)])
             }
+            .alert("Are you sure?",
+                   isPresented: self.$showCancelWarningDialog,
+                   actions: {
+                Button("No", role: .cancel, action: {})
+                Button("Yes", role: .destructive, action: {
+                    self.dismiss()
+                })
+            }, message: { Text("If you quit, you will lose the signature you've just added.") })
         }
         .onAppear(perform: self.viewModel.onAppear)
     }
