@@ -9,7 +9,7 @@
   "settings" : {
     "_applicationInternalID" : "6449431190",
     "_developerTeamID" : "G6RAKRKZPR",
-    "_lastSynchronizedDate" : 706463765.03779304
+    "_lastSynchronizedDate" : 706614288.93695605
   },
   "subscriptionGroups" : [
     {
@@ -26,7 +26,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "11.99",
+          "displayPrice" : "3.99",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6449435879",
@@ -47,12 +47,12 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "11.99",
+          "displayPrice" : "3.99",
           "familyShareable" : false,
           "groupNumber" : 6,
           "internalID" : "6449436432",
           "introductoryOffer" : {
-            "internalID" : "5DB5ED2E",
+            "internalID" : "1F91B9DD",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
@@ -73,7 +73,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "3.99",
+          "displayPrice" : "1.99",
           "familyShareable" : false,
           "groupNumber" : 3,
           "internalID" : "6449436136",
@@ -94,7 +94,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "79.99",
+          "displayPrice" : "17.99",
           "familyShareable" : false,
           "groupNumber" : 4,
           "internalID" : "6449436141",
@@ -115,12 +115,12 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "79.99",
+          "displayPrice" : "17.99",
           "familyShareable" : false,
           "groupNumber" : 5,
           "internalID" : "6449436302",
           "introductoryOffer" : {
-            "internalID" : "C2B75CBB",
+            "internalID" : "178FF839",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"

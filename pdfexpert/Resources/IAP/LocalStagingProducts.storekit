@@ -24,7 +24,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "11.99",
+          "displayPrice" : "4.99",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6449435879",
@@ -45,9 +45,9 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "11.99",
+          "displayPrice" : "4.99",
           "familyShareable" : false,
-          "groupNumber" : 6,
+          "groupNumber" : 5,
           "internalID" : "6449436432",
           "introductoryOffer" : {
             "internalID" : "D91BFEE9",
@@ -71,9 +71,9 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "3.99",
+          "displayPrice" : "1.99",
           "familyShareable" : false,
-          "groupNumber" : 3,
+          "groupNumber" : 2,
           "internalID" : "6449436136",
           "introductoryOffer" : null,
           "localizations" : [
@@ -92,9 +92,9 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "79.99",
+          "displayPrice" : "19.99",
           "familyShareable" : false,
-          "groupNumber" : 4,
+          "groupNumber" : 3,
           "internalID" : "6449436141",
           "introductoryOffer" : null,
           "localizations" : [
@@ -113,9 +113,9 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "79.99",
+          "displayPrice" : "19.99",
           "familyShareable" : false,
-          "groupNumber" : 5,
+          "groupNumber" : 4,
           "internalID" : "6449436302",
           "introductoryOffer" : {
             "internalID" : "6D245617",
