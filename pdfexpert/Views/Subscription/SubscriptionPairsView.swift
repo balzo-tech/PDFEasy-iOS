@@ -15,7 +15,7 @@ struct SubscriptionPairsView: View {
     
     var body: some View {
         ZStack {
-            self.getCloseButton(color: ColorPalette.primaryText) {
+            self.getCloseButton(color: ColorPalette.primaryText.opacity(0.3)) {
                 self.onComplete()
             }
             self.content
