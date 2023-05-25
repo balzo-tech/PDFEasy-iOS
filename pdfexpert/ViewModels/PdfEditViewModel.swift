@@ -36,7 +36,6 @@ class PdfEditViewModel: ObservableObject {
     @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
     @Published var scannerShow: Bool = false
-    @Published var monetizationShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var signatureAddViewShow: Bool = false
     @Published var editMode: EditMode = .add
@@ -123,11 +122,7 @@ class PdfEditViewModel: ObservableObject {
     
     func openScanner() {
         self.currentAnalyticsPdfInputType = .scan
-        if self.store.isPremium.value {
-            self.showScanner()
-        } else {
-            self.monetizationShow = true
-        }
+        self.showScanner()
     }
     
     func save() {

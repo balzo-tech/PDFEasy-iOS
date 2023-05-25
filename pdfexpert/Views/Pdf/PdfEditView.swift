@@ -54,11 +54,6 @@ struct PdfEditView: View {
         }, message: { pdfSaveError in
             Text(pdfSaveError.errorDescription ?? "")
         })
-        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
-            self.getSubscriptionView(onComplete: {
-                self.viewModel.monetizationShow = false
-            })
-        }
         // File picker for images
         .fullScreenCover(isPresented: self.$viewModel.fileImagePickerShow) {
             FilePicker(fileTypes: [.image],

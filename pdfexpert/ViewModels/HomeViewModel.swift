@@ -47,8 +47,6 @@ struct PickedImage: Transferable {
 
 public class HomeViewModel : ObservableObject {
     
-    @Published var monetizationShow: Bool = false
-    
     @Published var imageInputPickerShow: Bool = false
     @Published var fileImagePickerShow: Bool = false
     @Published var filePickerShow: Bool = false
@@ -116,11 +114,7 @@ public class HomeViewModel : ObservableObject {
     
     func scanPdf() {
         self.trackPdfConversionChosenEvent(inputType: .scan)
-        if self.store.isPremium.value {
-            self.showScanner()
-        } else {
-            self.monetizationShow = true
-        }
+        self.showScanner()
     }
     
     @MainActor
@@ -155,11 +149,7 @@ public class HomeViewModel : ObservableObject {
     
     func openFilePicker() {
         self.trackPdfConversionChosenEvent(inputType: .file)
-        if self.store.isPremium.value {
-            self.filePickerShow = true
-        } else {
-            self.monetizationShow = true
-        }
+        self.filePickerShow = true
     }
     
     @MainActor

@@ -51,11 +51,6 @@ struct HomeView: View {
         .onAppear() {
             self.homeViewModel.onAppear()
         }
-        .fullScreenCover(isPresented: self.$homeViewModel.monetizationShow) {
-            self.getSubscriptionView(onComplete: {
-                self.homeViewModel.monetizationShow = false
-            })
-        }
         .sheet(isPresented: self.$homeViewModel.imageInputPickerShow) {
             ImportView(onFileImportPressed: { self.homeViewModel.openFileImagePicker() },
                        onCameraImportPressed: { self.homeViewModel.openCamera() },
