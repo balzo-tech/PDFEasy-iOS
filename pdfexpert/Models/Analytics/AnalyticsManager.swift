@@ -23,13 +23,15 @@ enum AnalyticsPdfInputType {
 }
 
 enum AnalyticsScreen {
-    case convert, files, settings, subscription, importTutorial, signature
+    case onboarding, convert, files, settings, subscription, importTutorial, signature
 }
 
 enum AnalyticsEvent {
     case appTrackingTransparancyAuthorized
     case checkoutCompleted(subscriptionPlanProduct: Product)
     case onboardingCompleted(results: [OnboardingQuestion: OnboardingOption])
+    case onboardingTutorialCompleted
+    case onboardingTutorialSkipped
     case conversionToPdfChosen(pdfInputType: AnalyticsPdfInputType)
     case conversionToPdfCompleted(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)

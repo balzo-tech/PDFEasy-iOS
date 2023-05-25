@@ -50,6 +50,7 @@ extension MarginsOption {
 extension AnalyticsScreen {
     var name: String {
         switch self {
+        case .onboarding: return "Onboarding"
         case .convert: return "Convert"
         case .files: return "File"
         case .settings: return "Settings"
@@ -66,6 +67,8 @@ extension AnalyticsEvent {
         case .appTrackingTransparancyAuthorized: return "tracking_authorized"
         case .checkoutCompleted: return "checkout_completed"
         case .onboardingCompleted: return "onboarding_completed"
+        case .onboardingTutorialCompleted: return "onboarding_tutorial_completed"
+        case .onboardingTutorialSkipped: return "onboarding_tutorial_skipped"
         case .conversionToPdfChosen: return "conversion_to_pdf_chosen"
         case .conversionToPdfCompleted: return "conversion_to_pdf_completed"
         case .pageAdded: return "page_added"
@@ -111,6 +114,8 @@ extension AnalyticsEvent {
                 parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
             }
             return parameters
+        case .onboardingTutorialCompleted: return nil
+        case .onboardingTutorialSkipped: return nil
         case .pageRemoved: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil
