@@ -57,6 +57,7 @@ extension AnalyticsScreen {
         case .subscription: return "Subscription"
         case .importTutorial: return "ImportTutorial"
         case .signature: return "Signature"
+        case .fillForm: return "FillForm"
         }
     }
 }

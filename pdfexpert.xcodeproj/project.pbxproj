@@ -20,6 +20,12 @@
 		892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */; };
 		892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */; };
 		892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */; };
+		892E404F2A25E5D9000EEE23 /* TextAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */; };
+		8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */; };
+		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
+		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
+		8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */; };
+		8933490E2A24B6120005D484 /* TextResizableUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490D2A24B6120005D484 /* TextResizableUIView.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -180,6 +186,12 @@
 		892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnnotationStamp.swift; sourceTree = "<group>"; };
 		892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureView.swift; sourceTree = "<group>"; };
 		892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureViewModel.swift; sourceTree = "<group>"; };
+		892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnnotation.swift; sourceTree = "<group>"; };
+		8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormView.swift; sourceTree = "<group>"; };
+		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
+		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
+		8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitViewBinder.swift; sourceTree = "<group>"; };
+		8933490D2A24B6120005D484 /* TextResizableUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableUIView.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -378,6 +390,7 @@
 				89436AC029E563AE00060605 /* PdfViewerView.swift */,
 				892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */,
 				89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */,
+				8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -609,9 +622,13 @@
 				893E84A529D5C5E200F6B99A /* ActivityViewController.swift */,
 				8902898C29DC1F10007E6372 /* PageControl.swift */,
 				89436AC629E5B99100060605 /* PdfKitView.swift */,
+				8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */,
 				89127AA02A177E370059005F /* PencilKitView.swift */,
 				892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */,
+				892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */,
 				89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */,
+				8932ECE82A20F10500CBCD7A /* TextResizableView.swift */,
+				8933490D2A24B6120005D484 /* TextResizableUIView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -698,6 +715,7 @@
 				89436AC229E59C0E00060605 /* PdfEditViewModel.swift */,
 				89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */,
 				892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */,
+				8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */,
 				89127AA42A17A3600059005F /* PdfSignatureCanvasViewModel.swift */,
 			);
 			path = ViewModels;
@@ -955,8 +973,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */,
 				89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */,
 				89CD7B5529D329B1003F1C3A /* Enum+Extensions.swift in Sources */,
+				8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */,
 				89436ABF29E55EA000060605 /* PdfEditable.swift in Sources */,
 				8955ED962A1F73DC009985EE /* OnboardingTutorialViewModel.swift in Sources */,
 				89436AC529E5A2F800060605 /* PdfViewerViewModel.swift in Sources */,
@@ -968,6 +988,7 @@
 				891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
+				892E404F2A25E5D9000EEE23 /* TextAnnotation.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
 				89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */,
 				895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */,
@@ -989,6 +1010,7 @@
 				89CD7B9829D329B1003F1C3A /* SubscriptionViewUtility.swift in Sources */,
 				893C8FE629DF0399000E35BD /* Pdf+CoreDataProperties.swift in Sources */,
 				89127AA32A177F170059005F /* PdfSignatureCanvasView.swift in Sources */,
+				8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */,
 				893C8FD329DED2E9000E35BD /* Repository.swift in Sources */,
 				89923E6929D46A9900E246FC /* FilePicker.swift in Sources */,
 				894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */,
@@ -1007,6 +1029,7 @@
 				8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */,
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
 				893C8FD429DED2E9000E35BD /* RepositoryImpl.swift in Sources */,
+				8933490E2A24B6120005D484 /* TextResizableUIView.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
 				89127AA52A17A3600059005F /* PdfSignatureCanvasViewModel.swift in Sources */,
 				89CD7B9729D329B1003F1C3A /* SharedLocalizedError.swift in Sources */,
@@ -1054,6 +1077,7 @@
 				89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */,
 				89127AA72A17C1980059005F /* PencilKit+Extensions.swift in Sources */,
 				893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */,
+				8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,

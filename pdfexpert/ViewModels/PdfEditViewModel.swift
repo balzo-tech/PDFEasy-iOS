@@ -38,6 +38,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var signatureAddViewShow: Bool = false
+    @Published var fillFormAddViewShow: Bool = false
     @Published var editMode: EditMode = .add
     @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
     @Published var compression: CGFloat = K.Misc.PdfDefaultCompression
@@ -155,6 +156,10 @@ class PdfEditViewModel: ObservableObject {
         self.signatureAddViewShow = true
     }
     
+    func showFillFormSignature() {
+        self.fillFormAddViewShow = true
+    }
+    
     func viewPdf() {
         guard let pdf = self.pdf else {
             debugPrint(for: self, message: "Missing expected pdf")
@@ -188,8 +193,8 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
-    func updatePdfWithSignatures(pdfEditable: PdfEditable) {
-        // TODO: Update thumbnails only for pages with new signatures added
+    func updatePdf(pdfEditable: PdfEditable) {
+        // TODO: Update thumbnails only for changed pages
         self.pdfEditable = pdfEditable
         self.refreshThumbnails()
     }

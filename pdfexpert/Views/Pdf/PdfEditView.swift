@@ -31,6 +31,7 @@ struct PdfEditView: View {
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 if self.viewModel.pdfEditable.pdfDocument.pageCount > 0 {
+                    self.showFillFormButton
                     self.showAddSignatureButton
                 }
                 self.saveButton
@@ -85,8 +86,15 @@ struct PdfEditView: View {
             let inputParameter = PdfSignatureViewModel
                 .InputParameter(pdfEditable: self.viewModel.pdfEditable,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex ?? 0,
-                                onConfirm: { self.viewModel.updatePdfWithSignatures(pdfEditable: $0) })
+                                onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
+        }
+        .fullScreenCover(isPresented: self.$viewModel.fillFormAddViewShow) {
+            let inputParameter = PdfFillFormViewModel
+                .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex ?? 0,
+                                onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
+            PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
         }
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
@@ -263,6 +271,12 @@ struct PdfEditView: View {
                 .font(FontPalette.fontRegular(withSize: 14))
         }
         .padding([.leading, .trailing], 16)
+    }
+    
+    var showFillFormButton: some View {
+        Button(action: { self.viewModel.showFillFormSignature() }) {
+            Image("manage_annotations")
+        }
     }
     
     var showAddSignatureButton: some View {

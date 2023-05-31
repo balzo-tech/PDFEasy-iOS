@@ -23,7 +23,7 @@ enum AnalyticsPdfInputType {
 }
 
 enum AnalyticsScreen {
-    case onboarding, convert, files, settings, subscription, importTutorial, signature
+    case onboarding, convert, files, settings, subscription, importTutorial, signature, fillForm
 }
 
 enum AnalyticsEvent {
