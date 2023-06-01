@@ -189,7 +189,7 @@ fileprivate extension UIImage {
     
     func pdfPage() -> PDFPage? {
         // Typical Letter PDF page size and margins
-        let pageBounds = CGRect(x: 0, y: 0, width: 595, height: 842)
+        let pageBounds = CGRect(origin: .zero, size: K.Misc.PdfPageSize)
         let margin: CGFloat = 40
 
         let imageMaxWidth = pageBounds.width - (margin * 2)

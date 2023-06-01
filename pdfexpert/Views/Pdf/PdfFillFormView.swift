@@ -38,33 +38,10 @@ struct PdfFillFormView: View {
                     }
                 }
                 .tabViewStyle(.page)
-//                .ignoresSafeArea(.keyboard)
                 .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
                 .frame(width: parentGeometryReader.size.width,
                        height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
             }
-//            ZStack {
-//                PdfKitViewBinder(
-//                    pdfView: self.$viewModel.pdfView,
-//                    singlePage: false,
-//                    pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
-//                    backgroundColor: UIColor(ColorPalette.primaryBG),
-//                    usePaginator: true
-//                )
-//                .onTapGesture { self.viewModel.tapOnPdfView(positionInView: $0) }
-//                .allowsHitTesting(self.viewModel.pageScrollingAllowed)
-//                if self.viewModel.textAnnotationSelected {
-//                    TextResizableView(text: self.$viewModel.selectedTextAnnotationText,
-//                                      rect: self.$viewModel.selectedAnnotationViewRect,
-//                                      fontFamilyName: .constant(nil),
-//                                      fontColor: .constant(.black),
-//                                      color: .orange,
-//                                      borderWidth: 4,
-//                                      handleSize: 10,
-//                                      handleTapSize: 50,
-//                                      deleteCallback: self.viewModel.onDeleteAnnotationPressed)
-//                }
-//            }
             .padding([.leading, .trailing], 16)
             .padding([.top], 16)
             .background(ColorPalette.primaryBG)
@@ -96,10 +73,11 @@ struct PdfFillFormView: View {
         }
         if self.viewModel.editedPageIndex == pageIndex {
             TextResizableView(data: self.$viewModel.currentTextResizableViewData,
-                              fontFamilyName: K.Misc.DefaultAnnotationTextFontName,
+                              fontName: K.Misc.DefaultAnnotationTextFontName,
                               fontColor: .black,
                               color: .orange,
                               borderWidth: 4,
+                              minSize: CGSize(width: 5, height: 5),
                               handleSize: 25,
                               handleTapSize: 50,
                               deleteCallback: self.viewModel.onDeleteAnnotationPressed)
@@ -109,14 +87,17 @@ struct PdfFillFormView: View {
     @ViewBuilder func getView(forAnnotation annotation: PDFAnnotation) -> some View {
         if let page = annotation.page {
             GeometryReader { geometryReader in
-                let annotationBounds = PdfFillFormViewModel.convertRect(annotation.bounds,
+                let annotationBounds = PdfFillFormViewModel.convertRect(annotation.verticalCenteredTextBounds,
                                                                         viewSize: geometryReader.size,
                                                                         fromPage: page)
                 let position = CGPoint(x: annotationBounds.origin.x + annotationBounds.size.width / 2,
                                        y: annotationBounds.origin.y + annotationBounds.size.height / 2)
                 Text(annotation.contents ?? "")
-                    .font(Font(UIFont.systemFont(ofSize: K.Misc.DefaultAnnotationTextFontSize)))
-//                    .font(Font(annotation.font ?? .systemFont(ofSize: K.Misc.DefaultAnnotationTextFontSize)))
+                    .font(Font(UIFont.font(named: K.Misc.DefaultAnnotationTextFontName,
+                                           fitting: annotation.contents ?? "",
+                                           into: annotationBounds.size,
+                                           with: [:],
+                                           options: [])))
                     .foregroundColor(Color(annotation.fontColor ?? .black))
                     .frame(width: annotationBounds.width, height: annotationBounds.height)
                     .position(position)

@@ -17,31 +17,19 @@ struct TextResizableViewData {
 
 struct TextResizableView: View {
     
-    fileprivate enum TextResizableViewState {
-        case unselected
-        case selected
-        case editingText
-    }
-    
     enum FocusField: Hashable {
         case field
-      }
+    }
     
     @Binding var data: TextResizableViewData
-    let fontFamilyName: String?
+    let fontName: String
     let fontColor: UIColor
     let color: Color
     let borderWidth: CGFloat
+    let minSize: CGSize
     let handleSize: CGFloat
     let handleTapSize: CGFloat
     let deleteCallback: TextResizableViewDeleteCallback
-    
-//    @State private var text: String { didSet { self.updateRect() } }
-//    @Binding private var bottomRight: CGPoint
-//    @Binding private var topLeft: CGPoint
-    @State private var textSize: CGFloat = K.Misc.DefaultAnnotationTextFontSize
-    
-    @State private var state: TextResizableViewState = .unselected
     
     @State private var tapOffset: CGPoint? = nil
     @FocusState private var focusedField: FocusField?
@@ -66,74 +54,80 @@ struct TextResizableView: View {
     }
     
     private var font: UIFont {
-        let defaultFont = UIFont.systemFont(ofSize: self.textSize)
-        if let fontFamilyName = self.fontFamilyName {
-            return UIFont(name: fontFamilyName, size: self.textSize) ?? defaultFont
-        } else {
-            return defaultFont
-        }
+        UIFont.font(named: self.fontName,
+                    fitting: self.data.text,
+                    into: self.computedSize,
+                    with: [:],
+                    options: [])
     }
     
     init(data: Binding<TextResizableViewData>,
-         fontFamilyName: String?,
+         fontName: String,
          fontColor: UIColor,
          color: Color,
          borderWidth: CGFloat,
+         minSize: CGSize,
          handleSize: CGFloat,
          handleTapSize: CGFloat,
          deleteCallback: @escaping TextResizableViewDeleteCallback) {
         self._data = data
-        self.fontFamilyName = fontFamilyName
+        self.fontName = fontName
         self.fontColor = fontColor
         self.color = color
         self.borderWidth = borderWidth
+        self.minSize = minSize
         self.handleSize = handleSize
         self.handleTapSize = handleTapSize
         self.deleteCallback = deleteCallback
     }
     
     var body: some View {
-        GeometryReader { parentGeometryReader in
-            ZStack {
-                GeometryReader { _ in
-                    TextField("", text: self.$data.text)
-                        .multilineTextAlignment(.center)
-                        .font(Font(self.font))
-                        .foregroundColor(Color(self.fontColor))
-                        .focused(self.$focusedField, equals: .field)
-//                        .onAppear {
-//                            self.focusedField = .field
-//                        }
-                        .onTapGesture {
-                            self.state = .selected
-                        }
-                        .frame(width: self.computedSize.width, height: self.computedSize.height)
-                        .background(self.backgroundView)
-                        .position(self.computedCenter)
-                        .gesture(
-                            DragGesture()
-                                .onChanged { gesture in
-                                    self.OnDrag(dragGestureValue: gesture,
-                                                parentViewSize: parentGeometryReader.size)
-                                }
-                                .onEnded { _ in self.tapOffset = nil }
-                        )
+        ZStack {
+            Rectangle()
+                .foregroundColor(.clear)
+                .contentShape(Rectangle())
+                .allowsHitTesting(self.focusedField == .field)
+                .onTapGesture {
+                    self.focusedField = .none
                 }
-                if self.state == .selected {
+            GeometryReader { parentGeometryReader in
+                ZStack {
+                    GeometryReader { _ in
+                        TextField("", text: self.$data.text)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .font(Font(self.font))
+                            .foregroundColor(Color(self.fontColor))
+                            .focused(self.$focusedField, equals: .field)
+                            .onAppear {
+                                self.tapOffset = nil
+                                self.focusedField = .field
+                            }
+                            .contentShape(Rectangle())
+                            .frame(width: self.computedSize.width, height: self.computedSize.height)
+                            .background(Rectangle().stroke(self.color, lineWidth: self.borderWidth))
+                            .position(self.computedCenter)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { gesture in
+                                        self.OnDrag(dragGestureValue: gesture,
+                                                    parentViewSize: parentGeometryReader.size)
+                                    }
+                                    .onEnded { _ in self.tapOffset = nil }
+                            )
+                    }
                     self.getResizeHandle(parentViewSize: parentGeometryReader.size)
                     self.getDeleteButton(parentViewSize: parentGeometryReader.size)
                 }
+                
             }
         }
     }
     
-    @ViewBuilder private var backgroundView: some View {
-        if self.state == .selected {
-            Rectangle().stroke(self.color, lineWidth: self.borderWidth)
-        } else {
-            Color.clear
+    @State var size: CGSize = .zero {
+        didSet {
+            print("Size: \(self.size)")
         }
-//        Color.red
     }
     
     private func OnDrag(dragGestureValue: DragGesture.Value, parentViewSize: CGSize) {
@@ -147,13 +141,13 @@ struct TextResizableView: View {
                                           y: dragGestureValue.startLocation.y - center.y)
         }
         
-        guard let tapImageOffset = self.tapOffset else {
+        guard let tapOffset = self.tapOffset else {
             return
         }
         
-        var newCenterX = location.x - tapImageOffset.x
+        var newCenterX = location.x - tapOffset.x
         newCenterX = max(min(newCenterX, parentViewSize.width - size.width / 2), size.width / 2)
-        var newCenterY = location.y - tapImageOffset.y
+        var newCenterY = location.y - tapOffset.y
         newCenterY = max(min(newCenterY, parentViewSize.height - size.height / 2), size.height / 2)
         
         let currentEventTranslation: CGPoint = CGPoint(x: newCenterX - center.x,
@@ -172,8 +166,8 @@ struct TextResizableView: View {
         var bottomRight = CGPoint(x: location.x,y: location.y)
             .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
         bottomRight = CGPoint(
-            x: max(bottomRight.x, self.topLeft.x + self.handleSize),
-            y: max(bottomRight.y, self.topLeft.y + self.handleSize)
+            x: max(bottomRight.x, self.topLeft.x + self.minSize.width),
+            y: max(bottomRight.y, self.topLeft.y + self.minSize.height)
         )
         
         self.updateRect(topLeft: self.topLeft, bottomRight: bottomRight, text: self.data.text)
@@ -245,11 +239,12 @@ struct TextResizableView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geometryReader in
             TextResizableView(data: .constant(getData(forParentSize: geometryReader.size)),
-                              fontFamilyName: nil,
+                              fontName: "Arial",
                               fontColor: .white,
                               color: .orange,
                               borderWidth: 4,
-                              handleSize: 20,
+                              minSize: CGSize(width: 5, height: 5),
+                              handleSize: 25,
                               handleTapSize: 50,
                               deleteCallback: { print("TextResizableView_Previews - Delete callback called!") })
             .position(x: geometryReader.size.width/2, y: geometryReader.size.height/2)

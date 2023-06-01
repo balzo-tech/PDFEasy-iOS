@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension String {
     
@@ -19,5 +20,17 @@ extension String {
 
     public mutating func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
+    }
+    
+    public func boundingRect(font: UIFont?,
+                             with attributes: [NSAttributedString.Key: Any],
+                             options: NSStringDrawingOptions) -> CGRect {
+        var attributes = attributes
+        attributes[.font] = font
+        return self.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude,
+                                              height: CGFloat.greatestFiniteMagnitude),
+                                 options: options,
+                                 attributes: attributes,
+                                 context: nil)
     }
 }

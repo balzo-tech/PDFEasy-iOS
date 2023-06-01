@@ -25,7 +25,6 @@
 		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
 		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
 		8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */; };
-		8933490E2A24B6120005D484 /* TextResizableUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490D2A24B6120005D484 /* TextResizableUIView.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -80,6 +79,8 @@
 		895FE2CD29D724B900A99D5B /* SubscriptionPairsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895FE2CC29D724B900A99D5B /* SubscriptionPairsItemView.swift */; };
 		895FE2D029D7392F00A99D5B /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 895FE2CF29D7392F00A99D5B /* Collections */; };
 		895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 895FE2D129D7392F00A99D5B /* OrderedCollections */; };
+		896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6C2A28910B008F268E /* SizePrinter.swift */; };
+		896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */; };
 		897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */; };
 		897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */; };
 		89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */; };
@@ -191,7 +192,6 @@
 		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
 		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
 		8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitViewBinder.swift; sourceTree = "<group>"; };
-		8933490D2A24B6120005D484 /* TextResizableUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableUIView.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -245,6 +245,8 @@
 		895FE2C729D6E7D900A99D5B /* ProductionProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductionProducts.storekit; sourceTree = "<group>"; };
 		895FE2CA29D6E9B800A99D5B /* SubscriptionPairsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPairsView.swift; sourceTree = "<group>"; };
 		895FE2CC29D724B900A99D5B /* SubscriptionPairsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPairsItemView.swift; sourceTree = "<group>"; };
+		896CCF6C2A28910B008F268E /* SizePrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizePrinter.swift; sourceTree = "<group>"; };
+		896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalView.swift; sourceTree = "<group>"; };
 		897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalItemView.swift; sourceTree = "<group>"; };
 		89847AE02A1BA947000EC14B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -628,7 +630,7 @@
 				892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */,
 				89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */,
 				8932ECE82A20F10500CBCD7A /* TextResizableView.swift */,
-				8933490D2A24B6120005D484 /* TextResizableUIView.swift */,
+				896CCF6C2A28910B008F268E /* SizePrinter.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -645,6 +647,7 @@
 				894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */,
 				891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */,
 				89127AA62A17C1980059005F /* PencilKit+Extensions.swift */,
+				896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1029,7 +1032,6 @@
 				8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */,
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
 				893C8FD429DED2E9000E35BD /* RepositoryImpl.swift in Sources */,
-				8933490E2A24B6120005D484 /* TextResizableUIView.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
 				89127AA52A17A3600059005F /* PdfSignatureCanvasViewModel.swift in Sources */,
 				89CD7B9729D329B1003F1C3A /* SharedLocalizedError.swift in Sources */,
@@ -1037,6 +1039,7 @@
 				89AAFE9C29DB1842002D348E /* OnboardingView.swift in Sources */,
 				892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */,
 				89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */,
+				896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */,
 				89127AA12A177E370059005F /* PencilKitView.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,
 				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
@@ -1052,6 +1055,7 @@
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89B72A3329DADC790076884F /* SettingsView.swift in Sources */,
 				8902899129DC298E007E6372 /* OnboardingOption.swift in Sources */,
+				896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */,
 				8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
