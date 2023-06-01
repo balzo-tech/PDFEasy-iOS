@@ -84,6 +84,9 @@ extension AnalyticsEvent {
         case .pdfShared: return "pdf_shared"
         case .signatureCreated: return "signature_created"
         case .signatureAdded: return "signature_added"
+        case .textAnnotationAdded: return "text_annotation_added"
+        case .textAnnotationRemoved: return "text_annotation_removed"
+        case .annotationsConfirmed: return "annotations_confirmed"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -124,6 +127,9 @@ extension AnalyticsEvent {
         case .existingPdfOpened: return nil
         case .existingPdfRemoved: return nil
         case .importTutorialCompleted: return nil
+        case .textAnnotationAdded: return nil
+        case .textAnnotationRemoved: return nil
+        case .annotationsConfirmed: return nil
         case .signatureCreated: return nil
         case .signatureAdded: return nil
         case .pdfEditCompleted(let marginsOption, let compressionValue):

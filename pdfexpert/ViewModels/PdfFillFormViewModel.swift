@@ -123,6 +123,7 @@ class PdfFillFormViewModel: ObservableObject {
     
     func onDeleteAnnotationPressed() {
         self.editedPageIndex = nil
+        self.analyticsManager.track(event: .textAnnotationRemoved)
     }
     
     func onConfirmButtonPressed() {
@@ -140,6 +141,9 @@ class PdfFillFormViewModel: ObservableObject {
                 }
             }
         }
+        
+        self.analyticsManager.track(event: .annotationsConfirmed)
+        
         self.onConfirm(PdfEditable(pdfDocument: self.pdfDocument))
     }
     
@@ -157,6 +161,7 @@ class PdfFillFormViewModel: ObservableObject {
                                         withProperties: nil)
         annotation.page = page
         self.annotations.append(annotation)
+        self.analyticsManager.track(event: .textAnnotationAdded)
     }
     
     static func convertPoint(_ point: CGPoint, viewSize: CGSize, toPage: PDFPage) -> CGPoint {

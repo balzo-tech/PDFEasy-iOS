@@ -44,6 +44,9 @@ enum AnalyticsEvent {
     case importTutorialCompleted
     case signatureCreated
     case signatureAdded
+    case textAnnotationAdded
+    case textAnnotationRemoved
+    case annotationsConfirmed
     case pdfEditCompleted(marginsOption: MarginsOption, compressionValue: CGFloat)
     case pdfShared(marginsOption: MarginsOption?, compressionValue: CGFloat?)
     case reportScreen(_ screen: AnalyticsScreen)
