@@ -11,11 +11,11 @@ import WeScan
 
 class PdfScanUtility {
     
-    static func convertScan(scannerResult: ScannerResult, asyncOperation: Binding<AsyncOperation<PdfEditable, SharedLocalizedError>>) {
+    static func convertScan(scannerResult: ScannerResult, asyncOperation: Binding<AsyncOperation<PdfEditable, PdfEditableError>>) {
         guard let imageScannerResult = scannerResult.results else {
             if let error = scannerResult.error {
                 debugPrint(for: type(of: Self.self), message: "Scan failed. Error: \(error)")
-                asyncOperation.wrappedValue = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+                asyncOperation.wrappedValue = AsyncOperation(status: .error(.unknownError))
             } else {
                 asyncOperation.wrappedValue = AsyncOperation(status: .empty)
             }
@@ -34,13 +34,13 @@ class PdfScanUtility {
             switch result {
             case .success(let data):
                 guard let pdfEditable = PdfEditable(data: data) else {
-                    asyncOperation.wrappedValue = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+                    asyncOperation.wrappedValue = AsyncOperation(status: .error(.unknownError))
                     return
                 }
                 asyncOperation.wrappedValue = AsyncOperation(status: .data(pdfEditable))
             case .failure(let error):
                 debugPrint(for: Self.self, message: "Scan to pdf conversion failed. Error: \(error.localizedDescription)")
-                asyncOperation.wrappedValue = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+                asyncOperation.wrappedValue = AsyncOperation(status: .error(.unknownError))
             }
         }
     }

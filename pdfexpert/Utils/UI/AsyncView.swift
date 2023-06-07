@@ -39,20 +39,21 @@ struct AsyncView<LoadingView: View, DataType, ErrorType: LocalizedError>: ViewMo
     }
     
     func body(content: Content) -> some View {
+        ZStack {
+            content
+            self.additionalContent
+        }.errorAlert(asyncOperation: self.$asyncOperation)
+    }
+    
+    @ViewBuilder var additionalContent: some View {
         switch self.asyncOperation.status {
-        case .empty:
-            content
+        case .empty: Spacer()
         case .loading:
-            ZStack {
-                content
-                Color(.black).opacity(0.5)
-                    .edgesIgnoringSafeArea(.all)
-                self.loadingView()
-            }
-        case .error:
-            Group { content }.errorAlert(asyncOperation: self.$asyncOperation)
-        case .data:
-            content
+            Color(.black).opacity(0.5)
+                .edgesIgnoringSafeArea(.all)
+            self.loadingView()
+        case .error: Spacer()
+        case .data:  Spacer()
         }
     }
 }

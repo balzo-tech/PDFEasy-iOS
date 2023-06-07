@@ -22,6 +22,12 @@ struct PdfEditable {
         self.password = password
     }
     
+    init?(pdfUrl: URL, password: String? = nil) {
+        guard let pdfDocument = PDFDocument(url: pdfUrl) else { return nil }
+        self.pdfDocument = pdfDocument
+        self.password = password
+    }
+    
     init(pdfDocument: PDFDocument, password: String? = nil) {
         self.pdfDocument = pdfDocument
         self.password = password

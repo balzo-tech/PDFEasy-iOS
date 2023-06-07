@@ -18,38 +18,13 @@ extension Container {
     }
 }
 
-enum ImageTransferError: LocalizedError {
-    case importFailed
-    
-    var errorDescription: String? {
-        switch self {
-        case .importFailed: return "Couldn't import the selected photo."
-        }
-    }
-}
-
-struct PickedImage: Transferable {
-    let uiImage: UIImage
-    
-    static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(importedContentType: .image) { data in
-        #if canImport(UIKit)
-            guard let uiImage = UIImage(data: data) else {
-                throw ImageTransferError.importFailed
-            }
-            return PickedImage(uiImage: uiImage)
-        #else
-            throw ImageTransferError.importFailed
-        #endif
-        }
-    }
-}
-
 public class HomeViewModel : ObservableObject {
     
     @Published var imageInputPickerShow: Bool = false
     @Published var fileImagePickerShow: Bool = false
     @Published var filePickerShow: Bool = false
+    @Published var pdfFilePickerShow: Bool = false
+    @Published var pdfPasswordInputShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -69,7 +44,7 @@ public class HomeViewModel : ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     
-    @Published var asyncPdf: AsyncOperation<PdfEditable, SharedLocalizedError> = AsyncOperation(status: .empty) {
+    @Published var asyncPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
         didSet {
             if self.asyncPdf.success {
                 self.trackPdfConversionCompletedEvent()
@@ -92,6 +67,8 @@ public class HomeViewModel : ObservableObject {
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentInputFileExtension: String? = nil
+    
+    private var lockedPdfEditable: PdfEditable? = nil
     
     @MainActor
     func onAppear() {
@@ -152,6 +129,11 @@ public class HomeViewModel : ObservableObject {
         self.filePickerShow = true
     }
     
+    func openPdfFilePicker() {
+        self.trackPdfConversionChosenEvent(inputType: .pdf)
+        self.pdfFilePickerShow = true
+    }
+    
     @MainActor
     func convert() {
         if let urlToImageToConvert = self.urlToImageToConvert {
@@ -167,6 +149,30 @@ public class HomeViewModel : ObservableObject {
             self.scannerResult = nil
             PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
+    }
+    
+    @MainActor
+    func importPdf(pdfUrl: URL) {
+        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+            assertionFailure("Missing expected file for give url")
+            return
+        }
+        
+        if pdfEditable.pdfDocument.isLocked {
+            self.lockedPdfEditable = pdfEditable
+            self.pdfPasswordInputShow = true
+        } else {
+            self.asyncPdf = self.decryptFile(pdfEditable: pdfEditable)
+        }
+    }
+    
+    @MainActor
+    func importLockedPdf(password: String) {
+        guard let pdfEditable = self.lockedPdfEditable else {
+            assertionFailure("Missing expected locked pdf")
+            return
+        }
+        self.asyncPdf = self.decryptFile(pdfEditable: pdfEditable, password: password)
     }
     
     @MainActor
@@ -193,12 +199,12 @@ public class HomeViewModel : ObservableObject {
         Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
             if let error = error {
                 debugPrint(for: self, message: "Error converting word file. Error: \(error)")
-                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+                self.asyncPdf = AsyncOperation(status: .error(.unknownError))
             } else if let data = data, let pdfEditable = PdfEditable(data: data) {
                 self.currentInputFileExtension = fileUrl.pathExtension
                 self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
             } else {
-                self.asyncPdf = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+                self.asyncPdf = AsyncOperation(status: .error(.unknownError))
             }
         }
     }
@@ -311,6 +317,33 @@ public class HomeViewModel : ObservableObject {
         self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
     }
     
+    private func decryptFile(pdfEditable: PdfEditable, password: String = "") -> AsyncOperation<PdfEditable, PdfEditableError> {
+        guard pdfEditable.pdfDocument.isEncrypted else {
+            return AsyncOperation(status: .data(pdfEditable))
+        }
+        
+        guard pdfEditable.pdfDocument.unlock(withPassword: password) else {
+            return AsyncOperation(status: .error(.wrongPassword))
+        }
+        
+        guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
+            assertionFailure("Missing expected encrypted data")
+            return AsyncOperation(status: .error(.unknownError))
+        }
+        
+        guard let pdfDecryptedData = try? PDFUtility.removePassword(data: pdfEncryptedData, existingPDFPassword: password) else {
+            assertionFailure("Missing expected decrypted data")
+            return AsyncOperation(status: .error(.unknownError))
+        }
+        
+        guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
+            assertionFailure("Cannot decode pdf from decrypted data")
+            return AsyncOperation(status: .error(.unknownError))
+        }
+        
+        return AsyncOperation(status: .data(pdfDecryptedEditable))
+    }
+    
     private func trackPdfConversionChosenEvent(inputType: AnalyticsPdfInputType) {
         self.currentAnalyticsPdfInputType = inputType
         self.analyticsManager.track(event: .conversionToPdfChosen(pdfInputType: inputType))
@@ -322,24 +355,6 @@ public class HomeViewModel : ObservableObject {
                                                                          fileExtension: self.currentInputFileExtension))
             self.currentAnalyticsPdfInputType = nil
             self.currentInputFileExtension = nil
-        }
-    }
-}
-
-enum ImportImageError: LocalizedError, UnderlyingError {
-    case unknownError
-    case underlyingError(errorDescription: String)
-    
-    static func getUnknownError() -> Self { Self.unknownError }
-    
-    static func getUnderlyingError(errorDescription: String) -> Self {
-        return .underlyingError(errorDescription: errorDescription)
-    }
-    
-    var errorDescription: String? {
-        switch self {
-        case .unknownError: return "Internal Error. Please try again later"
-        case .underlyingError(let errorMessage): return errorMessage
         }
     }
 }

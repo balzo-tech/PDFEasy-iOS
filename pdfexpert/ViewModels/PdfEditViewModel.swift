@@ -55,7 +55,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     @Published var asyncImageLoading: AsyncOperation<(), ImportImageError> = AsyncOperation(status: .empty)
-    @Published var asyncPdf: AsyncOperation<PdfEditable, SharedLocalizedError> = AsyncOperation(status: .empty) {
+    @Published var asyncPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
         didSet {
             if let pdfEditable = self.asyncPdf.data  {
                 self.appendPdfEditableToPdf(pdfEditable: pdfEditable)

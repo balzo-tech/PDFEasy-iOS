@@ -20,6 +20,7 @@
 		892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */; };
 		892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */; };
 		892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */; };
+		8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8928F3D02A30BAFB001C1853 /* PickedImage.swift */; };
 		892E404F2A25E5D9000EEE23 /* TextAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */; };
 		8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */; };
 		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
@@ -128,7 +129,7 @@
 		89CD7B7129D329B1003F1C3A /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AFA29D329B1003F1C3A /* ColorPalette.swift */; };
 		89CD7B7329D329B1003F1C3A /* SubscribeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7AFD29D329B1003F1C3A /* SubscribeViewModel.swift */; };
 		89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7B2629D329B1003F1C3A /* ContentView.swift */; };
-		89CD7B9729D329B1003F1C3A /* SharedLocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7B2C29D329B1003F1C3A /* SharedLocalizedError.swift */; };
+		89CD7B9729D329B1003F1C3A /* SharedErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7B2C29D329B1003F1C3A /* SharedErrors.swift */; };
 		89CD7B9829D329B1003F1C3A /* SubscriptionViewUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7B2D29D329B1003F1C3A /* SubscriptionViewUtility.swift */; };
 		89CD7B9929D329B1003F1C3A /* View+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7B2E29D329B1003F1C3A /* View+Preview.swift */; };
 		89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7B2F29D329B1003F1C3A /* View+Internal.swift */; };
@@ -187,6 +188,7 @@
 		892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnnotationStamp.swift; sourceTree = "<group>"; };
 		892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureView.swift; sourceTree = "<group>"; };
 		892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureViewModel.swift; sourceTree = "<group>"; };
+		8928F3D02A30BAFB001C1853 /* PickedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedImage.swift; sourceTree = "<group>"; };
 		892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnnotation.swift; sourceTree = "<group>"; };
 		8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormView.swift; sourceTree = "<group>"; };
 		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
@@ -297,7 +299,7 @@
 		89CD7AFA29D329B1003F1C3A /* ColorPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		89CD7AFD29D329B1003F1C3A /* SubscribeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscribeViewModel.swift; sourceTree = "<group>"; };
 		89CD7B2629D329B1003F1C3A /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		89CD7B2C29D329B1003F1C3A /* SharedLocalizedError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLocalizedError.swift; sourceTree = "<group>"; };
+		89CD7B2C29D329B1003F1C3A /* SharedErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedErrors.swift; sourceTree = "<group>"; };
 		89CD7B2D29D329B1003F1C3A /* SubscriptionViewUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionViewUtility.swift; sourceTree = "<group>"; };
 		89CD7B2E29D329B1003F1C3A /* View+Preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Preview.swift"; sourceTree = "<group>"; };
 		89CD7B2F29D329B1003F1C3A /* View+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Internal.swift"; sourceTree = "<group>"; };
@@ -680,6 +682,7 @@
 				89E55BE629DC70A80073F268 /* OnboardingQuestion.swift */,
 				8902899029DC298E007E6372 /* OnboardingOption.swift */,
 				89436ABE29E55EA000060605 /* PdfEditable.swift */,
+				8928F3D02A30BAFB001C1853 /* PickedImage.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -748,7 +751,7 @@
 		89CD7B2B29D329B1003F1C3A /* InternalUtils */ = {
 			isa = PBXGroup;
 			children = (
-				89CD7B2C29D329B1003F1C3A /* SharedLocalizedError.swift */,
+				89CD7B2C29D329B1003F1C3A /* SharedErrors.swift */,
 				89CD7B2D29D329B1003F1C3A /* SubscriptionViewUtility.swift */,
 				89CD7B2E29D329B1003F1C3A /* View+Preview.swift */,
 				89CD7B2F29D329B1003F1C3A /* View+Internal.swift */,
@@ -987,6 +990,7 @@
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
 				89436AC129E563AE00060605 /* PdfViewerView.swift in Sources */,
+				8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */,
 				894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */,
 				891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
@@ -1034,7 +1038,7 @@
 				893C8FD429DED2E9000E35BD /* RepositoryImpl.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
 				89127AA52A17A3600059005F /* PdfSignatureCanvasViewModel.swift in Sources */,
-				89CD7B9729D329B1003F1C3A /* SharedLocalizedError.swift in Sources */,
+				89CD7B9729D329B1003F1C3A /* SharedErrors.swift in Sources */,
 				893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */,
 				89AAFE9C29DB1842002D348E /* OnboardingView.swift in Sources */,
 				892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */,

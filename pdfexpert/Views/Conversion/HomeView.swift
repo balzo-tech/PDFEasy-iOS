@@ -20,6 +20,8 @@ struct HomeView: View {
     
     @InjectedObject(\.homeViewModel) var homeViewModel
     
+    @State private var passwordText: String = ""
+    
     let items: [HomeItem] = [
         HomeItem(title: "Convert\nimages to PDF",
                  imageName: "home_convert_image",
@@ -29,13 +31,13 @@ struct HomeView: View {
                  buttonAction: { $0.openFilePicker() }),
         HomeItem(title: "PDF\nScanner",
                  imageName: "home_scan",
-                 buttonAction: { $0.scanPdf() })/*,
-        HomeItem(title: "Fill in\na file",
-                 imageName: "home_fill_form",
                  buttonAction: { $0.scanPdf() }),
+//        HomeItem(title: "Fill in\na file",
+//                 imageName: "home_fill_form",
+//                 buttonAction: { $0.scanPdf() }),
         HomeItem(title: "Import\nPDF",
                  imageName: "home_import_pdf",
-                 buttonAction: { $0.scanPdf() })*/
+                 buttonAction: { $0.openPdfFilePicker() })
     ]
     
     private var gridItemLayout = [GridItem(.flexible(), spacing: 14),
@@ -86,6 +88,25 @@ struct HomeView: View {
                 self.homeViewModel.convert()
             })
         }
+        // File picker for pdf files
+        .fullScreenCover(isPresented: self.$homeViewModel.pdfFilePickerShow) {
+            FilePicker(fileTypes: [.pdf],
+                       onPickedFile: {
+                self.homeViewModel.importPdf(pdfUrl: $0)
+            })
+        }
+        .alert("Your pdf is protected", isPresented: self.$homeViewModel.pdfPasswordInputShow, actions: {
+            SecureField("Enter Password", text: self.$passwordText)
+            Button("Confirm", action: {
+                self.homeViewModel.importLockedPdf(password: self.passwordText)
+                self.passwordText = ""
+            })
+            Button("Cancel", role: .cancel, action: {
+                self.passwordText = ""
+            })
+        }, message: {
+            Text("Enter the password of your pdf in order to import it.")
+        })
         // WeScan scanner
         .fullScreenCover(isPresented: self.$homeViewModel.scannerShow) {
             ScannerView(onScannerResult: {
