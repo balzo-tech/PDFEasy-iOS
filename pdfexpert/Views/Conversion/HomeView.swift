@@ -12,7 +12,7 @@ import PhotosUI
 struct HomeItem: Identifiable {
     let id = UUID()
     let title: String
-    let buttonText: String
+    let imageName: String
     let buttonAction: (HomeViewModel) -> ()
 }
 
@@ -21,33 +21,44 @@ struct HomeView: View {
     @InjectedObject(\.homeViewModel) var homeViewModel
     
     let items: [HomeItem] = [
-        HomeItem(title: "Convert\npicture to PDF",
-                 buttonText: "Start to convert",
+        HomeItem(title: "Convert\nimages to PDF",
+                 imageName: "home_convert_image",
                  buttonAction: { $0.openImageInputPicker() }),
-        HomeItem(title: "Convert\nFile to PDF",
-                 buttonText: "Start to convert",
+        HomeItem(title: "Convert\nfiles to PDF",
+                 imageName: "home_convert_files",
                  buttonAction: { $0.openFilePicker() }),
         HomeItem(title: "PDF\nScanner",
-                 buttonText: "Start to scan",
-                 buttonAction: { $0.scanPdf() })
+                 imageName: "home_scan",
+                 buttonAction: { $0.scanPdf() })/*,
+        HomeItem(title: "Fill in\na file",
+                 imageName: "home_fill_form",
+                 buttonAction: { $0.scanPdf() }),
+        HomeItem(title: "Import\nPDF",
+                 imageName: "home_import_pdf",
+                 buttonAction: { $0.scanPdf() })*/
     ]
     
+    private var gridItemLayout = [GridItem(.flexible(), spacing: 14),
+                                  GridItem(.flexible(), spacing: 14)]
+    
     var body: some View {
-        List(self.items, id: \.id) { item in
-            VStack {
-                HomeItemView(title: item.title,
-                             buttonText: item.buttonText,
-                             onButtonPressed: { item.buttonAction(self.homeViewModel) })
-                Spacer().frame(height: 40)
+        ScrollView {
+            LazyVGrid(columns: gridItemLayout, spacing: 14) {
+                ForEach(self.items, id: \.id) { item in
+                    HomeItemView(title: item.title,
+                                 imageName: item.imageName,
+                                 onButtonPressed: { item.buttonAction(self.homeViewModel) })
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color(.clear))
+                    .listRowInsets(EdgeInsets())
+                }
             }
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color(.clear))
-            .listRowInsets(EdgeInsets())
+            .padding(14)
         }
-        .padding(.top, 20)
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
-        .navigationTitle("Convert")
+        .navigationTitle("Home")
         .onAppear() {
             self.homeViewModel.onAppear()
         }

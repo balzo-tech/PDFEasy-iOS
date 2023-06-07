@@ -98,7 +98,7 @@ public class HomeViewModel : ObservableObject {
         Task {
             try await self.store.refreshAll()
         }
-        self.analyticsManager.track(event: .reportScreen(.convert))
+        self.analyticsManager.track(event: .reportScreen(.home))
     }
     
     @MainActor

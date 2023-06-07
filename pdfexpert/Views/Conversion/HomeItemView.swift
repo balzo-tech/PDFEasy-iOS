@@ -10,48 +10,40 @@ import SwiftUI
 struct HomeItemView: View {
     
     let title: String
-    let buttonText: String
+    let imageName: String
     let onButtonPressed: () -> ()
     
     var body: some View {
-        ZStack {
-            self.defaultGradientBackground
-            .foregroundColor(ColorPalette.secondaryBG)
-            .cornerRadius(10)
-            .shadow(radius: 5)
-            VStack(spacing: 0) {
-                Text(self.title)
-                    .font(FontPalette.fontBold(withSize: 28))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        Button(action: {
+            self.onButtonPressed()
+        }) {
+            VStack(spacing: 16) {
                 Spacer()
-                Button(action: {
-                    self.onButtonPressed()
-                }) {
-                    Text(self.buttonText)
-                        .font(FontPalette.fontBold(withSize: 16))
-                        .foregroundColor(ColorPalette.buttonGradientStart)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .background(ColorPalette.primaryText)
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
+                Image(self.imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 32)
+                Text(self.title)
+                    .font(FontPalette.fontBold(withSize: 16))
+                    .foregroundColor(ColorPalette.primaryText)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
+            
         }
-        .frame(height: 175)
-        .padding(.leading, 24)
-        .padding(.trailing, 24)
+        .background(
+            self.defaultGradientBackground
+            .cornerRadius(10)
+        )
     }
 }
 
 struct HomeItemView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeItemView(title: "Convert\npicture to PDF",
-                     buttonText: "Start to convert",
+        HomeItemView(title: "Convert\nimages to PDF",
+                     imageName: "home_convert_image",
                      onButtonPressed: {})
     }
 }

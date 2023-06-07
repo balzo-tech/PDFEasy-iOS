@@ -51,7 +51,7 @@ extension AnalyticsScreen {
     var name: String {
         switch self {
         case .onboarding: return "Onboarding"
-        case .convert: return "Convert"
+        case .home: return "Home"
         case .files: return "File"
         case .settings: return "Settings"
         case .subscription: return "Subscription"
