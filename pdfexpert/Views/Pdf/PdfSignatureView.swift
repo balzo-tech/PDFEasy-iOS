@@ -26,7 +26,6 @@ struct PdfSignatureView: View {
                         usePaginator: true
                     )
                     .onTapGesture { self.viewModel.tapOnPdfView() }
-                    .allowsHitTesting(self.viewModel.pageScrollingAllowed)
                 }
                 if let signatureImage = self.viewModel.signatureImage {
                     ImageResizableView(
