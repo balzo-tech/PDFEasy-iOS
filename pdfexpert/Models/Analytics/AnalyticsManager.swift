@@ -19,7 +19,7 @@ enum AnalyticsError {
 }
 
 enum AnalyticsPdfInputType {
-    case camera, gallery, fileImage, file, scan, appExtension, pdf
+    case camera, gallery, fileImage, file, scan, appExtension, pdf, scanFillForm, fileFillForm
 }
 
 enum AnalyticsScreen {

@@ -185,6 +185,8 @@ fileprivate extension AnalyticsPdfInputType {
         case .scan: return "scan"
         case .appExtension: return "app_extension"
         case .pdf: return "pdf"
+        case .scanFillForm: return "scan_fill_form"
+        case .fileFillForm: return "file_fill_form"
         }
     }
 }

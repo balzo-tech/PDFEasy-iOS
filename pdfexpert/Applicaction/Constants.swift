@@ -69,6 +69,7 @@ struct K {
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
         static let ImportFileTypes: [UTType?] = [
+            UTType.pdf,
             .presentation,
             .spreadsheet,
             UTType("com.microsoft.word.doc"),

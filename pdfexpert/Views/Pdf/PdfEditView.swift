@@ -37,6 +37,7 @@ struct PdfEditView: View {
                 self.saveButton
             }
         }
+        .onAppear(perform:self.viewModel.onAppear)
         .alert("Error",
                isPresented: .constant(self.viewModel.pdfSaveError != nil),
                presenting: self.viewModel.pdfSaveError,
@@ -341,7 +342,8 @@ fileprivate extension MarginsOption {
 struct PdfEditView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
-            AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(pdfEditable)))
+            let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: pdfEditable, startAction: nil)
+            AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter)))
         } else {
             AnyView(Spacer())
         }

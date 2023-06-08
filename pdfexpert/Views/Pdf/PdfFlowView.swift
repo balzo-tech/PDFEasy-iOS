@@ -13,6 +13,7 @@ struct PdfFlowView: View {
     @InjectedObject(\.pdfCoordinator) var coordinator
     @Environment(\.dismiss) var dismiss
     let pdfEditable: PdfEditable
+    let startAction: PdfEditStartAction?
     
     var body: some View {
         self.content
@@ -23,7 +24,9 @@ struct PdfFlowView: View {
         case .edit:
             return AnyView(
                 NavigationStack(path: self.$coordinator.path) {
-                    PdfEditView(viewModel: Container.shared.pdfEditViewModel(self.pdfEditable))
+                    let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: self.pdfEditable,
+                                                                         startAction: self.startAction)
+                    PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter))
                         .navigationDestination(for: PdfCoordinator.Route.self) { route in
                             switch route {
                             case .viewer(let pdf, let marginsOption, let compression):
@@ -49,7 +52,7 @@ struct PdfFlowView: View {
 struct PdfView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
-            AnyView(PdfFlowView(pdfEditable: pdfEditable))
+            AnyView(PdfFlowView(pdfEditable: pdfEditable, startAction: nil))
         } else {
             AnyView(Color(.clear))
         }

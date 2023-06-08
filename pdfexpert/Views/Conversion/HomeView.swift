@@ -32,9 +32,9 @@ struct HomeView: View {
         HomeItem(title: "PDF\nScanner",
                  imageName: "home_scan",
                  buttonAction: { $0.scanPdf() }),
-//        HomeItem(title: "Fill in\na file",
-//                 imageName: "home_fill_form",
-//                 buttonAction: { $0.scanPdf() }),
+        HomeItem(title: "Fill in\na file",
+                 imageName: "home_fill_form",
+                 buttonAction: { $0.openFillFormInputPicker() }),
         HomeItem(title: "Import\nPDF",
                  imageName: "home_import_pdf",
                  buttonAction: { $0.openPdfFilePicker() })
@@ -64,11 +64,32 @@ struct HomeView: View {
         .onAppear() {
             self.homeViewModel.onAppear()
         }
+        // Image input picker
         .sheet(isPresented: self.$homeViewModel.imageInputPickerShow) {
-            ImportView(onFileImportPressed: { self.homeViewModel.openFileImagePicker() },
-                       onCameraImportPressed: { self.homeViewModel.openCamera() },
-                       onGalleryImportPressed: { self.homeViewModel.openGallery() })
+            ImportView(items: [
+                ImportItem(title: "File",
+                           imageName: "file",
+                           callBack: { self.homeViewModel.openFileImagePicker() }),
+                ImportItem(title: "Camera",
+                           imageName: "camera",
+                           callBack: { self.homeViewModel.openCamera() }),
+                ImportItem(title: "Gallery",
+                           imageName: "gallery",
+                           callBack: { self.homeViewModel.openGallery() })
+            ])
             .presentationDetents([.height(400)])
+        }
+        // Fill Form input picker
+        .sheet(isPresented: self.$homeViewModel.fillFormInputPickerShow) {
+            ImportView(items: [
+                ImportItem(title: "From existing file",
+                           imageName: "file",
+                           callBack: { self.homeViewModel.openFilePicker() }),
+                ImportItem(title: "Scan a file",
+                           imageName: "scan",
+                           callBack: { self.homeViewModel.scanPdf() })
+            ])
+            .presentationDetents([.height(300)])
         }
         // File picker for images
         .fullScreenCover(isPresented: self.$homeViewModel.fileImagePickerShow) {
@@ -125,9 +146,12 @@ struct HomeView: View {
         .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
                       selection: self.$homeViewModel.imageSelection,
                       matching: .images)
-        .sheet(isPresented: self.$homeViewModel.pdfFlowShow) {
+        .sheet(isPresented: self.$homeViewModel.pdfFlowShow, onDismiss: {
+            self.homeViewModel.editStartAction = nil
+        }) {
             let pdfEditable = self.homeViewModel.asyncPdf.data!
-            PdfFlowView(pdfEditable: pdfEditable)
+            let editStartAction = self.homeViewModel.editStartAction
+            PdfFlowView(pdfEditable: pdfEditable, startAction: editStartAction)
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })

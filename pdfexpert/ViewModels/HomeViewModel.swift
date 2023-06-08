@@ -25,6 +25,7 @@ public class HomeViewModel : ObservableObject {
     @Published var filePickerShow: Bool = false
     @Published var pdfFilePickerShow: Bool = false
     @Published var pdfPasswordInputShow: Bool = false
+    @Published var fillFormInputPickerShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -67,11 +68,13 @@ public class HomeViewModel : ObservableObject {
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentInputFileExtension: String? = nil
+    var editStartAction: PdfEditStartAction? = nil
     
     private var lockedPdfEditable: PdfEditable? = nil
     
     @MainActor
     func onAppear() {
+        self.editStartAction = nil
         Task {
             try await self.store.refreshAll()
         }
@@ -89,9 +92,20 @@ public class HomeViewModel : ObservableObject {
         self.imageInputPickerShow = true
     }
     
+    @MainActor
     func scanPdf() {
-        self.trackPdfConversionChosenEvent(inputType: .scan)
-        self.showScanner()
+        if self.fillFormInputPickerShow {
+            self.fillFormInputPickerShow = false
+            self.editStartAction = .openFillForm
+            self.trackPdfConversionChosenEvent(inputType: .scanFillForm)
+            Task {
+                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+                self.showScanner()
+            }
+        } else {
+            self.trackPdfConversionChosenEvent(inputType: .scan)
+            self.showScanner()
+        }
     }
     
     @MainActor
@@ -124,14 +138,29 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
+    @MainActor
     func openFilePicker() {
-        self.trackPdfConversionChosenEvent(inputType: .file)
-        self.filePickerShow = true
+        if self.fillFormInputPickerShow {
+            self.trackPdfConversionChosenEvent(inputType: .fileFillForm)
+            self.fillFormInputPickerShow = false
+            self.editStartAction = .openFillForm
+            Task {
+                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+                self.filePickerShow = true
+            }
+        } else {
+            self.trackPdfConversionChosenEvent(inputType: .file)
+            self.filePickerShow = true
+        }
     }
     
     func openPdfFilePicker() {
         self.trackPdfConversionChosenEvent(inputType: .pdf)
         self.pdfFilePickerShow = true
+    }
+    
+    func openFillFormInputPicker() {
+        self.fillFormInputPickerShow = true
     }
     
     @MainActor
@@ -193,18 +222,20 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     private func convertFileByUrl(fileUrl: URL) {
-        
-        self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        
-        Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
-            if let error = error {
-                debugPrint(for: self, message: "Error converting word file. Error: \(error)")
-                self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-            } else if let data = data, let pdfEditable = PdfEditable(data: data) {
-                self.currentInputFileExtension = fileUrl.pathExtension
-                self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
-            } else {
-                self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+        if fileUrl.pathExtension == "pdf" {
+            self.importPdf(pdfUrl: fileUrl)
+        } else {
+            self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+            Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
+                if let error = error {
+                    debugPrint(for: self, message: "Error converting word file. Error: \(error)")
+                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                    self.currentInputFileExtension = fileUrl.pathExtension
+                    self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
+                } else {
+                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+                }
             }
         }
     }
@@ -235,6 +266,7 @@ public class HomeViewModel : ObservableObject {
         self.asyncPdf = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
     }
     
+    @MainActor
     private func showScanner() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized, .notDetermined:

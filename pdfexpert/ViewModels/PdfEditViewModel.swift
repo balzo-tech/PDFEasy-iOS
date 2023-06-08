@@ -12,8 +12,8 @@ import UIKit
 import PhotosUI
 
 extension Container {
-    var pdfEditViewModel: ParameterFactory<PdfEditable, PdfEditViewModel> {
-        self { PdfEditViewModel(pdfEditable: $0) }.shared
+    var pdfEditViewModel: ParameterFactory<PdfEditViewModel.InputParameter, PdfEditViewModel> {
+        self { PdfEditViewModel(inputParameter: $0) }.shared
     }
 }
 
@@ -21,7 +21,16 @@ enum MarginsOption: CaseIterable {
     case noMargins, mediumMargins, heavyMargins
 }
 
+enum PdfEditStartAction {
+    case openFillForm
+}
+
 class PdfEditViewModel: ObservableObject {
+    
+    struct InputParameter {
+        let pdfEditable: PdfEditable
+        let startAction: PdfEditStartAction?
+    }
     
     enum EditMode: CaseIterable {
         case add, margins, compression
@@ -77,10 +86,27 @@ class PdfEditViewModel: ObservableObject {
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentInputFileExtension: String? = nil
+    var startAction: PdfEditStartAction? = nil
     
-    init(pdfEditable: PdfEditable) {
-        self.pdfEditable = pdfEditable
+    init(inputParameter: InputParameter) {
+        self.pdfEditable = inputParameter.pdfEditable
+        self.startAction = inputParameter.startAction
         self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
+    }
+    
+    @MainActor
+    func onAppear() {
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            
+            if let startAction = self.startAction {
+                switch startAction {
+                case .openFillForm:
+                    self.fillFormAddViewShow = true
+                }
+            }
+            self.startAction = nil
+        }
     }
     
     func deletePage(atIndex index: Int) {

@@ -34,6 +34,6 @@ class PdfCoordinator: ObservableObject {
 
 extension Container {
     var pdfCoordinator: Factory<PdfCoordinator> {
-        self { PdfCoordinator() }.singleton
+        self { PdfCoordinator() }.shared
     }
 }

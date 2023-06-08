@@ -101,7 +101,11 @@ struct TextResizableView: View {
                             .focused(self.$focusedField, equals: .field)
                             .onAppear {
                                 self.tapOffset = nil
-                                self.focusedField = .field
+                                // Dispatch on main thread is currently necessary
+                                // to avoid memory leak on the view model of the parent view.
+                                DispatchQueue.main.async {
+                                    self.focusedField = .field
+                                }
                             }
                             .contentShape(Rectangle())
                             .frame(width: self.computedSize.width, height: self.computedSize.height)
@@ -121,12 +125,6 @@ struct TextResizableView: View {
                 }
                 
             }
-        }
-    }
-    
-    @State var size: CGSize = .zero {
-        didSet {
-            print("Size: \(self.size)")
         }
     }
     

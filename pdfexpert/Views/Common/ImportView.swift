@@ -7,11 +7,15 @@
 
 import SwiftUI
 
+struct ImportItem {
+    let title: String
+    let imageName: String
+    let callBack: () -> ()
+}
+
 struct ImportView: View {
     
-    let onFileImportPressed: () -> ()
-    let onCameraImportPressed: () -> ()
-    let onGalleryImportPressed: () -> ()
+    let items: [ImportItem]
     
     var body: some View {
         VStack {
@@ -20,22 +24,26 @@ struct ImportView: View {
                 .font(FontPalette.fontBold(withSize: 28))
                 .foregroundColor(ColorPalette.thirdText)
             Spacer().frame(height: 80)
-            ImportItemView(title: "File", imageName: "file", onPressed: { self.onFileImportPressed() })
-            Spacer().frame(height: 20)
-            ImportItemView(title: "Camera", imageName: "camera", onPressed: { self.onCameraImportPressed() })
-            Spacer().frame(height: 20)
-            ImportItemView(title: "Gallery", imageName: "gallery", onPressed: { self.onGalleryImportPressed() })
+            ForEach(self.items, id: \.title) { item in
+                ImportItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
+                Spacer().frame(height: 20)
+            }
         }
-        .padding(EdgeInsets(top: 44, leading: 32, bottom: 65, trailing: 32))
+        .padding(EdgeInsets(top: 44, leading: 32, bottom: 45, trailing: 32))
         .background(ColorPalette.secondaryBG)
         .cornerRadius(20, corners: [.topLeft, .topRight])
     }
 }
 
 struct ImportView_Previews: PreviewProvider {
+    
+    static let items = [
+        ImportItem(title: "File", imageName: "file", callBack: {}),
+        ImportItem(title: "Camera", imageName: "camera", callBack: {}),
+        ImportItem(title: "Gallery", imageName: "gallery", callBack: {})
+    ]
+    
     static var previews: some View {
-        ImportView(onFileImportPressed: {},
-                   onCameraImportPressed: {},
-                   onGalleryImportPressed: {})
+        ImportView(items: items)
     }
 }

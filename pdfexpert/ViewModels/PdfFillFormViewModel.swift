@@ -113,7 +113,6 @@ class PdfFillFormViewModel: ObservableObject {
             self.editedPageIndex = pageIndex
             self.annotations.removeAll(where: { $0 == textAnnotation })
         } else {
-//            let size = CGSize(width: 300, height: 200)
             let size = CGSize(width: 100, height: 15)
             let rect = CGRect(x: positionInView.x - (size.width / 2), y: positionInView.y - (size.height / 2), width: size.width, height: size.height)
             self.currentTextResizableViewData = TextResizableViewData(text: "Text", rect: rect)
