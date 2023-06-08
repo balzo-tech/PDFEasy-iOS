@@ -45,8 +45,8 @@ class PdfSignatureViewModel: ObservableObject {
         self.pdfEditable = inputParameter.pdfEditable
         
         self.onConfirm = inputParameter.onConfirm
-        self.pdfView.document = inputParameter.pdfEditable.pdfDocument
-        if let page = inputParameter.pdfEditable.pdfDocument.page(at: inputParameter.currentPageIndex) {
+        self.pdfView.document = PDFUtility.applyPostProcess(toPdfDocument: inputParameter.pdfEditable.pdfDocument, horizontalMargin: 0, quality: 1.0)
+        if let page = self.pdfView.document?.page(at: inputParameter.currentPageIndex) {
             self.pdfView.go(to: page)
         }
     }

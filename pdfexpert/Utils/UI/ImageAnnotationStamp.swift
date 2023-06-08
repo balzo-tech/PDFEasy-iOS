@@ -10,9 +10,9 @@ import UIKit
 import PDFKit
 
 class ImageStampAnnotation: PDFAnnotation {
-    var image: UIImage!
+    var image: UIImage?
     
-    init(with image: UIImage!, forBounds bounds: CGRect, withProperties properties: [AnyHashable : Any]?) {
+    init(with image: UIImage, forBounds bounds: CGRect, withProperties properties: [AnyHashable : Any]?) {
         super.init(bounds: bounds, forType: PDFAnnotationSubtype.stamp,  withProperties: properties)
         self.image = image
     }
@@ -22,7 +22,7 @@ class ImageStampAnnotation: PDFAnnotation {
     }
     
     override func draw(with box: PDFDisplayBox, in context: CGContext)   {
-        guard let cgImage = self.image.cgImage else { return }
+        guard let cgImage = self.image?.cgImage else { return }
         context.draw(cgImage, in: self.bounds)
     }
 }
