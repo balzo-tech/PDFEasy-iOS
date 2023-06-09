@@ -12,7 +12,7 @@ import UIKit
 
 extension Container {
     var pdfFillFormViewModel: ParameterFactory<PdfFillFormViewModel.InputParameter, PdfFillFormViewModel> {
-        self { PdfFillFormViewModel(inputParameter: $0) }.shared
+        self { PdfFillFormViewModel(inputParameter: $0) }
     }
 }
 

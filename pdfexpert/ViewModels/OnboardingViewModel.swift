@@ -10,7 +10,7 @@ import Factory
 
 extension Container {
     var onboardingViewModel: Factory<OnboardingViewModel> {
-        self { OnboardingViewModel() }.shared
+        self { OnboardingViewModel() }
     }
 }
 

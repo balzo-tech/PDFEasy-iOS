@@ -13,7 +13,7 @@ import Collections
 
 extension Container {
     var subscribtionPairsViewModel: Factory<SubscriptionPairsViewModel> {
-        self { SubscriptionPairsViewModel() }.shared
+        self { SubscriptionPairsViewModel() }
     }
 }
 

@@ -13,7 +13,7 @@ import PhotosUI
 
 extension Container {
     var pdfEditViewModel: ParameterFactory<PdfEditViewModel.InputParameter, PdfEditViewModel> {
-        self { PdfEditViewModel(inputParameter: $0) }.shared
+        self { PdfEditViewModel(inputParameter: $0) }
     }
 }
 

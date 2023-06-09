@@ -14,7 +14,7 @@ import WeScan
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {
-        self { HomeViewModel() }.shared
+        self { HomeViewModel() }
     }
 }
 

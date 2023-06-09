@@ -15,7 +15,7 @@ typealias ImageCapturedCallback = (UIImage) -> ()
 
 extension Container {
     var cameraService: Factory<CameraService> {
-        self { CameraService() }.shared
+        self { CameraService() }
     }
 }
 

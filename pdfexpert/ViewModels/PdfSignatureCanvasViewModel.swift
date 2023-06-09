@@ -12,7 +12,7 @@ import PencilKit
 
 extension Container {
     var pdfSignatureCanvasViewModel: ParameterFactory<ConfirmationCallback, PdfSignatureCanvasViewModel> {
-        self { PdfSignatureCanvasViewModel(onConfirm: $0) }.shared
+        self { PdfSignatureCanvasViewModel(onConfirm: $0) }
     }
 }
 

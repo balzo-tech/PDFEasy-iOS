@@ -13,7 +13,7 @@ import Collections
 
 extension Container {
     var subscriptionVerticalViewModel: Factory<SubscriptionVerticalViewModel> {
-        self { SubscriptionVerticalViewModel() }.shared
+        self { SubscriptionVerticalViewModel() }
     }
 }
 

@@ -13,7 +13,7 @@ import PencilKit
 
 extension Container {
     var pdfSignatureViewModel: ParameterFactory<PdfSignatureViewModel.InputParameter, PdfSignatureViewModel> {
-        self { PdfSignatureViewModel(inputParameter: $0) }.shared
+        self { PdfSignatureViewModel(inputParameter: $0) }
     }
 }
 

@@ -10,7 +10,7 @@ import Factory
 
 extension Container {
     var pdfViewerViewModel: ParameterFactory<PdfViewerViewModel.InputParameter, PdfViewerViewModel> {
-        self { PdfViewerViewModel(inputParameter: $0) }.shared
+        self { PdfViewerViewModel(inputParameter: $0) }
     }
 }
 

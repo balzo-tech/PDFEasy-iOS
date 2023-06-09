@@ -13,7 +13,7 @@ import CloudKitSyncMonitor
 
 extension Container {
     var archiveViewModel: Factory<ArchiveViewModel> {
-        self { ArchiveViewModel() }.shared
+        self { ArchiveViewModel() }
     }
 }
 
