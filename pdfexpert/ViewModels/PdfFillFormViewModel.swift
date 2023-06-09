@@ -47,7 +47,11 @@ class PdfFillFormViewModel: ObservableObject {
     private var onConfirm: PdfSignatureCallback
     
     init(inputParameter: InputParameter) {
-        self.pdfDocument = inputParameter.pdfEditable.pdfDocument.copy() as! PDFDocument
+        var pdfDocumentCopy = PDFDocument()
+        if let pdfData = inputParameter.pdfEditable.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
+            pdfDocumentCopy = copy
+        }
+        self.pdfDocument = pdfDocumentCopy
         
         self.onConfirm = inputParameter.onConfirm
         
@@ -64,6 +68,8 @@ class PdfFillFormViewModel: ObservableObject {
                 self.pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
             }
         }
+        
+        self.pageIndex = inputParameter.currentPageIndex
     }
     
     func onAppear() {
@@ -90,7 +96,7 @@ class PdfFillFormViewModel: ObservableObject {
         debugPrint(for: self, message: "Tap in: \(positionInView), for page index: \(pageIndex)")
         
         let pointInPage = Self.convertPoint(positionInView, viewSize: pageViewSize, toPage: page)
-        let textAnnotations = self.annotations.compactMap { $0 as? TextAnnotation }
+        let textAnnotations = self.annotations.filter { $0.isTextAnnotation }
         let textAnnotationsInPoint = textAnnotations.filter { $0.page == page && $0.verticalCenteredTextBounds.contains(pointInPage) }
         
         if self.editedPageIndex != nil, self.currentTextResizableViewData.rect.contains(positionInView) {
@@ -153,11 +159,11 @@ class PdfFillFormViewModel: ObservableObject {
             return
         }
         let bounds = Self.convertRect(self.currentTextResizableViewData.rect, viewSize: self.pageViewSize, toPage: page)
-        let annotation = TextAnnotation(with: self.currentTextResizableViewData.text,
-                                        forBounds: bounds,
-                                        textColor: .black,
-                                        fontName: K.Misc.DefaultAnnotationTextFontName,
-                                        withProperties: nil)
+        let annotation = PDFAnnotation.create(with: self.currentTextResizableViewData.text,
+                                              forBounds: bounds,
+                                              textColor: .black,
+                                              fontName: K.Misc.DefaultAnnotationTextFontName,
+                                              withProperties: nil)
         annotation.page = page
         self.annotations.append(annotation)
         self.analyticsManager.track(event: .textAnnotationAdded)
@@ -207,7 +213,7 @@ class PdfFillFormViewModel: ObservableObject {
 
 extension Array where Element == PDFAnnotation {
     var supportedAnnotations: [PDFAnnotation] {
-        self.compactMap { $0 as? TextAnnotation }
+        self.filter { $0.isTextAnnotation }
     }
 }
 

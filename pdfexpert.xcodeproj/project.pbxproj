@@ -21,7 +21,7 @@
 		892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */; };
 		892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */; };
 		8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8928F3D02A30BAFB001C1853 /* PickedImage.swift */; };
-		892E404F2A25E5D9000EEE23 /* TextAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */; };
+		892E404F2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892E404E2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift */; };
 		8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */; };
 		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
 		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
@@ -189,7 +189,7 @@
 		892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureView.swift; sourceTree = "<group>"; };
 		892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureViewModel.swift; sourceTree = "<group>"; };
 		8928F3D02A30BAFB001C1853 /* PickedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedImage.swift; sourceTree = "<group>"; };
-		892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnnotation.swift; sourceTree = "<group>"; };
+		892E404E2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PDFAnnotation+Extensions.swift"; sourceTree = "<group>"; };
 		8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormView.swift; sourceTree = "<group>"; };
 		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
 		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
@@ -629,7 +629,6 @@
 				8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */,
 				89127AA02A177E370059005F /* PencilKitView.swift */,
 				892201D82A0BA64600832CF2 /* ImageAnnotationStamp.swift */,
-				892E404E2A25E5D9000EEE23 /* TextAnnotation.swift */,
 				89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */,
 				8932ECE82A20F10500CBCD7A /* TextResizableView.swift */,
 				896CCF6C2A28910B008F268E /* SizePrinter.swift */,
@@ -650,6 +649,7 @@
 				891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */,
 				89127AA62A17C1980059005F /* PencilKit+Extensions.swift */,
 				896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */,
+				892E404E2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -995,7 +995,7 @@
 				891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
-				892E404F2A25E5D9000EEE23 /* TextAnnotation.swift in Sources */,
+				892E404F2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
 				89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */,
 				895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */,
