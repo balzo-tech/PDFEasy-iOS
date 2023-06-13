@@ -53,7 +53,7 @@ struct SubscriptionVerticalView: View {
                 Image("subscription")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(maxHeight: 194)
+                    .frame(maxHeight: 400)
                 Spacer().frame(height: 20)
                 Spacer()
             }
@@ -111,6 +111,7 @@ struct SubscriptionVerticalView: View {
                     SubscriptionVerticalItemView(subscriptionPlan: subscriptionPlanVerticalItem,
                                                  isSelected: self.viewModel.selectedSubscriptionItemIndex == index,
                                                  onTap: { self.viewModel.selectedSubscriptionItemIndex = index })
+                    .frame(maxHeight: 200)
                     Spacer().frame(height: 16)
                 }
             )

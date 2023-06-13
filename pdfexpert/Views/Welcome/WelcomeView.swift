@@ -19,7 +19,8 @@ struct WelcomeView: View {
                     Image("subscription")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: 132)
+                        .frame(maxHeight: 600)
+                        .padding(60)
                     Text("Welcome in PDF Easy:\nConvert & Edit")
                         .font(FontPalette.fontBold(withSize: 24))
                         .foregroundColor(ColorPalette.primaryText)
@@ -31,7 +32,7 @@ struct WelcomeView: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
-                .position(x: geometry.size.width/2, y: geometry.size.height/4)
+                .position(x: geometry.size.width/2, y: geometry.size.height/3)
             }
             VStack {
                 Spacer()

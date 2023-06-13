@@ -49,8 +49,6 @@ struct ImportTutorialView: View {
                     }
                 }
                 .pagerTabStripViewStyle(.bar() { Color(.clear) })
-                .frame(height: 440)
-                Spacer().frame(height: 40)
                 PageControl(currentPageIndex: self.pageIndex,
                             numberOfPages: self.pageCount,
                             currentPageColor: ColorPalette.buttonGradientStart,

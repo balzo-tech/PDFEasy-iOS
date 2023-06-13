@@ -15,10 +15,11 @@ struct OnboardingTutorialPageView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            Spacer()
             Image(self.imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(maxHeight: 318)
+                .frame(maxHeight: 600)
             Spacer().frame(height: 40)
             Text(self.title)
                 .font(FontPalette.fontBold(withSize: 22))
@@ -35,6 +36,7 @@ struct OnboardingTutorialPageView: View {
                 .frame(height: 80, alignment: .top)
                 .padding([.leading, .trailing], 32)
                 .multilineTextAlignment(.center)
+            Spacer()
         }
     }
 }

@@ -21,6 +21,7 @@ struct OnboardingTutorialView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            Spacer()
             PagerTabStripView(selection: self.$viewModel.pageIndex) {
                 ForEach(Array(self.viewModel.items.enumerated()), id: \.offset) { index, item in
                     OnboardingTutorialPageView(imageName: item.imageName,

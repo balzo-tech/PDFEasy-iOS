@@ -70,7 +70,7 @@ struct SubscriptionVerticalItemView: View {
                 }
             }
         }
-        .frame(height: self.viewHeight)
+        .frame(minHeight: self.viewHeight)
     }
     
     var viewHeight: CGFloat {

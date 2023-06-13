@@ -87,6 +87,6 @@ struct SubscriptionPairsItemView_Previews: PreviewProvider {
                                  onTap: {})
         }
         .padding([.leading, .trailing], 16)
-        .frame(height: 161)
+        .frame(minHeight: 161, maxHeight: 200)
     }
 }

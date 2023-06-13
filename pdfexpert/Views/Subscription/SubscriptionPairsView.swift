@@ -53,7 +53,7 @@ struct SubscriptionPairsView: View {
                 Image("subscription")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(maxHeight: 194)
+                    .frame(maxHeight: 400)
                 Spacer().frame(height: 20)
                 Spacer()
             }
@@ -177,7 +177,7 @@ struct SubscriptionPairsView: View {
                     }
                 }
             }
-            .frame(height: 161))
+                .frame(minHeight: 161, maxHeight: 200))
         } else {
             return AnyView(Spacer().frame(height: 1))
         }

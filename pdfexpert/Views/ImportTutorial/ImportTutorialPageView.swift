@@ -15,6 +15,7 @@ struct ImportTutorialPageView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            Spacer()
             Text(self.title)
                 .font(FontPalette.fontBold(withSize: 22))
                 .foregroundColor(ColorPalette.primaryText)
@@ -24,6 +25,9 @@ struct ImportTutorialPageView: View {
                 .multilineTextAlignment(.center)
             Spacer().frame(height: 20)
             Image(self.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxHeight: 600)
             Spacer().frame(height: 40)
             Text(self.description)
                 .font(FontPalette.fontRegular(withSize: 16))
@@ -32,7 +36,7 @@ struct ImportTutorialPageView: View {
                 .frame(height: 80, alignment: .top)
                 .padding([.leading, .trailing], 32)
                 .multilineTextAlignment(.center)
-            Spacer().frame(height: 40)
+            Spacer()
         }
     }
 }
