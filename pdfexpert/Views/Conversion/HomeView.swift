@@ -35,6 +35,9 @@ struct HomeView: View {
         HomeItem(title: "Fill in\na file",
                  imageName: "home_fill_form",
                  buttonAction: { $0.openFillFormInputPicker() }),
+        HomeItem(title: "Sign\na file",
+                 imageName: "home_sign",
+                 buttonAction: { $0.openSignInputPicker() }),
         HomeItem(title: "Import\nPDF",
                  imageName: "home_import_pdf",
                  buttonAction: { $0.openPdfFilePicker() })
@@ -81,6 +84,18 @@ struct HomeView: View {
         }
         // Fill Form input picker
         .sheet(isPresented: self.$homeViewModel.fillFormInputPickerShow) {
+            ImportView(items: [
+                ImportItem(title: "From existing file",
+                           imageName: "file",
+                           callBack: { self.homeViewModel.openFilePicker() }),
+                ImportItem(title: "Scan a file",
+                           imageName: "scan",
+                           callBack: { self.homeViewModel.scanPdf() })
+            ])
+            .presentationDetents([.height(300)])
+        }
+        // Sign input picker
+        .sheet(isPresented: self.$homeViewModel.signInputPickerShow) {
             ImportView(items: [
                 ImportItem(title: "From existing file",
                            imageName: "file",

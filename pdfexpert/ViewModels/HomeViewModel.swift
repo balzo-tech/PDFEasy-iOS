@@ -25,6 +25,7 @@ public class HomeViewModel : ObservableObject {
     @Published var pdfFilePickerShow: Bool = false
     @Published var pdfPasswordInputShow: Bool = false
     @Published var fillFormInputPickerShow: Bool = false
+    @Published var signInputPickerShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -101,6 +102,14 @@ public class HomeViewModel : ObservableObject {
                 try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
                 self.showScanner()
             }
+        } else if self.signInputPickerShow {
+            self.signInputPickerShow = false
+            self.editStartAction = .openSignature
+            self.trackPdfConversionChosenEvent(inputType: .scanSign)
+            Task {
+                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+                self.showScanner()
+            }
         } else {
             self.trackPdfConversionChosenEvent(inputType: .scan)
             self.showScanner()
@@ -147,6 +156,14 @@ public class HomeViewModel : ObservableObject {
                 try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
                 self.filePickerShow = true
             }
+        } else if self.signInputPickerShow {
+            self.trackPdfConversionChosenEvent(inputType: .fileSign)
+            self.signInputPickerShow = false
+            self.editStartAction = .openSignature
+            Task {
+                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+                self.filePickerShow = true
+            }
         } else {
             self.trackPdfConversionChosenEvent(inputType: .file)
             self.filePickerShow = true
@@ -160,6 +177,10 @@ public class HomeViewModel : ObservableObject {
     
     func openFillFormInputPicker() {
         self.fillFormInputPickerShow = true
+    }
+    
+    func openSignInputPicker() {
+        self.signInputPickerShow = true
     }
     
     @MainActor

@@ -23,6 +23,7 @@ enum MarginsOption: CaseIterable {
 
 enum PdfEditStartAction {
     case openFillForm
+    case openSignature
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -103,6 +104,8 @@ class PdfEditViewModel: ObservableObject {
                 switch startAction {
                 case .openFillForm:
                     self.fillFormAddViewShow = true
+                case .openSignature:
+                    self.signatureAddViewShow = true
                 }
             }
             self.startAction = nil
