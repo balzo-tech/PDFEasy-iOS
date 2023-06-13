@@ -78,6 +78,7 @@ struct K {
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
         static let PdfPageSize: CGSize = CGSize(width: 595, height: 842)
+        static let PdfPageDefaultMargin: CGFloat = 0
         static let DefaultAnnotationTextFontSize: CGFloat = 10.0
         static let DefaultAnnotationTextFontName: String = "Arial"
         static let PdfMarginsColor: UIColor = .white

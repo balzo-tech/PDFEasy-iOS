@@ -6,21 +6,19 @@
 //
 
 import SwiftUI
-import WeScan
+import VisionKit
 
 struct ScannerView: UIViewControllerRepresentable {
     
     let onScannerResult: ScannerResultCallback
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        let controller = ImageScannerController()
-        controller.imageScannerDelegate = context.coordinator
+        let controller = VNDocumentCameraViewController()
+        controller.delegate = context.coordinator
         return controller
     }
     
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        
-    }
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
     
     func makeCoordinator() -> ScannerViewCoordinator {
         ScannerViewCoordinator(onScannerResult: self.onScannerResult)
@@ -28,13 +26,12 @@ struct ScannerView: UIViewControllerRepresentable {
 }
 
 struct ScannerResult {
-    let results: ImageScannerResults?
-    let error: Error?
+    let scan: VNDocumentCameraScan
 }
 
 typealias ScannerResultCallback = (ScannerResult) -> ()
 
-class ScannerViewCoordinator: NSObject, ImageScannerControllerDelegate {
+class ScannerViewCoordinator: NSObject, VNDocumentCameraViewControllerDelegate {
     
     let onScannerResult: ScannerResultCallback
 
@@ -42,17 +39,9 @@ class ScannerViewCoordinator: NSObject, ImageScannerControllerDelegate {
         self.onScannerResult = onScannerResult
     }
     
-    func imageScannerController(_ scanner: ImageScannerController, didFailWithError error: Error) {
-        self.onScannerResult(ScannerResult(results: nil, error: error))
-    }
-
-    func imageScannerController(_ scanner: ImageScannerController,
-                                didFinishScanningWithResults results: ImageScannerResults) {
-        self.onScannerResult(ScannerResult(results: results, error: nil))
-    }
-
-    func imageScannerControllerDidCancel(_ scanner: ImageScannerController) {
-        self.onScannerResult(ScannerResult(results: nil, error: nil))
+    func documentCameraViewController(_ controller: VNDocumentCameraViewController,
+                                      didFinishWith scan: VNDocumentCameraScan) {
+        self.onScannerResult(ScannerResult(scan: scan))
     }
 }
 

@@ -10,7 +10,6 @@ import Factory
 import SwiftUI
 import PhotosUI
 import PSPDFKit
-import WeScan
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {

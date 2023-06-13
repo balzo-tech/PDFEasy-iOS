@@ -128,7 +128,7 @@ struct HomeView: View {
         }, message: {
             Text("Enter the password of your pdf in order to import it.")
         })
-        // WeScan scanner
+        // Scanner
         .fullScreenCover(isPresented: self.$homeViewModel.scannerShow) {
             ScannerView(onScannerResult: {
                 self.homeViewModel.scannerShow = false

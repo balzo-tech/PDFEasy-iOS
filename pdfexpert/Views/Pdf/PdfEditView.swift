@@ -8,7 +8,6 @@
 import SwiftUI
 import Factory
 import PhotosUI
-import WeScan
 
 struct PdfEditView: View {
     
@@ -76,7 +75,7 @@ struct PdfEditView: View {
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
                       selection: self.$viewModel.imageSelection,
                       matching: .images)
-        // WeScan scanner
+        // Scanner
         .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
             ScannerView(onScannerResult: {
                 self.viewModel.scannerShow = false

@@ -73,7 +73,6 @@
 		895C1BB72A04FA53005EA190 /* ShareFileExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 895C1BAD2A04FA53005EA190 /* ShareFileExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895C1BBF2A051261005EA190 /* SharedStorage.swift */; };
 		895C1BC12A051261005EA190 /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895C1BBF2A051261005EA190 /* SharedStorage.swift */; };
-		895FE2C129D6D76300A99D5B /* WeScan in Frameworks */ = {isa = PBXBuildFile; productRef = 895FE2C029D6D76300A99D5B /* WeScan */; };
 		895FE2C429D6D7E500A99D5B /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895FE2C329D6D7E500A99D5B /* ScannerView.swift */; };
 		895FE2C629D6E17600A99D5B /* AnimationPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895FE2C529D6E17600A99D5B /* AnimationPalette.swift */; };
 		895FE2CB29D6E9B800A99D5B /* SubscriptionPairsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895FE2CA29D6E9B800A99D5B /* SubscriptionPairsView.swift */; };
@@ -342,7 +341,6 @@
 				89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */,
 				895FE2D029D7392F00A99D5B /* Collections in Frameworks */,
 				89CD7BA829D32C72003F1C3A /* Factory in Frameworks */,
-				895FE2C129D6D76300A99D5B /* WeScan in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -835,7 +833,6 @@
 				89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */,
 				89923E6629D437F500E246FC /* FirebasePerformance */,
 				893E84A329D5BFBB00F6B99A /* PSPDFKit */,
-				895FE2C029D6D76300A99D5B /* WeScan */,
 				895FE2CF29D7392F00A99D5B /* Collections */,
 				895FE2D129D7392F00A99D5B /* OrderedCollections */,
 				89B72A2F29DAD4990076884F /* FacebookCore */,
@@ -879,7 +876,6 @@
 				89CD7BA629D32C72003F1C3A /* XCRemoteSwiftPackageReference "Factory" */,
 				89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */,
-				895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */,
 				895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */,
 				89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */,
@@ -1683,14 +1679,6 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/WeTransfer/WeScan.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -1756,11 +1744,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */;
 			productName = PagerTabStripView;
-		};
-		895FE2C029D6D76300A99D5B /* WeScan */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 895FE2BF29D6D76300A99D5B /* XCRemoteSwiftPackageReference "WeScan" */;
-			productName = WeScan;
 		};
 		895FE2CF29D7392F00A99D5B /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;
