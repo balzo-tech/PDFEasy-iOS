@@ -123,8 +123,22 @@ struct ArchiveView: View {
                 }
                     .listStyle(.inset)
                     .safeAreaInset(edge: .bottom) {
-                        self.getDefaultButton(text: "Convert from any file",
-                                              onButtonPressed: { self.importTutorialShow = true })
+                        Button(action: { self.importTutorialShow = true }) {
+                            HStack(spacing: 8) {
+                                Image("info")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                                Text("Convert from any file")
+                                    .frame(maxHeight: .infinity)
+                                    .font(FontPalette.fontBold(withSize: 16))
+                                    .foregroundColor(ColorPalette.primaryText)
+                            }
+                            .contentShape(Capsule())
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
+                        .background(self.defaultGradientBackground)
+                        .cornerRadius(10)
                         .padding(EdgeInsets(top: 0, leading: 32, bottom: 32, trailing: 32))
                     }
             )
