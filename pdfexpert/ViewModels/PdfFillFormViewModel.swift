@@ -41,6 +41,7 @@ class PdfFillFormViewModel: ObservableObject {
     
     var pageScrollingAllowed: Bool { nil == self.editedPageIndex }
     var pageViewSize: CGSize = .zero
+    var shouldShowCloseWarning: Bool = false
     
     @Injected(\.analyticsManager) private var analyticsManager
     
@@ -100,35 +101,51 @@ class PdfFillFormViewModel: ObservableObject {
         let textAnnotationsInPoint = textAnnotations.filter { $0.page == page && $0.verticalCenteredTextBounds.contains(pointInPage) }
         
         if self.editedPageIndex != nil, self.currentTextResizableViewData.rect.contains(positionInView) {
+            // Tapping inside the currently selected text resizable view -> Do nothing
             return
         }
         
         if self.editedPageIndex != nil {
+            // Tapping outside the currently selected text resizable view -> convert that text resizable view to text annotation
             self.applyCurrentEditedTextAnnotation()
             self.editedPageIndex = nil
 
             if let textAnnotation = textAnnotationsInPoint.first {
+                // Tapping inside a different text annotation -> convert that text annotation to text resizable view
                 let rect = Self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
                 self.currentTextResizableViewData = TextResizableViewData(text: textAnnotation.text, rect: rect)
                 self.editedPageIndex = pageIndex
                 self.annotations.removeAll(where: { $0 == textAnnotation })
             }
+            // Changes are applied, set the dirty flag
+            self.shouldShowCloseWarning = true
         } else if let textAnnotation = textAnnotationsInPoint.first {
+            // Tapping inside a text annotation -> convert that text annotation to text resizable view
             let rect = Self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
             self.currentTextResizableViewData = TextResizableViewData(text: textAnnotation.contents ?? "", rect: rect)
             self.editedPageIndex = pageIndex
             self.annotations.removeAll(where: { $0 == textAnnotation })
+            // Nothing changes in this exact instant, but it will if the user modify the text resizable view
+            // Just set the dirty flag here to keep it simple
+            self.shouldShowCloseWarning = true
         } else {
+            // Tapping in empty area -> create a new text resizable view
             let size = CGSize(width: 100, height: 15)
             let rect = CGRect(x: positionInView.x - (size.width / 2), y: positionInView.y - (size.height / 2), width: size.width, height: size.height)
             self.currentTextResizableViewData = TextResizableViewData(text: "Text", rect: rect)
             self.editedPageIndex = pageIndex
+            // The newly created text resizable view will be added as an annotation upon confirmation
+            // thus the dirty flag must be set
+            self.shouldShowCloseWarning = true
         }
     }
     
     func onDeleteAnnotationPressed() {
         self.editedPageIndex = nil
         self.analyticsManager.track(event: .textAnnotationRemoved)
+        // A text resizable view has been removed. If that view was associated to an existing text annotation
+        // a change has been made to the original file. Just setting the dirty flag anyway to keep it simple
+        self.shouldShowCloseWarning = true
     }
     
     func onConfirmButtonPressed() {
@@ -151,8 +168,6 @@ class PdfFillFormViewModel: ObservableObject {
         
         self.onConfirm(PdfEditable(pdfDocument: self.pdfDocument))
     }
-    
-    func onCancelButtonPressed() {}
     
     private func applyCurrentEditedTextAnnotation() {
         guard let pageIndex = self.editedPageIndex, let page = self.pdfDocument.page(at: pageIndex), !self.currentTextResizableViewData.text.isEmpty else {

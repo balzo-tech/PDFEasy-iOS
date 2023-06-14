@@ -91,7 +91,6 @@ struct ArchiveView: View {
                         .padding(.trailing, 16)
                         .background(ColorPalette.secondaryBG)
                     }
-                    
                     .frame(height: 94)
                     .cornerRadius(10)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))

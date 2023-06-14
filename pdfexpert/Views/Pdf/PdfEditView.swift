@@ -340,7 +340,9 @@ fileprivate extension MarginsOption {
 struct PdfEditView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
-            let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: pdfEditable, startAction: nil)
+            let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: pdfEditable,
+                                                                 startAction: nil,
+                                                                 shouldShowCloseWarning: .constant(true))
             AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter)))
         } else {
             AnyView(Spacer())

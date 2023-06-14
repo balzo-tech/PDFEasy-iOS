@@ -31,6 +31,7 @@ class PdfEditViewModel: ObservableObject {
     struct InputParameter {
         let pdfEditable: PdfEditable
         let startAction: PdfEditStartAction?
+        let shouldShowCloseWarning: Binding<Bool>
     }
     
     enum EditMode: CaseIterable {
@@ -79,6 +80,7 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.store) private var store
     
+    var shouldShowCloseWarning: Binding<Bool>
     var urlToImageToConvert: URL?
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
@@ -92,6 +94,7 @@ class PdfEditViewModel: ObservableObject {
     init(inputParameter: InputParameter) {
         self.pdfEditable = inputParameter.pdfEditable
         self.startAction = inputParameter.startAction
+        self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
         self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
     }
     
@@ -174,6 +177,7 @@ class PdfEditViewModel: ObservableObject {
             let pdf = Pdf(context: self.repository.pdfManagedContext, pdfData: data, password: self.pdfEditable.password)
             self.pdf = pdf
             try self.repository.saveChanges()
+            self.shouldShowCloseWarning.wrappedValue = false
             self.viewPdf()
         } catch {
             debugPrint(for: self, message: "Pdf save failed with error: \(error)")

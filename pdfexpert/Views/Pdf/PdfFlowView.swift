@@ -15,6 +15,9 @@ struct PdfFlowView: View {
     let pdfEditable: PdfEditable
     let startAction: PdfEditStartAction?
     
+    @State var shouldShowCloseWarning: Bool = true
+    @State var showCloseWarningDialog: Bool = false
+    
     var body: some View {
         self.content
     }
@@ -25,7 +28,8 @@ struct PdfFlowView: View {
             return AnyView(
                 NavigationStack(path: self.$coordinator.path) {
                     let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: self.pdfEditable,
-                                                                         startAction: self.startAction)
+                                                                         startAction: self.startAction,
+                                                                         shouldShowCloseWarning: self.$shouldShowCloseWarning)
                     PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter))
                         .navigationDestination(for: PdfCoordinator.Route.self) { route in
                             switch route {
@@ -41,8 +45,20 @@ struct PdfFlowView: View {
                             }
                         }
                         .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                            self.dismiss()
+                            if self.shouldShowCloseWarning {
+                                self.showCloseWarningDialog = true
+                            } else {
+                                self.dismiss()
+                            }
                         })
+                        .alert("Are you sure?",
+                               isPresented: self.$showCloseWarningDialog,
+                               actions: {
+                            Button("No", role: .cancel, action: {})
+                            Button("Yes", role: .destructive, action: {
+                                self.dismiss()
+                            })
+                        }, message: { Text("If you quit, you will lose the changes to your current file.") })
                 }
             )
         }

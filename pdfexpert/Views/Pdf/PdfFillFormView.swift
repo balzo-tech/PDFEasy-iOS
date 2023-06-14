@@ -13,6 +13,7 @@ struct PdfFillFormView: View {
     
     @StateObject var viewModel: PdfFillFormViewModel
     @Environment(\.dismiss) var dismiss
+    @State var showCancelWarningDialog: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -48,8 +49,11 @@ struct PdfFillFormView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Tap where you wish to add text")
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                self.viewModel.onCancelButtonPressed()
-                self.dismiss()
+                if self.viewModel.shouldShowCloseWarning {
+                    self.showCancelWarningDialog = true
+                } else {
+                    self.dismiss()
+                }
             })
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -63,6 +67,14 @@ struct PdfFillFormView: View {
                     }
                 }
             }
+            .alert("Are you sure?",
+                   isPresented: self.$showCancelWarningDialog,
+                   actions: {
+                Button("No", role: .cancel, action: {})
+                Button("Yes", role: .destructive, action: {
+                    self.dismiss()
+                })
+            }, message: { Text("If you quit, you will lose the changes you have just made.") })
         }
         .onAppear(perform: self.viewModel.onAppear)
     }
