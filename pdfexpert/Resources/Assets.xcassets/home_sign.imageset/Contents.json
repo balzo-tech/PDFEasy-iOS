@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "signature.png",
+      "filename" : "home_sign.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "signature@2x.png",
+      "filename" : "home_sign@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "signature@3x.png",
+      "filename" : "home_sign@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

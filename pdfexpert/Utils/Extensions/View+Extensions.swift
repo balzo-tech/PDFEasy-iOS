@@ -72,6 +72,19 @@ extension View {
             }
         }
     }
+    
+    @ViewBuilder func actionDialog<A>(_ title: Text,
+                                      isPresented: Binding<Bool>,
+                                      titleVisibility: Visibility = .automatic,
+                                      @ViewBuilder actions: () -> A) -> some View where A : View {
+        // This platform branching is needed because, on iPad, confirmationDialog brokes interaction subsequent modals
+        // See: http://openradar.appspot.com/radar?id=5597349300666368
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.alert(title, isPresented: isPresented, actions: actions)
+        } else {
+            self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility, actions: actions)
+        }
+    }
 }
 
 extension Binding where Value == String {

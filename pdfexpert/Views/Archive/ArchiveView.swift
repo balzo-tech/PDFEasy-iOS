@@ -105,10 +105,10 @@ struct ArchiveView: View {
                         })
                         .tint(Color.red)
                     })
-                    .confirmationDialog(
-                                Text("Are you sure?"),
-                                isPresented: self.$showingDeleteAlert,
-                                titleVisibility: .visible
+                    .actionDialog(
+                        Text("Are you sure?"),
+                        isPresented: self.$showingDeleteAlert,
+                        titleVisibility: .visible
                     ) {
                         Button("Delete", role: .destructive) {
                             self.showingDeleteAlert = false

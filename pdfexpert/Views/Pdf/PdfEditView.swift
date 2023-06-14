@@ -171,10 +171,10 @@ struct PdfEditView: View {
                     self.addThumbnailCell
                         .applyCellStyle()
                 }
-                .confirmationDialog(
-                            Text("Choose your source"),
-                            isPresented: self.$showingImageInputPicker,
-                            titleVisibility: .visible
+                .actionDialog(
+                    Text("Choose your source"),
+                    isPresented: self.$showingImageInputPicker,
+                    titleVisibility: .visible
                 ) {
                     Button("Photo Gallery") {
                         self.viewModel.openGallery()
@@ -188,6 +188,7 @@ struct PdfEditView: View {
                     Button("Scan") {
                         self.viewModel.openScanner()
                     }
+                    Button("Cancel", role: .cancel) {}
                 }
                 ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
                     Button(action: {
@@ -198,10 +199,10 @@ struct PdfEditView: View {
                         self.getThumbnailCell(image: image)
                             .applyCellStyle()
                     }
-                    .confirmationDialog(
-                                Text("Action"),
-                                isPresented: self.$showingDeleteConfermation,
-                                titleVisibility: .visible
+                    .actionDialog(
+                        Text("Action"),
+                        isPresented: self.$showingDeleteConfermation,
+                        titleVisibility: .visible
                     ) {
                         Button("Delete", role: .destructive) {
                             self.showingDeleteConfermation = false
