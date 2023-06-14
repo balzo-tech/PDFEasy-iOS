@@ -32,7 +32,7 @@ struct ArchiveView: View {
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
         }
-        .sheet(item: self.$archiveViewModel.pdfToBeReviewed) { pdf in
+        .fullScreenCover(item: self.$archiveViewModel.pdfToBeReviewed) { pdf in
             NavigationStack {
                 let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
                                                                        marginsOption: nil,

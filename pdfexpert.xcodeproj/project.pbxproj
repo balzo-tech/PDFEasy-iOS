@@ -26,6 +26,7 @@
 		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
 		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
 		8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */; };
+		893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -193,6 +194,7 @@
 		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
 		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
 		8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitViewBinder.swift; sourceTree = "<group>"; };
+		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -630,6 +632,7 @@
 				89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */,
 				8932ECE82A20F10500CBCD7A /* TextResizableView.swift */,
 				896CCF6C2A28910B008F268E /* SizePrinter.swift */,
+				893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1002,6 +1005,7 @@
 				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
 				89E55BE729DC70A80073F268 /* OnboardingQuestion.swift in Sources */,
 				893DE8DC29E7F9A10043C02C /* SubscriptionVerticalViewModel.swift in Sources */,
+				893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */,
 				895FE2CD29D724B900A99D5B /* SubscriptionPairsItemView.swift in Sources */,
 				893C8FE529DF0399000E35BD /* Pdf+CoreDataClass.swift in Sources */,
 				892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */,

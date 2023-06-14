@@ -43,8 +43,16 @@ struct HomeView: View {
                  buttonAction: { $0.openPdfFilePicker() })
     ]
     
-    private var gridItemLayout = [GridItem(.flexible(), spacing: 14),
-                                  GridItem(.flexible(), spacing: 14)]
+    private let gridItemLayout: [GridItem] = {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return [GridItem(.flexible(), spacing: 14),
+                    GridItem(.flexible(), spacing: 14),
+                    GridItem(.flexible(), spacing: 14)]
+        } else {
+            return [GridItem(.flexible(), spacing: 14),
+                    GridItem(.flexible(), spacing: 14)]
+        }
+    }()
     
     var body: some View {
         ScrollView {
@@ -67,8 +75,9 @@ struct HomeView: View {
         .onAppear() {
             self.homeViewModel.onAppear()
         }
-        // Image input picker
-        .sheet(isPresented: self.$homeViewModel.imageInputPickerShow) {
+        .formSheet(isPresented: self.$homeViewModel.imageInputPickerShow,
+                   size: CGSize(width: 400, height: 400)) {
+            // Image input picker
             ImportView(items: [
                 ImportItem(title: "File",
                            imageName: "file",
@@ -80,10 +89,9 @@ struct HomeView: View {
                            imageName: "gallery",
                            callBack: { self.homeViewModel.openGallery() })
             ])
-            .presentationDetents([.height(400)])
-        }
-        // Fill Form input picker
-        .sheet(isPresented: self.$homeViewModel.fillFormInputPickerShow) {
+        }.formSheet(isPresented: self.$homeViewModel.fillFormInputPickerShow,
+                    size: CGSize(width: 400, height: 300)) {
+            // Fill Form input picker
             ImportView(items: [
                 ImportItem(title: "From existing file",
                            imageName: "file",
@@ -92,10 +100,9 @@ struct HomeView: View {
                            imageName: "scan",
                            callBack: { self.homeViewModel.scanPdf() })
             ])
-            .presentationDetents([.height(300)])
-        }
-        // Sign input picker
-        .sheet(isPresented: self.$homeViewModel.signInputPickerShow) {
+        }.formSheet(isPresented: self.$homeViewModel.signInputPickerShow,
+                    size: CGSize(width: 400, height: 300)) {
+            // Sign input picker
             ImportView(items: [
                 ImportItem(title: "From existing file",
                            imageName: "file",
@@ -104,33 +111,23 @@ struct HomeView: View {
                            imageName: "scan",
                            callBack: { self.homeViewModel.scanPdf() })
             ])
-            .presentationDetents([.height(300)])
-        }
-        // File picker for images
-        .fullScreenCover(isPresented: self.$homeViewModel.fileImagePickerShow) {
-            FilePicker(fileTypes: [.image],
-                       onPickedFile: {
-                // Callback is called on modal dismiss, thus we can assign and convert in a row
-                self.homeViewModel.urlToImageToConvert = $0
-                self.homeViewModel.convert()
-            })
-        }
-        // File picker for files
-        .fullScreenCover(isPresented: self.$homeViewModel.filePickerShow) {
-            FilePicker(fileTypes: K.Misc.ImportFileTypes.compactMap { $0 },
-                       onPickedFile: {
-                // Callback is called on modal dismiss, thus we can assign and convert in a row
-                self.homeViewModel.urlToFileToConvert = $0
-                self.homeViewModel.convert()
-            })
-        }
-        // File picker for pdf files
-        .fullScreenCover(isPresented: self.$homeViewModel.pdfFilePickerShow) {
-            FilePicker(fileTypes: [.pdf],
-                       onPickedFile: {
-                self.homeViewModel.importPdf(pdfUrl: $0)
-            })
-        }
+        }.filePicker(isPresented: self.$homeViewModel.fileImagePickerShow,
+                     fileTypes: [.image],
+                     onPickedFile: {
+            self.homeViewModel.urlToImageToConvert = $0
+            self.homeViewModel.convert()
+        })
+        .filePicker(isPresented: self.$homeViewModel.filePickerShow,
+                    fileTypes: K.Misc.ImportFileTypes.compactMap { $0 },
+                    onPickedFile: {
+            self.homeViewModel.urlToFileToConvert = $0
+            self.homeViewModel.convert()
+        })
+        .filePicker(isPresented: self.$homeViewModel.pdfFilePickerShow,
+                    fileTypes: [.pdf],
+                    onPickedFile: {
+            self.homeViewModel.importPdf(pdfUrl: $0)
+        })
         .alert("Your pdf is protected", isPresented: self.$homeViewModel.pdfPasswordInputShow, actions: {
             SecureField("Enter Password", text: self.$passwordText)
             Button("Confirm", action: {
@@ -143,15 +140,15 @@ struct HomeView: View {
         }, message: {
             Text("Enter the password of your pdf in order to import it.")
         })
-        // Scanner
         .fullScreenCover(isPresented: self.$homeViewModel.scannerShow) {
+            // Scanner
             ScannerView(onScannerResult: {
                 self.homeViewModel.scannerShow = false
                 self.homeViewModel.scannerResult = $0
             }).onDisappear { self.homeViewModel.convert() }
         }
-        // Camera for image capture
         .fullScreenCover(isPresented: self.$homeViewModel.cameraShow) {
+            // Camera for image capture
             CameraView(model: Container.shared.cameraViewModel({ uiImage in
                 self.homeViewModel.cameraShow = false
                 self.homeViewModel.imageToConvert = uiImage
@@ -161,7 +158,7 @@ struct HomeView: View {
         .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
                       selection: self.$homeViewModel.imageSelection,
                       matching: .images)
-        .sheet(isPresented: self.$homeViewModel.pdfFlowShow, onDismiss: {
+        .fullScreenCover(isPresented: self.$homeViewModel.pdfFlowShow, onDismiss: {
             self.homeViewModel.editStartAction = nil
         }) {
             let pdfEditable = self.homeViewModel.asyncPdf.data!

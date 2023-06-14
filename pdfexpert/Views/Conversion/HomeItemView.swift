@@ -17,21 +17,23 @@ struct HomeItemView: View {
         Button(action: {
             self.onButtonPressed()
         }) {
-            VStack(spacing: 16) {
-                Spacer()
-                Image(self.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 32)
-                Text(self.title)
-                    .font(FontPalette.fontBold(withSize: 16))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                Spacer()
+            GeometryReader { geometryReader in
+                VStack(spacing: 16) {
+                    Spacer()
+                    Image(self.imageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: geometryReader.size.height * 0.2)
+                    
+                    Text(self.title)
+                        .font(FontPalette.fontBold(withSize: 16))
+                        .foregroundColor(ColorPalette.primaryText)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                    Spacer()
+                }
             }
-            
         }
         .background(
             self.defaultGradientBackground

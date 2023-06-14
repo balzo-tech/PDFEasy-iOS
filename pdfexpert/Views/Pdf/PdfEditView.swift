@@ -56,14 +56,13 @@ struct PdfEditView: View {
             Text(pdfSaveError.errorDescription ?? "")
         })
         // File picker for images
-        .fullScreenCover(isPresented: self.$viewModel.fileImagePickerShow) {
-            FilePicker(fileTypes: [.image],
-                       onPickedFile: {
-                // Callback is called on modal dismiss, thus we can assign and convert in a row
-                self.viewModel.urlToImageToConvert = $0
-                self.viewModel.convert()
-            })
-        }
+        .filePicker(isPresented: self.$viewModel.fileImagePickerShow,
+                    fileTypes: [.image],
+                    onPickedFile: {
+            // Callback is called on modal dismiss, thus we can assign and convert in a row
+            self.viewModel.urlToImageToConvert = $0
+            self.viewModel.convert()
+        })
         // Camera for image capture
         .fullScreenCover(isPresented: self.$viewModel.cameraShow) {
             CameraView(model: Container.shared.cameraViewModel({ uiImage in

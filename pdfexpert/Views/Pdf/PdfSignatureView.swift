@@ -63,13 +63,13 @@ struct PdfSignatureView: View {
                     }
                 }
             }
-            .sheet(isPresented: self.$viewModel.isCreatingSignature) {
+            .formSheet(isPresented: self.$viewModel.isCreatingSignature,
+                       size: CGSize(width: 400, height: 400)) {
                 PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({
                     self.viewModel.onSignatureCreated(signatureImage: $0)
                 }))
                 .background(ColorPalette.primaryText)
                 .cornerRadius(20, corners: [.topLeft, .topRight])
-                .presentationDetents([.height(400)])
             }
             .alert("Are you sure?",
                    isPresented: self.$showCancelWarningDialog,

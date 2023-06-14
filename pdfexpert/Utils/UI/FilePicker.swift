@@ -50,3 +50,19 @@ class FilePickerCoordinator: NSObject, UIDocumentPickerDelegate {
         self.onPickedFile(url)
     }
 }
+
+extension View {
+    @ViewBuilder func filePicker(isPresented: Binding<Bool>,
+                                 fileTypes: [UTType],
+                                 onPickedFile: @escaping FilePickerCallback) -> some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.sheet(isPresented: isPresented) {
+                FilePicker(fileTypes: fileTypes, onPickedFile: onPickedFile)
+            }
+        } else {
+            self.fullScreenCover(isPresented: isPresented) {
+                FilePicker(fileTypes: fileTypes, onPickedFile: onPickedFile)
+            }
+        }
+    }
+}
