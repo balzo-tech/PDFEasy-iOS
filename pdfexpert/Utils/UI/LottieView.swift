@@ -33,18 +33,11 @@ struct LottieView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) {}
     
-    func loop(autoReverse: Bool = false) -> some UIViewRepresentable {
+    func loop(autoReverse: Bool = false) -> Self {
         let view = self
         view.animationView.loopMode = autoReverse ? .autoReverse : .loop
         return view
     }
-    
-//    func setValues() {
-//        print(animationView.logHierarchyKeypaths())
-//        let keypath = AnimationKeypath(keys: ["**", "Fill 1", "**", "Color"])
-//        let colorProvider = ColorValueProvider(UIColor.green.lottieColorValue)
-//        animationView.setValueProvider(colorProvider, keypath: keypath)
-//    }
 }
 
 struct LottieView_Previews: PreviewProvider {

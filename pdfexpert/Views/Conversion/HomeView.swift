@@ -166,9 +166,9 @@ struct HomeView: View {
             PdfFlowView(pdfEditable: pdfEditable, startAction: editStartAction)
         }
         .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
-                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
+                   loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
-                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
+                   loadingView: { AnimationType.pdf.view })
         .alertCameraPermission(isPresented: self.$homeViewModel.cameraPermissionDeniedShow)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.homeViewModel.onDidBecomeActive()

@@ -96,9 +96,9 @@ struct PdfEditView: View {
             PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
         }
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
-                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
+                   loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
-                   loadingView: { AnimationType.pdf.view.loop(autoReverse: true) })
+                   loadingView: { AnimationType.pdf.view })
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     

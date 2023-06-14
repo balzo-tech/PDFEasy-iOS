@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum AnimationType: String {
     case dots = "loading"
@@ -13,7 +14,16 @@ enum AnimationType: String {
 }
 
 extension AnimationType {
-    var view: LottieView {
-        LottieView(filename: self.rawValue)
+    var view: some View {
+        var view = LottieView(filename: self.rawValue)
+        switch self {
+        case .dots: view = view.loop()
+        case .pdf: view = view.loop(autoReverse: true)
+        }
+        return GeometryReader { geometryReader in
+            view.frame(width: geometryReader.size.width / 2.0)
+                .frame(maxHeight: .infinity)
+                .position(x: geometryReader.size.width / 2.0, y: geometryReader.size.height / 2.0)
+        }
     }
 }

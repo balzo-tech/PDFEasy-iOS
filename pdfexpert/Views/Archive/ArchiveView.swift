@@ -164,7 +164,7 @@ struct ArchiveView: View {
     }
     
     func getLoadingView() -> some View {
-        AnimationType.dots.view.loop().background(Color(.black).opacity(0.3))
+        AnimationType.dots.view.background(Color(.black).opacity(0.3))
     }
     
     func getErrorView() -> some View {
