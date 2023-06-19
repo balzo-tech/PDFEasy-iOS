@@ -25,22 +25,22 @@ struct HomeView: View {
     let items: [HomeItem] = [
         HomeItem(title: "Convert\nimages to PDF",
                  imageName: "home_convert_image",
-                 buttonAction: { $0.openImageInputPicker() }),
+                 buttonAction: { $0.openImagePickerFlow() }),
         HomeItem(title: "Convert\nfiles to PDF",
                  imageName: "home_convert_files",
-                 buttonAction: { $0.openFilePicker() }),
+                 buttonAction: { $0.openConvertFileFlow() }),
         HomeItem(title: "PDF\nScanner",
                  imageName: "home_scan",
-                 buttonAction: { $0.scanPdf() }),
+                 buttonAction: { $0.scanPdf(startAction: nil, directlyFromScan: true) }),
         HomeItem(title: "Fill in\na file",
                  imageName: "home_fill_form",
-                 buttonAction: { $0.openFillFormInputPicker() }),
+                 buttonAction: { $0.openFillFormFlow() }),
         HomeItem(title: "Sign\na file",
                  imageName: "home_sign",
-                 buttonAction: { $0.openSignInputPicker() }),
+                 buttonAction: { $0.openSignFlow() }),
         HomeItem(title: "Import\nPDF",
                  imageName: "home_import_pdf",
-                 buttonAction: { $0.openPdfFilePicker() })
+                 buttonAction: { $0.openPdfFileFlow() })
     ]
     
     private let gridItemLayout: [GridItem] = {
@@ -75,45 +75,15 @@ struct HomeView: View {
         .onAppear() {
             self.homeViewModel.onAppear()
         }
-        .formSheet(isPresented: self.$homeViewModel.imageInputPickerShow,
-                   size: CGSize(width: 400, height: 400)) {
-            // Image input picker
-            ImportView(items: [
-                ImportItem(title: "File",
-                           imageName: "file",
-                           callBack: { self.homeViewModel.openFileImagePicker() }),
-                ImportItem(title: "Camera",
-                           imageName: "camera",
-                           callBack: { self.homeViewModel.openCamera() }),
-                ImportItem(title: "Gallery",
-                           imageName: "gallery",
-                           callBack: { self.homeViewModel.openGallery() })
-            ])
-        }.formSheet(isPresented: self.$homeViewModel.fillFormInputPickerShow,
-                    size: CGSize(width: 400, height: 300)) {
-            // Fill Form input picker
-            ImportView(items: [
-                ImportItem(title: "From existing file",
-                           imageName: "file",
-                           callBack: { self.homeViewModel.openFilePicker() }),
-                ImportItem(title: "Scan a file",
-                           imageName: "scan",
-                           callBack: { self.homeViewModel.scanPdf() })
-            ])
-        }.formSheet(isPresented: self.$homeViewModel.signInputPickerShow,
-                    size: CGSize(width: 400, height: 300)) {
-            // Sign input picker
-            ImportView(items: [
-                ImportItem(title: "From existing file",
-                           imageName: "file",
-                           callBack: { self.homeViewModel.openFilePicker() }),
-                ImportItem(title: "Scan a file",
-                           imageName: "scan",
-                           callBack: { self.homeViewModel.scanPdf() })
-            ])
-        }.filePicker(isPresented: self.$homeViewModel.fileImagePickerShow,
-                     fileTypes: [.image],
-                     onPickedFile: {
+        .formSheet(item: self.$homeViewModel.pickerType) {
+            self.getView(forPickerType: $0)
+        }
+        .formSheet(item: self.$homeViewModel.selectedSourceType) {
+            self.getFileSourceImportView(forSourceType: $0)
+        }
+        .filePicker(isPresented: self.$homeViewModel.fileImagePickerShow,
+                    fileTypes: [.image],
+                    onPickedFile: {
             self.homeViewModel.urlToImageToConvert = $0
             self.homeViewModel.convert()
         })
@@ -173,6 +143,77 @@ struct HomeView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.homeViewModel.onDidBecomeActive()
         }
+    }
+    
+    @ViewBuilder func getView(forPickerType pickerType: PickerType) -> some View {
+        switch pickerType {
+        case .image:
+            ImportView(items: [
+                ImportItem(title: "File",
+                           imageName: "file",
+                           callBack: { self.homeViewModel.openFileSourcePicker(sourceType: .imageFile) }),
+                ImportItem(title: "Camera",
+                           imageName: "camera",
+                           callBack: { self.homeViewModel.openCamera() }),
+                ImportItem(title: "Gallery",
+                           imageName: "gallery",
+                           callBack: { self.homeViewModel.openGallery() })
+            ])
+        case .pdf:
+            self.getFileOrScanImportView(forSourceType: .pdf, startAction: nil)
+        case .convert:
+            self.getFileSourceImportView(forSourceType: .convertFile)
+        case .formFill:
+            self.getFileOrScanImportView(forSourceType: .formFill, startAction: .openFillForm)
+        case .sign:
+            self.getFileOrScanImportView(forSourceType: .sign, startAction: .openSignature)
+        }
+    }
+    
+    private func getFileOrScanImportView(forSourceType sourceType: SourceType, startAction: PdfEditStartAction?) -> some View {
+        return ImportView(items: [
+            ImportItem(title: "From existing file",
+                       imageName: "file",
+                       callBack: { self.homeViewModel.openFileSourcePicker(sourceType: sourceType) }),
+            ImportItem(title: "Scan a file",
+                       imageName: "scan",
+                       callBack: { self.homeViewModel.scanPdf(startAction: startAction, directlyFromScan: false) })
+        ])
+    }
+    
+    private func getFileSourceImportView(forSourceType sourceType: SourceType) -> some View {
+        ImportView(items: [
+            ImportItem(title: "Google Drive",
+                       imageName: "file",
+                       callBack: { self.homeViewModel.openFilePicker(fileSource: .google, sourceType: sourceType) }),
+            ImportItem(title: "Dropbox",
+                       imageName: "file",
+                       callBack: { self.homeViewModel.openFilePicker(fileSource: .dropbox, sourceType: sourceType) }),
+            ImportItem(title: "iCloud",
+                       imageName: "file",
+                       callBack: { self.homeViewModel.openFilePicker(fileSource: .icloud, sourceType: sourceType) }),
+            ImportItem(title: "Files",
+                       imageName: "file",
+                       callBack: { self.homeViewModel.openFilePicker(fileSource: .files, sourceType: sourceType) })
+        ])
+    }
+}
+
+extension PickerType: FormSheetItem {
+    var viewSize: CGSize {
+        switch self {
+        case .image: return CGSize(width: 400.0, height: 400.0)
+        case .pdf: return CGSize(width: 400.0, height: 320.0)
+        case .convert: return CGSize(width: 400.0, height: 320.0)
+        case .formFill: return CGSize(width: 400.0, height: 320.0)
+        case .sign: return CGSize(width: 400.0, height: 320.0)
+        }
+    }
+}
+
+extension SourceType: FormSheetItem {
+    var viewSize: CGSize {
+        CGSize(width: 400.0, height: 500.0)
     }
 }
 

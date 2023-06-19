@@ -19,7 +19,7 @@ enum AnalyticsError {
 }
 
 enum AnalyticsPdfInputType {
-    case camera, gallery, fileImage, file, scan, appExtension, pdf, scanFillForm, fileFillForm, scanSign, fileSign
+    case camera, gallery, fileImage, file, scan, appExtension, scanPdf, filePdf, scanFillForm, fileFillForm, scanSign, fileSign
 }
 
 enum AnalyticsScreen {
@@ -32,8 +32,8 @@ enum AnalyticsEvent {
     case onboardingCompleted(results: [OnboardingQuestion: OnboardingOption])
     case onboardingTutorialCompleted
     case onboardingTutorialSkipped
-    case conversionToPdfChosen(pdfInputType: AnalyticsPdfInputType)
-    case conversionToPdfCompleted(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
+    case conversionToPdfChosen(pdfInputType: AnalyticsPdfInputType, fileSource: FileSource?)
+    case conversionToPdfCompleted(pdfInputType: AnalyticsPdfInputType, fileSource: FileSource?, fileExtension: String?)
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
     case pageRemoved
     case passwordAdded

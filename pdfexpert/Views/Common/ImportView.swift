@@ -23,7 +23,7 @@ struct ImportView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(FontPalette.fontBold(withSize: 28))
                 .foregroundColor(ColorPalette.thirdText)
-            Spacer().frame(height: 80)
+            Spacer()
             ForEach(self.items, id: \.title) { item in
                 ImportItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
                 Spacer().frame(height: 20)

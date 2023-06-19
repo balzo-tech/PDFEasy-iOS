@@ -13,6 +13,7 @@ private enum FirebaseEventCustomParameters: String {
     case compression = "compression"
     case marginOption = "margin_option"
     case pdfInputType = "pdf_input_type"
+    case fileSourceType = "file_source_type"
     case pdfInputTypeExtension = "pdf_input_type_extension"
     case productId = "product_identifier"
     case productPrice = "product_price"
@@ -43,6 +44,17 @@ extension MarginsOption {
         case .noMargins: return "no_margins"
         case .mediumMargins: return "medium_margins"
         case .heavyMargins: return "heavy_margins"
+        }
+    }
+}
+
+extension FileSource {
+    var trackingParameterValue: String {
+        switch self {
+        case .google: return "google_drive"
+        case .dropbox: return "dropbox"
+        case .icloud: return "iCloud"
+        case .files: return "files"
         }
     }
 }
@@ -104,12 +116,19 @@ extension AnalyticsEvent {
         case .onboardingCompleted(let results):
             return Dictionary(uniqueKeysWithValues: results
                 .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
-        case .conversionToPdfChosen(let pdfInputType):
-            return [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
-        case .conversionToPdfCompleted(let pdfInputType, let fileExtension):
+        case .conversionToPdfChosen(let pdfInputType, let fileSource):
+            var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+            if let fileSource = fileSource {
+                parameters[FirebaseEventCustomParameters.fileSourceType.rawValue] = fileSource.trackingParameterValue
+            }
+            return parameters
+        case .conversionToPdfCompleted(let pdfInputType, let fileSource, let fileExtension):
             var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
             if let fileExtension = fileExtension {
                 parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
+            }
+            if let fileSource = fileSource {
+                parameters[FirebaseEventCustomParameters.fileSourceType.rawValue] = fileSource.trackingParameterValue
             }
             return parameters
         case .pageAdded(let pdfInputType, let fileExtension):
@@ -184,7 +203,8 @@ fileprivate extension AnalyticsPdfInputType {
         case .file: return "file"
         case .scan: return "scan"
         case .appExtension: return "app_extension"
-        case .pdf: return "pdf"
+        case .scanPdf: return "scan_pdf"
+        case .filePdf: return "file_pdf"
         case .scanFillForm: return "scan_fill_form"
         case .fileFillForm: return "file_fill_form"
         case .scanSign: return "scan_sign"

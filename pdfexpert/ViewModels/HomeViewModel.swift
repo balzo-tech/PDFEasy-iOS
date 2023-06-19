@@ -17,15 +17,41 @@ extension Container {
     }
 }
 
+enum SourceType: Hashable, Identifiable {
+    
+    var id: Self { return self }
+    
+    case imageFile
+    case pdf
+    case convertFile
+    case formFill
+    case sign
+}
+
+enum PickerType: Hashable, Identifiable {
+    
+    var id: Self { return self }
+    
+    case image
+    case pdf
+    case convert
+    case formFill
+    case sign
+}
+
+enum FileSource {
+    case google, dropbox, icloud, files
+}
+
 public class HomeViewModel : ObservableObject {
     
-    @Published var imageInputPickerShow: Bool = false
+    @Published var pickerType: PickerType? = nil
+    @Published var selectedSourceType: SourceType? = nil
+    
     @Published var fileImagePickerShow: Bool = false
     @Published var filePickerShow: Bool = false
     @Published var pdfFilePickerShow: Bool = false
     @Published var pdfPasswordInputShow: Bool = false
-    @Published var fillFormInputPickerShow: Bool = false
-    @Published var signInputPickerShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -67,7 +93,8 @@ public class HomeViewModel : ObservableObject {
     var scannerResult: ScannerResult?
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
-    var currentInputFileExtension: String? = nil
+    var currentAnalyticsFileSourceType: FileSource? = nil
+    var currentAnalyticsInputFileExtension: String? = nil
     var editStartAction: PdfEditStartAction? = nil
     
     private var lockedPdfEditable: PdfEditable? = nil
@@ -88,48 +115,59 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
-    func openImageInputPicker() {
-        self.imageInputPickerShow = true
+    func openConvertFileFlow() {
+        self.selectedSourceType = .convertFile
+    }
+    
+    func openImagePickerFlow() {
+        self.pickerType = .image
+    }
+    
+    func openPdfFileFlow() {
+        self.pickerType = .pdf
+    }
+    
+    func openFillFormFlow() {
+        self.pickerType = .formFill
+    }
+    
+    func openSignFlow() {
+        self.pickerType = .sign
     }
     
     @MainActor
-    func scanPdf() {
-        if self.fillFormInputPickerShow {
-            self.fillFormInputPickerShow = false
-            self.editStartAction = .openFillForm
-            self.trackPdfConversionChosenEvent(inputType: .scanFillForm)
-            Task {
-                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-                self.showScanner()
+    func openFilePicker(fileSource: FileSource, sourceType: SourceType) {
+        self.trackPdfConversionChosenEvent(inputType: sourceType.analyticsPdfInputType, fileSource: fileSource)
+        self.selectedSourceType = nil
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            switch sourceType {
+            case .imageFile: self.fileImagePickerShow = true
+            case .convertFile: self.filePickerShow = true
+            case .pdf: self.pdfFilePickerShow = true
+            case .formFill:
+                self.editStartAction = .openFillForm
+                self.filePickerShow = true
+            case .sign:
+                self.editStartAction = .openSignature
+                self.filePickerShow = true
             }
-        } else if self.signInputPickerShow {
-            self.signInputPickerShow = false
-            self.editStartAction = .openSignature
-            self.trackPdfConversionChosenEvent(inputType: .scanSign)
-            Task {
-                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-                self.showScanner()
-            }
-        } else {
-            self.trackPdfConversionChosenEvent(inputType: .scan)
-            self.showScanner()
         }
     }
     
     @MainActor
-    func openFileImagePicker() {
-        self.trackPdfConversionChosenEvent(inputType: .fileImage)
-        self.imageInputPickerShow = false
+    func openFileSourcePicker(sourceType: SourceType) {
+        self.pickerType = nil
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            self.fileImagePickerShow = true
+            self.selectedSourceType = sourceType
         }
     }
     
     @MainActor
     func openCamera() {
-        self.trackPdfConversionChosenEvent(inputType: .camera)
-        self.imageInputPickerShow = false
+        self.pickerType = nil
+        self.trackPdfConversionChosenEvent(inputType: .camera, fileSource: nil)
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
             self.cameraShow = true
@@ -138,8 +176,8 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     func openGallery() {
-        self.trackPdfConversionChosenEvent(inputType: .gallery)
-        self.imageInputPickerShow = false
+        self.pickerType = nil
+        self.trackPdfConversionChosenEvent(inputType: .gallery, fileSource: nil)
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
             self.imagePickerShow = true
@@ -147,40 +185,21 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    func openFilePicker() {
-        if self.fillFormInputPickerShow {
-            self.trackPdfConversionChosenEvent(inputType: .fileFillForm)
-            self.fillFormInputPickerShow = false
-            self.editStartAction = .openFillForm
-            Task {
-                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-                self.filePickerShow = true
+    func scanPdf(startAction: PdfEditStartAction?, directlyFromScan: Bool) {
+        self.pickerType = nil
+        self.editStartAction = startAction
+        let inputType: AnalyticsPdfInputType = {
+            switch startAction {
+            case .none: return directlyFromScan ? .scan : .scanPdf
+            case .openFillForm: return .scanFillForm
+            case .openSignature: return .scanSign
             }
-        } else if self.signInputPickerShow {
-            self.trackPdfConversionChosenEvent(inputType: .fileSign)
-            self.signInputPickerShow = false
-            self.editStartAction = .openSignature
-            Task {
-                try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-                self.filePickerShow = true
-            }
-        } else {
-            self.trackPdfConversionChosenEvent(inputType: .file)
-            self.filePickerShow = true
+        }()
+        self.trackPdfConversionChosenEvent(inputType: inputType, fileSource: nil)
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            self.showScanner()
         }
-    }
-    
-    func openPdfFilePicker() {
-        self.trackPdfConversionChosenEvent(inputType: .pdf)
-        self.pdfFilePickerShow = true
-    }
-    
-    func openFillFormInputPicker() {
-        self.fillFormInputPickerShow = true
-    }
-    
-    func openSignInputPicker() {
-        self.signInputPickerShow = true
     }
     
     @MainActor
@@ -232,7 +251,7 @@ public class HomeViewModel : ObservableObject {
                 self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
                 return
             }
-            self.currentInputFileExtension = fileImageUrl.pathExtension
+            self.currentAnalyticsInputFileExtension = fileImageUrl.pathExtension
             self.convertUiImageToPdf(uiImage: uiImage)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
@@ -251,7 +270,7 @@ public class HomeViewModel : ObservableObject {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
                 } else if let data = data, let pdfEditable = PdfEditable(data: data) {
-                    self.currentInputFileExtension = fileUrl.pathExtension
+                    self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
                     self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
@@ -365,7 +384,7 @@ public class HomeViewModel : ObservableObject {
             try await Task.sleep(until: .now + .seconds(0.5), clock: .continuous)
         }
         
-        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: .appExtension, fileExtension: "pdf"))
+        self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: .appExtension, fileSource: nil, fileExtension: "pdf"))
         self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
     }
     
@@ -396,17 +415,32 @@ public class HomeViewModel : ObservableObject {
         return AsyncOperation(status: .data(pdfDecryptedEditable))
     }
     
-    private func trackPdfConversionChosenEvent(inputType: AnalyticsPdfInputType) {
+    private func trackPdfConversionChosenEvent(inputType: AnalyticsPdfInputType, fileSource: FileSource?) {
         self.currentAnalyticsPdfInputType = inputType
-        self.analyticsManager.track(event: .conversionToPdfChosen(pdfInputType: inputType))
+        self.currentAnalyticsFileSourceType = fileSource
+        self.analyticsManager.track(event: .conversionToPdfChosen(pdfInputType: inputType, fileSource: fileSource))
     }
     
     private func trackPdfConversionCompletedEvent() {
         if let currentAnalyticsPdfInputType = self.currentAnalyticsPdfInputType {
             self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: currentAnalyticsPdfInputType,
-                                                                         fileExtension: self.currentInputFileExtension))
+                                                                         fileSource: self.currentAnalyticsFileSourceType,
+                                                                         fileExtension: self.currentAnalyticsInputFileExtension))
             self.currentAnalyticsPdfInputType = nil
-            self.currentInputFileExtension = nil
+            self.currentAnalyticsFileSourceType = nil
+            self.currentAnalyticsInputFileExtension = nil
+        }
+    }
+}
+
+extension SourceType {
+    var analyticsPdfInputType: AnalyticsPdfInputType {
+        switch self {
+        case .imageFile: return .fileImage
+        case .pdf: return .filePdf
+        case .convertFile: return .file
+        case .formFill: return .fileFillForm
+        case .sign: return .fileSign
         }
     }
 }
