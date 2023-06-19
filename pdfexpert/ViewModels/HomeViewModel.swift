@@ -46,7 +46,13 @@ enum FileSource {
 public class HomeViewModel : ObservableObject {
     
     @Published var pickerType: PickerType? = nil
-    @Published var selectedSourceType: SourceType? = nil
+    @Published var selectedSourceType: SourceType? = nil {
+        didSet {
+            if let selectedSourceType = selectedSourceType {
+                self.trackFileSourceViewed(homeOption: selectedSourceType.analyticsHomeOption)
+            }
+        }
+    }
     
     @Published var fileImagePickerShow: Bool = false
     @Published var filePickerShow: Bool = false
@@ -116,22 +122,27 @@ public class HomeViewModel : ObservableObject {
     }
     
     func openConvertFileFlow() {
+        self.trackHomeOptionChosen(homeOption: .convertFile)
         self.selectedSourceType = .convertFile
     }
     
     func openImagePickerFlow() {
+        self.trackHomeOptionChosen(homeOption: .convertImage)
         self.pickerType = .image
     }
     
     func openPdfFileFlow() {
+        self.trackHomeOptionChosen(homeOption: .pdf)
         self.pickerType = .pdf
     }
     
     func openFillFormFlow() {
+        self.trackHomeOptionChosen(homeOption: .fillForm)
         self.pickerType = .formFill
     }
     
     func openSignFlow() {
+        self.trackHomeOptionChosen(homeOption: .signature)
         self.pickerType = .sign
     }
     
@@ -188,6 +199,9 @@ public class HomeViewModel : ObservableObject {
     func scanPdf(startAction: PdfEditStartAction?, directlyFromScan: Bool) {
         self.pickerType = nil
         self.editStartAction = startAction
+        if directlyFromScan {
+            self.trackHomeOptionChosen(homeOption: .scan)
+        }
         let inputType: AnalyticsPdfInputType = {
             switch startAction {
             case .none: return directlyFromScan ? .scan : .scanPdf
@@ -415,6 +429,14 @@ public class HomeViewModel : ObservableObject {
         return AsyncOperation(status: .data(pdfDecryptedEditable))
     }
     
+    private func trackHomeOptionChosen(homeOption: AnalyticsHomeOption) {
+        self.analyticsManager.track(event: .homeOptionChosen(homeOption: homeOption))
+    }
+    
+    private func trackFileSourceViewed(homeOption: AnalyticsHomeOption) {
+        self.analyticsManager.track(event: .fileSourceViewed(homeOption: homeOption))
+    }
+    
     private func trackPdfConversionChosenEvent(inputType: AnalyticsPdfInputType, fileSource: FileSource?) {
         self.currentAnalyticsPdfInputType = inputType
         self.currentAnalyticsFileSourceType = fileSource
@@ -441,6 +463,16 @@ extension SourceType {
         case .convertFile: return .file
         case .formFill: return .fileFillForm
         case .sign: return .fileSign
+        }
+    }
+    
+    var analyticsHomeOption: AnalyticsHomeOption {
+        switch self {
+        case .imageFile: return .convertImage
+        case .pdf: return .pdf
+        case .convertFile: return .convertFile
+        case .formFill: return .fillForm
+        case .sign: return .signature
         }
     }
 }

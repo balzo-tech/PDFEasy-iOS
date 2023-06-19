@@ -13,6 +13,7 @@ private enum FirebaseEventCustomParameters: String {
     case compression = "compression"
     case marginOption = "margin_option"
     case pdfInputType = "pdf_input_type"
+    case homeOptionType = "home_option_type"
     case fileSourceType = "file_source_type"
     case pdfInputTypeExtension = "pdf_input_type_extension"
     case productId = "product_identifier"
@@ -82,6 +83,8 @@ extension AnalyticsEvent {
         case .onboardingCompleted: return "onboarding_completed"
         case .onboardingTutorialCompleted: return "onboarding_tutorial_completed"
         case .onboardingTutorialSkipped: return "onboarding_tutorial_skipped"
+        case .homeOptionChosen: return "home_option_chosen"
+        case .fileSourceViewed: return "file_source_viewed"
         case .conversionToPdfChosen: return "conversion_to_pdf_chosen"
         case .conversionToPdfCompleted: return "conversion_to_pdf_completed"
         case .pageAdded: return "page_added"
@@ -116,6 +119,10 @@ extension AnalyticsEvent {
         case .onboardingCompleted(let results):
             return Dictionary(uniqueKeysWithValues: results
                 .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
+        case .homeOptionChosen(let homeOption):
+            return [FirebaseEventCustomParameters.homeOptionType.rawValue: homeOption.trackingParameterValue]
+        case .fileSourceViewed(let homeOption):
+            return [FirebaseEventCustomParameters.homeOptionType.rawValue: homeOption.trackingParameterValue]
         case .conversionToPdfChosen(let pdfInputType, let fileSource):
             var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
             if let fileSource = fileSource {
@@ -209,6 +216,20 @@ fileprivate extension AnalyticsPdfInputType {
         case .fileFillForm: return "file_fill_form"
         case .scanSign: return "scan_sign"
         case .fileSign: return "file_sign"
+        }
+    }
+}
+
+fileprivate extension AnalyticsHomeOption {
+    
+    var trackingParameterValue: String {
+        switch self {
+        case .convertImage: return "convert_image"
+        case .convertFile: return "convert_file"
+        case .scan: return "scan"
+        case .pdf: return "pdf"
+        case .fillForm: return "fill_form"
+        case .signature: return "signature"
         }
     }
 }

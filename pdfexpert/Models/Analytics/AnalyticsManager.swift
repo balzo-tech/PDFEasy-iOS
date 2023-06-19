@@ -22,6 +22,10 @@ enum AnalyticsPdfInputType {
     case camera, gallery, fileImage, file, scan, appExtension, scanPdf, filePdf, scanFillForm, fileFillForm, scanSign, fileSign
 }
 
+enum AnalyticsHomeOption {
+    case convertImage, convertFile, scan, pdf, fillForm, signature
+}
+
 enum AnalyticsScreen {
     case onboarding, home, files, settings, subscription, importTutorial, signature, fillForm
 }
@@ -32,6 +36,8 @@ enum AnalyticsEvent {
     case onboardingCompleted(results: [OnboardingQuestion: OnboardingOption])
     case onboardingTutorialCompleted
     case onboardingTutorialSkipped
+    case homeOptionChosen(homeOption: AnalyticsHomeOption)
+    case fileSourceViewed(homeOption: AnalyticsHomeOption)
     case conversionToPdfChosen(pdfInputType: AnalyticsPdfInputType, fileSource: FileSource?)
     case conversionToPdfCompleted(pdfInputType: AnalyticsPdfInputType, fileSource: FileSource?, fileExtension: String?)
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
