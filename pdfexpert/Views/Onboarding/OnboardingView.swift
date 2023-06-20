@@ -18,7 +18,8 @@ struct OnboardingView: View {
             PageControl(currentPageIndex: self.onboardingViewModel.pageIndex,
                         numberOfPages: self.onboardingViewModel.questions.count,
                         currentPageColor: ColorPalette.buttonGradientStart,
-                        normalPageColor: ColorPalette.thirdText)
+                        normalPageColor: ColorPalette.thirdText,
+                        enableInteraction: false)
             PagerTabStripView(
                 swipeGestureEnabled: .constant(false),
                 selection: self.$onboardingViewModel.pageIndex

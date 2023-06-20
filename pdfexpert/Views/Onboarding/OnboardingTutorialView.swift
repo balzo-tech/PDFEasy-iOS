@@ -35,7 +35,8 @@ struct OnboardingTutorialView: View {
             PageControl(currentPageIndex: self.viewModel.pageIndex,
                         numberOfPages: self.pageCount,
                         currentPageColor: ColorPalette.buttonGradientStart,
-                        normalPageColor: ColorPalette.buttonGradientStart.opacity(0.3))
+                        normalPageColor: ColorPalette.buttonGradientStart.opacity(0.3),
+                        enableInteraction: false)
             .frame(height: 40)
             Spacer().frame(height: 40)
             self.getDefaultButton(text: "Continue",

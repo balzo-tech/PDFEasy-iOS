@@ -52,7 +52,8 @@ struct ImportTutorialView: View {
                 PageControl(currentPageIndex: self.pageIndex,
                             numberOfPages: self.pageCount,
                             currentPageColor: ColorPalette.buttonGradientStart,
-                            normalPageColor: ColorPalette.buttonGradientStart.opacity(0.3))
+                            normalPageColor: ColorPalette.buttonGradientStart.opacity(0.3),
+                            enableInteraction: false)
                 .frame(height: 40)
                 Spacer()
                 self.getDefaultButton(text: self.buttonText,
