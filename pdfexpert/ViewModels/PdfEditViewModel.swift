@@ -40,11 +40,12 @@ class PdfEditViewModel: ObservableObject {
     }
     
     @Published private(set)var pdfEditable: PdfEditable
-    @Published var pdfCurrentPageIndex: Int? = 0
+    @Published var pdfCurrentPageIndex: Int = 0
+    @Published var pageImages: [UIImage?] = []
     @Published var pdfThumbnails: [UIImage?] = []
     @Published var pdfSaveError: PdfEditSaveError? = nil
     
-    @Published var fileImagePickerShow: Bool = false
+    @Published var filePickerShow: Bool = false
     @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
     @Published var scannerShow: Bool = false
@@ -99,7 +100,8 @@ class PdfEditViewModel: ObservableObject {
         self.pdfEditable = inputParameter.pdfEditable
         self.startAction = inputParameter.startAction
         self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
-        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
+        self.refreshImages()
+        self.refreshThumbnails()
     }
     
     @MainActor
@@ -124,6 +126,10 @@ class PdfEditViewModel: ObservableObject {
             assertionFailure("Inconsistency error: pdf thumbnails count doesn't match pdf pages count")
             return
         }
+        guard self.pageImages.count == self.pdfEditable.pdfDocument.pageCount else {
+            assertionFailure("Inconsistency error: pdf page images count doesn't match pdf pages count")
+            return
+        }
         let maxIndex = self.pdfEditable.pdfDocument.pageCount
         
         guard index >= 0, index < maxIndex else {
@@ -132,18 +138,19 @@ class PdfEditViewModel: ObservableObject {
         }
         self.pdfEditable.pdfDocument.removePage(at: index)
         self.pdfThumbnails.remove(at: index)
+        self.pageImages.remove(at: index)
         
         let newMaxIndex = self.pdfEditable.pdfDocument.pageCount
         
-        if nil != self.pdfCurrentPageIndex, index >= newMaxIndex {
-            self.pdfCurrentPageIndex = (newMaxIndex > 0) ? newMaxIndex - 1 : nil
+        if self.pdfCurrentPageIndex >= newMaxIndex {
+            self.pdfCurrentPageIndex = (newMaxIndex > 0) ? newMaxIndex - 1 : 0
         }
         
         self.analyticsManager.track(event: .pageRemoved)
     }
     
-    func openFileImagePicker() {
-        self.fileImagePickerShow = true
+    func openFilePicker() {
+        self.filePickerShow = true
         self.currentAnalyticsPdfInputType = .file
     }
     
@@ -207,15 +214,6 @@ class PdfEditViewModel: ObservableObject {
         self.coordinator.showViewer(pdf: pdf, marginOption: self.marginsOption, compression: self.compression)
     }
     
-    func getCurrentPageImage(withSize size: CGSize) -> UIImage? {
-        guard let pdfCurrentPageIndex = self.pdfCurrentPageIndex else {
-            return nil
-        }
-        return PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
-                                               size: size,
-                                               forPageIndex: pdfCurrentPageIndex)
-    }
-    
     @MainActor
     func convert() {
         if let urlToFileToConvert = self.urlToFileToConvert {
@@ -234,6 +232,7 @@ class PdfEditViewModel: ObservableObject {
         // TODO: Update thumbnails only for changed pages
         self.pdfEditable = pdfEditable
         self.refreshThumbnails()
+        self.refreshImages()
     }
     
     @MainActor
@@ -324,23 +323,23 @@ class PdfEditViewModel: ObservableObject {
     
     private func appendUiImageToPdf(uiImage: UIImage) {
         PDFUtility.appendImageToPdfDocument(pdfDocument: self.pdfEditable.pdfDocument, uiImage: uiImage)
-        let image = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
+        let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
+                                                        size: nil,
+                                                        forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
+        self.pageImages.append(pageImage)
+        let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
                                                     size: K.Misc.ThumbnailEditSize,
                                                     forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
-        self.pdfThumbnails.append(image)
-        if self.pdfCurrentPageIndex == nil {
-            self.pdfCurrentPageIndex = 0
-        }
+        self.pdfThumbnails.append(thumbnail)
         self.trackPageAddedEvent()
     }
     
     private func appendPdfEditableToPdf(pdfEditable: PdfEditable) {
         PDFUtility.appendPdfDocument(pdfEditable.pdfDocument, toPdfDocument: self.pdfEditable.pdfDocument)
+        let pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: nil)
+        self.pageImages.append(contentsOf: pageImages)
         let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
         self.pdfThumbnails.append(contentsOf: thumbnails)
-        if self.pdfCurrentPageIndex == nil {
-            self.pdfCurrentPageIndex = 0
-        }
         self.trackPageAddedEvent()
     }
     
@@ -351,6 +350,10 @@ class PdfEditViewModel: ObservableObject {
         default:
             self.cameraPermissionDeniedShow = true
         }
+    }
+    
+    private func refreshImages() {
+        self.pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: nil)
     }
     
     private func refreshThumbnails() {

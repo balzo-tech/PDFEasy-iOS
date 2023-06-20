@@ -27,6 +27,7 @@ struct PdfEditView: View {
             self.editView
             self.editOptionsView
         }
+        .ignoresSafeArea(.keyboard)
         .padding([.leading, .trailing], 16)
         .background(ColorPalette.primaryBG)
         .toolbar {
@@ -57,8 +58,8 @@ struct PdfEditView: View {
         }, message: { pdfSaveError in
             Text(pdfSaveError.errorDescription ?? "")
         })
-        // File picker for images
-        .filePicker(isPresented: self.$viewModel.fileImagePickerShow,
+        // File picker
+        .filePicker(isPresented: self.$viewModel.filePickerShow,
                     fileTypes: K.Misc.ImportFileTypesForAddPage.compactMap { $0 },
                     onPickedFile: {
             // Callback is called on modal dismiss, thus we can assign and convert in a row
@@ -86,14 +87,14 @@ struct PdfEditView: View {
         .fullScreenCover(isPresented: self.$viewModel.signatureAddViewShow) {
             let inputParameter = PdfSignatureViewModel
                 .InputParameter(pdfEditable: self.viewModel.pdfEditable,
-                                currentPageIndex: self.viewModel.pdfCurrentPageIndex ?? 0,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
         }
         .fullScreenCover(isPresented: self.$viewModel.fillFormAddViewShow) {
             let inputParameter = PdfFillFormViewModel
                 .InputParameter(pdfEditable: self.viewModel.pdfEditable,
-                                currentPageIndex: self.viewModel.pdfCurrentPageIndex ?? 0,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
         }
@@ -116,17 +117,29 @@ struct PdfEditView: View {
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     
-    var pdfView: some View {
-        GeometryReader { geometry in
-            if let image = self.viewModel.getCurrentPageImage(withSize: geometry.size) {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .position(x: geometry.size.width/2, y: geometry.size.height/2)
-            } else {
-                self.emptyView
+    @ViewBuilder var pdfView: some View {
+        if self.viewModel.pageImages.count > 0 {
+            GeometryReader { parentGeometryReader in
+                TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
+                    ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
+                            ZStack {
+                                if let page = page {
+                                    Image(uiImage: page)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                } else {
+                                    ColorPalette.fourthText
+                                }
+                            }
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
+                .frame(width: parentGeometryReader.size.width,
+                       height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
             }
+        } else {
+            self.emptyView
         }
     }
     
@@ -197,7 +210,7 @@ struct PdfEditView: View {
                         self.viewModel.openCamera()
                     }
                     Button("File") {
-                        self.viewModel.openFileImagePicker()
+                        self.viewModel.openFilePicker()
                     }
                     Button("Scan") {
                         self.viewModel.openScanner()

@@ -36,7 +36,7 @@ class PDFUtility {
         }
     }
     
-    static func generatePdfThumbnails(pdfDocument: PDFDocument, size: CGSize) -> [UIImage?] {
+    static func generatePdfThumbnails(pdfDocument: PDFDocument, size: CGSize?) -> [UIImage?] {
         var thumbnails: [UIImage?] = []
         for index in 0..<pdfDocument.pageCount {
             let image = Self.generatePdfThumbnail(pdfDocument: pdfDocument,
@@ -48,7 +48,7 @@ class PDFUtility {
     }
     
     static func generatePdfThumbnail(documentData: Data,
-                                     size: CGSize,
+                                     size: CGSize?,
                                      forPageIndex pageIndex: Int = 0) -> UIImage? {
         guard let pdfDocument = PDFDocument(data: documentData) else { return nil }
         return self.generatePdfThumbnail(pdfDocument: pdfDocument,
@@ -57,13 +57,17 @@ class PDFUtility {
     }
     
     static func generatePdfThumbnail(pdfDocument: PDFDocument,
-                                     size: CGSize,
+                                     size: CGSize?,
                                      forPageIndex pageIndex: Int = 0) -> UIImage? {
         guard pageIndex >= 0, pageIndex < pdfDocument.pageCount else { return nil }
-        let pdfDocumentPage = pdfDocument.page(at: pageIndex)
-        let nativeScale = UIScreen.main.nativeScale
-        let nativeSize = CGSize(width: size.width * nativeScale, height: size.height * nativeScale)
-        return pdfDocumentPage?.thumbnail(of: nativeSize, for: PDFDisplayBox.trimBox)
+        guard let pdfDocumentPage = pdfDocument.page(at: pageIndex) else { return nil }
+        if let size = size {
+            let nativeScale = UIScreen.main.nativeScale
+            let nativeSize = CGSize(width: size.width * nativeScale, height: size.height * nativeScale)
+            return pdfDocumentPage.thumbnail(of: nativeSize, for: PDFDisplayBox.trimBox)
+        } else {
+            return pdfDocumentPage.thumbnail(of: pdfDocumentPage.bounds(for: .mediaBox).size, for: .mediaBox)
+        }
     }
     
     static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, horizontalMargin: CGFloat, quality: CGFloat) -> PDFDocument {
