@@ -184,16 +184,16 @@ struct HomeView: View {
     private func getFileSourceImportView(forSourceType sourceType: SourceType) -> some View {
         ImportView(items: [
             ImportItem(title: "Google Drive",
-                       imageName: "file",
+                       imageName: "home_file_source_google",
                        callBack: { self.homeViewModel.openFilePicker(fileSource: .google, sourceType: sourceType) }),
             ImportItem(title: "Dropbox",
-                       imageName: "file",
+                       imageName: "home_file_source_dropbox",
                        callBack: { self.homeViewModel.openFilePicker(fileSource: .dropbox, sourceType: sourceType) }),
             ImportItem(title: "iCloud",
-                       imageName: "file",
+                       imageName: "home_file_source_icloud",
                        callBack: { self.homeViewModel.openFilePicker(fileSource: .icloud, sourceType: sourceType) }),
             ImportItem(title: "Files",
-                       imageName: "file",
+                       imageName: "home_file_source_files",
                        callBack: { self.homeViewModel.openFilePicker(fileSource: .files, sourceType: sourceType) })
         ])
     }

@@ -236,8 +236,6 @@ class PdfEditViewModel: ObservableObject {
         self.refreshThumbnails()
     }
     
-    
-    
     @MainActor
     private func convertFileByUrl(fileUrl: URL) {
         let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)

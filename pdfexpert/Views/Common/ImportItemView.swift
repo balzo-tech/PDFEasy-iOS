@@ -17,6 +17,9 @@ struct ImportItemView: View {
         Button(action: { self.onPressed() }) {
             HStack(spacing: 20) {
                 Image(self.imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 30)
                 Text(self.title)
                     .font(FontPalette.fontBold(withSize: 16))
                     .foregroundColor(ColorPalette.thirdText)
