@@ -12,6 +12,7 @@ import PhotosUI
 struct PdfEditView: View {
     
     fileprivate static let cellSide: CGFloat = 80.0
+    fileprivate static let selectedCellBorderWidth: CGFloat = 4.0
     
     @StateObject var viewModel: PdfEditViewModel
     @State private var showingImageInputPicker = false
@@ -196,7 +197,7 @@ struct PdfEditView: View {
                     self.showingImageInputPicker = true
                 }) {
                     self.addThumbnailCell
-                        .applyCellStyle()
+                        .applyCellStyle(highlight: false)
                 }
                 .actionDialog(
                     Text("Choose your source"),
@@ -224,7 +225,7 @@ struct PdfEditView: View {
                         self.showingDeleteConfermation = true
                     }) {
                         self.getThumbnailCell(image: image)
-                            .applyCellStyle()
+                            .applyCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
                     }
                     .actionDialog(
                         Text("Action"),
@@ -243,7 +244,7 @@ struct PdfEditView: View {
                 }
             }
         }
-        .frame(height: Self.cellSide)
+        .frame(height: Self.cellSide + Self.selectedCellBorderWidth)
     }
     
     var addThumbnailCell: some View {
@@ -322,10 +323,17 @@ struct PdfEditView: View {
 }
 
 fileprivate extension View {
-    func applyCellStyle() -> some View {
+    func applyCellStyle(highlight: Bool) -> some View {
         self
             .frame(width: PdfEditView.cellSide, height: PdfEditView.cellSide)
             .cornerRadius(16)
+            .if(highlight) { view in
+                view.overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(ColorPalette.buttonGradientStart,
+                                lineWidth: PdfEditView.selectedCellBorderWidth)
+                )
+            }
     }
 }
 
