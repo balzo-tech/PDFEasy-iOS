@@ -19,6 +19,8 @@ struct PdfEditView: View {
     @State private var indexToDelete: Int? = nil
     @State private var showingSaveErrorAlert = false
     
+    @State private var passwordText: String = ""
+    
     var body: some View {
         VStack(spacing: 30) {
             self.pdfView
@@ -57,10 +59,10 @@ struct PdfEditView: View {
         })
         // File picker for images
         .filePicker(isPresented: self.$viewModel.fileImagePickerShow,
-                    fileTypes: [.image],
+                    fileTypes: K.Misc.ImportFileTypesForAddPage.compactMap { $0 },
                     onPickedFile: {
             // Callback is called on modal dismiss, thus we can assign and convert in a row
-            self.viewModel.urlToImageToConvert = $0
+            self.viewModel.urlToFileToConvert = $0
             self.viewModel.convert()
         })
         // Camera for image capture
@@ -95,6 +97,18 @@ struct PdfEditView: View {
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
         }
+        .alert("Your pdf is protected", isPresented: self.$viewModel.pdfPasswordInputShow, actions: {
+            SecureField("Enter Password", text: self.$passwordText)
+            Button("Confirm", action: {
+                self.viewModel.importLockedPdf(password: self.passwordText)
+                self.passwordText = ""
+            })
+            Button("Cancel", role: .cancel, action: {
+                self.passwordText = ""
+            })
+        }, message: {
+            Text("Enter the password of your pdf in order to import it.")
+        })
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,

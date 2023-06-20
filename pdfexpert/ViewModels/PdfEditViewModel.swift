@@ -10,6 +10,7 @@ import Factory
 import SwiftUI
 import UIKit
 import PhotosUI
+import PSPDFKit
 
 extension Container {
     var pdfEditViewModel: ParameterFactory<PdfEditViewModel.InputParameter, PdfEditViewModel> {
@@ -53,6 +54,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var editMode: EditMode = .add
     @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
     @Published var compression: CGFloat = K.Misc.PdfDefaultCompression
+    @Published var pdfPasswordInputShow: Bool = false
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -81,15 +83,17 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.store) private var store
     
     var shouldShowCloseWarning: Binding<Bool>
-    var urlToImageToConvert: URL?
+    var urlToFileToConvert: URL?
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
     
     var pdf: Pdf? = nil
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
-    var currentInputFileExtension: String? = nil
+    var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
+    
+    private var lockedPdfEditable: PdfEditable? = nil
     
     init(inputParameter: InputParameter) {
         self.pdfEditable = inputParameter.pdfEditable
@@ -140,7 +144,7 @@ class PdfEditViewModel: ObservableObject {
     
     func openFileImagePicker() {
         self.fileImagePickerShow = true
-        self.currentAnalyticsPdfInputType = .fileImage
+        self.currentAnalyticsPdfInputType = .file
     }
     
     func openCamera() {
@@ -214,9 +218,9 @@ class PdfEditViewModel: ObservableObject {
     
     @MainActor
     func convert() {
-        if let urlToImageToConvert = self.urlToImageToConvert {
-            self.urlToImageToConvert = nil
-            self.convertFileImageByURL(fileImageUrl: urlToImageToConvert)
+        if let urlToFileToConvert = self.urlToFileToConvert {
+            self.urlToFileToConvert = nil
+            self.convertFileByUrl(fileUrl: urlToFileToConvert)
         } else if let imageToConvert = self.imageToConvert {
             self.imageToConvert = nil
             self.appendUiImageToPdf(uiImage: imageToConvert)
@@ -232,6 +236,57 @@ class PdfEditViewModel: ObservableObject {
         self.refreshThumbnails()
     }
     
+    
+    
+    @MainActor
+    private func convertFileByUrl(fileUrl: URL) {
+        let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)
+        if fileUtType?.conforms(to: .pdf) ?? false {
+            self.importPdf(pdfUrl: fileUrl)
+        } else if fileUtType?.conforms(to: .image) ?? false {
+            self.convertFileImageByURL(fileImageUrl: fileUrl)
+        } else {
+            self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+            Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
+                if let error = error {
+                    debugPrint(for: self, message: "Error converting word file. Error: \(error)")
+                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                    self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
+                    self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
+                } else {
+                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+                }
+            }
+        }
+    }
+    
+    @MainActor
+    func importPdf(pdfUrl: URL) {
+        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+            assertionFailure("Missing expected file for give url")
+            return
+        }
+        
+        if pdfEditable.pdfDocument.isLocked {
+            self.lockedPdfEditable = pdfEditable
+            self.pdfPasswordInputShow = true
+        } else {
+            self.currentAnalyticsInputFileExtension = pdfUrl.pathExtension
+            self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
+        }
+    }
+    
+    @MainActor
+    func importLockedPdf(password: String) {
+        guard let pdfEditable = self.lockedPdfEditable else {
+            assertionFailure("Missing expected locked pdf")
+            return
+        }
+        self.currentAnalyticsInputFileExtension = "pdf"
+        self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
+    }
+    
     @MainActor
     private func convertFileImageByURL(fileImageUrl: URL) {
         do {
@@ -240,7 +295,7 @@ class PdfEditViewModel: ObservableObject {
                 self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
                 return
             }
-            self.currentInputFileExtension = fileImageUrl.pathExtension
+            self.currentAnalyticsInputFileExtension = fileImageUrl.pathExtension
             self.appendUiImageToPdf(uiImage: uiImage)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
@@ -309,9 +364,9 @@ class PdfEditViewModel: ObservableObject {
             assertionFailure("Missing exptected analytics pdf input type")
             return
         }
-        self.analyticsManager.track(event: .pageAdded(pdfInputType: currentAnalyticsPdfInputType, fileExtension: self.currentInputFileExtension))
+        self.analyticsManager.track(event: .pageAdded(pdfInputType: currentAnalyticsPdfInputType, fileExtension: self.currentAnalyticsInputFileExtension))
         self.currentAnalyticsPdfInputType = nil
-        self.currentInputFileExtension = nil
+        self.currentAnalyticsInputFileExtension = nil
     }
 }
 

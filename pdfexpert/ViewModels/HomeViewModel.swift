@@ -244,7 +244,7 @@ public class HomeViewModel : ObservableObject {
             self.lockedPdfEditable = pdfEditable
             self.pdfPasswordInputShow = true
         } else {
-            self.asyncPdf = self.decryptFile(pdfEditable: pdfEditable)
+            self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
         }
     }
     
@@ -254,7 +254,7 @@ public class HomeViewModel : ObservableObject {
             assertionFailure("Missing expected locked pdf")
             return
         }
-        self.asyncPdf = self.decryptFile(pdfEditable: pdfEditable, password: password)
+        self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
     }
     
     @MainActor
@@ -275,7 +275,8 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     private func convertFileByUrl(fileUrl: URL) {
-        if fileUrl.pathExtension == "pdf" {
+        let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)
+        if fileUtType?.conforms(to: .pdf) ?? false {
             self.importPdf(pdfUrl: fileUrl)
         } else {
             self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
@@ -400,33 +401,6 @@ public class HomeViewModel : ObservableObject {
         
         self.analyticsManager.track(event: .conversionToPdfCompleted(pdfInputType: .appExtension, fileSource: nil, fileExtension: "pdf"))
         self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
-    }
-    
-    private func decryptFile(pdfEditable: PdfEditable, password: String = "") -> AsyncOperation<PdfEditable, PdfEditableError> {
-        guard pdfEditable.pdfDocument.isEncrypted else {
-            return AsyncOperation(status: .data(pdfEditable))
-        }
-        
-        guard pdfEditable.pdfDocument.unlock(withPassword: password) else {
-            return AsyncOperation(status: .error(.wrongPassword))
-        }
-        
-        guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
-            assertionFailure("Missing expected encrypted data")
-            return AsyncOperation(status: .error(.unknownError))
-        }
-        
-        guard let pdfDecryptedData = try? PDFUtility.removePassword(data: pdfEncryptedData, existingPDFPassword: password) else {
-            assertionFailure("Missing expected decrypted data")
-            return AsyncOperation(status: .error(.unknownError))
-        }
-        
-        guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
-            assertionFailure("Cannot decode pdf from decrypted data")
-            return AsyncOperation(status: .error(.unknownError))
-        }
-        
-        return AsyncOperation(status: .data(pdfDecryptedEditable))
     }
     
     private func trackHomeOptionChosen(homeOption: AnalyticsHomeOption) {

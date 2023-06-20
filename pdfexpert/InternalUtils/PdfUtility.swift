@@ -183,6 +183,33 @@ class PDFUtility {
         }
         return nil
     }
+    
+    static func decryptFile(pdfEditable: PdfEditable, password: String = "") -> AsyncOperation<PdfEditable, PdfEditableError> {
+        guard pdfEditable.pdfDocument.isEncrypted else {
+            return AsyncOperation(status: .data(pdfEditable))
+        }
+        
+        guard pdfEditable.pdfDocument.unlock(withPassword: password) else {
+            return AsyncOperation(status: .error(.wrongPassword))
+        }
+        
+        guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
+            assertionFailure("Missing expected encrypted data")
+            return AsyncOperation(status: .error(.unknownError))
+        }
+        
+        guard let pdfDecryptedData = try? PDFUtility.removePassword(data: pdfEncryptedData, existingPDFPassword: password) else {
+            assertionFailure("Missing expected decrypted data")
+            return AsyncOperation(status: .error(.unknownError))
+        }
+        
+        guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
+            assertionFailure("Cannot decode pdf from decrypted data")
+            return AsyncOperation(status: .error(.unknownError))
+        }
+        
+        return AsyncOperation(status: .data(pdfDecryptedEditable))
+    }
 }
 
 extension UIImage {

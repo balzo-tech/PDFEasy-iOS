@@ -75,6 +75,14 @@ struct K {
             UTType("com.microsoft.word.doc"),
             UTType("com.apple.iwork.pages.sffpages")
         ]
+        static let ImportFileTypesForAddPage: [UTType?] = [
+            UTType.image,
+            UTType.pdf,
+            .presentation,
+            .spreadsheet,
+            UTType("com.microsoft.word.doc"),
+            UTType("com.apple.iwork.pages.sffpages")
+        ]
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
         static let PdfPageSize: CGSize = CGSize(width: 595, height: 842)
