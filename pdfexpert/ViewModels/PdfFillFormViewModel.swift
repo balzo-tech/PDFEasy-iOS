@@ -27,21 +27,26 @@ class PdfFillFormViewModel: ObservableObject {
     }
     
     @Published var pdfDocument: PDFDocument
-    @Published var pageImages: [UIImage] = []
-    @Published var pageIndex: Int = 0 {
+    @Published var pageImages: [UIImage]
+    @Published var pageIndex: Int {
         didSet {
             self.applyCurrentEditedTextAnnotation()
             self.editedPageIndex = nil
-            
         }
     }
-    @Published var annotations: [PDFAnnotation] = []
+    @Published var annotations: [PDFAnnotation]
     @Published var currentTextResizableViewData: TextResizableViewData = TextResizableViewData(text: "", rect: .zero)
     @Published var editedPageIndex: Int? = nil
     
     var pageScrollingAllowed: Bool { nil == self.editedPageIndex }
     var pageViewSize: CGSize = .zero
     var shouldShowCloseWarning: Bool = false
+    
+    // Used only to perform point and rect conversions from view space to page space and viceversa
+    // A dedicated PDFView for each page is needed, because changing page on the fly based on the
+    // needed page appears not to be done instantly, giving wrong results.
+    // This way we achieve correctness but at the cost of an increased memory consumption.
+    private let pdfViews: [PDFView]
     
     @Injected(\.analyticsManager) private var analyticsManager
     
@@ -56,19 +61,32 @@ class PdfFillFormViewModel: ObservableObject {
         
         self.onConfirm = inputParameter.onConfirm
         
-        for pageIndex in 0..<self.pdfDocument.pageCount {
-            if let page = self.pdfDocument.page(at: pageIndex) {
+        var pdfViews: [PDFView] = []
+        var annotationLists: [PDFAnnotation] = []
+        var pageImages: [UIImage] = []
+        for pageIndex in 0..<pdfDocumentCopy.pageCount {
+            if let page = pdfDocumentCopy.page(at: pageIndex) {
                 let annotations = page.annotations.supportedAnnotations
                 // Store annotations
-                self.annotations.append(contentsOf: annotations)
+                annotationLists.append(contentsOf: annotations)
                 // Detach annotations from page
                 for annotation in annotations {
                     page.removeAnnotation(annotation)
                 }
                 // Render page
-                self.pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
+                pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
+                
+                let pdfView = PDFView()
+                pdfView.document = pdfDocumentCopy
+                pdfView.autoScales = true
+                pdfView.displayMode = .singlePage
+                pdfView.go(to: page)
+                pdfViews.append(pdfView)
             }
         }
+        self.annotations = annotationLists
+        self.pageImages = pageImages
+        self.pdfViews = pdfViews
         
         self.pageIndex = inputParameter.currentPageIndex
     }
@@ -96,7 +114,7 @@ class PdfFillFormViewModel: ObservableObject {
         
         debugPrint(for: self, message: "Tap in: \(positionInView), for page index: \(pageIndex)")
         
-        let pointInPage = Self.convertPoint(positionInView, viewSize: pageViewSize, toPage: page)
+        let pointInPage = self.convertPoint(positionInView, viewSize: pageViewSize, toPage: page)
         let textAnnotations = self.annotations.filter { $0.isTextAnnotation }
         let textAnnotationsInPoint = textAnnotations.filter { $0.page == page && $0.verticalCenteredTextBounds.contains(pointInPage) }
         
@@ -112,7 +130,7 @@ class PdfFillFormViewModel: ObservableObject {
 
             if let textAnnotation = textAnnotationsInPoint.first {
                 // Tapping inside a different text annotation -> convert that text annotation to text resizable view
-                let rect = Self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
+                let rect = self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
                 self.currentTextResizableViewData = TextResizableViewData(text: textAnnotation.text, rect: rect)
                 self.editedPageIndex = pageIndex
                 self.annotations.removeAll(where: { $0 == textAnnotation })
@@ -121,7 +139,7 @@ class PdfFillFormViewModel: ObservableObject {
             self.shouldShowCloseWarning = true
         } else if let textAnnotation = textAnnotationsInPoint.first {
             // Tapping inside a text annotation -> convert that text annotation to text resizable view
-            let rect = Self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
+            let rect = self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
             self.currentTextResizableViewData = TextResizableViewData(text: textAnnotation.contents ?? "", rect: rect)
             self.editedPageIndex = pageIndex
             self.annotations.removeAll(where: { $0 == textAnnotation })
@@ -173,7 +191,7 @@ class PdfFillFormViewModel: ObservableObject {
         guard let pageIndex = self.editedPageIndex, let page = self.pdfDocument.page(at: pageIndex), !self.currentTextResizableViewData.text.isEmpty else {
             return
         }
-        let bounds = Self.convertRect(self.currentTextResizableViewData.rect, viewSize: self.pageViewSize, toPage: page)
+        let bounds = self.convertRect(self.currentTextResizableViewData.rect, viewSize: self.pageViewSize, toPage: page)
         let annotation = PDFAnnotation.create(with: self.currentTextResizableViewData.text,
                                               forBounds: bounds,
                                               textColor: .black,
@@ -184,45 +202,41 @@ class PdfFillFormViewModel: ObservableObject {
         self.analyticsManager.track(event: .textAnnotationAdded)
     }
     
-    static func convertPoint(_ point: CGPoint, viewSize: CGSize, toPage: PDFPage) -> CGPoint {
-        let pageRect = toPage.bounds(for: .mediaBox)
-        let viewRect = CGRect(origin: .zero, size: viewSize)
-        return convertPoint(point, fromRect: viewRect, toRect: pageRect).getYInverted(forParentSize: pageRect.size.height)
+    func convertPoint(_ point: CGPoint, viewSize: CGSize, toPage: PDFPage) -> CGPoint {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: toPage) else {
+            return .zero
+        }
+        return pdfView.convert(point, to: toPage)
     }
 
-    static func convertPoint(_ point: CGPoint, viewSize: CGSize, fromPage: PDFPage) -> CGPoint {
-        let pageRect = fromPage.bounds(for: .mediaBox)
-        let viewRect = CGRect(origin: .zero, size: viewSize)
-        return convertPoint(point.getYInverted(forParentSize: pageRect.size.height), fromRect: pageRect, toRect: viewRect)
+    func convertPoint(_ point: CGPoint, viewSize: CGSize, fromPage: PDFPage) -> CGPoint {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: fromPage) else {
+            return .zero
+        }
+        return pdfView.convert(point, from: fromPage)
     }
     
-    static func convertRect(_ rect: CGRect, viewSize: CGSize, toPage: PDFPage) -> CGRect {
-        let pageRect = toPage.bounds(for: .mediaBox)
-        let viewRect = CGRect(origin: .zero, size: viewSize)
-        return convertRect(rect, fromRect: viewRect, toRect: pageRect).getYInverted(forParentSize: pageRect.size.height)
+    func convertRect(_ rect: CGRect, viewSize: CGSize, toPage: PDFPage) -> CGRect {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: toPage) else {
+            return .zero
+        }
+        return pdfView.convert(rect, to: toPage)
     }
     
-    static func convertRect(_ rect: CGRect, viewSize: CGSize, fromPage: PDFPage) -> CGRect {
-        let pageRect = fromPage.bounds(for: .mediaBox)
-        let viewRect = CGRect(origin: .zero, size: viewSize)
-        return convertRect(rect.getYInverted(forParentSize: pageRect.size.height), fromRect: pageRect, toRect: viewRect)
+    func convertRect(_ rect: CGRect, viewSize: CGSize, fromPage: PDFPage) -> CGRect {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: fromPage) else {
+            return .zero
+        }
+        return pdfView.convert(rect, from: fromPage)
     }
     
-    private static func convertRect(_ rect: CGRect, fromRect: CGRect, toRect: CGRect) -> CGRect {
-        let topLeft = CGPoint(x: rect.minX, y: rect.minY)
-        let bottomRight = CGPoint(x: rect.maxX, y: rect.maxY)
-        let convertedTopLeft = convertPoint(topLeft, fromRect: fromRect, toRect: toRect)
-        let convertedBottomRight = convertPoint(bottomRight, fromRect: fromRect, toRect: toRect)
-        return CGRect(x: convertedTopLeft.x,
-                      y: convertedTopLeft.y,
-                      width: max(0 ,convertedBottomRight.x - convertedTopLeft.x),
-                      height: max(0 ,convertedBottomRight.y - convertedTopLeft.y))
-    }
-    
-    private static func convertPoint(_ point: CGPoint, fromRect: CGRect, toRect: CGRect) -> CGPoint {
-        let x = point.x * (toRect.size.width / fromRect.size.width)
-        let y = point.y * (toRect.size.height / fromRect.size.height)
-        return CGPoint(x: x, y: y)
+    private func getPdfView(viewSize: CGSize, page: PDFPage) -> PDFView? {
+        guard let pdfView = self.pdfViews.first(where: { $0.currentPage == page }) else {
+            assertionFailure("Missing PdfView with given page")
+            return nil
+        }
+        pdfView.frame = CGRect(origin: .zero, size: viewSize)
+        return pdfView
     }
 }
 
@@ -241,5 +255,11 @@ extension CGRect {
 extension CGPoint {
     func getYInverted(forParentSize parentHeight: CGFloat) -> CGPoint {
         return CGPoint(x: self.x, y: parentHeight-self.y)
+    }
+}
+
+extension CGSize {
+    var aspectRatio: CGFloat {
+        return self.width / self.height
     }
 }

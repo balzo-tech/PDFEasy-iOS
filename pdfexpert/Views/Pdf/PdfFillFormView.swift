@@ -38,7 +38,7 @@ struct PdfFillFormView: View {
                         }
                     }
                 }
-                .tabViewStyle(.page)
+                .tabViewStyle(.page(indexDisplayMode: .never))
                 .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
                 .frame(width: parentGeometryReader.size.width,
                        height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
@@ -99,7 +99,7 @@ struct PdfFillFormView: View {
     @ViewBuilder func getView(forAnnotation annotation: PDFAnnotation) -> some View {
         if let page = annotation.page {
             GeometryReader { geometryReader in
-                let annotationBounds = PdfFillFormViewModel.convertRect(annotation.verticalCenteredTextBounds,
+                let annotationBounds = self.viewModel.convertRect(annotation.verticalCenteredTextBounds,
                                                                         viewSize: geometryReader.size,
                                                                         fromPage: page)
                 let position = CGPoint(x: annotationBounds.origin.x + annotationBounds.size.width / 2,

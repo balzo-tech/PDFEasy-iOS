@@ -45,7 +45,7 @@ fileprivate extension CGRect {
     static var safetyMargin: CGFloat { 10.0 }
     
     func encode(forText text: String, withFont font: UIFont?) -> CGRect {
-        var size = text.boundingRect(font: font, with: [:], options: []).size
+        let size = text.boundingRect(font: font, with: [:], options: []).size
         let center = CGPoint(x: self.origin.x + self.size.width / 2, y: self.origin.y + self.size.height / 2)
         let origin = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
         return CGRect(origin: origin, size: size)
