@@ -23,6 +23,7 @@ enum MarginsOption: CaseIterable {
 }
 
 enum PdfEditStartAction {
+    case openFillWidget
     case openFillForm
     case openSignature
 }
@@ -51,11 +52,13 @@ class PdfEditViewModel: ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var signatureAddViewShow: Bool = false
-    @Published var fillFormAddViewShow: Bool = false
+    @Published var fillFormViewShow: Bool = false
+    @Published var fillWidgetViewShow: Bool = false
     @Published var editMode: EditMode = .add
     @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
     @Published var compression: CGFloat = K.Misc.PdfDefaultCompression
     @Published var pdfPasswordInputShow: Bool = false
+    @Published var missingWidgetWarningShow: Bool = false
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -94,6 +97,8 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
     
+    var showFillWidgetButton: Bool { PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) }
+    
     private var lockedPdfEditable: PdfEditable? = nil
     
     init(inputParameter: InputParameter) {
@@ -111,8 +116,14 @@ class PdfEditViewModel: ObservableObject {
             
             if let startAction = self.startAction {
                 switch startAction {
+                case .openFillWidget:
+                    if PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) {
+                        self.fillWidgetViewShow = true
+                    } else {
+                        self.missingWidgetWarningShow = true
+                    }
                 case .openFillForm:
-                    self.fillFormAddViewShow = true
+                    self.fillFormViewShow = true
                 case .openSignature:
                     self.signatureAddViewShow = true
                 }
@@ -200,8 +211,12 @@ class PdfEditViewModel: ObservableObject {
         self.signatureAddViewShow = true
     }
     
-    func showFillFormSignature() {
-        self.fillFormAddViewShow = true
+    func showFillForm() {
+        self.fillFormViewShow = true
+    }
+    
+    func showFillWidget() {
+        self.fillWidgetViewShow = true
     }
     
     func viewPdf() {

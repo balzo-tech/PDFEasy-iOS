@@ -71,6 +71,7 @@ extension AnalyticsScreen {
         case .importTutorial: return "ImportTutorial"
         case .signature: return "Signature"
         case .fillForm: return "FillForm"
+        case .fillWidget: return "FillWidget"
         }
     }
 }
@@ -102,6 +103,8 @@ extension AnalyticsEvent {
         case .textAnnotationAdded: return "text_annotation_added"
         case .textAnnotationRemoved: return "text_annotation_removed"
         case .annotationsConfirmed: return "annotations_confirmed"
+        case .fillWidgetCancelled: return "fill_widget_cancelled"
+        case .fillWidgetConfirmed: return "fill_widget_confirmed"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -158,6 +161,8 @@ extension AnalyticsEvent {
         case .annotationsConfirmed: return nil
         case .signatureCreated: return nil
         case .signatureAdded: return nil
+        case .fillWidgetCancelled: return nil
+        case .fillWidgetConfirmed: return nil
         case .pdfEditCompleted(let marginsOption, let compressionValue):
             return [
              FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
@@ -216,6 +221,7 @@ fileprivate extension AnalyticsPdfInputType {
         case .fileFillForm: return "file_fill_form"
         case .scanSign: return "scan_sign"
         case .fileSign: return "file_sign"
+        case .fileFillWidget: return "file_fill_widget"
         }
     }
 }
@@ -230,6 +236,7 @@ fileprivate extension AnalyticsHomeOption {
         case .pdf: return "pdf"
         case .fillForm: return "fill_form"
         case .signature: return "signature"
+        case .fillWidget: return "fill_widget"
         }
     }
 }

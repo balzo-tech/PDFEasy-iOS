@@ -35,6 +35,9 @@ struct PdfEditView: View {
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 if self.viewModel.pdfEditable.pdfDocument.pageCount > 0 {
+                    if self.viewModel.showFillWidgetButton {
+                        self.showFillWidgetButton
+                    }
                     self.showFillFormButton
                     self.showAddSignatureButton
                 }
@@ -93,12 +96,19 @@ struct PdfEditView: View {
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
         }
-        .fullScreenCover(isPresented: self.$viewModel.fillFormAddViewShow) {
+        .fullScreenCover(isPresented: self.$viewModel.fillFormViewShow) {
             let inputParameter = PdfFillFormViewModel
                 .InputParameter(pdfEditable: self.viewModel.pdfEditable,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex,
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
+        }
+        .fullScreenCover(isPresented: self.$viewModel.fillWidgetViewShow) {
+            let inputParameter = PdfFillWidgetViewModel
+                .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
+            PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
         }
         .alert("Your pdf is protected", isPresented: self.$viewModel.pdfPasswordInputShow, actions: {
             SecureField("Enter Password", text: self.$passwordText)
@@ -117,6 +127,11 @@ struct PdfEditView: View {
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
+        .alert("Info", isPresented: self.$viewModel.missingWidgetWarningShow, actions: {
+            Button("Ok", role: .cancel, action: {})
+        }, message: {
+            Text("Your pdf has no editable fields that you can fill in.")
+        })
     }
     
     @ViewBuilder var pdfView: some View {
@@ -297,8 +312,14 @@ struct PdfEditView: View {
         .padding([.leading, .trailing], 16)
     }
     
+    var showFillWidgetButton: some View {
+        Button(action: { self.viewModel.showFillWidget() }) {
+            Image("manage_widget")
+        }
+    }
+    
     var showFillFormButton: some View {
-        Button(action: { self.viewModel.showFillFormSignature() }) {
+        Button(action: { self.viewModel.showFillForm() }) {
             Image("manage_annotations")
         }
     }

@@ -26,6 +26,7 @@ enum SourceType: Hashable, Identifiable {
     case convertFile
     case formFill
     case sign
+    case formWidget
 }
 
 enum PickerType: Hashable, Identifiable {
@@ -146,6 +147,11 @@ public class HomeViewModel : ObservableObject {
         self.pickerType = .sign
     }
     
+    func openFillWidgetFlow() {
+        self.trackHomeOptionChosen(homeOption: .fillWidget)
+        self.selectedSourceType = .formWidget
+    }
+    
     @MainActor
     func openFilePicker(fileSource: FileSource, sourceType: SourceType) {
         self.trackPdfConversionChosenEvent(inputType: sourceType.analyticsPdfInputType, fileSource: fileSource)
@@ -162,6 +168,9 @@ public class HomeViewModel : ObservableObject {
             case .sign:
                 self.editStartAction = .openSignature
                 self.filePickerShow = true
+            case .formWidget:
+                self.editStartAction = .openFillWidget
+                self.pdfFilePickerShow = true
             }
         }
     }
@@ -207,6 +216,9 @@ public class HomeViewModel : ObservableObject {
             case .none: return directlyFromScan ? .scan : .scanPdf
             case .openFillForm: return .scanFillForm
             case .openSignature: return .scanSign
+            case .openFillWidget:
+                assertionFailure("Widgets cannot exist on scanned files (as long as OCR is not implemented)")
+                return .scan
             }
         }()
         self.trackPdfConversionChosenEvent(inputType: inputType, fileSource: nil)
@@ -437,6 +449,7 @@ extension SourceType {
         case .convertFile: return .file
         case .formFill: return .fileFillForm
         case .sign: return .fileSign
+        case .formWidget: return .fileFillWidget
         }
     }
     
@@ -447,6 +460,7 @@ extension SourceType {
         case .convertFile: return .convertFile
         case .formFill: return .fillForm
         case .sign: return .signature
+        case .formWidget: return .fillWidget
         }
     }
 }

@@ -214,6 +214,17 @@ class PDFUtility {
         
         return AsyncOperation(status: .data(pdfDecryptedEditable))
     }
+    
+    static func hasPdfWidget(pdfEditable: PdfEditable) -> Bool {
+        for pageIndex in 0..<pdfEditable.pdfDocument.pageCount {
+            if let page = pdfEditable.pdfDocument.page(at: pageIndex) {
+                if page.annotations.contains(where: { $0.isWidgetAnnotation }) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }
 
 extension UIImage {

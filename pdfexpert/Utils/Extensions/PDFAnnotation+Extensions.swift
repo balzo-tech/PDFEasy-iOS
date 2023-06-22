@@ -19,6 +19,13 @@ extension PDFAnnotation {
         return true
     }
     
+    var isWidgetAnnotation: Bool {
+        guard let subType = self.annotationKeyValues[PDFAnnotationKey.subtype] as? PDFAnnotationSubtype, subType == PDFAnnotationSubtype.widget else {
+            return false
+        }
+        return true
+    }
+    
     var verticalCenteredTextBounds: CGRect {
         self.bounds.decode(forText: self.contents ?? "", withFont: self.font)
     }

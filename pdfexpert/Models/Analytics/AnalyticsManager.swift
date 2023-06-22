@@ -19,15 +19,15 @@ enum AnalyticsError {
 }
 
 enum AnalyticsPdfInputType {
-    case camera, gallery, fileImage, file, scan, appExtension, scanPdf, filePdf, scanFillForm, fileFillForm, scanSign, fileSign
+    case camera, gallery, fileImage, file, scan, appExtension, scanPdf, filePdf, scanFillForm, fileFillForm, scanSign, fileSign, fileFillWidget
 }
 
 enum AnalyticsHomeOption {
-    case convertImage, convertFile, scan, pdf, fillForm, signature
+    case convertImage, convertFile, scan, pdf, fillForm, signature, fillWidget
 }
 
 enum AnalyticsScreen {
-    case onboarding, home, files, settings, subscription, importTutorial, signature, fillForm
+    case onboarding, home, files, settings, subscription, importTutorial, signature, fillForm, fillWidget
 }
 
 enum AnalyticsEvent {
@@ -53,6 +53,8 @@ enum AnalyticsEvent {
     case textAnnotationAdded
     case textAnnotationRemoved
     case annotationsConfirmed
+    case fillWidgetCancelled
+    case fillWidgetConfirmed
     case pdfEditCompleted(marginsOption: MarginsOption, compressionValue: CGFloat)
     case pdfShared(marginsOption: MarginsOption?, compressionValue: CGFloat?)
     case reportScreen(_ screen: AnalyticsScreen)

@@ -66,6 +66,8 @@
 		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
 		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
+		89504A462A448252000BCACD /* PdfFillWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89504A452A448252000BCACD /* PdfFillWidgetView.swift */; };
+		89504A482A44829C000BCACD /* PdfFillWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */; };
 		8955ED922A1F61A9009985EE /* OnboardingTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED912A1F61A9009985EE /* OnboardingTutorialView.swift */; };
 		8955ED942A1F61BD009985EE /* OnboardingTutorialPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED932A1F61BD009985EE /* OnboardingTutorialPageView.swift */; };
 		8955ED962A1F73DC009985EE /* OnboardingTutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED952A1F73DC009985EE /* OnboardingTutorialViewModel.swift */; };
@@ -234,6 +236,8 @@
 		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		89504A452A448252000BCACD /* PdfFillWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillWidgetView.swift; sourceTree = "<group>"; };
+		89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillWidgetViewModel.swift; sourceTree = "<group>"; };
 		8955ED912A1F61A9009985EE /* OnboardingTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTutorialView.swift; sourceTree = "<group>"; };
 		8955ED932A1F61BD009985EE /* OnboardingTutorialPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTutorialPageView.swift; sourceTree = "<group>"; };
 		8955ED952A1F73DC009985EE /* OnboardingTutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTutorialViewModel.swift; sourceTree = "<group>"; };
@@ -395,6 +399,7 @@
 				892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */,
 				89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */,
 				8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */,
+				89504A452A448252000BCACD /* PdfFillWidgetView.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -724,6 +729,7 @@
 				892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */,
 				8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */,
 				89127AA42A17A3600059005F /* PdfSignatureCanvasViewModel.swift */,
+				89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1000,6 +1006,7 @@
 				895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */,
 				89CD7B7329D329B1003F1C3A /* SubscribeViewModel.swift in Sources */,
 				893E849129D5874D00F6B99A /* CameraView.swift in Sources */,
+				89504A482A44829C000BCACD /* PdfFillWidgetViewModel.swift in Sources */,
 				894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */,
 				893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */,
 				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
@@ -1092,6 +1099,7 @@
 				89CD7B4F29D329B1003F1C3A /* ParentalCheck.swift in Sources */,
 				89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */,
 				89CD7B7129D329B1003F1C3A /* ColorPalette.swift in Sources */,
+				89504A462A448252000BCACD /* PdfFillWidgetView.swift in Sources */,
 				8955ED942A1F61BD009985EE /* OnboardingTutorialPageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

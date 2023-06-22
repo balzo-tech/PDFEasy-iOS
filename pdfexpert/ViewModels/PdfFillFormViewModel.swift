@@ -50,7 +50,7 @@ class PdfFillFormViewModel: ObservableObject {
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    private var onConfirm: PdfSignatureCallback
+    private var onConfirm: PdfFillFormViewCallback
     
     init(inputParameter: InputParameter) {
         var pdfDocumentCopy = PDFDocument()

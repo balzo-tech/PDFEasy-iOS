@@ -32,15 +32,18 @@ struct HomeView: View {
         HomeItem(title: "PDF\nScanner",
                  imageName: "home_scan",
                  buttonAction: { $0.scanPdf(startAction: nil, directlyFromScan: true) }),
-        HomeItem(title: "Fill in\na file",
-                 imageName: "home_fill_form",
-                 buttonAction: { $0.openFillFormFlow() }),
+        HomeItem(title: "Fill in\na PDF file",
+                 imageName: "home_fill_widget",
+                 buttonAction: { $0.openFillWidgetFlow() }),
         HomeItem(title: "Sign\na file",
                  imageName: "home_sign",
                  buttonAction: { $0.openSignFlow() }),
         HomeItem(title: "Import\nPDF",
                  imageName: "home_import_pdf",
-                 buttonAction: { $0.openPdfFileFlow() })
+                 buttonAction: { $0.openPdfFileFlow() }),
+        HomeItem(title: "Add text",
+                 imageName: "home_fill_form",
+                 buttonAction: { $0.openFillFormFlow() })
     ]
     
     private let gridItemLayout: [GridItem] = {
