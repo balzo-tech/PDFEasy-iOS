@@ -21,6 +21,7 @@ struct PdfEditView: View {
     @State private var showingSaveErrorAlert = false
     
     @State private var passwordText: String = ""
+    @State private var draggedImage: UIImage? = nil
     
     var body: some View {
         VStack(spacing: 30) {
@@ -120,25 +121,16 @@ struct PdfEditView: View {
     
     @ViewBuilder var pdfView: some View {
         if self.viewModel.pageImages.count > 0 {
-            GeometryReader { parentGeometryReader in
-                TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
-                    ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
-                            ZStack {
-                                if let page = page {
-                                    Image(uiImage: page)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                } else {
-                                    ColorPalette.fourthText
-                                }
-                            }
+            TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
+                ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, pageImage) in
+                    ZStack {
+                        Image(uiImage: pageImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                     }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
-                .frame(width: parentGeometryReader.size.width,
-                       height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
         } else {
             self.emptyView
         }
@@ -259,16 +251,20 @@ struct PdfEditView: View {
         .background(ColorPalette.primaryText)
     }
     
-    func getThumbnailCell(image: UIImage?) -> some View {
-        if let image = image {
-            return AnyView(
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            )
-        } else {
-            return AnyView(ColorPalette.primaryText)
-        }
+    func getThumbnailCell(image: UIImage) -> some View {
+        return AnyView(
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .onDrag {
+                    self.draggedImage = image
+                    return NSItemProvider()
+                }
+                .onDrop(of: [.image],
+                        delegate: PdfEditDropViewDelegate(destinationItem: image,
+                                                          draggedItem: self.$draggedImage,
+                                                          viewModel: self.viewModel))
+        )
     }
     
     var marginOptionsView: some View {
@@ -382,6 +378,35 @@ struct PdfEditView_Previews: PreviewProvider {
             AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter)))
         } else {
             AnyView(Spacer())
+        }
+    }
+}
+
+fileprivate struct PdfEditDropViewDelegate: DropDelegate {
+    
+    let destinationItem: UIImage
+    @Binding var draggedItem: UIImage?
+    var viewModel: PdfEditViewModel
+    
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        return DropProposal(operation: .move)
+    }
+    
+    func performDrop(info: DropInfo) -> Bool {
+        self.draggedItem = nil
+        return true
+    }
+    
+    func dropEntered(info: DropInfo) {
+        // Swap Items
+        if let draggedItem {
+            let fromIndex = self.viewModel.pdfThumbnails.firstIndex(of: draggedItem)
+            if let fromIndex {
+                let toIndex = self.viewModel.pdfThumbnails.firstIndex(of: self.destinationItem)
+                if let toIndex, fromIndex != toIndex {
+                    self.viewModel.handlePageReordering(fromIndex: fromIndex, toIndex: toIndex)
+                }
+            }
         }
     }
 }

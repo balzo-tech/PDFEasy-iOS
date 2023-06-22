@@ -41,8 +41,8 @@ class PdfEditViewModel: ObservableObject {
     
     @Published private(set)var pdfEditable: PdfEditable
     @Published var pdfCurrentPageIndex: Int = 0
-    @Published var pageImages: [UIImage?] = []
-    @Published var pdfThumbnails: [UIImage?] = []
+    @Published var pageImages: [UIImage] = []
+    @Published var pdfThumbnails: [UIImage] = []
     @Published var pdfSaveError: PdfEditSaveError? = nil
     
     @Published var filePickerShow: Bool = false
@@ -235,6 +235,28 @@ class PdfEditViewModel: ObservableObject {
         self.refreshImages()
     }
     
+    func handlePageReordering(fromIndex: Int, toIndex: Int) {
+        if fromIndex != toIndex {
+            // exchangePage throws an exception if used after pages are added. Apparently it doesn't update its internal indices when adding pages,
+            // which it relies upon to perform the swap. A manual workaround using removePage and insert methods seems to work fine, though.
+//            self.pdfEditable.pdfDocument.exchangePage(at: fromIndex, withPageAt: toIndex)
+            if let toPage = self.pdfEditable.pdfDocument.page(at: toIndex), let fromPage = self.pdfEditable.pdfDocument.page(at: fromIndex) {
+                self.pdfEditable.pdfDocument.removePage(at: fromIndex)
+                self.pdfEditable.pdfDocument.insert(toPage, at: fromIndex)
+                self.pdfEditable.pdfDocument.removePage(at: toIndex)
+                self.pdfEditable.pdfDocument.insert(fromPage, at: toIndex)
+                
+                self.pdfThumbnails.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
+                self.pageImages.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
+                if self.pdfCurrentPageIndex == fromIndex {
+                    self.pdfCurrentPageIndex = toIndex
+                } else if self.pdfCurrentPageIndex == toIndex {
+                    self.pdfCurrentPageIndex = fromIndex
+                }
+            }
+        }
+    }
+    
     @MainActor
     private func convertFileByUrl(fileUrl: URL) {
         let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)
@@ -326,19 +348,21 @@ class PdfEditViewModel: ObservableObject {
         let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
                                                         size: nil,
                                                         forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
-        self.pageImages.append(pageImage)
         let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
                                                     size: K.Misc.ThumbnailEditSize,
                                                     forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
-        self.pdfThumbnails.append(thumbnail)
+        if let pageImage = pageImage, let thumbnail = thumbnail {
+            self.pageImages.append(pageImage)
+            self.pdfThumbnails.append(thumbnail)
+        }
         self.trackPageAddedEvent()
     }
     
     private func appendPdfEditableToPdf(pdfEditable: PdfEditable) {
         PDFUtility.appendPdfDocument(pdfEditable.pdfDocument, toPdfDocument: self.pdfEditable.pdfDocument)
-        let pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: nil)
+        let pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: nil).compactMap { $0 }
         self.pageImages.append(contentsOf: pageImages)
-        let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
+        let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
         self.pdfThumbnails.append(contentsOf: thumbnails)
         self.trackPageAddedEvent()
     }
@@ -353,11 +377,11 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func refreshImages() {
-        self.pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: nil)
+        self.pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: nil).compactMap { $0 }
     }
     
     private func refreshThumbnails() {
-        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize)
+        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
     }
     
     private func trackPageAddedEvent() {
