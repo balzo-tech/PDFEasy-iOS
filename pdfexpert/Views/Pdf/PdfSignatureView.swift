@@ -17,16 +17,36 @@ struct PdfSignatureView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GeometryReader { geometryReader in
-                    PdfKitViewBinder(
-                        pdfView: self.$viewModel.pdfView,
-                        singlePage: false,
-                        pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
-                        backgroundColor: UIColor(ColorPalette.primaryBG),
-                        usePaginator: true
-                    )
-                    .onTapGesture { self.viewModel.tapOnPdfView() }
+                // This PDFView is behind everything so that it can be easily laid out
+                // and used for rect conversion.
+                // TODO: Improve this removing the need of a PDFView (especially in the view hierarchy)
+                PdfKitViewBinder(
+                    pdfView: self.$viewModel.pdfView,
+                    singlePage: false,
+                    pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
+                    backgroundColor: UIColor(ColorPalette.primaryBG),
+                    usePaginator: true
+                )
+                ColorPalette.primaryBG
+                TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
+                    ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
+                        GeometryReader { geometryReader in
+                            ZStack {
+                                Image(uiImage: page)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .ignoresSafeArea(.keyboard)
+                            }
+                            .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
+                        }
+                    }
                 }
+                .allowsHitTesting(self.viewModel.pageScrollingAllowed)
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .onTapGesture { self.viewModel.tapOnPdfView() }
+                .padding([.leading, .trailing], 16)
+                .padding([.top], 16)
+                .background(ColorPalette.primaryBG)
                 if let signatureImage = self.viewModel.signatureImage {
                     ImageResizableView(
                         uiImage: signatureImage,
@@ -39,9 +59,6 @@ struct PdfSignatureView: View {
                     )
                 }
             }
-            .padding([.leading, .trailing], 16)
-            .padding([.top], 16)
-            .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Tap where you wish to sign")
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
