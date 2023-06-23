@@ -24,9 +24,9 @@
 		</dict>
 	</array>
 	<key>FacebookAppID</key>
-	<string>735833828044207</string>
+	<string>myFacebookAppID</string>
 	<key>FacebookClientToken</key>
-	<string>a1b20422ee4de34070073299d35bdbcb</string>
+	<string>myFacebookClientToken</string>
 	<key>FacebookDisplayName</key>
 	<string>PDF Easy</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

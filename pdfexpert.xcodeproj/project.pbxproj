@@ -87,6 +87,7 @@
 		897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */; };
 		897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */; };
 		89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */; };
+		89883B022A45CB9800E684B6 /* InfoTemplate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89883B012A45CB9800E684B6 /* InfoTemplate.plist */; };
 		8991485129E851B500DD01F2 /* ConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8991485029E851B500DD01F2 /* ConfigService.swift */; };
 		8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */; };
 		8991485629E85DE500DD01F2 /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 8991485529E85DE500DD01F2 /* CombineExt */; };
@@ -258,6 +259,8 @@
 		897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalItemView.swift; sourceTree = "<group>"; };
 		89847AE02A1BA947000EC14B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResizableView.swift; sourceTree = "<group>"; };
+		89883B012A45CB9800E684B6 /* InfoTemplate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoTemplate.plist; sourceTree = "<group>"; };
+		89883B032A45CBDA00E684B6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8991485029E851B500DD01F2 /* ConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigService.swift; sourceTree = "<group>"; };
 		8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
 		89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparencyImpl.swift; sourceTree = "<group>"; };
@@ -447,6 +450,7 @@
 		89847ADE2A1BA8CC000EC14B /* Production */ = {
 			isa = PBXGroup;
 			children = (
+				89CD7AA729D32856003F1C3A /* Info.plist */,
 				89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */,
 			);
 			path = Production;
@@ -455,6 +459,7 @@
 		89847ADF2A1BA8CC000EC14B /* Staging */ = {
 			isa = PBXGroup;
 			children = (
+				89883B032A45CBDA00E684B6 /* Info.plist */,
 				89847AE02A1BA947000EC14B /* GoogleService-Info.plist */,
 			);
 			path = Staging;
@@ -559,7 +564,7 @@
 		89CD7AAD29D329B1003F1C3A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				89CD7AA729D32856003F1C3A /* Info.plist */,
+				89883B012A45CB9800E684B6 /* InfoTemplate.plist */,
 				89847ADE2A1BA8CC000EC14B /* Production */,
 				89847ADF2A1BA8CC000EC14B /* Staging */,
 				893C8FDF29DEDAE8000E35BD /* Test */,
@@ -822,6 +827,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 89CD7AAA29D32856003F1C3A /* Build configuration list for PBXNativeTarget "PdfExpert" */;
 			buildPhases = (
+				89883B052A45D07300E684B6 /* Setup Info.plist */,
 				89CD7A9229D32855003F1C3A /* Sources */,
 				89CD7A9329D32855003F1C3A /* Frameworks */,
 				89AA36072A1BB0280077A70A /* Setup Firebase Environment GoogleService-Info.plist */,
@@ -922,6 +928,7 @@
 				89CD7B9F29D32AB4003F1C3A /* Montserrat-ExtraBold.ttf in Resources */,
 				89CD7B4A29D329B1003F1C3A /* loading.json in Resources */,
 				893C8FE129DEDAF4000E35BD /* test.pdf in Resources */,
+				89883B022A45CB9800E684B6 /* InfoTemplate.plist in Resources */,
 				89CD7BA229D32AB4003F1C3A /* Montserrat-Medium.ttf in Resources */,
 				89CD7BA029D32AB4003F1C3A /* Montserrat-Bold.ttf in Resources */,
 				89CD7B3329D329B1003F1C3A /* Assets.xcassets in Resources */,
@@ -931,6 +938,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		89883B052A45D07300E684B6 /* Setup Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Name of the resource we're selectively copying\nINFO_PLIST=Info.plist\n\n# Get references to dev and prod versions of the Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nINFO_STAGING=${PROJECT_DIR}/${TARGET_NAME}/Resources/Staging/${INFO_PLIST}\nINFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Resources/Production/${INFO_PLIST}\n\n# Make sure the staging version of Info.plist exists\necho \"Looking for ${INFO_PLIST} in ${INFO_STAGING}\"\nif [ ! -f $INFO_STAGING ]\nthen\n    echo \"No Staging Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Make sure the prod version of Info.plist exists\necho \"Looking for ${INFO_PLIST} in ${INFO_PROD}\"\nif [ ! -f $INFO_PROD ]\nthen\n    echo \"No Production Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Get a reference to the destination location for the Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod Info.plist for Production builds\nif [ \"${CONFIGURATION}\" == \"Production Release\" ] || [ \"${CONFIGURATION}\" == \"Production Debug\" ]\nthen\n    echo \"Using ${INFO_PROD}\"\n    cp \"${INFO_PROD}\" \"${PLIST_DESTINATION}\"\nelse\n    echo \"Using ${INFO_STAGING}\"\n    cp \"${INFO_STAGING}\" \"${PLIST_DESTINATION}\"\nfi\n\n";
+		};
 		89923E6429D437B400E246FC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1254,7 +1279,7 @@
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
+				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy Staging";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
@@ -1377,7 +1402,7 @@
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
+				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy Staging";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
@@ -1561,7 +1586,7 @@
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
+				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
@@ -1601,7 +1626,7 @@
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PdfExpert/Resources/Info.plist;
+				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
