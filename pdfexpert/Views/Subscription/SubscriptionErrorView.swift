@@ -19,7 +19,7 @@ struct SubscriptionErrorView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 80)
             Text("Oh nou")
-                .font(FontPalette.fontBold(withSize: 32))
+                .font(FontPalette.fontMedium(withSize: 32))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .center)
             Text("Something went wrong,\nmind trying again?")

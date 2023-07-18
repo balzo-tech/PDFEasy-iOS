@@ -35,10 +35,7 @@ struct ContentView: View {
                         .navigationDestination(for: MainCoordinator.Route.self) { route in
                             switch route {
                             case .onboarding:
-                                switch K.Misc.OnboardingType {
-                                case .survey: OnboardingView()
-                                case .tutorial: OnboardingTutorialView()
-                                }
+                                OnboardingView()
                             }
                         }
                 }

@@ -7,41 +7,56 @@
 
 import SwiftUI
 
-enum TabItemIndex: Int {
+fileprivate enum MainTab: Int, CaseIterable {
     case archive
-    case convert
+    case home
     case settings
+    
+    var name: String {
+        switch self {
+        case .archive: return "File"
+        case .home: return "Explore"
+        case .settings: return "Settings"
+        }
+    }
+    
+    var imageName: String {
+        switch self {
+        case .archive: return "tab_archive"
+        case .home: return "tab_home"
+        case .settings: return "tab_settings"
+        }
+    }
 }
 
 struct MainTabView: View {
     
-    @State private var selection: Int = TabItemIndex.convert.rawValue
+    @State private var selection: Int = MainTab.home.rawValue
     
     var body: some View {
         TabView(selection: $selection) {
-            NavigationStack {
-                ArchiveView()
+            ForEach(MainTab.allCases, id:\.self) { tab in
+                NavigationStack {
+                    self.getRootView(forTab: tab)
+                        .navigationTitle(tab.name)
+                        .toolbarBackground(ColorPalette.secondaryBG, for: .navigationBar)
+                        .toolbarBackground(.visible, for: .navigationBar)
+                }
+                .tabItem {
+                    Label(tab.name, image: tab.imageName)
+                }
+                .tag(tab.rawValue)
             }
-            .tabItem {
-                Label("File", image: "tab_archive")
-            }
-            .tag(TabItemIndex.archive.rawValue)
-            NavigationStack {
-                HomeView()
-            }
-            .tabItem {
-                Label("Explore", image: "tab_home")
-            }
-            .tag(TabItemIndex.convert.rawValue)
-            NavigationStack {
-                SettingsView()
-            }
-            .tabItem {
-                Label("Settings", image: "tab_settings")
-            }
-            .tag(TabItemIndex.settings.rawValue)
         }
         .background(ColorPalette.primaryBG)
+    }
+    
+    @MainActor @ViewBuilder private func getRootView(forTab tab: MainTab) -> some View {
+        switch tab {
+        case .archive: ArchiveView()
+        case .home: HomeView()
+        case .settings: SettingsView()
+        }
     }
 }
 

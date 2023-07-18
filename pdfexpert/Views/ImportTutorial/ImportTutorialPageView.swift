@@ -17,7 +17,7 @@ struct ImportTutorialPageView: View {
         VStack(spacing: 0) {
             Spacer()
             Text(self.title)
-                .font(FontPalette.fontBold(withSize: 22))
+                .font(FontPalette.fontMedium(withSize: 22))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity)
                 .frame(height: 80, alignment: .top)
@@ -30,7 +30,7 @@ struct ImportTutorialPageView: View {
                 .frame(maxHeight: 600)
             Spacer().frame(height: 40)
             Text(self.description)
-                .font(FontPalette.fontRegular(withSize: 16))
+                .font(FontPalette.fontMedium(withSize: 16))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity)
                 .frame(height: 80, alignment: .top)

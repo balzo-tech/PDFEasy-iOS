@@ -40,7 +40,6 @@ struct SettingsView: View {
         .padding(.top, 16)
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
-        .navigationTitle("Settings")
         .onAppear() {
             Container.shared.analyticsManager().track(event: .reportScreen(.settings))
         }

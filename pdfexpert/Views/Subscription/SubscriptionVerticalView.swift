@@ -59,12 +59,12 @@ struct SubscriptionVerticalView: View {
             }
             VStack(spacing: 0) {
                 Text("PDF Easy")
-                    .font(FontPalette.fontBold(withSize: 32))
+                    .font(FontPalette.fontMedium(withSize: 32))
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer().frame(height: 16)
                 Text("No obligation, you can cancel whenever you want.")
-                    .font(FontPalette.fontRegular(withSize: 16))
+                    .font(FontPalette.fontRegular(withSize: 14))
                     .foregroundColor(ColorPalette.primaryText)
                     .lineLimit(2)
                     .minimumScaleFactor(0.5)
@@ -97,7 +97,7 @@ struct SubscriptionVerticalView: View {
     
     var currentSubscriptionPlanView: some View {
         Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-            .font(FontPalette.fontBold(withSize: 20))
+            .font(FontPalette.fontMedium(withSize: 20))
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 40)

@@ -82,8 +82,7 @@ extension AnalyticsEvent {
         case .appTrackingTransparancyAuthorized: return "tracking_authorized"
         case .checkoutCompleted: return "checkout_completed"
         case .onboardingCompleted: return "onboarding_completed"
-        case .onboardingTutorialCompleted: return "onboarding_tutorial_completed"
-        case .onboardingTutorialSkipped: return "onboarding_tutorial_skipped"
+        case .onboardingSkipped: return "onboarding_skipped"
         case .homeActionChosen: return "home_action_chosen"
         case .homeFullActionChosen: return "home_full_action_chosen"
         case .homeFullActionCompleted: return "home_full_action_completed"
@@ -118,9 +117,6 @@ extension AnalyticsEvent {
                 FirebaseEventCustomParameters.productPrice.rawValue: subscriptionPlanProduct.displayPrice,
                 FirebaseEventCustomParameters.subscriptionPlanIsFreeTrial.rawValue: subscriptionPlanProduct.subscription?.introductoryOffer?.paymentMode == .freeTrial
             ]
-        case .onboardingCompleted(let results):
-            return Dictionary(uniqueKeysWithValues: results
-                .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
         case .homeActionChosen(let homeAction):
             return [FirebaseEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
         case .homeFullActionChosen(let homeAction, let importOption):
@@ -144,8 +140,8 @@ extension AnalyticsEvent {
                 parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
             }
             return parameters
-        case .onboardingTutorialCompleted: return nil
-        case .onboardingTutorialSkipped: return nil
+        case .onboardingCompleted: return nil
+        case .onboardingSkipped: return nil
         case .pageRemoved: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil

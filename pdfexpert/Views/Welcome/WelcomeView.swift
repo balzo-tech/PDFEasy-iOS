@@ -22,7 +22,7 @@ struct WelcomeView: View {
                         .frame(maxHeight: 600)
                         .padding(60)
                     Text("Welcome in PDF Easy:\nConvert & Edit")
-                        .font(FontPalette.fontBold(withSize: 24))
+                        .font(FontPalette.fontMedium(withSize: 24))
                         .foregroundColor(ColorPalette.primaryText)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -43,7 +43,6 @@ struct WelcomeView: View {
         .padding([.leading, .trailing], 16)
         .padding([.top, .bottom], 64)
         .background(ColorPalette.primaryBG)
-        .navigationBarHidden(true)
     }
 }
 

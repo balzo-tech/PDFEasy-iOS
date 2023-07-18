@@ -16,11 +16,6 @@ enum SubscriptionViewType: CaseIterable {
     case vertical
 }
 
-enum OnboardingType: CaseIterable {
-    case survey
-    case tutorial
-}
-
 struct K {
     struct Test {
         static let UseMockDB = false
@@ -85,7 +80,6 @@ struct K {
         static let PdfMarginsColor: UIColor = .white
         static let PdfDefaultMarginOption: MarginsOption = .noMargins
         static let PdfDefaultCompression: CGFloat = 0.0
-        static let OnboardingType: OnboardingType = .tutorial
     }
 }
 

@@ -2,118 +2,66 @@
 //  OnboardingPageView.swift
 //  PdfExpert
 //
-//  Created by Leonardo Passeri on 04/04/23.
+//  Created by Leonardo Passeri on 25/05/23.
 //
 
 import SwiftUI
 
-protocol OnboardingOptionView: OnboardingOption {
-    var id: String { get }
-    var displayText: String { get }
-    var displayImageName: String { get }
-}
-
-protocol OnboardingQuestionView {
-    var title: String { get }
-    var subtitle: String { get }
-    var options: [any OnboardingOptionView] { get }
-}
-
 struct OnboardingPageView: View {
     
-    let question: OnboardingQuestionView
-    let onButtonPressed: (OnboardingOption) -> ()
-    
-    @State var selectedOption: OnboardingOptionView? = nil
-    
-    var buttonEnabled: Bool { self.selectedOption != nil }
+    let imageName: String
+    let title: String
+    let description: String
     
     var body: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 0) {
-                Spacer().frame(height: 16)
-                Text(self.question.title)
-                    .font(FontPalette.fontBold(withSize: 22))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                Spacer().frame(height: 16)
-                VStack(spacing: 0) {
-                    Text(self.question.subtitle)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.7)
-                        .font(FontPalette.fontRegular(withSize: 15))
-                        .foregroundColor(ColorPalette.primaryText)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    Spacer()
-                }.frame(height: 64)
-            }
-            List() {
-                ForEach(self.question.options, id: \.displayText) { option in
-                    Button(action: { self.selectedOption = option }) {
-                        HStack(spacing: 20) {
-                            Image(option.displayImageName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 20, height: 20)
-                            Text(option.displayText)
-                                .font(FontPalette.fontRegular(withSize: 15))
-                                .foregroundColor(ColorPalette.primaryText)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .padding([.leading, .trailing], 20)
-                    }
-                    .frame(height: 48)
-                    .background(self.getItemBackground(forOption: option))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                    .cornerRadius(10)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                }
+            Spacer()
+            Image(self.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxHeight: 600)
+            Spacer().frame(height: 40)
+            Text(self.title)
+                .font(FontPalette.fontMedium(withSize: 22))
+                .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity)
-            }
-            .background(ColorPalette.primaryBG)
-            .scrollIndicators(.never)
-            .listStyle(.plain)
-            Spacer(minLength: 30)
-            Button(action: {
-                if let selectedOption = self.selectedOption {
-                    self.onButtonPressed(selectedOption)
-                }
-            }) {
-                Text("Next")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .font(FontPalette.fontBold(withSize: 16))
-                    .foregroundColor(ColorPalette.primaryText)
-                    .contentShape(Capsule())
-            }
-            .disabled(!self.buttonEnabled)
-            .frame(maxWidth: .infinity)
-            .frame(height: 48)
-            .background(self.buttonBackground)
-            .cornerRadius(10)
+                .frame(height: 70, alignment: .top)
+                .padding([.leading, .trailing], 32)
+                .multilineTextAlignment(.center)
+            Spacer().frame(height: 16)
+            Text(self.description)
+                .font(FontPalette.fontRegular(withSize: 16))
+                .foregroundColor(ColorPalette.primaryText)
+                .frame(maxWidth: .infinity)
+                .frame(height: 80, alignment: .top)
+                .padding([.leading, .trailing], 32)
+                .multilineTextAlignment(.center)
+            Spacer()
         }
-        .padding([.leading, .trailing], 16)
-    }
-    
-    var buttonBackground: some View {
-        self.buttonEnabled
-        ? AnyView(self.defaultGradientBackground)
-        : AnyView(ColorPalette.thirdText)
-    }
-    
-    func getItemBackground(forOption option: any OnboardingOptionView) -> some View {
-        self.selectedOption?.id == option.id
-        ? AnyView(self.defaultGradientBackground)
-        : AnyView(ColorPalette.secondaryBG)
     }
 }
 
 struct OnboardingPageView_Previews: PreviewProvider {
-    
     static var previews: some View {
-        OnboardingPageView(question: OnboardingQuestion.role, onButtonPressed: { _ in })
-            .background(ColorPalette.primaryBG)
+        OnboardingPageView(
+            imageName: "onboarding_tutorial_1",
+            title: "Convert files\nto PDF",
+            description: "You can convert to pdf a lot of file types from the programs you prefer."
+        )
+        OnboardingPageView(
+            imageName: "onboarding_tutorial_2",
+            title: "Enter and edit your\nsignature",
+            description: "Insert your signature in the pdf you created with a single tap."
+        )
+        OnboardingPageView(
+            imageName: "onboarding_tutorial_3",
+            title: "Edit, share and save your\nPDF",
+            description: "You can add new pages, edit your pdf, save it and share it with anyone."
+        )
+        OnboardingPageView(
+            imageName: "onboarding_tutorial_4",
+            title: "Protect your files with\npassword",
+            description: "Enter a password to protect your pdf, you can delete it and change it whenever you want."
+        )
     }
 }

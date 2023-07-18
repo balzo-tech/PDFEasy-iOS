@@ -95,7 +95,6 @@ struct HomeView: View {
         }
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
-        .navigationTitle("Explore")
         .onAppear() {
             self.viewModel.onAppear()
         }

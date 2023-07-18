@@ -59,7 +59,7 @@ struct SubscriptionPairsView: View {
             }
             VStack(spacing: 0) {
                 Text("PDF Easy")
-                    .font(FontPalette.fontBold(withSize: 32))
+                    .font(FontPalette.fontMedium(withSize: 30))
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer().frame(height: 16)
@@ -90,7 +90,7 @@ struct SubscriptionPairsView: View {
             Text("Restore purchase")
                 .frame(maxHeight: .infinity)
                 .underline()
-                .font(FontPalette.fontRegular(withSize: 15))
+                .font(FontPalette.fontLight(withSize: 15))
                 .foregroundColor(ColorPalette.primaryText)
         }
         .frame(maxWidth: .infinity)
@@ -130,7 +130,7 @@ struct SubscriptionPairsView: View {
     var freeTrialDescriptionView: some View {
         return AnyView(VStack(spacing: 0) {
             Text("Not sure yet?")
-                .font(FontPalette.fontBold(withSize: 16))
+                .font(FontPalette.fontMedium(withSize: 16))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Spacer().frame(height: 4)
@@ -159,7 +159,7 @@ struct SubscriptionPairsView: View {
     
     var currentSubscriptionPlanView: some View {
         Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-            .font(FontPalette.fontBold(withSize: 18))
+            .font(FontPalette.fontMedium(withSize: 18))
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 40)

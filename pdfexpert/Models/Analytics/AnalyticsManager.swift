@@ -29,9 +29,8 @@ enum AnalyticsScreen {
 enum AnalyticsEvent {
     case appTrackingTransparancyAuthorized
     case checkoutCompleted(subscriptionPlanProduct: Product)
-    case onboardingCompleted(results: [OnboardingQuestion: OnboardingOption])
-    case onboardingTutorialCompleted
-    case onboardingTutorialSkipped
+    case onboardingCompleted
+    case onboardingSkipped
     case homeActionChosen(homeAction: HomeAction)
     case homeFullActionChosen(homeAction: HomeAction, importOption: ImportOption?)
     case homeFullActionCompleted(homeAction: HomeAction, importOption: ImportOption?, fileExtension: String?)

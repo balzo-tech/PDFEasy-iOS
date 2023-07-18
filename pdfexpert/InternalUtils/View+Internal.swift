@@ -26,7 +26,7 @@ extension View {
         Button(action: onButtonPressed) {
             Text(text)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .font(FontPalette.fontBold(withSize: 16))
+                .font(FontPalette.fontMedium(withSize: 18))
                 .foregroundColor(ColorPalette.primaryText)
                 .contentShape(Capsule())
         }

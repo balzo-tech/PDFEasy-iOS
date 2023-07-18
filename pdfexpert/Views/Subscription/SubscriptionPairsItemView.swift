@@ -20,7 +20,7 @@ struct SubscriptionPairsItemView: View {
             VStack(spacing: 0) {
                 HStack(alignment: .top, spacing: 12) {
                     Text(self.subscriptionPlan.title)
-                        .font(FontPalette.fontBold(withSize: 16))
+                        .font(FontPalette.fontMedium(withSize: 16))
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: 110, alignment: .leading)
                         .multilineTextAlignment(.leading)
@@ -35,7 +35,7 @@ struct SubscriptionPairsItemView: View {
                     .multilineTextAlignment(.leading)
                 Spacer().frame(minHeight: 12)
                 Text(self.subscriptionPlan.descriptionText)
-                    .font(FontPalette.fontMedium(withSize: 10))
+                    .font(FontPalette.fontLight(withSize: 10))
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }

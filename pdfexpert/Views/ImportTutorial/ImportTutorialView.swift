@@ -68,6 +68,7 @@ struct ImportTutorialView: View {
                 Container.shared.analyticsManager().track(event: .reportScreen(.importTutorial))
             }
         }
+        .background(ColorPalette.primaryBG)
     }
     
     private var buttonText: String {

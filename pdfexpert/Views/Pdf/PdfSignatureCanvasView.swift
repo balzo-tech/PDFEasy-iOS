@@ -33,7 +33,7 @@ struct PdfSignatureCanvasView: View {
             ColorPalette.primaryBG.frame(height: 1)
             Spacer().frame(height: 6)
             Text("Sign in here")
-                .font(FontPalette.fontMedium(withSize: 12))
+                .font(FontPalette.fontRegular(withSize: 12))
                 .foregroundColor(ColorPalette.thirdText)
                 .frame(maxWidth: .infinity)
             Spacer().frame(height: 37)

@@ -38,10 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func setupAppearance() {
         UINavigationBar.appearance().isTranslucent = false
-        UINavigationBar.appearance().backgroundColor = UIColor(ColorPalette.primaryBG)
-        UINavigationBar.appearance().barTintColor = UIColor(ColorPalette.primaryBG)
         UINavigationBar.appearance().tintColor = UIColor(ColorPalette.primaryText)
-        UINavigationBar.appearance().largeTitleTextAttributes = [.font : FontPalette.uiFontBold(withSize: 30)]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.font : FontPalette.uiFontMedium(withSize: 24)]
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
         tabBarAppearance.backgroundColor = UIColor(ColorPalette.secondaryBG)

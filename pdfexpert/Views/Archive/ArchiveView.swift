@@ -24,7 +24,6 @@ struct ArchiveView: View {
             }
         }
         .background(ColorPalette.primaryBG)
-        .navigationTitle("File")
         .onAppear() {
             self.archiveViewModel.onAppear()
         }
@@ -66,7 +65,7 @@ struct ArchiveView: View {
                             VStack(spacing: 0) {
                                 Spacer()
                                 Text(item.creationDateText)
-                                    .font(FontPalette.fontRegular(withSize: 15))
+                                    .font(FontPalette.fontMedium(withSize: 16))
                                     .foregroundColor(ColorPalette.primaryText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .minimumScaleFactor(0.5)
@@ -74,7 +73,7 @@ struct ArchiveView: View {
                                 Spacer().frame(height: 16)
                                 HStack(spacing: 16) {
                                     Text(item.pageCountText)
-                                        .font(FontPalette.fontRegular(withSize: 15))
+                                        .font(FontPalette.fontMedium(withSize: 15))
                                         .foregroundColor(ColorPalette.fourthText)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                     if item.password != nil {
@@ -120,6 +119,8 @@ struct ArchiveView: View {
                         }
                     }
                 }
+                    // Needed to use a custom background color in case of List with inset list style
+                    .scrollContentBackground(.hidden)
                     .listStyle(.inset)
                     .safeAreaInset(edge: .bottom) {
                         Button(action: { self.importTutorialShow = true }) {
@@ -129,7 +130,7 @@ struct ArchiveView: View {
                                     .frame(width: 18, height: 18)
                                 Text("Convert from any file")
                                     .frame(maxHeight: .infinity)
-                                    .font(FontPalette.fontBold(withSize: 16))
+                                    .font(FontPalette.fontMedium(withSize: 18))
                                     .foregroundColor(ColorPalette.primaryText)
                             }
                             .contentShape(Capsule())
@@ -175,7 +176,7 @@ struct ArchiveView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 80)
             Text("Oh nou")
-                .font(FontPalette.fontBold(withSize: 32))
+                .font(FontPalette.fontMedium(withSize: 32))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .center)
             Text("Something went wrong,\nmind trying again?")
@@ -206,7 +207,7 @@ struct ArchiveView: View {
 extension Pdf {
     
     var creationDateText: String {
-        var text = "Converted on "
+        var text = "Created at "
         if let creationDate = self.creationDate {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM-dd-YYYY"
