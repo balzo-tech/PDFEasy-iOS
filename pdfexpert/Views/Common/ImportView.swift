@@ -21,15 +21,15 @@ struct ImportView: View {
         VStack {
             Text("Import from")
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .font(FontPalette.fontBold(withSize: 28))
-                .foregroundColor(ColorPalette.thirdText)
-            Spacer()
+                .font(FontPalette.fontMedium(withSize: 20))
+                .foregroundColor(ColorPalette.primaryText)
+            Spacer(minLength: 20)
             ForEach(self.items, id: \.title) { item in
                 ImportItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
-                Spacer().frame(height: 20)
+                Spacer().frame(height: 10)
             }
         }
-        .padding(EdgeInsets(top: 44, leading: 32, bottom: 45, trailing: 32))
+        .padding(EdgeInsets(top: 44, leading: 16, bottom: 32, trailing: 16))
         .background(ColorPalette.secondaryBG)
         .cornerRadius(20, corners: [.topLeft, .topRight])
     }
@@ -39,8 +39,8 @@ struct ImportView_Previews: PreviewProvider {
     
     static let items = [
         ImportItem(title: "File", imageName: "file", callBack: {}),
+        ImportItem(title: "Gallery", imageName: "gallery", callBack: {}),
         ImportItem(title: "Camera", imageName: "camera", callBack: {}),
-        ImportItem(title: "Gallery", imageName: "gallery", callBack: {})
     ]
     
     static var previews: some View {

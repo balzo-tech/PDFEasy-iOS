@@ -66,3 +66,22 @@ extension View {
         }
     }
 }
+
+protocol FilePickerTypeProvider: Identifiable {
+    var fileTypes: [UTType] { get }
+}
+
+extension View {
+    @ViewBuilder func filePicker<Item: FilePickerTypeProvider>(item: Binding<Item?>,
+                                 onPickedFile: @escaping FilePickerCallback) -> some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.sheet(item: item) {
+                FilePicker(fileTypes: $0.fileTypes, onPickedFile: onPickedFile)
+            }
+        } else {
+            self.fullScreenCover(item: item) {
+                FilePicker(fileTypes: $0.fileTypes, onPickedFile: onPickedFile)
+            }
+        }
+    }
+}

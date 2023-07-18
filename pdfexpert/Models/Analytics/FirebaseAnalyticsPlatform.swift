@@ -12,9 +12,9 @@ import FirebaseCrashlytics
 private enum FirebaseEventCustomParameters: String {
     case compression = "compression"
     case marginOption = "margin_option"
+    case homeActionType = "home_action_type"
+    case importOption = "import_option"
     case pdfInputType = "pdf_input_type"
-    case homeOptionType = "home_option_type"
-    case fileSourceType = "file_source_type"
     case pdfInputTypeExtension = "pdf_input_type_extension"
     case productId = "product_identifier"
     case productPrice = "product_price"
@@ -84,10 +84,9 @@ extension AnalyticsEvent {
         case .onboardingCompleted: return "onboarding_completed"
         case .onboardingTutorialCompleted: return "onboarding_tutorial_completed"
         case .onboardingTutorialSkipped: return "onboarding_tutorial_skipped"
-        case .homeOptionChosen: return "home_option_chosen"
-        case .fileSourceViewed: return "file_source_viewed"
-        case .conversionToPdfChosen: return "conversion_to_pdf_chosen"
-        case .conversionToPdfCompleted: return "conversion_to_pdf_completed"
+        case .homeActionChosen: return "home_action_chosen"
+        case .homeFullActionChosen: return "home_full_action_chosen"
+        case .homeFullActionCompleted: return "home_full_action_completed"
         case .pageAdded: return "page_added"
         case .pageRemoved: return "page_remove"
         case .passwordAdded: return "password_added"
@@ -122,23 +121,21 @@ extension AnalyticsEvent {
         case .onboardingCompleted(let results):
             return Dictionary(uniqueKeysWithValues: results
                 .map { key, value in (key.trackingParameterKey, value.trackingParameterValue) })
-        case .homeOptionChosen(let homeOption):
-            return [FirebaseEventCustomParameters.homeOptionType.rawValue: homeOption.trackingParameterValue]
-        case .fileSourceViewed(let homeOption):
-            return [FirebaseEventCustomParameters.homeOptionType.rawValue: homeOption.trackingParameterValue]
-        case .conversionToPdfChosen(let pdfInputType, let fileSource):
-            var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
-            if let fileSource = fileSource {
-                parameters[FirebaseEventCustomParameters.fileSourceType.rawValue] = fileSource.trackingParameterValue
+        case .homeActionChosen(let homeAction):
+            return [FirebaseEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
+        case .homeFullActionChosen(let homeAction, let importOption):
+            var parameters = [FirebaseEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
+            if let importOption = importOption {
+                parameters[FirebaseEventCustomParameters.importOption.rawValue] = importOption.trackingParameterValue
             }
             return parameters
-        case .conversionToPdfCompleted(let pdfInputType, let fileSource, let fileExtension):
-            var parameters = [FirebaseEventCustomParameters.pdfInputType.rawValue: pdfInputType.trackingParameterValue]
+        case .homeFullActionCompleted(let homeAction, let importOption, let fileExtension):
+            var parameters = [FirebaseEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
             if let fileExtension = fileExtension {
                 parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
             }
-            if let fileSource = fileSource {
-                parameters[FirebaseEventCustomParameters.fileSourceType.rawValue] = fileSource.trackingParameterValue
+            if let importOption = importOption {
+                parameters[FirebaseEventCustomParameters.importOption.rawValue] = importOption.trackingParameterValue
             }
             return parameters
         case .pageAdded(let pdfInputType, let fileExtension):
@@ -226,17 +223,39 @@ fileprivate extension AnalyticsPdfInputType {
     }
 }
 
-fileprivate extension AnalyticsHomeOption {
+fileprivate extension HomeAction {
     
     var trackingParameterValue: String {
         switch self {
-        case .convertImage: return "convert_image"
-        case .convertFile: return "convert_file"
+        case .appExtension: return "app_extension"
+        case .imageToPdf: return "image_to_pdf"
+        case .wordToPdf: return "word_to_pdf"
+        case .excelToPdf: return "excel_to_pdf"
+        case .powerpointToPdf: return "powerpoint_to_pdf"
         case .scan: return "scan"
-        case .pdf: return "pdf"
-        case .fillForm: return "fill_form"
-        case .signature: return "signature"
-        case .fillWidget: return "fill_widget"
+        case .sign: return "sign"
+        case .formFill: return "form_fill"
+        case .addText: return "add_text"
+        case .createPdf: return "create_pdf"
+        case .importPdf: return "import_pdf"
+        }
+    }
+}
+
+fileprivate extension ImportOption {
+    
+    var trackingParameterValue: String {
+        switch self {
+        case .camera: return "camera"
+        case .gallery: return "gallery"
+        case .scan: return "scan"
+        case .file(let fileSource):
+            switch fileSource {
+            case .google: return "google_drive"
+            case .dropbox: return "dropbox"
+            case .icloud: return "icloud"
+            case .files: return "files"
+            }
         }
     }
 }

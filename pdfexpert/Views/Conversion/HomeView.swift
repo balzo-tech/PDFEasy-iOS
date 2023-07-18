@@ -12,43 +12,70 @@ import PhotosUI
 struct HomeItem: Identifiable {
     let id = UUID()
     let title: String
+    let description: String
     let imageName: String
-    let buttonAction: (HomeViewModel) -> ()
+    let homeAction: HomeAction
 }
 
 struct HomeView: View {
     
-    @InjectedObject(\.homeViewModel) var homeViewModel
+    @InjectedObject(\.homeViewModel) var viewModel
     
     @State private var passwordText: String = ""
     
-    let items: [HomeItem] = [
-        HomeItem(title: "Convert\nimages to PDF",
-                 imageName: "home_convert_image",
-                 buttonAction: { $0.openImagePickerFlow() }),
-        HomeItem(title: "Convert\nfiles to PDF",
-                 imageName: "home_convert_files",
-                 buttonAction: { $0.openConvertFileFlow() }),
-        HomeItem(title: "PDF\nScanner",
+    let convertItems: [HomeItem] = [
+        HomeItem(title: "Image to PDF",
+                 description: "Convert image to PDF in seconds",
+                 imageName: "home_image_to_pdf",
+                 homeAction: .imageToPdf),
+        HomeItem(title: "Word to PDF",
+                 description: "Make DOC file easy to read by converting them to PDF.",
+                 imageName: "home_word_to_pdf",
+                 homeAction: .wordToPdf),
+        HomeItem(title: "Excel to PDF",
+                 description: "Make EXCEL file easy to read by converting them to PDF.",
+                 imageName: "home_excel_to_pdf",
+                 homeAction: .excelToPdf),
+        HomeItem(title: "Powerpoint to PDF",
+                 description: "Make PPT file easy to view by converting them to PDF.",
+                 imageName: "home_power_to_pdf",
+                 homeAction: .powerpointToPdf),
+        HomeItem(title: "Scan",
+                 description: "Scan file from your smartphone or your camera",
                  imageName: "home_scan",
-                 buttonAction: { $0.scanPdf(startAction: nil, directlyFromScan: true) }),
-        HomeItem(title: "Fill in\na PDF file",
-                 imageName: "home_fill_widget",
-                 buttonAction: { $0.openFillWidgetFlow() }),
-        HomeItem(title: "Sign\na file",
+                 homeAction: .scan)
+    ]
+    
+    let editItems: [HomeItem] = [
+        HomeItem(title: "Sign PDF",
+                 description: "Sign a document or send a signature request to others",
                  imageName: "home_sign",
-                 buttonAction: { $0.openSignFlow() }),
-        HomeItem(title: "Import\nPDF",
-                 imageName: "home_import_pdf",
-                 buttonAction: { $0.openPdfFileFlow() }),
-        HomeItem(title: "Add text",
+                 homeAction: .sign),
+        HomeItem(title: "Fill in a form",
+                 description: "Fill in a form or file",
                  imageName: "home_fill_form",
-                 buttonAction: { $0.openFillFormFlow() })
+                 homeAction: .formFill),
+        HomeItem(title: "Add text",
+                 description: "Add text on your files",
+                 imageName: "home_add_text",
+                 homeAction: .addText),
+        HomeItem(title: "Create PDF",
+                 description: "Create a pdf from scratch and edit it",
+                 imageName: "home_create_pdf",
+                 homeAction: .createPdf)
+    ]
+    
+    let importItems: [HomeItem] = [
+        HomeItem(title: "Import PDF",
+                 description: "Import pdf from your files",
+                 imageName: "home_import_pdf",
+                 homeAction: .importPdf)
     ]
     
     private let gridItemLayout: [GridItem] = {
         if UIDevice.current.userInterfaceIdiom == .pad {
             return [GridItem(.flexible(), spacing: 14),
+                    GridItem(.flexible(), spacing: 14),
                     GridItem(.flexible(), spacing: 14),
                     GridItem(.flexible(), spacing: 14)]
         } else {
@@ -60,51 +87,28 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: gridItemLayout, spacing: 14) {
-                ForEach(self.items, id: \.id) { item in
-                    HomeItemView(title: item.title,
-                                 imageName: item.imageName,
-                                 onButtonPressed: { item.buttonAction(self.homeViewModel) })
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color(.clear))
-                    .listRowInsets(EdgeInsets())
-                }
+                self.section(forItems: self.convertItems, sectionTitle: "Convert to PDF")
+                self.section(forItems: self.editItems, sectionTitle: "Edit PDF")
+                self.section(forItems: self.importItems, sectionTitle: "Convert from PDF")
             }
             .padding(14)
         }
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
-        .navigationTitle("Home")
+        .navigationTitle("Explore")
         .onAppear() {
-            self.homeViewModel.onAppear()
+            self.viewModel.onAppear()
         }
-        .formSheet(item: self.$homeViewModel.pickerType) {
-            self.getView(forPickerType: $0)
+        .formSheet(item: self.$viewModel.importOptionGroup) {
+            self.getImportView(forImportOptionGroup: $0)
         }
-        .formSheet(item: self.$homeViewModel.selectedSourceType) {
-            self.getFileSourceImportView(forSourceType: $0)
-        }
-        .filePicker(isPresented: self.$homeViewModel.fileImagePickerShow,
-                    fileTypes: [.image],
-                    onPickedFile: {
-            self.homeViewModel.urlToImageToConvert = $0
-            self.homeViewModel.convert()
+        .filePicker(item: self.$viewModel.importFileOption, onPickedFile: {
+            self.viewModel.processPickedFileUrl($0)
         })
-        .filePicker(isPresented: self.$homeViewModel.filePickerShow,
-                    fileTypes: K.Misc.ImportFileTypes.compactMap { $0 },
-                    onPickedFile: {
-            self.homeViewModel.urlToFileToConvert = $0
-            self.homeViewModel.convert()
-        })
-        .filePicker(isPresented: self.$homeViewModel.pdfFilePickerShow,
-                    fileTypes: [.pdf],
-                    onPickedFile: {
-            self.homeViewModel.importPdf(pdfUrl: $0)
-        })
-        .alert("Your pdf is protected", isPresented: self.$homeViewModel.pdfPasswordInputShow, actions: {
+        .alert("Your pdf is protected", isPresented: self.$viewModel.pdfPasswordInputShow, actions: {
             SecureField("Enter Password", text: self.$passwordText)
             Button("Confirm", action: {
-                self.homeViewModel.importLockedPdf(password: self.passwordText)
+                self.viewModel.importLockedPdf(password: self.passwordText)
                 self.passwordText = ""
             })
             Button("Cancel", role: .cancel, action: {
@@ -113,110 +117,102 @@ struct HomeView: View {
         }, message: {
             Text("Enter the password of your pdf in order to import it.")
         })
-        .fullScreenCover(isPresented: self.$homeViewModel.scannerShow) {
+        .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
             // Scanner
             ScannerView(onScannerResult: {
-                self.homeViewModel.scannerShow = false
-                self.homeViewModel.scannerResult = $0
-            }).onDisappear { self.homeViewModel.convert() }
+                self.viewModel.convertScan(scannerResult: $0)
+            })
         }
-        .fullScreenCover(isPresented: self.$homeViewModel.cameraShow) {
+        .fullScreenCover(isPresented: self.$viewModel.cameraShow) {
             // Camera for image capture
             CameraView(model: Container.shared.cameraViewModel({ uiImage in
-                self.homeViewModel.cameraShow = false
-                self.homeViewModel.imageToConvert = uiImage
-            })).onDisappear { self.homeViewModel.convert() }
+                self.viewModel.convertImage(uiImage: uiImage)
+            }))
         }
         // Photo gallery picker
-        .photosPicker(isPresented: self.$homeViewModel.imagePickerShow,
-                      selection: self.$homeViewModel.imageSelection,
+        .photosPicker(isPresented: self.$viewModel.imagePickerShow,
+                      selection: self.$viewModel.imageSelection,
                       matching: .images)
-        .fullScreenCover(isPresented: self.$homeViewModel.pdfFlowShow, onDismiss: {
-            self.homeViewModel.editStartAction = nil
-        }) {
-            let pdfEditable = self.homeViewModel.asyncPdf.data!
-            let editStartAction = self.homeViewModel.editStartAction
+        .fullScreenCover(isPresented: self.$viewModel.pdfFlowShow) {
+            let pdfEditable = self.viewModel.asyncPdf.data!
+            let editStartAction = self.viewModel.editStartAction
             PdfFlowView(pdfEditable: pdfEditable, startAction: editStartAction)
         }
-        .asyncView(asyncOperation: self.$homeViewModel.asyncPdf,
+        .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
-        .asyncView(asyncOperation: self.$homeViewModel.asyncImageLoading,
+        .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
-        .alertCameraPermission(isPresented: self.$homeViewModel.cameraPermissionDeniedShow)
+        .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-            self.homeViewModel.onDidBecomeActive()
+            self.viewModel.onDidBecomeActive()
         }
     }
     
-    @ViewBuilder func getView(forPickerType pickerType: PickerType) -> some View {
-        switch pickerType {
-        case .image:
-            ImportView(items: [
-                ImportItem(title: "File",
-                           imageName: "file",
-                           callBack: { self.homeViewModel.openFileSourcePicker(sourceType: .imageFile) }),
-                ImportItem(title: "Camera",
-                           imageName: "camera",
-                           callBack: { self.homeViewModel.openCamera() }),
-                ImportItem(title: "Gallery",
-                           imageName: "gallery",
-                           callBack: { self.homeViewModel.openGallery() })
-            ])
-        case .pdf:
-            self.getFileOrScanImportView(forSourceType: .pdf, startAction: nil)
-        case .convert:
-            self.getFileSourceImportView(forSourceType: .convertFile)
-        case .formFill:
-            self.getFileOrScanImportView(forSourceType: .formFill, startAction: .openFillForm)
-        case .sign:
-            self.getFileOrScanImportView(forSourceType: .sign, startAction: .openSignature)
+    @ViewBuilder func section(forItems items: [HomeItem], sectionTitle: String) -> some View {
+        Section {
+            ForEach(items, id: \.id) { item in
+                HomeItemView(title: item.title,
+                             description: item.description,
+                             imageName: item.imageName,
+                             onButtonPressed: { self.viewModel.performHomeAction(item.homeAction) })
+                .aspectRatio(1.0, contentMode: .fit)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color(.clear))
+                .listRowInsets(EdgeInsets())
+            }
+        } header: {
+            Text(sectionTitle)
+                .font(FontPalette.fontMedium(withSize: 18))
+                .foregroundColor(ColorPalette.primaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
-    private func getFileOrScanImportView(forSourceType sourceType: SourceType, startAction: PdfEditStartAction?) -> some View {
-        return ImportView(items: [
-            ImportItem(title: "From existing file",
-                       imageName: "file",
-                       callBack: { self.homeViewModel.openFileSourcePicker(sourceType: sourceType) }),
-            ImportItem(title: "Scan a file",
-                       imageName: "scan",
-                       callBack: { self.homeViewModel.scanPdf(startAction: startAction, directlyFromScan: false) })
-        ])
-    }
-    
-    private func getFileSourceImportView(forSourceType sourceType: SourceType) -> some View {
-        ImportView(items: [
-            ImportItem(title: "Google Drive",
-                       imageName: "home_file_source_google",
-                       callBack: { self.homeViewModel.openFilePicker(fileSource: .google, sourceType: sourceType) }),
-            ImportItem(title: "Dropbox",
-                       imageName: "home_file_source_dropbox",
-                       callBack: { self.homeViewModel.openFilePicker(fileSource: .dropbox, sourceType: sourceType) }),
-            ImportItem(title: "iCloud",
-                       imageName: "home_file_source_icloud",
-                       callBack: { self.homeViewModel.openFilePicker(fileSource: .icloud, sourceType: sourceType) }),
-            ImportItem(title: "Files",
-                       imageName: "home_file_source_files",
-                       callBack: { self.homeViewModel.openFilePicker(fileSource: .files, sourceType: sourceType) })
-        ])
+    @ViewBuilder func getImportView(forImportOptionGroup importOptionGroup: ImportOptionGroup) -> some View {
+        ImportView(items: importOptionGroup.options.map { importOption in
+            switch importOption {
+            case .camera:
+                return ImportItem(title: "Camera",
+                                  imageName: "camera",
+                                  callBack: { self.viewModel.openCamera() })
+            case .gallery:
+                return ImportItem(title: "Gallery",
+                                  imageName: "gallery",
+                                  callBack: { self.viewModel.openGallery() })
+            case .scan:
+                return ImportItem(title: "Scan a file",
+                           imageName: "scan",
+                           callBack: { self.viewModel.scanPdf() })
+            case .file(let fileSource):
+                switch fileSource {
+                case .google:
+                    return ImportItem(title: "Google Drive",
+                               imageName: "home_file_source_google",
+                               callBack: { self.viewModel.openFilePicker(fileSource: .google) })
+                case .dropbox:
+                    return ImportItem(title: "Dropbox",
+                               imageName: "home_file_source_dropbox",
+                               callBack: { self.viewModel.openFilePicker(fileSource: .dropbox) })
+                case .icloud:
+                    return ImportItem(title: "iCloud",
+                               imageName: "home_file_source_icloud",
+                               callBack: { self.viewModel.openFilePicker(fileSource: .icloud) })
+                case .files:
+                    return ImportItem(title: "Files",
+                               imageName: "home_file_source_files",
+                               callBack: { self.viewModel.openFilePicker(fileSource: .files) })
+                }
+            }
+        })
     }
 }
 
-extension PickerType: FormSheetItem {
+extension ImportOptionGroup: FormSheetItem {
     var viewSize: CGSize {
         switch self {
-        case .image: return CGSize(width: 400.0, height: 400.0)
-        case .pdf: return CGSize(width: 400.0, height: 320.0)
-        case .convert: return CGSize(width: 400.0, height: 320.0)
-        case .formFill: return CGSize(width: 400.0, height: 320.0)
-        case .sign: return CGSize(width: 400.0, height: 320.0)
+        case .image: return CGSize(width: 400.0, height: 250.0)
+        case .fileAndScan: return CGSize(width: 400.0, height: 220.0)
         }
-    }
-}
-
-extension SourceType: FormSheetItem {
-    var viewSize: CGSize {
-        CGSize(width: 400.0, height: 500.0)
     }
 }
 

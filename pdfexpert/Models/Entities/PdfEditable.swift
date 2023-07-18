@@ -28,8 +28,8 @@ struct PdfEditable {
         self.password = password
     }
     
-    init(pdfDocument: PDFDocument, password: String? = nil) {
-        self.pdfDocument = pdfDocument
+    init(pdfDocument: PDFDocument? = nil, password: String? = nil) {
+        self.pdfDocument = pdfDocument ?? PDFDocument()
         self.password = password
     }
 }

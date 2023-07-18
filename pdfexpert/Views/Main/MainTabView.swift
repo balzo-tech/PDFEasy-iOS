@@ -30,7 +30,7 @@ struct MainTabView: View {
                 HomeView()
             }
             .tabItem {
-                Label("Home", image: "tab_home")
+                Label("Explore", image: "tab_home")
             }
             .tag(TabItemIndex.convert.rawValue)
             NavigationStack {

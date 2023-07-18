@@ -68,13 +68,6 @@ struct K {
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
-        static let ImportFileTypes: [UTType?] = [
-            UTType.pdf,
-            .presentation,
-            .spreadsheet,
-            UTType("com.microsoft.word.doc"),
-            UTType("com.apple.iwork.pages.sffpages")
-        ]
         static let ImportFileTypesForAddPage: [UTType?] = [
             UTType.image,
             UTType.pdf,
@@ -105,3 +98,23 @@ extension MarginsOption {
         }
     }
 }
+
+extension ImportFileOption: FilePickerTypeProvider {
+     
+    var fileTypes: [UTType] {
+        switch self {
+        case .image: return [UTType.image]
+        case .word: return [UTType("com.microsoft.word.doc")].compactMap { $0 }
+        case .excel: return [.spreadsheet]
+        case .powerpoint: return [.presentation]
+        case .pdf: return [UTType.pdf]
+        case .allDocs: return [
+            UTType.pdf,
+            .presentation,
+            .spreadsheet,
+            UTType("com.microsoft.word.doc"),
+            UTType("com.apple.iwork.pages.sffpages")
+        ].compactMap { $0 }
+        }
+    }
+ }

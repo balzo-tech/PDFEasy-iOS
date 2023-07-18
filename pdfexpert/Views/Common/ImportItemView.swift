@@ -15,22 +15,22 @@ struct ImportItemView: View {
     
     var body: some View {
         Button(action: { self.onPressed() }) {
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                 Image(self.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 30)
                 Text(self.title)
-                    .font(FontPalette.fontBold(withSize: 16))
-                    .foregroundColor(ColorPalette.thirdText)
+                    .font(FontPalette.fontRegular(withSize: 18))
+                    .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.leading, 24)
-            .padding(.trailing, 24)
+            .padding(.leading, 16)
+            .padding(.trailing, 16)
         }
-        .frame(height: 62)
+        .frame(height: 48)
         .frame(maxWidth: .infinity)
-        .overlay(RoundedRectangle(cornerRadius: 10).stroke(ColorPalette.thirdText, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(ColorPalette.thirdText, lineWidth: 1))
     }
 }
 
