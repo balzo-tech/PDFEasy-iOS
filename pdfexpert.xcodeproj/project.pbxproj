@@ -202,6 +202,7 @@
 		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
 		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
 		8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitViewBinder.swift; sourceTree = "<group>"; };
+		8936AA2A2A67F975005F6C73 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
@@ -372,6 +373,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8936AA292A67F922005F6C73 /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				8936AA2A2A67F975005F6C73 /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
+			sourceTree = "<group>";
+		};
 		893C8FC729DED15B000E35BD /* Archive */ = {
 			isa = PBXGroup;
 			children = (
@@ -533,6 +542,7 @@
 		89CD7A8D29D32855003F1C3A = {
 			isa = PBXGroup;
 			children = (
+				8936AA292A67F922005F6C73 /* ci_scripts */,
 				89CD7A9829D32855003F1C3A /* PdfExpert */,
 				895C1BAE2A04FA53005EA190 /* ShareFileExtension */,
 				89CD7A9729D32855003F1C3A /* Products */,
