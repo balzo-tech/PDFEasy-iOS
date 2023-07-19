@@ -70,40 +70,15 @@ enum HomeAction: Hashable, Identifiable {
 }
 
 enum ImportFileOption: Hashable, Identifiable {
-     
+    
     var id: Self { return self }
-     
+    
     case image
     case word
     case excel
     case powerpoint
     case pdf
     case allDocs
- }
-
-enum ImportOption: Hashable, Identifiable {
-    
-    var id: Self { return self }
-    
-    case camera
-    case gallery
-    case scan
-    case file(fileSource: FileSource)
-}
-
-enum ImportOptionGroup: Hashable, Identifiable {
-    
-    var id: Self { return self }
-    
-    case image
-    case fileAndScan
-    
-    var options: [ImportOption] {
-        switch self {
-        case .image: return [.camera, .gallery, .file(fileSource: .files)]
-        case .fileAndScan: return [.file(fileSource: .files), .scan]
-        }
-    }
 }
 
 enum FileSource: Hashable, Identifiable {
@@ -195,6 +170,22 @@ public class HomeViewModel : ObservableObject {
             self.createPdf()
         case .scan:
             self.scanPdf()
+        }
+    }
+    
+    @MainActor
+    func handleImportOption(importOption: ImportOption) {
+        switch importOption {
+        case .camera: self.openCamera()
+        case .gallery: self.openGallery()
+        case .scan: self.scanPdf()
+        case .file(let fileSource):
+            switch fileSource {
+            case .google: self.openFilePicker(fileSource: .google)
+            case .dropbox: self.openFilePicker(fileSource: .dropbox)
+            case .icloud: self.openFilePicker(fileSource: .icloud)
+            case .files: self.openFilePicker(fileSource: .files)
+            }
         }
     }
     

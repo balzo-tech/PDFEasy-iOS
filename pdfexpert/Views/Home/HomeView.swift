@@ -99,7 +99,8 @@ struct HomeView: View {
             self.viewModel.onAppear()
         }
         .formSheet(item: self.$viewModel.importOptionGroup) {
-            self.getImportView(forImportOptionGroup: $0)
+            ImportView.getImportView(forImportOptionGroup: $0,
+                                     importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
         }
         .filePicker(item: self.$viewModel.importFileOption, onPickedFile: {
             self.viewModel.processPickedFileUrl($0)
@@ -165,44 +166,6 @@ struct HomeView: View {
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-    }
-    
-    @ViewBuilder func getImportView(forImportOptionGroup importOptionGroup: ImportOptionGroup) -> some View {
-        ImportView(items: importOptionGroup.options.map { importOption in
-            switch importOption {
-            case .camera:
-                return ImportItem(title: "Camera",
-                                  imageName: "camera",
-                                  callBack: { self.viewModel.openCamera() })
-            case .gallery:
-                return ImportItem(title: "Gallery",
-                                  imageName: "gallery",
-                                  callBack: { self.viewModel.openGallery() })
-            case .scan:
-                return ImportItem(title: "Scan a file",
-                           imageName: "scan",
-                           callBack: { self.viewModel.scanPdf() })
-            case .file(let fileSource):
-                switch fileSource {
-                case .google:
-                    return ImportItem(title: "Google Drive",
-                               imageName: "home_file_source_google",
-                               callBack: { self.viewModel.openFilePicker(fileSource: .google) })
-                case .dropbox:
-                    return ImportItem(title: "Dropbox",
-                               imageName: "home_file_source_dropbox",
-                               callBack: { self.viewModel.openFilePicker(fileSource: .dropbox) })
-                case .icloud:
-                    return ImportItem(title: "iCloud",
-                               imageName: "home_file_source_icloud",
-                               callBack: { self.viewModel.openFilePicker(fileSource: .icloud) })
-                case .files:
-                    return ImportItem(title: "Files",
-                               imageName: "home_file_source_files",
-                               callBack: { self.viewModel.openFilePicker(fileSource: .files) })
-                }
-            }
-        })
     }
 }
 

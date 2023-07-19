@@ -23,7 +23,7 @@ enum AnalyticsPdfInputType {
 }
 
 enum AnalyticsScreen {
-    case onboarding, home, files, settings, subscription, importTutorial, signature, fillForm, fillWidget
+    case onboarding, home, files, chatPdfSelection, settings, subscription, importTutorial, signature, fillForm, fillWidget, chatPdf
 }
 
 enum AnalyticsEvent {
@@ -51,6 +51,8 @@ enum AnalyticsEvent {
     case fillWidgetConfirmed
     case pdfEditCompleted(marginsOption: MarginsOption, compressionValue: CGFloat)
     case pdfShared(marginsOption: MarginsOption?, compressionValue: CGFloat?)
+    case chatPdfSelectionFullActionChosen(importOption: ImportOption?)
+    case chatPdfSelectionFullActionCompleted(importOption: ImportOption?, fileExtension: String?)
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

@@ -17,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Facebook init
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
+        // ProjectInfo Validation
+        ProjectInfo.validate()
+        
         self.setupAppearance()
         
         return true

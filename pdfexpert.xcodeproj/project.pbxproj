@@ -23,6 +23,16 @@
 		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
 		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
 		8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */; };
+		8936AA312A682812005F6C73 /* ProjectInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8936AA302A682812005F6C73 /* ProjectInfo.plist */; };
+		8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA322A6828C9005F6C73 /* ProjectInfo.swift */; };
+		8936AA372A68299B005F6C73 /* ChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA342A68299B005F6C73 /* ChatPdfManagerImpl.swift */; };
+		8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA352A68299B005F6C73 /* ChatPdfManager.swift */; };
+		8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */; };
+		8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */; };
+		8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3D2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift */; };
+		8936AA402A683FB5005F6C73 /* ImportOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3F2A683FB5005F6C73 /* ImportOption.swift */; };
+		8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA412A6840D1005F6C73 /* ChatPdfView.swift */; };
+		8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */; };
 		893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
@@ -203,6 +213,16 @@
 		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
 		8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitViewBinder.swift; sourceTree = "<group>"; };
 		8936AA2A2A67F975005F6C73 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
+		8936AA302A682812005F6C73 /* ProjectInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProjectInfo.plist; sourceTree = "<group>"; };
+		8936AA322A6828C9005F6C73 /* ProjectInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectInfo.swift; sourceTree = "<group>"; };
+		8936AA342A68299B005F6C73 /* ChatPdfManagerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerImpl.swift; sourceTree = "<group>"; };
+		8936AA352A68299B005F6C73 /* ChatPdfManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPdfManager.swift; sourceTree = "<group>"; };
+		8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerMock.swift; sourceTree = "<group>"; };
+		8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfSelectionView.swift; sourceTree = "<group>"; };
+		8936AA3D2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfSelectionViewModel.swift; sourceTree = "<group>"; };
+		8936AA3F2A683FB5005F6C73 /* ImportOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportOption.swift; sourceTree = "<group>"; };
+		8936AA412A6840D1005F6C73 /* ChatPdfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfView.swift; sourceTree = "<group>"; };
+		8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfViewModel.swift; sourceTree = "<group>"; };
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
@@ -381,6 +401,15 @@
 			path = ci_scripts;
 			sourceTree = "<group>";
 		};
+		8936AA3A2A682C71005F6C73 /* ChatPdf */ = {
+			isa = PBXGroup;
+			children = (
+				8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */,
+				8936AA412A6840D1005F6C73 /* ChatPdfView.swift */,
+			);
+			path = ChatPdf;
+			sourceTree = "<group>";
+		};
 		893C8FC729DED15B000E35BD /* Archive */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +531,7 @@
 			children = (
 				894D485729D42C9D002B0230 /* ImportItemView.swift */,
 				894D485929D42CC5002B0230 /* ImportView.swift */,
+				8936AA3F2A683FB5005F6C73 /* ImportOption.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -587,6 +617,7 @@
 		89CD7AAD29D329B1003F1C3A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8936AA302A682812005F6C73 /* ProjectInfo.plist */,
 				89883B012A45CB9800E684B6 /* InfoTemplate.plist */,
 				89847ADE2A1BA8CC000EC14B /* Production */,
 				89847ADF2A1BA8CC000EC14B /* Staging */,
@@ -714,6 +745,9 @@
 				89CD7AE529D329B1003F1C3A /* StoreImpl.swift */,
 				89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */,
 				89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */,
+				8936AA352A68299B005F6C73 /* ChatPdfManager.swift */,
+				8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */,
+				8936AA342A68299B005F6C73 /* ChatPdfManagerImpl.swift */,
 				893C8FD129DED2E9000E35BD /* Repository.swift */,
 				893C8FD229DED2E9000E35BD /* RepositoryImpl.swift */,
 				8991485029E851B500DD01F2 /* ConfigService.swift */,
@@ -729,6 +763,7 @@
 				893C8FE429DF0399000E35BD /* Pdf+CoreDataProperties.swift */,
 				89436ABE29E55EA000060605 /* PdfEditable.swift */,
 				8928F3D02A30BAFB001C1853 /* PickedImage.swift */,
+				8936AA322A6828C9005F6C73 /* ProjectInfo.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -763,6 +798,8 @@
 				893E849329D5878E00F6B99A /* CameraViewModel.swift */,
 				8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */,
 				893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */,
+				8936AA3D2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift */,
+				8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */,
 				89436AC229E59C0E00060605 /* PdfEditViewModel.swift */,
 				89436AC429E5A2F800060605 /* PdfViewerViewModel.swift */,
 				892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */,
@@ -778,16 +815,17 @@
 			children = (
 				89CD7BB229D32E69003F1C3A /* Navigation */,
 				8995694829D3473E00566EF4 /* Common */,
+				89AAFEA829DB3098002D348E /* Welcome */,
+				89AAFE9A29DB1823002D348E /* Onboarding */,
+				895FE2C929D6E98100A99D5B /* Subscription */,
 				89436AB929E5578300060605 /* Pdf */,
 				899F484229DF123B00E7E1E4 /* Main */,
 				893C8FC729DED15B000E35BD /* Archive */,
-				89AAFEA829DB3098002D348E /* Welcome */,
-				89AAFE9A29DB1823002D348E /* Onboarding */,
-				89CD7BB729D330B2003F1C3A /* Conversion */,
+				8936AA3A2A682C71005F6C73 /* ChatPdf */,
+				89CD7BB729D330B2003F1C3A /* Home */,
+				89B72A3129DADC6E0076884F /* Settings */,
 				895FE2C229D6D7D800A99D5B /* Scan */,
 				893E849229D5877800F6B99A /* Camera */,
-				89B72A3129DADC6E0076884F /* Settings */,
-				895FE2C929D6E98100A99D5B /* Subscription */,
 				894B019D2A0902A000FF6198 /* ImportTutorial */,
 				89CD7B2629D329B1003F1C3A /* ContentView.swift */,
 			);
@@ -817,13 +855,13 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
-		89CD7BB729D330B2003F1C3A /* Conversion */ = {
+		89CD7BB729D330B2003F1C3A /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				89CD7BBA29D330FB003F1C3A /* HomeView.swift */,
 				8995694129D33B1300566EF4 /* HomeItemView.swift */,
 			);
-			path = Conversion;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		89E55BE029DC66170073F268 /* Analytics */ = {
@@ -961,6 +999,7 @@
 				89D79E012A654DC80086A8E5 /* Poppins-Thin.ttf in Resources */,
 				89D79E032A654DC80086A8E5 /* Poppins-ExtraBoldItalic.ttf in Resources */,
 				89CD7B3429D329B1003F1C3A /* Products.plist in Resources */,
+				8936AA312A682812005F6C73 /* ProjectInfo.plist in Resources */,
 				89D79DF82A654DC80086A8E5 /* Poppins-ExtraLightItalic.ttf in Resources */,
 				89D79E082A654DC80086A8E5 /* Poppins-Bold.ttf in Resources */,
 				89923E6B29D47B9E00E246FC /* pdf-scanning.json in Resources */,
@@ -1064,6 +1103,7 @@
 				89436ABF29E55EA000060605 /* PdfEditable.swift in Sources */,
 				8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */,
 				89436AC529E5A2F800060605 /* PdfViewerViewModel.swift in Sources */,
+				8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */,
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
@@ -1072,6 +1112,7 @@
 				894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */,
 				891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
+				8936AA402A683FB5005F6C73 /* ImportOption.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
 				892E404F2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
@@ -1083,6 +1124,7 @@
 				894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */,
 				893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */,
 				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
+				8936AA372A68299B005F6C73 /* ChatPdfManagerImpl.swift in Sources */,
 				893DE8DC29E7F9A10043C02C /* SubscriptionVerticalViewModel.swift in Sources */,
 				893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */,
 				895FE2CD29D724B900A99D5B /* SubscriptionPairsItemView.swift in Sources */,
@@ -1099,6 +1141,7 @@
 				893C8FD329DED2E9000E35BD /* Repository.swift in Sources */,
 				89923E6929D46A9900E246FC /* FilePicker.swift in Sources */,
 				894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */,
+				8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */,
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
 				8991485129E851B500DD01F2 /* ConfigService.swift in Sources */,
 				89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */,
@@ -1132,6 +1175,7 @@
 				89436AC729E5B99100060605 /* PdfKitView.swift in Sources */,
 				89CD7B5429D329B1003F1C3A /* Color+Extensions.swift in Sources */,
 				897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */,
+				8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */,
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89B72A3329DADC790076884F /* SettingsView.swift in Sources */,
 				896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */,
@@ -1152,6 +1196,8 @@
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
 				8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */,
 				89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */,
+				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
+				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */,
@@ -1159,11 +1205,13 @@
 				89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */,
 				89127AA72A17C1980059005F /* PencilKit+Extensions.swift in Sources */,
 				893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */,
+				8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */,
 				8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,
 				89CD7B4F29D329B1003F1C3A /* ParentalCheck.swift in Sources */,
+				8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */,
 				89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */,
 				89CD7B7129D329B1003F1C3A /* ColorPalette.swift in Sources */,
 				89504A462A448252000BCACD /* PdfFillWidgetView.swift in Sources */,

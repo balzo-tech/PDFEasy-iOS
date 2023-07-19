@@ -10,12 +10,14 @@ import SwiftUI
 fileprivate enum MainTab: Int, CaseIterable {
     case archive
     case home
+    case chatPdf
     case settings
     
     var name: String {
         switch self {
         case .archive: return "File"
         case .home: return "Explore"
+        case .chatPdf: return "ChatPDF"
         case .settings: return "Settings"
         }
     }
@@ -24,6 +26,7 @@ fileprivate enum MainTab: Int, CaseIterable {
         switch self {
         case .archive: return "tab_archive"
         case .home: return "tab_home"
+        case .chatPdf: return "tab_chat_pdf"
         case .settings: return "tab_settings"
         }
     }
@@ -55,6 +58,7 @@ struct MainTabView: View {
         switch tab {
         case .archive: ArchiveView()
         case .home: HomeView()
+        case .chatPdf: ChatPdfSelectionView()
         case .settings: SettingsView()
         }
     }

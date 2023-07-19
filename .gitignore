@@ -59,3 +59,5 @@ Carthage/Build
 GoogleService-Info.plist
 # Info Plist
 Info.plist
+# ProjectInfo Plist
+ProjectInfo.plist

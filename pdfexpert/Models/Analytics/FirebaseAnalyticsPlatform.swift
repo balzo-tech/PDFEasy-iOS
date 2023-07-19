@@ -66,12 +66,14 @@ extension AnalyticsScreen {
         case .onboarding: return "Onboarding"
         case .home: return "Home"
         case .files: return "File"
+        case .chatPdfSelection: return "ChatPdfSelection"
         case .settings: return "Settings"
         case .subscription: return "Subscription"
         case .importTutorial: return "ImportTutorial"
         case .signature: return "Signature"
         case .fillForm: return "FillForm"
         case .fillWidget: return "FillWidget"
+        case .chatPdf: return "ChatPdf"
         }
     }
 }
@@ -103,6 +105,8 @@ extension AnalyticsEvent {
         case .annotationsConfirmed: return "annotations_confirmed"
         case .fillWidgetCancelled: return "fill_widget_cancelled"
         case .fillWidgetConfirmed: return "fill_widget_confirmed"
+        case .chatPdfSelectionFullActionChosen: return "chat_pdf_selection_full_action_chosen"
+        case .chatPdfSelectionFullActionCompleted: return "chat_pdf_selection_full_action_completed"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -168,6 +172,21 @@ extension AnalyticsEvent {
             }
             if let compressionValue = compressionValue {
                 parameters[FirebaseEventCustomParameters.compression.rawValue] = compressionValue
+            }
+            return parameters
+        case .chatPdfSelectionFullActionChosen(let importOption):
+            var parameters: [String: Any] = [:]
+            if let importOption = importOption {
+                parameters[FirebaseEventCustomParameters.importOption.rawValue] = importOption.trackingParameterValue
+            }
+            return parameters
+        case .chatPdfSelectionFullActionCompleted(let importOption, let fileExtension):
+            var parameters: [String: Any] = [:]
+            if let fileExtension = fileExtension {
+                parameters[FirebaseEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
+            }
+            if let importOption = importOption {
+                parameters[FirebaseEventCustomParameters.importOption.rawValue] = importOption.trackingParameterValue
             }
             return parameters
         case .reportScreen(let screen): return [AnalyticsParameterScreenName: screen.name]

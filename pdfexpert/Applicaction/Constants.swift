@@ -48,6 +48,9 @@ struct K {
             guard let testPdfDocument = DebugPdfDocument else { return nil }
             return PdfEditable(pdfDocument: testPdfDocument)
         }
+        
+        // ChatPdf
+        static let UseMockChatPdf = true
     }
     
     struct MonetizationK {
