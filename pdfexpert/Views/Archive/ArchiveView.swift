@@ -207,7 +207,7 @@ struct ArchiveView: View {
 extension Pdf {
     
     var creationDateText: String {
-        var text = "Created at "
+        var text = "File "
         if let creationDate = self.creationDate {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM-dd-YYYY"

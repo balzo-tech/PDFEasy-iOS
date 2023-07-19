@@ -163,6 +163,9 @@ struct PdfEditView: View {
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
+            self.getDefaultButton(text: "Add a new page") {
+                self.showingImageInputPicker = true
+            }
             Spacer()
         }
     }
