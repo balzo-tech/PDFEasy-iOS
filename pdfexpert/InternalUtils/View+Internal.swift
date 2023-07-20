@@ -65,10 +65,10 @@ extension View {
         }
     }
     
-    func getSubscriptionView(onComplete: @escaping () -> ()) -> some View {
+    @ViewBuilder func getSubscriptionView(onComplete: @escaping () -> ()) -> some View {
         switch Container.shared.configService().remoteConfigData.value.subcriptionViewType {
-        case .pairs: return AnyView(SubscriptionPairsView(onComplete: onComplete))
-        case .vertical: return AnyView(SubscriptionVerticalView(onComplete: onComplete))
+        case .pairs: SubscriptionPairsView(onComplete: onComplete)
+        case .vertical: SubscriptionVerticalView(onComplete: onComplete)
         }
     }
 }

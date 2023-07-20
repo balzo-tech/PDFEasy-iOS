@@ -29,15 +29,15 @@ struct HomeView: View {
                  imageName: "home_image_to_pdf",
                  homeAction: .imageToPdf),
         HomeItem(title: "Word to PDF",
-                 description: "Make DOC file easy to read by converting them to PDF.",
+                 description: "Make DOC file easy to read by converting them to PDF",
                  imageName: "home_word_to_pdf",
                  homeAction: .wordToPdf),
         HomeItem(title: "Excel to PDF",
-                 description: "Make EXCEL file easy to read by converting them to PDF.",
+                 description: "Make EXCEL file easy to read by converting them to PDF",
                  imageName: "home_excel_to_pdf",
                  homeAction: .excelToPdf),
         HomeItem(title: "Powerpoint to PDF",
-                 description: "Make PPT file easy to view by converting them to PDF.",
+                 description: "Make PPT file easy to view by converting them to PDF",
                  imageName: "home_power_to_pdf",
                  homeAction: .powerpointToPdf),
         HomeItem(title: "Scan",
@@ -93,6 +93,7 @@ struct HomeView: View {
             }
             .padding(14)
         }
+        .padding(.top, 16)
         .listStyle(.plain)
         .background(ColorPalette.primaryBG)
         .onAppear() {

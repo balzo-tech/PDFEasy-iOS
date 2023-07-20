@@ -18,8 +18,8 @@ protocol SubscriptionPlan: Hashable {
 class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
     
     @Published var isPremium: Bool = false
-    @Published var restorePurchaseRequest: AsyncOperation<Bool, RestorePurchaseError> = AsyncOperation(status: .empty)
-    @Published var purchaseRequest: AsyncOperation<(), PurchaseError> = AsyncOperation(status: .empty)
+    @Published var restorePurchaseRequest: AsyncOperation<Bool, SharedUnderlyingError> = AsyncOperation(status: .empty)
+    @Published var purchaseRequest: AsyncOperation<(), SharedUnderlyingError> = AsyncOperation(status: .empty)
     
     @Published var currentSubscriptionPlan: S?
     
@@ -51,7 +51,7 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
                 self.purchaseRequest = AsyncOperation(status: .data(()))
             } catch let error {
                 print("Subscribe Error: " + error.localizedDescription)
-                let convertedError = PurchaseError.convertError(fromError: error)
+                let convertedError = SharedUnderlyingError.convertError(fromError: error)
                 self.purchaseRequest = AsyncOperation(status: .error(convertedError))
             }
         }
@@ -69,7 +69,7 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
                 await self.store.updateCustomerProductStatus()
                 self.restorePurchaseRequest = AsyncOperation(status: .data(self.isPremium && self.isPremium != currentIsPremium))
             } catch {
-                let convertedError = RestorePurchaseError.convertError(fromError: error)
+                let convertedError = SharedUnderlyingError.convertError(fromError: error)
                 self.restorePurchaseRequest = AsyncOperation(status: .error(convertedError))
             }
         }
@@ -104,42 +104,6 @@ enum RefreshError: LocalizedError, UnderlyingError {
         case .unknownError: return "Internal Error. Please try again later"
         case .underlyingError(let errorMessage): return errorMessage
         case .missingExpectedSubscriptionPlanError: return "Internal Error. Please try again later"
-        }
-    }
-}
-
-enum RestorePurchaseError: LocalizedError, UnderlyingError {
-    case unknownError
-    case underlyingError(errorDescription: String)
-    
-    static func getUnknownError() -> Self { Self.unknownError }
-    
-    static func getUnderlyingError(errorDescription: String) -> Self {
-        return .underlyingError(errorDescription: errorDescription)
-    }
-    
-    var errorDescription: String? {
-        switch self {
-        case .unknownError: return "Internal Error. Please try again later"
-        case .underlyingError(let errorMessage): return errorMessage
-        }
-    }
-}
-
-enum PurchaseError: LocalizedError, UnderlyingError {
-    case unknownError
-    case underlyingError(errorDescription: String)
-    
-    static func getUnknownError() -> Self { Self.unknownError }
-    
-    static func getUnderlyingError(errorDescription: String) -> Self {
-        return .underlyingError(errorDescription: errorDescription)
-    }
-    
-    var errorDescription: String? {
-        switch self {
-        case .unknownError: return "Internal Error. Please try again later"
-        case .underlyingError(let errorMessage): return errorMessage
         }
     }
 }

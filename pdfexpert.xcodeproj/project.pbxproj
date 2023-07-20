@@ -56,6 +56,11 @@
 		893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */; };
 		893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */ = {isa = PBXBuildFile; productRef = 893E84A329D5BFBB00F6B99A /* PSPDFKit */; };
 		893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E84A529D5C5E200F6B99A /* ActivityViewController.swift */; };
+		893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */; };
+		893ED9D22A6926E8004EE67C /* ChatPdfMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */; };
+		893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D32A692805004EE67C /* CombineUtils.swift */; };
+		893ED9D92A693013004EE67C /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D72A693013004EE67C /* MessageView.swift */; };
+		893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D82A693013004EE67C /* MessageIndicatorView.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
 		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
 		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
@@ -247,6 +252,11 @@
 		893E849A29D5944E00F6B99A /* CameraService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Extensions.swift"; sourceTree = "<group>"; };
 		893E84A529D5C5E200F6B99A /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
+		893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfRef.swift; sourceTree = "<group>"; };
+		893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfMessage.swift; sourceTree = "<group>"; };
+		893ED9D32A692805004EE67C /* CombineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineUtils.swift; sourceTree = "<group>"; };
+		893ED9D72A693013004EE67C /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		893ED9D82A693013004EE67C /* MessageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageIndicatorView.swift; sourceTree = "<group>"; };
 		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
 		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
 		89436ABC29E5586600060605 /* PdfEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditView.swift; sourceTree = "<group>"; };
@@ -406,6 +416,8 @@
 			children = (
 				8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */,
 				8936AA412A6840D1005F6C73 /* ChatPdfView.swift */,
+				893ED9D82A693013004EE67C /* MessageIndicatorView.swift */,
+				893ED9D72A693013004EE67C /* MessageView.swift */,
 			);
 			path = ChatPdf;
 			sourceTree = "<group>";
@@ -688,6 +700,7 @@
 				89CD7AD429D329B1003F1C3A /* Extensions */,
 				89CD7ADB29D329B1003F1C3A /* Async.swift */,
 				89CD7ADC29D329B1003F1C3A /* DebugUtils.swift */,
+				893ED9D32A692805004EE67C /* CombineUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -764,6 +777,8 @@
 				89436ABE29E55EA000060605 /* PdfEditable.swift */,
 				8928F3D02A30BAFB001C1853 /* PickedImage.swift */,
 				8936AA322A6828C9005F6C73 /* ProjectInfo.swift */,
+				893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */,
+				893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1106,6 +1121,7 @@
 				8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */,
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
+				893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
 				89436AC129E563AE00060605 /* PdfViewerView.swift in Sources */,
 				8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */,
@@ -1140,6 +1156,7 @@
 				8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */,
 				893C8FD329DED2E9000E35BD /* Repository.swift in Sources */,
 				89923E6929D46A9900E246FC /* FilePicker.swift in Sources */,
+				893ED9D22A6926E8004EE67C /* ChatPdfMessage.swift in Sources */,
 				894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */,
 				8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */,
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
@@ -1166,6 +1183,7 @@
 				896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */,
 				89127AA12A177E370059005F /* PencilKitView.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,
+				893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */,
 				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
 				899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */,
 				894D485A29D42CC5002B0230 /* ImportView.swift in Sources */,
@@ -1192,6 +1210,7 @@
 				894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */,
 				89CD7B4C29D329B1003F1C3A /* CircularProgressView.swift in Sources */,
 				89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */,
+				893ED9D92A693013004EE67C /* MessageView.swift in Sources */,
 				893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */,
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
 				8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */,
@@ -1211,6 +1230,7 @@
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,
 				89CD7B4F29D329B1003F1C3A /* ParentalCheck.swift in Sources */,
+				893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */,
 				8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */,
 				89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */,
 				89CD7B7129D329B1003F1C3A /* ColorPalette.swift in Sources */,

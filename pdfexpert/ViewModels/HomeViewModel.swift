@@ -105,7 +105,7 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
-    @Published var asyncImageLoading: AsyncOperation<(), ImportImageError> = AsyncOperation(status: .empty)
+    @Published var asyncImageLoading: AsyncOperation<(), SharedUnderlyingError> = AsyncOperation(status: .empty)
     
     @Published var cameraShow: Bool = false
     @Published var scannerShow: Bool = false
@@ -346,7 +346,7 @@ public class HomeViewModel : ObservableObject {
                 case .success(nil):
                     self.asyncImageLoading = AsyncOperation(status: .empty)
                 case .failure(let error):
-                    let convertedError = ImportImageError.convertError(fromError: error)
+                    let convertedError = SharedUnderlyingError.convertError(fromError: error)
                     self.asyncImageLoading = AsyncOperation(status: .error(convertedError))
                 }
             }

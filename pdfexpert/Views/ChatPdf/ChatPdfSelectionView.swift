@@ -17,7 +17,7 @@ struct ChatPdfSelectionView: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Our PDF AI summarize and answer questions for free. Drop your PDF here")
+            Text("Our PDF AI summarize and answer questions for free. Drop your PDF here.")
                 .font(FontPalette.fontRegular(withSize: 14))
                 .foregroundColor(ColorPalette.primaryText)
                 .multilineTextAlignment(.center)
@@ -59,13 +59,19 @@ struct ChatPdfSelectionView: View {
                 self.viewModel.convertScan(scannerResult: $0)
             })
         }
-        .fullScreenCover(isPresented: self.$viewModel.chatPdfShow) {
-            ChatPdfView()
+        .fullScreenCover(item: self.$viewModel.chatPdfRef) { chatPdfRef in
+            let parameters = ChatPdfViewModel.Parameters(chatPdfRef: chatPdfRef)
+            ChatPdfView(viewModel: Container.shared.chatPdfViewModel(parameters))
+        }
+        
+        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
+            self.getSubscriptionView(onComplete: {
+                self.viewModel.monetizationShow = false
+            })
         }
         .asyncView(asyncOperation: self.$viewModel.asyncImportPdf,
                    loadingView: { AnimationType.pdf.view })
-        .asyncView(asyncOperation: self.$viewModel.asyncUploadPdf,
-                   loadingView: { AnimationType.pdf.view })
+        .asyncView(asyncOperation: self.$viewModel.asyncUploadPdf)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     
@@ -98,7 +104,7 @@ struct ChatPdfSelectionView: View {
                 .frame(width: 18)
                 
                 .foregroundColor(ColorPalette.thirdText)
-            Text("PDF are limited to 32MB per file")
+            Text("PDF are limited to 32MB per file\nand are limited to 2000 pages")
                 .font(FontPalette.fontRegular(withSize: 13))
                 .foregroundColor(ColorPalette.thirdText)
                 .minimumScaleFactor(0.5)

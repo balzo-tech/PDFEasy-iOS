@@ -17,7 +17,7 @@ enum SharedLocalizedError: LocalizedError {
     }
 }
 
-enum ImportImageError: LocalizedError, UnderlyingError {
+enum SharedUnderlyingError: LocalizedError, UnderlyingError {
     case unknownError
     case underlyingError(errorDescription: String)
     

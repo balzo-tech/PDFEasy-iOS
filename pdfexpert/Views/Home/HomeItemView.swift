@@ -37,7 +37,7 @@ struct HomeItemView: View {
                     Spacer().frame(height: 4)
                     VStack {
                         Text(self.description)
-                            .font(FontPalette.fontLight(withSize: 10))
+                            .font(FontPalette.fontLight(withSize: 12))
                             .foregroundColor(ColorPalette.primaryText)
                             .frame(maxWidth: .infinity, alignment: .center)
                             .multilineTextAlignment(.center)
@@ -45,7 +45,7 @@ struct HomeItemView: View {
                             .padding([.leading, .trailing], 12)
                         Spacer()
                     }
-                    .frame(height: 50)
+                    .frame(height: 65)
                     Spacer()
                 }
             }
@@ -61,7 +61,7 @@ struct HomeItemView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geometryReader in
             HomeItemView(title: "Powerpoint to PDF",
-                         description: "Make PPT file easy to view by converting them to PDF",
+                         description: "Make PPT file easy to view by converting them to PDF converting them to PDF",
                          imageName: "home_image_to_pdf",
                          onButtonPressed: {})
             .aspectRatio(1.0, contentMode: .fit)

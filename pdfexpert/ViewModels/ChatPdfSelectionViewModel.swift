@@ -9,6 +9,7 @@ import Foundation
 import Factory
 import PhotosUI
 import PSPDFKit
+import Combine
 
 extension Container {
     var chatPdfSelectionViewModel: Factory<ChatPdfSelectionViewModel> {
@@ -26,7 +27,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     
-    @Published var asyncImportPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
+    @MainActor @Published var asyncImportPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
         didSet {
             if let pdfEditable = self.asyncImportPdf.data {
                 self.trackFullActionCompleted()
@@ -34,19 +35,23 @@ class ChatPdfSelectionViewModel: ObservableObject {
             }
         }
     }
-    @Published var asyncUploadPdf: AsyncOperation<(), SharedLocalizedError> = AsyncOperation(status: .empty) {
+    
+    @Published var asyncUploadPdf: AsyncOperation<ChatPdfRef, ChatPdfError> = AsyncOperation(status: .empty) {
         didSet {
-            if self.asyncUploadPdf.success {
-                self.chatPdfShow = true
+            if let chatPdfRef = self.asyncUploadPdf.data {
+                self.chatPdfRef = chatPdfRef
             } else {
-                self.chatPdfShow = false
+                self.chatPdfRef = nil
             }
         }
     }
     
-    @Published var chatPdfShow: Bool = false
+    @Published var chatPdfRef: ChatPdfRef? = nil
+    
+    @Published var monetizationShow: Bool = false
     
     @Injected(\.store) private var store
+    @Injected(\.chatPdfManager) private var chatPdfManager
     @Injected(\.analyticsManager) private var analyticsManager
     
     private var currentAnalyticsImportOption: ImportOption? = nil
@@ -54,12 +59,19 @@ class ChatPdfSelectionViewModel: ObservableObject {
     
     private var lockedPdfEditable: PdfEditable? = nil
     
+    private var cancelBag = Set<AnyCancellable>()
+    
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.chatPdfSelection))
     }
     
     func getPdfButtonPressed() {
-        self.importOptionGroup = .fileAndScan
+        self.trackPdfSelection()
+        if self.store.isPremium.value {
+            self.importOptionGroup = .fileAndScan
+        } else {
+            self.monetizationShow = true
+        }
     }
     
     @MainActor
@@ -179,9 +191,24 @@ class ChatPdfSelectionViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     private func uploadPdf(pdfEditable: PdfEditable) {
-        print("TODO: Upload Pdf")
-        self.asyncUploadPdf = AsyncOperation(status: .data(()))
+        guard let pdfData = pdfEditable.rawData else {
+            assertionFailure("Missing expected pdf data")
+            self.asyncUploadPdf = AsyncOperation(status: .error(.unknownError))
+            return
+        }
+        
+        self.asyncUploadPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        
+        self.chatPdfManager.sendPdf(pdf: pdfData)
+            .sinkToAsyncStatus { [weak self] status in
+                self?.asyncUploadPdf = AsyncOperation(status: status)
+            }.store(in: &self.cancelBag)
+    }
+    
+    private func trackPdfSelection() {
+        self.analyticsManager.track(event: .chatPdfSelectionActionChosen)
     }
     
     private func trackFullActionChosen(importOption: ImportOption?) {

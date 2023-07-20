@@ -55,7 +55,7 @@ class RepositoryImpl: Repository {
                 .viewContext.fetch(request).count > 0
         } catch {
             debugPrint(for: self, message: "Error while fetching stories")
-            throw LoadError.convertError(fromError: error)
+            throw SharedUnderlyingError.convertError(fromError: error)
         }
         return result
     }
@@ -67,7 +67,7 @@ class RepositoryImpl: Repository {
             return try self.persistence.container.viewContext.fetch(fetchRequest)
         } catch {
             debugPrint(for: self, message: "Error while fetching stories")
-            throw LoadError.convertError(fromError: error)
+            throw SharedUnderlyingError.convertError(fromError: error)
         }
     }
     
@@ -79,17 +79,6 @@ class RepositoryImpl: Repository {
 enum SaveError: UnderlyingError {
     case unknownError
     case diskFullError
-    case underlyingError(errorDescription: String)
-    
-    static func getUnknownError() -> Self { Self.unknownError }
-    
-    static func getUnderlyingError(errorDescription: String) -> Self {
-        return .underlyingError(errorDescription: errorDescription)
-    }
-}
-
-enum LoadError: UnderlyingError {
-    case unknownError
     case underlyingError(errorDescription: String)
     
     static func getUnknownError() -> Self { Self.unknownError }

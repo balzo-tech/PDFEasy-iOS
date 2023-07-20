@@ -105,8 +105,10 @@ extension AnalyticsEvent {
         case .annotationsConfirmed: return "annotations_confirmed"
         case .fillWidgetCancelled: return "fill_widget_cancelled"
         case .fillWidgetConfirmed: return "fill_widget_confirmed"
+        case .chatPdfSelectionActionChosen: return "chat_pdf_selection_action_chosen"
         case .chatPdfSelectionFullActionChosen: return "chat_pdf_selection_full_action_chosen"
         case .chatPdfSelectionFullActionCompleted: return "chat_pdf_selection_full_action_completed"
+        case .chatPdfMessageSent: return "chat_pdf_message_sent"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -174,6 +176,7 @@ extension AnalyticsEvent {
                 parameters[FirebaseEventCustomParameters.compression.rawValue] = compressionValue
             }
             return parameters
+        case .chatPdfSelectionActionChosen: return nil
         case .chatPdfSelectionFullActionChosen(let importOption):
             var parameters: [String: Any] = [:]
             if let importOption = importOption {
@@ -189,6 +192,7 @@ extension AnalyticsEvent {
                 parameters[FirebaseEventCustomParameters.importOption.rawValue] = importOption.trackingParameterValue
             }
             return parameters
+        case .chatPdfMessageSent: return nil
         case .reportScreen(let screen): return [AnalyticsParameterScreenName: screen.name]
         case .reportNonFatalError: return nil
         }

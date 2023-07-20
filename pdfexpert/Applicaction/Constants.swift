@@ -51,6 +51,7 @@ struct K {
         
         // ChatPdf
         static let UseMockChatPdf = true
+        static let ChatPdfNetworkStubsDelay = 1.0
     }
     
     struct MonetizationK {

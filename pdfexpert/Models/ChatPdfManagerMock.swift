@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class ChatPdfManagerMock: ChatPdfManager {
     
@@ -15,14 +16,20 @@ class ChatPdfManagerMock: ChatPdfManager {
     
     private var index: Int = 0
     
-    func sendPdf(pdf: Data) async throws -> String {
-        return ""
+    func sendPdf(pdf: Data) -> AnyPublisher<ChatPdfRef, ChatPdfError> {
+        return Self.getDelayedResponse(response: ChatPdfRef(sourceId: "test_source_id"))
     }
     
-    func generateText(prompt: String) async throws -> String {
-        try await Task.sleep(until: .now + .seconds(1), clock: .continuous)
+    func generateText(ref: ChatPdfRef, prompt: String) -> AnyPublisher<ChatPdfMessage, ChatPdfError> {
         let text = self.texts[self.index % self.texts.count]
         self.index += 1
-        return text
+        return Self.getDelayedResponse(response: ChatPdfMessage(role: .assistant, type: .text, content: text))
+    }
+    
+    private static  func getDelayedResponse<T>(response: T) -> AnyPublisher<T, ChatPdfError> {
+        return Just.withErrorType((), ChatPdfError.self)
+            .delay(for: RunLoop.SchedulerTimeType.Stride(K.Test.ChatPdfNetworkStubsDelay), scheduler: RunLoop.main)
+            .flatMap { Just.withErrorType(response, ChatPdfError.self) }
+            .eraseToAnyPublisher()
     }
 }
