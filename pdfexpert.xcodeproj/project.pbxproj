@@ -36,6 +36,8 @@
 		893BE52B2A6A7864004B05B9 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 893BE52A2A6A7864004B05B9 /* CombineMoya */; };
 		893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */; };
 		893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */; };
+		893BE5352A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */; };
+		893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE5362A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -232,6 +234,8 @@
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerImpl.swift; sourceTree = "<group>"; };
 		893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtility.swift; sourceTree = "<group>"; };
+		893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfRef+Decodable.swift"; sourceTree = "<group>"; };
+		893BE5362A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfMessage+Decodable.swift"; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -424,6 +428,35 @@
 				893ED9D72A693013004EE67C /* MessageView.swift */,
 			);
 			path = ChatPdf;
+			sourceTree = "<group>";
+		};
+		893BE5312A6A96BE004B05B9 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				893BE5322A6A96D0004B05B9 /* ChatPdf */,
+				893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		893BE5322A6A96D0004B05B9 /* ChatPdf */ = {
+			isa = PBXGroup;
+			children = (
+				893BE5332A6A96E1004B05B9 /* Mapping */,
+				8936AA352A68299B005F6C73 /* ChatPdfManager.swift */,
+				8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */,
+				893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */,
+			);
+			path = ChatPdf;
+			sourceTree = "<group>";
+		};
+		893BE5332A6A96E1004B05B9 /* Mapping */ = {
+			isa = PBXGroup;
+			children = (
+				893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */,
+				893BE5362A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift */,
+			);
+			path = Mapping;
 			sourceTree = "<group>";
 		};
 		893C8FC729DED15B000E35BD /* Archive */ = {
@@ -762,14 +795,11 @@
 				89CD7AE529D329B1003F1C3A /* StoreImpl.swift */,
 				89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */,
 				89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */,
-				8936AA352A68299B005F6C73 /* ChatPdfManager.swift */,
-				8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */,
-				893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */,
-				893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */,
 				893C8FD129DED2E9000E35BD /* Repository.swift */,
 				893C8FD229DED2E9000E35BD /* RepositoryImpl.swift */,
 				8991485029E851B500DD01F2 /* ConfigService.swift */,
 				8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */,
+				893BE5312A6A96BE004B05B9 /* Network */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1225,6 +1255,7 @@
 				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
 				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
+				893BE5352A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */,
 				89436ABD29E5586600060605 /* PdfEditView.swift in Sources */,
@@ -1235,6 +1266,7 @@
 				8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */,
 				893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
+				893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,
 				89CD7B4F29D329B1003F1C3A /* ParentalCheck.swift in Sources */,

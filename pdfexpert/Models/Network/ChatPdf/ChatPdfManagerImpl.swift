@@ -10,17 +10,22 @@ import Moya
 import CombineMoya
 import Combine
 
+fileprivate struct ChatPdfApiError: Decodable, CustomStringConvertible {
+    let code: String
+    let message: String
+    
+    var description: String { self.message }
+}
+
 class ChatPdfManagerImpl: ChatPdfManager {
     
     fileprivate static let baseUrl: String = "https://api.chatpdf.com"
     
     fileprivate static let apiKey: String = { ProjectInfo.chatPdfApiKey }()
     
-    private lazy var provider: MoyaProvider<ChatPdfService> = {
-        MoyaProvider<ChatPdfService>(plugins: [self.loggerPlugin])
-    }()
+    lazy var provider: MoyaProvider<ChatPdfService> = { self.createProvider() }()
     
-    private lazy var loggerPlugin: PluginType = {
+    lazy var loggerPlugin: PluginType = {
         let formatter = NetworkLoggerPlugin.Configuration.Formatter(requestData: Data.JSONRequestDataFormatter,
                                                                     responseData: Data.JSONRequestDataFormatter)
         let logOptions: NetworkLoggerPlugin.Configuration.LogOptions = K.Test.ChatPdf.NetworkLogVerbose
@@ -29,6 +34,10 @@ class ChatPdfManagerImpl: ChatPdfManager {
         let config = NetworkLoggerPlugin.Configuration(formatter: formatter, logOptions: logOptions)
         return NetworkLoggerPlugin(configuration: config)
     }()
+    
+    func createProvider() -> MoyaProvider<ChatPdfService> {
+        MoyaProvider<ChatPdfService>(plugins: [self.loggerPlugin])
+    }
     
     func sendPdf(pdf: Data) -> AnyPublisher<ChatPdfRef, ChatPdfError> {
         self.send(request: .sendPdf(pdf: pdf))
@@ -42,12 +51,25 @@ class ChatPdfManagerImpl: ChatPdfManager {
         self.provider.requestPublisher(request)
             .tryMap() { response -> Data in
                 guard 200 ... 299 ~= response.statusCode else {
-                    throw URLError(.badServerResponse)
+                    let decoder = JSONDecoder()
+                    if let apiError =  try? decoder.decode(ChatPdfApiError.self, from: response.data) {
+                        throw ChatPdfError.underlyingError(errorDescription: apiError.description)
+                    } else {
+                        throw ChatPdfError.underlyingError(errorDescription: String(data: response.data, encoding: .utf8) ?? "")
+                    }
                 }
                 return response.data
             }
             .decode(type: T.self, decoder: JSONDecoder())
-            .mapError { ChatPdfError.underlyingError(errorDescription: $0.localizedDescription) }
+            .mapError { error in
+                if let error = error as? ChatPdfError {
+                    return error
+                } else if let error = error as? DecodingError {
+                    return ChatPdfError.parse
+                } else {
+                    return ChatPdfError.underlyingError(errorDescription: error.localizedDescription)
+                }
+            }
             .eraseToAnyPublisher()
     }
 }

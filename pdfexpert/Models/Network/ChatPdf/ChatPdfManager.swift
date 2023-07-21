@@ -26,8 +26,8 @@ enum ChatPdfError: LocalizedError, UnderlyingError {
         switch self {
         case .unknownError, .parse: return "Internal Error. Please try again later"
         case .underlyingError(let errorMessage): return errorMessage
-        case .pdfTooLarge, .parse: return "Your pdf is too large"
-        case .pdfTooManyPages, .parse: return "Your pdf has too many pages"
+        case .pdfTooLarge: return "Your pdf is too large"
+        case .pdfTooManyPages: return "Your pdf has too many pages"
         }
     }
 }
