@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "open book.png",
+      "filename" : "onboarding_chat_pdf.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "open book@2x.png",
+      "filename" : "onboarding_chat_pdf@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "open book@3x.png",
+      "filename" : "onboarding_chat_pdf@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

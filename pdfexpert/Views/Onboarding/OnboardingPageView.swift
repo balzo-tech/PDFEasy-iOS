@@ -44,22 +44,22 @@ struct OnboardingPageView: View {
 struct OnboardingPageView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingPageView(
-            imageName: "onboarding_tutorial_1",
+            imageName: "onboarding_chat_pdf",
+            title: "Chat with any PDF files",
+            description: "You can ask questions to any PDF and get quick insights and clarifications."
+        )
+        OnboardingPageView(
+            imageName: "onboarding_convert",
             title: "Convert files\nto PDF",
             description: "You can convert to pdf a lot of file types from the programs you prefer."
         )
         OnboardingPageView(
-            imageName: "onboarding_tutorial_2",
+            imageName: "onboarding_signature",
             title: "Enter and edit your\nsignature",
             description: "Insert your signature in the pdf you created with a single tap."
         )
         OnboardingPageView(
-            imageName: "onboarding_tutorial_3",
-            title: "Edit, share and save your\nPDF",
-            description: "You can add new pages, edit your pdf, save it and share it with anyone."
-        )
-        OnboardingPageView(
-            imageName: "onboarding_tutorial_4",
+            imageName: "onboarding_password",
             title: "Protect your files with\npassword",
             description: "Enter a password to protect your pdf, you can delete it and change it whenever you want."
         )
