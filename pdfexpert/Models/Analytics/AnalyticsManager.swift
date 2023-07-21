@@ -16,6 +16,7 @@ enum AnalyticsError {
     case shareExtensionPdfMissingDataForUnlockedFile
     case shareExtensionPdfDecryptionFailed
     case shareExtensionPdfCannotDecodeDecryptedData
+    case chatPdfDeletionFailed
 }
 
 enum AnalyticsPdfInputType {

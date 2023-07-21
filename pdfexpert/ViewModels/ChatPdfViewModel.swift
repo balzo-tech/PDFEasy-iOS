@@ -38,6 +38,10 @@ class ChatPdfViewModel: ObservableObject {
         self.analyticsManager.track(event: .reportScreen(.chatPdf))
     }
     
+    func onDisappear() {
+        self.chatPdfManager.deletePdf(ref: self.chatPdfRef)
+    }
+    
     func getResponse(text: String) {
         
         self.analyticsManager.track(event: .chatPdfMessageSent)

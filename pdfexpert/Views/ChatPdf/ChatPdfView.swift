@@ -89,6 +89,9 @@ struct ChatPdfView: View {
             .onAppear() {
                 self.viewModel.onAppear()
             }
+            .onDisappear() {
+                self.viewModel.onDisappear()
+            }
         }
         .background(ColorPalette.primaryBG)
     }

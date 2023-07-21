@@ -9,6 +9,7 @@ import Foundation
 import Moya
 import CombineMoya
 import Combine
+import Factory
 
 fileprivate struct ChatPdfApiError: Decodable, CustomStringConvertible {
     let code: String
@@ -35,6 +36,10 @@ class ChatPdfManagerImpl: ChatPdfManager {
         return NetworkLoggerPlugin(configuration: config)
     }()
     
+    @Injected(\.analyticsManager) private var analyticsManager
+    
+    private var cancelBag = Set<AnyCancellable>()
+    
     func createProvider() -> MoyaProvider<ChatPdfService> {
         MoyaProvider<ChatPdfService>(plugins: [self.loggerPlugin])
     }
@@ -45,6 +50,20 @@ class ChatPdfManagerImpl: ChatPdfManager {
     
     func generateText(ref: ChatPdfRef, prompt: String) -> AnyPublisher<ChatPdfMessage, ChatPdfError> {
         self.send(request: .generateText(ref: ref, prompt: prompt))
+    }
+    
+    func deletePdf(ref: ChatPdfRef) {
+        // Must be fire and forget by design, to avoid blocking the user and show unfriendly errors
+        // TODO: Improve with a queue of to-be-deleted pdfs that periodically get flushed
+        self.send(request: .deletePdf(ref: ref))
+            .sink(receiveCompletion: { subscriptionCompletion in
+                if let error = subscriptionCompletion.error {
+                    print("ChatPdfManagerImpl - deleting Pdf from Chat PDF. Error: \(error.localizedDescription)")
+                    self.analyticsManager.track(event: .reportNonFatalError(.chatPdfDeletionFailed))
+                }
+            }, receiveValue: {
+                print("ChatPdfManagerImpl - successfully deleted from Chat PDF")
+            }).store(in: &self.cancelBag)
     }
     
     private func send<T: Decodable>(request: ChatPdfService) -> AnyPublisher<T, ChatPdfError> {
@@ -64,8 +83,31 @@ class ChatPdfManagerImpl: ChatPdfManager {
             .mapError { error in
                 if let error = error as? ChatPdfError {
                     return error
-                } else if let error = error as? DecodingError {
+                } else if error is DecodingError {
                     return ChatPdfError.parse
+                } else {
+                    return ChatPdfError.underlyingError(errorDescription: error.localizedDescription)
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    private func send(request: ChatPdfService) -> AnyPublisher<(), ChatPdfError> {
+        self.provider.requestPublisher(request)
+            .tryMap() { response -> () in
+                guard 200 ... 299 ~= response.statusCode else {
+                    let decoder = JSONDecoder()
+                    if let apiError =  try? decoder.decode(ChatPdfApiError.self, from: response.data) {
+                        throw ChatPdfError.underlyingError(errorDescription: apiError.description)
+                    } else {
+                        throw ChatPdfError.underlyingError(errorDescription: String(data: response.data, encoding: .utf8) ?? "")
+                    }
+                }
+                return ()
+            }
+            .mapError { error in
+                if let error = error as? ChatPdfError {
+                    return error
                 } else {
                     return ChatPdfError.underlyingError(errorDescription: error.localizedDescription)
                 }
@@ -75,9 +117,9 @@ class ChatPdfManagerImpl: ChatPdfManager {
 }
 
 enum ChatPdfService {
-    // Misc
     case sendPdf(pdf: Data)
     case generateText(ref: ChatPdfRef, prompt: String)
+    case deletePdf(ref: ChatPdfRef)
 }
 
 extension ChatPdfService: TargetType {
@@ -88,12 +130,13 @@ extension ChatPdfService: TargetType {
         switch self {
         case .sendPdf: return "/v1/sources/add-file"
         case .generateText: return "/v1/chats/message"
+        case .deletePdf: return "/v1/sources/delete"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .sendPdf, .generateText:
+        case .sendPdf, .generateText, .deletePdf:
             return .post
         }
     }
@@ -103,6 +146,7 @@ extension ChatPdfService: TargetType {
         // Misc
         case .sendPdf: return "{\"sourceId\": \"TestSourceId\"}".utf8Encoded
         case .generateText: return "{\"content\": \"Test Message\"}".utf8Encoded
+        case .deletePdf: return "".utf8Encoded
         }
     }
     
@@ -120,6 +164,8 @@ extension ChatPdfService: TargetType {
                 "messages": [message]
             ]
             return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+        case .deletePdf(let ref):
+            return .requestParameters(parameters: ["sources": [ref.sourceId]], encoding: JSONEncoding.default)
         }
     }
     

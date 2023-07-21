@@ -210,6 +210,7 @@ extension AnalyticsError {
         case .shareExtensionPdfMissingDataForUnlockedFile: return "Share Extension Pdf was unlocked but failed to provide data"
         case .shareExtensionPdfDecryptionFailed: return "Share Extension Pdf was unlocked but could not be decrypted"
         case .shareExtensionPdfCannotDecodeDecryptedData: return "Share Extension Pdf was decrypted but could not be converted to PdfDocument"
+        case .chatPdfDeletionFailed: return "Pdf uploaded to Chat Pdf has not be deleted"
         }
     }
     
