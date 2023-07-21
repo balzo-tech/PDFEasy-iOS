@@ -60,7 +60,7 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
     private func updateFacebookAdvertiseTrackingSettings() {
         let enableAdvertiserTracking = self.permissionGranted ?? false
         #if FACEBOOK
-        Settings.isAdvertiserIDCollectionEnabled = enableAdvertiserTracking
+//        Settings.isAdvertiserIDCollectionEnabled = enableAdvertiserTracking
         #endif
     }
     

@@ -23,8 +23,12 @@
 			</array>
 		</dict>
 	</array>
+    <key>FacebookAdvertiserIDCollectionEnabled</key>
+    <false/>
 	<key>FacebookAppID</key>
 	<string>myFacebookAppID</string>
+    <key>FacebookAutoLogAppEventsEnabled</key>
+    <false/>
 	<key>FacebookClientToken</key>
 	<string>myFacebookClientToken</string>
 	<key>FacebookDisplayName</key>
