@@ -49,10 +49,11 @@ struct K {
             return PdfEditable(pdfDocument: testPdfDocument)
         }
         
-        // ChatPdf
-        static let UseMockChatPdf = false
-        static let ChatPdfNetworkStubsDelay = 1.0
-        static let ChatPdfNetworkLogVerbose = true
+        struct ChatPdf {
+            static let UseMock = false
+            static let NetworkStubsDelay = 1.0
+            static let NetworkLogVerbose = true
+        }
     }
     
     struct MonetizationK {
@@ -62,6 +63,11 @@ struct K {
     struct RemoteConfigK {
         static let DebugRemoteConfigExpirationDuration: TimeInterval = 30.0
         static let DefaultRemoteConfigExpirationDuration: TimeInterval = 60.0 * 60.0
+    }
+    
+    struct ChatPdf {
+        static let MaxBytes: UInt64 = 32 * 1_048_576 // 32 MB
+        static let MaxPages: Int = 2000
     }
     
     struct Misc {

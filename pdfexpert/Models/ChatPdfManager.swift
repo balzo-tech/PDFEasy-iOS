@@ -12,6 +12,8 @@ import Combine
 enum ChatPdfError: LocalizedError, UnderlyingError {
     case unknownError
     case parse
+    case pdfTooLarge
+    case pdfTooManyPages
     case underlyingError(errorDescription: String)
     
     static func getUnknownError() -> Self { Self.unknownError }
@@ -24,6 +26,8 @@ enum ChatPdfError: LocalizedError, UnderlyingError {
         switch self {
         case .unknownError, .parse: return "Internal Error. Please try again later"
         case .underlyingError(let errorMessage): return errorMessage
+        case .pdfTooLarge, .parse: return "Your pdf is too large"
+        case .pdfTooManyPages, .parse: return "Your pdf has too many pages"
         }
     }
 }
@@ -38,7 +42,7 @@ extension Container {
     var chatPdfManager: Factory<ChatPdfManager> {
         self {
             #if DEBUG
-            K.Test.UseMockChatPdf ? (ChatPdfManagerMock() as ChatPdfManager) : (ChatPdfManagerImpl() as ChatPdfManager)
+            K.Test.ChatPdf.UseMock ? (ChatPdfManagerMock() as ChatPdfManager) : (ChatPdfManagerImpl() as ChatPdfManager)
             #else
             ChatPdfManagerImpl()
             #endif

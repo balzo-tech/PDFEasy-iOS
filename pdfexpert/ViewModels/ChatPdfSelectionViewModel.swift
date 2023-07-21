@@ -147,6 +147,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
             self.lockedPdfEditable = pdfEditable
             self.pdfPasswordInputShow = true
         } else {
+            self.currentAnalyticsFileExtension = "pdf"
             self.asyncImportPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
         }
     }
@@ -157,6 +158,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
             assertionFailure("Missing expected locked pdf")
             return
         }
+        self.currentAnalyticsFileExtension = "pdf"
         self.asyncImportPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
     }
     
@@ -200,6 +202,16 @@ class ChatPdfSelectionViewModel: ObservableObject {
         }
         
         self.asyncUploadPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        
+        guard pdfData.count <= K.ChatPdf.MaxBytes else {
+            self.asyncUploadPdf = AsyncOperation(status: .error(.pdfTooLarge))
+            return
+        }
+        
+        guard pdfEditable.pdfDocument.pageCount <= K.ChatPdf.MaxPages else {
+            self.asyncUploadPdf = AsyncOperation(status: .error(.pdfTooManyPages))
+            return
+        }
         
         self.chatPdfManager.sendPdf(pdf: pdfData)
             .sinkToAsyncStatus { [weak self] status in

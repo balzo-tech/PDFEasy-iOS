@@ -23,7 +23,7 @@ class ChatPdfManagerImpl: ChatPdfManager {
     private lazy var loggerPlugin: PluginType = {
         let formatter = NetworkLoggerPlugin.Configuration.Formatter(requestData: Data.JSONRequestDataFormatter,
                                                                     responseData: Data.JSONRequestDataFormatter)
-        let logOptions: NetworkLoggerPlugin.Configuration.LogOptions = K.Test.ChatPdfNetworkLogVerbose
+        let logOptions: NetworkLoggerPlugin.Configuration.LogOptions = K.Test.ChatPdf.NetworkLogVerbose
             ? .verbose
             : .default
         let config = NetworkLoggerPlugin.Configuration(formatter: formatter, logOptions: logOptions)

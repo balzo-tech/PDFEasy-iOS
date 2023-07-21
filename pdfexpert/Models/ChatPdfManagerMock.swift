@@ -28,7 +28,7 @@ class ChatPdfManagerMock: ChatPdfManager {
     
     private static  func getDelayedResponse<T>(response: T) -> AnyPublisher<T, ChatPdfError> {
         return Just.withErrorType((), ChatPdfError.self)
-            .delay(for: RunLoop.SchedulerTimeType.Stride(K.Test.ChatPdfNetworkStubsDelay), scheduler: RunLoop.main)
+            .delay(for: RunLoop.SchedulerTimeType.Stride(K.Test.ChatPdf.NetworkStubsDelay), scheduler: RunLoop.main)
             .flatMap { Just.withErrorType(response, ChatPdfError.self) }
             .eraseToAnyPublisher()
     }
