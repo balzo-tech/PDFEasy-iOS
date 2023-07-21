@@ -100,7 +100,12 @@ struct ChatPdfView: View {
 struct ChatPdfView_Previews: PreviewProvider {
     
     private static let testChatPdfRef = ChatPdfRef(sourceId: "test_source_id")
-    private static let testParameters = ChatPdfViewModel.Parameters(chatPdfRef: Self.testChatPdfRef)
+    private static let testChatPdfMessage = ChatPdfMessage(role: .assistant,
+                                                           type: .text,
+                                                           content: "Welcome message")
+    private static let testChatPdfInitParams = ChatPdfInitParams(chatPdfRef: testChatPdfRef,
+                                                                 introductoryMessage: testChatPdfMessage)
+    private static let testParameters = ChatPdfViewModel.Parameters(chatPdfInitParams: Self.testChatPdfInitParams)
     
     static var previews: some View {
         let _ = Container.shared.chatPdfManager.register { ChatPdfManagerMock() }

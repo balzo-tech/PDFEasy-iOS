@@ -36,17 +36,17 @@ class ChatPdfSelectionViewModel: ObservableObject {
         }
     }
     
-    @Published var asyncUploadPdf: AsyncOperation<ChatPdfRef, ChatPdfError> = AsyncOperation(status: .empty) {
+    @Published var asyncChatPdfSetup: AsyncOperation<ChatPdfInitParams, ChatPdfError> = AsyncOperation(status: .empty) {
         didSet {
-            if let chatPdfRef = self.asyncUploadPdf.data {
-                self.chatPdfRef = chatPdfRef
+            if let chatPdfInitParams = self.asyncChatPdfSetup.data {
+                self.chatPdfInitParams = chatPdfInitParams
             } else {
-                self.chatPdfRef = nil
+                self.chatPdfInitParams = nil
             }
         }
     }
     
-    @Published var chatPdfRef: ChatPdfRef? = nil
+    @Published var chatPdfInitParams: ChatPdfInitParams? = nil
     
     @Published var monetizationShow: Bool = false
     
@@ -197,25 +197,29 @@ class ChatPdfSelectionViewModel: ObservableObject {
     private func uploadPdf(pdfEditable: PdfEditable) {
         guard let pdfData = pdfEditable.rawData else {
             assertionFailure("Missing expected pdf data")
-            self.asyncUploadPdf = AsyncOperation(status: .error(.unknownError))
+            self.asyncChatPdfSetup = AsyncOperation(status: .error(.unknownError))
             return
         }
         
-        self.asyncUploadPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
+        self.asyncChatPdfSetup = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
         
         guard pdfData.count <= K.ChatPdf.MaxBytes else {
-            self.asyncUploadPdf = AsyncOperation(status: .error(.pdfTooLarge))
+            self.asyncChatPdfSetup = AsyncOperation(status: .error(.pdfTooLarge))
             return
         }
         
         guard pdfEditable.pdfDocument.pageCount <= K.ChatPdf.MaxPages else {
-            self.asyncUploadPdf = AsyncOperation(status: .error(.pdfTooManyPages))
+            self.asyncChatPdfSetup = AsyncOperation(status: .error(.pdfTooManyPages))
             return
         }
         
         self.chatPdfManager.sendPdf(pdf: pdfData)
+            .flatMap { chatPdfRef in
+                self.chatPdfManager.generateText(ref: chatPdfRef, prompt: K.ChatPdf.IntroductoryMessageRequest)
+                    .map { ChatPdfInitParams(chatPdfRef: chatPdfRef, introductoryMessage: $0) }
+            }
             .sinkToAsyncStatus { [weak self] status in
-                self?.asyncUploadPdf = AsyncOperation(status: status)
+                self?.asyncChatPdfSetup = AsyncOperation(status: status)
             }.store(in: &self.cancelBag)
     }
     

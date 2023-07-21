@@ -59,11 +59,10 @@ struct ChatPdfSelectionView: View {
                 self.viewModel.convertScan(scannerResult: $0)
             })
         }
-        .fullScreenCover(item: self.$viewModel.chatPdfRef) { chatPdfRef in
-            let parameters = ChatPdfViewModel.Parameters(chatPdfRef: chatPdfRef)
+        .fullScreenCover(item: self.$viewModel.chatPdfInitParams) { chatPdfInitParams in
+            let parameters = ChatPdfViewModel.Parameters(chatPdfInitParams: chatPdfInitParams)
             ChatPdfView(viewModel: Container.shared.chatPdfViewModel(parameters))
         }
-        
         .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
             self.getSubscriptionView(onComplete: {
                 self.viewModel.monetizationShow = false
@@ -71,7 +70,7 @@ struct ChatPdfSelectionView: View {
         }
         .asyncView(asyncOperation: self.$viewModel.asyncImportPdf,
                    loadingView: { AnimationType.pdf.view })
-        .asyncView(asyncOperation: self.$viewModel.asyncUploadPdf)
+        .asyncView(asyncOperation: self.$viewModel.asyncChatPdfSetup)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     

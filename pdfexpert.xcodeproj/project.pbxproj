@@ -23,6 +23,7 @@
 		8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */; };
 		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
 		8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */; };
+		8934ACC72A6AE96700F6CDA8 /* ChatPdfInitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8934ACC62A6AE96700F6CDA8 /* ChatPdfInitParams.swift */; };
 		8936AA312A682812005F6C73 /* ProjectInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8936AA302A682812005F6C73 /* ProjectInfo.plist */; };
 		8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA322A6828C9005F6C73 /* ProjectInfo.swift */; };
 		8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA352A68299B005F6C73 /* ChatPdfManager.swift */; };
@@ -221,6 +222,7 @@
 		8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillFormViewModel.swift; sourceTree = "<group>"; };
 		8932ECE82A20F10500CBCD7A /* TextResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextResizableView.swift; sourceTree = "<group>"; };
 		8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitViewBinder.swift; sourceTree = "<group>"; };
+		8934ACC62A6AE96700F6CDA8 /* ChatPdfInitParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfInitParams.swift; sourceTree = "<group>"; };
 		8936AA2A2A67F975005F6C73 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		8936AA302A682812005F6C73 /* ProjectInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProjectInfo.plist; sourceTree = "<group>"; };
 		8936AA322A6828C9005F6C73 /* ProjectInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectInfo.swift; sourceTree = "<group>"; };
@@ -814,6 +816,7 @@
 				8936AA322A6828C9005F6C73 /* ProjectInfo.swift */,
 				893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */,
 				893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */,
+				8934ACC62A6AE96700F6CDA8 /* ChatPdfInitParams.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1245,6 +1248,7 @@
 				893C8FDE29DED7F4000E35BD /* PdfUtility.swift in Sources */,
 				8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */,
 				894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */,
+				8934ACC72A6AE96700F6CDA8 /* ChatPdfInitParams.swift in Sources */,
 				89CD7B4C29D329B1003F1C3A /* CircularProgressView.swift in Sources */,
 				89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */,
 				893ED9D92A693013004EE67C /* MessageView.swift in Sources */,

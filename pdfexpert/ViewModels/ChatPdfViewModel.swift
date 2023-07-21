@@ -18,7 +18,7 @@ extension Container {
 class ChatPdfViewModel: ObservableObject {
     
     struct Parameters {
-        let chatPdfRef: ChatPdfRef
+        let chatPdfInitParams: ChatPdfInitParams
     }
     
     @Injected(\.chatPdfManager) private var chatPdfManager
@@ -31,7 +31,8 @@ class ChatPdfViewModel: ObservableObject {
     private var cancelBag = Set<AnyCancellable>()
     
     init(parameters: Parameters) {
-        self.chatPdfRef = parameters.chatPdfRef
+        self.chatPdfRef = parameters.chatPdfInitParams.chatPdfRef
+        self.messages.append(parameters.chatPdfInitParams.introductoryMessage)
     }
     
     func onAppear() {

@@ -17,7 +17,7 @@ enum ChatPdfMessageType {
     case indicator
 }
 
-struct ChatPdfMessage {
+struct ChatPdfMessage: Hashable {
     let role: ChatPdfMessageRole
     let type: ChatPdfMessageType
     let content: String

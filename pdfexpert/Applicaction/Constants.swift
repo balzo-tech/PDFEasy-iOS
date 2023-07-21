@@ -68,6 +68,7 @@ struct K {
     struct ChatPdf {
         static let MaxBytes: UInt64 = 32 * 1_048_576 // 32 MB
         static let MaxPages: Int = 2000
+        static let IntroductoryMessageRequest: String = "Make a summary and suggest three questions"
     }
     
     struct Misc {
