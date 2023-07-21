@@ -40,7 +40,7 @@ struct MessageView: View {
     }
 }
 
-extension ChatPdfMessage {
+fileprivate extension ChatPdfMessage {
     
     var backgroundColor: Color {
         switch self.role {
