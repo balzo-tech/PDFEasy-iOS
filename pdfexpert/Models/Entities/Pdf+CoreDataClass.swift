@@ -50,7 +50,7 @@ public class Pdf: NSManagedObject {
     
     var shareData: Data? {
         if let password = self.password, let pdfDocument = self.pdfDocument {
-            if let encryptedPdfDocument = PDFUtility.encryptPdf(pdfDocument: pdfDocument, password: password) {
+            if let encryptedPdfDocument = try? PDFUtility.addPassword(pdfDocument: pdfDocument, password: password) {
                 if encryptedPdfDocument.unlock(withPassword: password) {
                     return encryptedPdfDocument.dataRepresentation() ?? self.data
                 } else {

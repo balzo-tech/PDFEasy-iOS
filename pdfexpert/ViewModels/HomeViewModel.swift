@@ -410,22 +410,13 @@ public class HomeViewModel : ObservableObject {
                 return
             }
             
-            guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
-                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfMissingDataForUnlockedFile))
-                resetSharedStorage()
-                return
-            }
-            guard let pdfDecryptedData = try? PDFUtility.removePassword(data: pdfEncryptedData, existingPDFPassword: password) else {
+            guard let pdfDecryptedDocument = try? PDFUtility.removePassword(pdfDocument: pdfEditable.pdfDocument, password: password) else {
                 self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfDecryptionFailed))
                 resetSharedStorage()
                 return
             }
-            guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
-                self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecodeDecryptedData))
-                resetSharedStorage()
-                return
-            }
-            pdfEditable = pdfDecryptedEditable
+            
+            pdfEditable = PdfEditable(pdfDocument: pdfDecryptedDocument, password: password)
         }
         resetSharedStorage()
         // TODO: Ask the user whether to discard the current pdf or not

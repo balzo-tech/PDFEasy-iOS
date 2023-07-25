@@ -186,9 +186,7 @@ class PdfEditViewModel: ObservableObject {
             return
         }
         
-        let pdfDocument = PDFUtility.applyPostProcess(toPdfDocument: self.pdfEditable.pdfDocument,
-                                                      horizontalMargin: self.marginsOption.horizontalMargin,
-                                                      quality: 1.0 - self.compression)
+        let pdfDocument = self.pdfEditable.pdfDocument
         
         guard let data = pdfDocument.dataRepresentation() else {
             debugPrint(for: self, message: "Couldn't convert pdf document to data")

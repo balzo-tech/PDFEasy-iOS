@@ -123,23 +123,6 @@ class PDFUtility {
         return newPdfDocument
     }
     
-    static func encryptPdf(pdfDocument: PDFDocument, password: String) -> PDFDocument? {
-        let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false)
-        let encryptedFileURL = documentDirectory.appendingPathComponent("temp_encrypted_pdf_file").appendingPathExtension(for: .pdf)
-        
-        // Write with password protection
-        pdfDocument.write(to: encryptedFileURL, withOptions: [PDFDocumentWriteOption.userPasswordOption : password,
-                                                              PDFDocumentWriteOption.ownerPasswordOption : password])
-        
-        // Get a new encrypted PdfDocument from the created file
-        let encryptedPdfDocument = PDFDocument(url: encryptedFileURL)
-        
-        // Clean up
-        try? FileManager.default.removeItem(at: encryptedFileURL)
-        
-        return encryptedPdfDocument
-    }
-    
     static func unlock(data: Data, password: String) -> CGPDFDocument? {
         if let pdf = CGPDFDocument(CGDataProvider(data: data as CFData)!) {
             guard pdf.isEncrypted == true else { return pdf }
@@ -154,38 +137,94 @@ class PDFUtility {
         return nil
     }
     
-    static func removePassword(data: Data, existingPDFPassword: String) throws -> Data? {
+    static func addPassword(pdfDocument: PDFDocument, password: String) throws -> PDFDocument {
+        return try Self.changePassword(pdfDocument: pdfDocument, password: password, addPassword: true)
+    }
+    
+    static func removePassword(pdfDocument: PDFDocument, password: String) throws -> PDFDocument {
+        return try Self.changePassword(pdfDocument: pdfDocument, password: password, addPassword: false)
+    }
+    
+    enum PdfChangePasswordError: LocalizedError {
+        case genericError
         
-        if let pdf = unlock(data: data, password: existingPDFPassword) {
-            let data = NSMutableData()
-            
-            autoreleasepool {
-                let pageCount = pdf.numberOfPages
-                UIGraphicsBeginPDFContextToData(data, .zero, nil)
-                
-                for index in 1...pageCount {
-                    
-                    let page = pdf.page(at: index)
-                    let pageRect = page?.getBoxRect(CGPDFBox.mediaBox)
-                    
-                    
-                    UIGraphicsBeginPDFPageWithInfo(pageRect!, nil)
-                    let ctx = UIGraphicsGetCurrentContext()
-                    ctx?.interpolationQuality = .high
-                    // Draw existing page
-                    ctx!.saveGState()
-                    ctx!.scaleBy(x: 1, y: -1)
-                    ctx!.translateBy(x: 0, y: -(pageRect?.size.height)!)
-                    ctx!.drawPDFPage(page!)
-                    ctx!.restoreGState()
-                    
-                }
-                
-                UIGraphicsEndPDFContext()
+        var errorDescription: String? {
+            switch self {
+            case .genericError: return "Internal error"
             }
-            return data as Data
         }
-        return nil
+    }
+    
+    private static func changePassword(pdfDocument: PDFDocument, password: String, addPassword: Bool) throws -> PDFDocument {
+        
+        guard let originalPdfData = pdfDocument.dataRepresentation() else {
+            throw PdfChangePasswordError.genericError
+        }
+        
+        guard let cgPdfDocument = unlock(data: originalPdfData, password: password) else {
+            throw PdfChangePasswordError.genericError
+        }
+        
+        var info: [AnyHashable : Any]? = [:]
+        if addPassword {
+            info = [
+                String(kCGPDFContextUserPassword): (password as AnyObject?),
+                String(kCGPDFContextOwnerPassword): (password as AnyObject?)
+            ]
+        }
+        
+        return try autoreleasepool { () -> PDFDocument in
+            let data = NSMutableData()
+            let pageCount = cgPdfDocument.numberOfPages
+            
+            UIGraphicsBeginPDFContextToData(data, .zero, info)
+            
+            for index in 1...pageCount {
+                
+                let page = cgPdfDocument.page(at: index)
+                let pageRect = page?.getBoxRect(CGPDFBox.mediaBox)
+                
+                UIGraphicsBeginPDFPageWithInfo(pageRect!, nil)
+                let ctx = UIGraphicsGetCurrentContext()
+                ctx?.interpolationQuality = .high
+                // Draw existing page
+                ctx!.saveGState()
+                ctx!.scaleBy(x: 1, y: -1)
+                ctx!.translateBy(x: 0, y: -(pageRect?.size.height)!)
+                ctx!.drawPDFPage(page!)
+                ctx!.restoreGState()
+                
+            }
+            
+            UIGraphicsEndPDFContext()
+            
+            let convertedData = data as Data
+            
+            guard let convertedPdfDocument = PDFDocument(data: convertedData) else {
+                throw PdfChangePasswordError.genericError
+            }
+            
+            convertedPdfDocument.accessPermissions
+            
+            // TODO: Handle errors correctly during the entire flow
+            
+            // TODO: Remove currently existing annotations before making the copy and re-add them on the copied file
+            
+            // TODO: Find out how to add annotations to an encrypted pdf file.
+            // Error: "PDFPage's addAnnotation: failed. PDF document's user permissions does not allow annotation modifications."
+            
+            for pageIndex in 0..<pdfDocument.pageCount {
+                if let originalPage = pdfDocument.page(at: pageIndex), let convertedPage = convertedPdfDocument.page(at: pageIndex) {
+                    for originalAnnotation in originalPage.annotations {
+                        let convertedAnnotation = originalAnnotation.copy() as! PDFAnnotation
+                        convertedPage.addAnnotation(convertedAnnotation)
+                        convertedAnnotation.page = convertedPage
+                    }
+                }
+            }
+            
+            return convertedPdfDocument
+        }
     }
     
     static func decryptFile(pdfEditable: PdfEditable, password: String = "") -> AsyncOperation<PdfEditable, PdfEditableError> {
@@ -197,22 +236,12 @@ class PDFUtility {
             return AsyncOperation(status: .error(.wrongPassword))
         }
         
-        guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
-            assertionFailure("Missing expected encrypted data")
-            return AsyncOperation(status: .error(.unknownError))
-        }
-        
-        guard let pdfDecryptedData = try? PDFUtility.removePassword(data: pdfEncryptedData, existingPDFPassword: password) else {
+        guard let pdfDecryptedDocument = try? PDFUtility.removePassword(pdfDocument: pdfEditable.pdfDocument, password: password) else {
             assertionFailure("Missing expected decrypted data")
             return AsyncOperation(status: .error(.unknownError))
         }
         
-        guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
-            assertionFailure("Cannot decode pdf from decrypted data")
-            return AsyncOperation(status: .error(.unknownError))
-        }
-        
-        return AsyncOperation(status: .data(pdfDecryptedEditable))
+        return AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDecryptedDocument, password: password)))
     }
     
     static func hasPdfWidget(pdfEditable: PdfEditable) -> Bool {
