@@ -36,6 +36,9 @@ enum HomeAction: Hashable, Identifiable {
     
     case importPdf
     
+    case removePassword
+    case addPassword
+    
     var importFileOption: ImportFileOption? {
         switch self {
         case .appExtension: return nil
@@ -49,6 +52,8 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return .allDocs
         case .createPdf: return nil
         case .importPdf: return .pdf
+        case .removePassword: return .pdf
+        case .addPassword: return .pdf
         }
     }
     
@@ -65,6 +70,26 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return .openFillForm
         case .createPdf: return nil
         case .importPdf: return nil
+        case .removePassword: return nil
+        case .addPassword: return nil
+        }
+    }
+    
+    var homePostImportAction: HomePostImportAction? {
+        switch self {
+        case .appExtension: return nil
+        case .imageToPdf: return nil
+        case .wordToPdf: return nil
+        case .excelToPdf: return nil
+        case .powerpointToPdf: return nil
+        case .scan: return nil
+        case .sign: return nil
+        case .formFill: return nil
+        case .addText: return nil
+        case .createPdf: return nil
+        case .importPdf: return nil
+        case .removePassword: return .removePassword
+        case .addPassword: return .addPassword
         }
     }
 }
@@ -84,6 +109,16 @@ enum ImportFileOption: Hashable, Identifiable {
 enum FileSource: Hashable, Identifiable {
     var id: Self { return self }
     case google, dropbox, icloud, files
+}
+
+enum HomePostImportAction: Hashable, Identifiable {
+    var id: Self { return self }
+    case addPassword, removePassword
+}
+
+enum HomePostSubscriptionAction: Hashable, Identifiable {
+    var id: Self { return self }
+    case share
 }
 
 public class HomeViewModel : ObservableObject {
@@ -110,12 +145,17 @@ public class HomeViewModel : ObservableObject {
     @Published var cameraShow: Bool = false
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
+    @Published var addPasswordShow: Bool = false
     
     @Published var asyncPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
         didSet {
             if self.asyncPdf.success {
                 self.trackFullActionCompleted()
-                self.pdfFlowShow = true
+                if let homePostImportAction = self.action?.homePostImportAction {
+                    self.performHomePostImportAction(homePostImportAction)
+                } else {
+                    self.pdfFlowShow = true
+                }
             } else {
                 self.pdfFlowShow = false
             }
@@ -123,15 +163,25 @@ public class HomeViewModel : ObservableObject {
     }
     
     @Published var pdfFlowShow: Bool = false
+    @Published var pdfSaved: Pdf? = nil
+    @Published var addPasswordCompletedShow: Bool = false
+    @Published var removePasswordCompletedShow: Bool = false
+    @Published var pdfToBeShared: Pdf?
+    @Published var addPasswordError: AddPasswordError? = nil
+    @Published var removePasswordError: RemovePasswordError? = nil
+    @Published var monetizationShow: Bool = false
     
     @Injected(\.store) private var store
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.repository) private var repository
+    @Injected(\.mainCoordinator) private var mainCoordinator
     
     var editStartAction: PdfEditStartAction? { self.action?.editStartAction }
     
     private var action: HomeAction? = nil
     private var currentAnalyticsImportOption: ImportOption? = nil
     private var currentAnalyticsFileExtension: String? = nil
+    private var homePostSubscriptionAction: HomePostSubscriptionAction? = nil
     
     private var lockedPdfEditable: PdfEditable? = nil
     
@@ -162,7 +212,7 @@ public class HomeViewModel : ObservableObject {
             break
         case .imageToPdf:
             self.importOptionGroup = .image
-        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill:
+        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword:
             self.openFilePicker(fileSource: .files)
         case .sign, .addText:
             self.importOptionGroup = .fileAndScan
@@ -263,7 +313,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
-            case .importPdf:
+            case .importPdf, .removePassword, .addPassword:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none:
                 assertionFailure("Selected file url is not handled for the current action")
@@ -279,10 +329,18 @@ public class HomeViewModel : ObservableObject {
         }
         
         if pdfEditable.pdfDocument.isLocked {
-            self.lockedPdfEditable = pdfEditable
-            self.pdfPasswordInputShow = true
+            if self.action?.homePostImportAction == .addPassword {
+                self.addPasswordError = .pdfHasPassword
+            } else {
+                self.lockedPdfEditable = pdfEditable
+                self.pdfPasswordInputShow = true
+            }
         } else {
-            self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
+            if self.action?.homePostImportAction == .removePassword {
+                self.removePasswordError = .pdfNoPassword
+            } else {
+                self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
+            }
         }
     }
     
@@ -293,6 +351,40 @@ public class HomeViewModel : ObservableObject {
             return
         }
         self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
+    }
+    
+    func setPassword(_ password: String) {
+        self.internalSetPassword(password)
+        debugPrint(for: self, message: "New password: \(password)")
+        self.analyticsManager.track(event: .passwordAdded)
+    }
+    
+    func goToArchive() {
+        self.mainCoordinator.goToArchive()
+        self.pdfSaved = nil
+    }
+    
+    func share() {
+        if self.store.isPremium.value {
+            self.pdfToBeShared = self.pdfSaved
+            self.analyticsManager.track(event: .pdfShared(marginsOption: nil, compressionValue: nil))
+            self.pdfSaved = nil
+        } else {
+            self.monetizationShow = true
+            self.homePostSubscriptionAction = .share
+        }
+    }
+    
+    func onMonetizationClose() {
+        self.monetizationShow = false
+        if self.store.isPremium.value, let homePostSubscriptionAction = self.homePostSubscriptionAction {
+            switch homePostSubscriptionAction {
+            case .share:
+                self.share()
+            }
+        } else {
+            self.pdfSaved = nil
+        }
     }
     
     @MainActor
@@ -444,6 +536,39 @@ public class HomeViewModel : ObservableObject {
     private func createPdf() {
         self.trackFullActionChosen(importOption: nil)
         self.asyncPdf = AsyncOperation(status: .data(PdfEditable()))
+    }
+    
+    private func performHomePostImportAction(_ action: HomePostImportAction) {
+        switch action {
+        case .addPassword:
+            self.addPasswordShow = true
+        case .removePassword:
+            self.internalSetPassword(nil)
+            debugPrint(for: self, message: "Password removed")
+            self.analyticsManager.track(event: .passwordRemoved)
+        }
+    }
+    
+    private func internalSetPassword(_ password: String?) {
+        guard let pdfData = self.asyncPdf.data?.pdfDocument.dataRepresentation() else {
+            assertionFailure("Missing expected pdf editable")
+            self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+            return
+        }
+        do {
+            let pdf = Pdf(context: self.repository.pdfManagedContext, pdfData: pdfData, password: password)
+            try self.repository.saveChanges()
+            self.pdfSaved = pdf
+            if password != nil {
+                self.addPasswordCompletedShow = true
+            } else {
+                self.removePasswordCompletedShow = true
+            }
+            self.asyncPdf = AsyncOperation(status: .empty)
+        } catch {
+            debugPrint(for: self, message: "Pdf save failed with error: \(error)")
+            self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+        }
     }
     
     private func trackActionChosen(action: HomeAction) {

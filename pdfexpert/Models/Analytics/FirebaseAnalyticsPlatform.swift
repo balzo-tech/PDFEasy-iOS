@@ -258,6 +258,8 @@ fileprivate extension HomeAction {
         case .addText: return "add_text"
         case .createPdf: return "create_pdf"
         case .importPdf: return "import_pdf"
+        case .removePassword: return "remove_password"
+        case .addPassword: return "add_password"
         }
     }
 }

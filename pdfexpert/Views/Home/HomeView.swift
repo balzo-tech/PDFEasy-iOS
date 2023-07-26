@@ -72,6 +72,17 @@ struct HomeView: View {
                  homeAction: .importPdf)
     ]
     
+    let protectItems: [HomeItem] = [
+        HomeItem(title: "Unlock PDF",
+                 description: "Unlock a PDF",
+                 imageName: "home_remove_password",
+                 homeAction: .removePassword),
+        HomeItem(title: "PDF Protector",
+                 description: "Enter a password to protect your pdf",
+                 imageName: "home_add_password",
+                 homeAction: .addPassword)
+    ]
+    
     private let gridItemLayout: [GridItem] = {
         if UIDevice.current.userInterfaceIdiom == .pad {
             return [GridItem(.flexible(), spacing: 14),
@@ -90,6 +101,7 @@ struct HomeView: View {
                 self.section(forItems: self.convertItems, sectionTitle: "Convert to PDF")
                 self.section(forItems: self.editItems, sectionTitle: "Edit PDF")
                 self.section(forItems: self.importItems, sectionTitle: "Convert from PDF")
+                self.section(forItems: self.protectItems, sectionTitle: "Protect PDF")
             }
             .padding(14)
         }
@@ -139,11 +151,27 @@ struct HomeView: View {
             let editStartAction = self.viewModel.editStartAction
             PdfFlowView(pdfEditable: pdfEditable, startAction: editStartAction)
         }
+        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
+            self.getSubscriptionView(onComplete: {
+                self.viewModel.onMonetizationClose()
+            })
+        }
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
+        .addPasswordView(show: self.$viewModel.addPasswordShow,
+                         addPasswordCallback: { self.viewModel.setPassword($0) })
+        .addPasswordCompletedAlert(show: self.$viewModel.addPasswordCompletedShow,
+                                   goToArchiveCallback: { self.viewModel.goToArchive() },
+                                   sharePdfCallback: { self.viewModel.share() })
+        .removePasswordCompletedAlert(show: self.$viewModel.removePasswordCompletedShow,
+                                      goToArchiveCallback: { self.viewModel.goToArchive() },
+                                      sharePdfCallback: { self.viewModel.share() })
+        .sharePdf(self.$viewModel.pdfToBeShared)
+        .showError(self.$viewModel.addPasswordError)
+        .showError(self.$viewModel.removePasswordError)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.viewModel.onDidBecomeActive()
         }
@@ -167,6 +195,30 @@ struct HomeView: View {
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+}
+
+extension View {
+    @ViewBuilder func addPasswordCompletedAlert(show: Binding<Bool>,
+                                                goToArchiveCallback: @escaping () -> (),
+                                                sharePdfCallback: @escaping () -> ()) -> some View {
+        self.alert("PDF Protected!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Share pdf", action: sharePdfCallback)
+        }, message: {
+            Text("Your pdf has been successfully protected")
+        })
+    }
+    
+    @ViewBuilder func removePasswordCompletedAlert(show: Binding<Bool>,
+                                                   goToArchiveCallback: @escaping () -> (),
+                                                   sharePdfCallback: @escaping () -> ()) -> some View {
+        self.alert("PDF Unlocked!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Share pdf", action: sharePdfCallback)
+        }, message: {
+            Text("Your pdf has been successfully unlocked")
+        })
     }
 }
 

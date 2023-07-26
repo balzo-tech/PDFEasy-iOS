@@ -13,7 +13,6 @@ struct PdfViewerView: View {
     @StateObject var viewModel: PdfViewerViewModel
     @State var passwordTextFieldShow: Bool = false
     @State var removePasswordAlertShow: Bool = false
-    @State private var passwordText: String = ""
     
     var body: some View {
         PdfKitView(
@@ -36,18 +35,8 @@ struct PdfViewerView: View {
                 self.viewModel.monetizationShow = false
             })
         }
-        .sheet(item: self.$viewModel.pdfToBeShared) { pdf in
-            ActivityViewController(activityItems: [pdf.shareData!],
-                                   thumbnail: pdf.thumbnail)
-        }
-        .alert("Error",
-               isPresented: .constant(self.viewModel.pdfSaveError != nil),
-               presenting: self.viewModel.pdfSaveError,
-               actions: { pdfSaveError in
-            Button("Cancel") { self.viewModel.pdfSaveError = nil }
-        }, message: { pdfSaveError in
-            Text(pdfSaveError.errorDescription ?? "")
-        })
+        .sharePdf(self.$viewModel.pdfToBeShared)
+        .showError(self.$viewModel.pdfSaveError)
     }
     
     @ViewBuilder var passwordButton: some View {
@@ -70,16 +59,8 @@ struct PdfViewerView: View {
         }, message: {
             Text("If you decide to remove the password, your PDF will no longer be protected.")
         })
-        .alert("Protect PDF using password", isPresented: self.$passwordTextFieldShow, actions: {
-            SecureField("Enter Password", text: self.$passwordText)
-            Button("Confirm", action: {
-                self.viewModel.setPassword(self.passwordText)
-                self.passwordText = ""
-            })
-            Button("Cancel", role: .cancel, action: {})
-        }, message: {
-            Text("Enter a password to protect your PDF file.")
-        })
+        .addPasswordView(show: self.$passwordTextFieldShow,
+                         addPasswordCallback: { self.viewModel.setPassword($0) })
     }
     
     var shareButton: some View {
@@ -106,10 +87,12 @@ struct PdfViewerView_Previews: PreviewProvider {
     }()
     
     static var previews: some View {
-        if let inputParameter = Self.inputParameter {
-            AnyView(PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter)))
-        } else {
-            AnyView(Spacer())
+        NavigationStack {
+            if let inputParameter = Self.inputParameter {
+                AnyView(PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter)))
+            } else {
+                AnyView(Spacer())
+            }
         }
     }
 }

@@ -64,6 +64,9 @@ class PdfViewerViewModel: ObservableObject {
     private func internalSetPassword(_ password: String?) {
         do {
             self.pdf.password = password
+            // Setting the password doesn't notify the state change to SwiftUI,
+            // so we must force a refresh. Not pretty, but better than uglier things such as adding more states.
+            self.objectWillChange.send()
             try self.repository.saveChanges()
         } catch {
             debugPrint(for: self, message: "Pdf save failed with error: \(error)")

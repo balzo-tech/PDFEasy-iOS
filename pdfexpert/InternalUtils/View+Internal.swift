@@ -71,4 +71,22 @@ extension View {
         case .vertical: SubscriptionVerticalView(onComplete: onComplete)
         }
     }
+    
+    func sharePdf(_ pdf: Binding<Pdf?>) -> some View {
+        self.sheet(item: pdf) { pdf in
+            ActivityViewController(activityItems: [pdf.shareData!],
+                                   thumbnail: pdf.thumbnail)
+        }
+    }
+    
+    func showError<T: LocalizedError>(_ errorBinding: Binding<T?>) -> some View {
+        self.alert("Error",
+                   isPresented: .constant(errorBinding.wrappedValue != nil),
+                   presenting: errorBinding.wrappedValue,
+                   actions: { pdfSaveError in
+            Button("Ok") { errorBinding.wrappedValue = nil }
+        }, message: { error in
+            Text(error.errorDescription ?? "")
+        })
+    }
 }

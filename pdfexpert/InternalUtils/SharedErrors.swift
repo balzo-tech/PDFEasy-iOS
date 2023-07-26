@@ -54,3 +54,27 @@ enum PdfEditableError: LocalizedError, UnderlyingError {
         }
     }
 }
+
+enum AddPasswordError: LocalizedError {
+    case unknownError
+    case pdfHasPassword
+    
+    var errorDescription: String? {
+        switch self {
+        case .unknownError: return "Internal Error. Please try again later"
+        case .pdfHasPassword: return "Your pdf is already protected"
+        }
+    }
+}
+
+enum RemovePasswordError: LocalizedError {
+    case unknownError
+    case pdfNoPassword
+    
+    var errorDescription: String? {
+        switch self {
+        case .unknownError: return "Internal Error. Please try again later"
+        case .pdfNoPassword: return "Your pdf is already unlocked"
+        }
+    }
+}

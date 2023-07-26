@@ -66,6 +66,7 @@
 		893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D32A692805004EE67C /* CombineUtils.swift */; };
 		893ED9D92A693013004EE67C /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D72A693013004EE67C /* MessageView.swift */; };
 		893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D82A693013004EE67C /* MessageIndicatorView.swift */; };
+		8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8940FB902A710D8D00A00D8D /* AddPasswordView.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
 		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
 		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
@@ -266,6 +267,7 @@
 		893ED9D32A692805004EE67C /* CombineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineUtils.swift; sourceTree = "<group>"; };
 		893ED9D72A693013004EE67C /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		893ED9D82A693013004EE67C /* MessageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageIndicatorView.swift; sourceTree = "<group>"; };
+		8940FB902A710D8D00A00D8D /* AddPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPasswordView.swift; sourceTree = "<group>"; };
 		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
 		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
 		89436ABC29E5586600060605 /* PdfEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditView.swift; sourceTree = "<group>"; };
@@ -583,6 +585,7 @@
 				894D485729D42C9D002B0230 /* ImportItemView.swift */,
 				894D485929D42CC5002B0230 /* ImportView.swift */,
 				8936AA3F2A683FB5005F6C73 /* ImportOption.swift */,
+				8940FB902A710D8D00A00D8D /* AddPasswordView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1266,6 +1269,7 @@
 				89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */,
 				89127AA72A17C1980059005F /* PencilKit+Extensions.swift in Sources */,
 				893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */,
+				8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */,
 				8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */,
 				8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */,
 				893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */,

@@ -6,12 +6,9 @@
 //
 
 import SwiftUI
+import Factory
 
-fileprivate enum MainTab: Int, CaseIterable {
-    case archive
-    case home
-    case chatPdf
-    case settings
+fileprivate extension MainTab {
     
     var name: String {
         switch self {
@@ -34,10 +31,10 @@ fileprivate enum MainTab: Int, CaseIterable {
 
 struct MainTabView: View {
     
-    @State private var selection: Int = MainTab.home.rawValue
+    @InjectedObject(\.mainCoordinator) var mainCoordinator
     
     var body: some View {
-        TabView(selection: $selection) {
+        TabView(selection: self.$mainCoordinator.tab) {
             ForEach(MainTab.allCases, id:\.self) { tab in
                 NavigationStack {
                     self.getRootView(forTab: tab)

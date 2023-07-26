@@ -9,6 +9,13 @@ import Foundation
 import SwiftUI
 import Factory
 
+enum MainTab: Int, CaseIterable {
+    case archive
+    case home
+    case chatPdf
+    case settings
+}
+
 class MainCoordinator: ObservableObject {
     
     enum RootView {
@@ -21,6 +28,7 @@ class MainCoordinator: ObservableObject {
     }
     
     @Published var rootView: RootView = .onboarding
+    @Published var tab: MainTab = MainTab.home
     @Published var path: [Route] = []
     
     @Injected(\.cacheManager) private var cacheManager
@@ -39,6 +47,10 @@ class MainCoordinator: ObservableObject {
     
     func goToMain() {
         self.rootView = .main
+    }
+    
+    func goToArchive() {
+        self.tab = MainTab.archive
     }
 }
 
