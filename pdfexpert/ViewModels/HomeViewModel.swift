@@ -163,10 +163,10 @@ public class HomeViewModel : ObservableObject {
     }
     
     @Published var pdfFlowShow: Bool = false
-    @Published var pdfSaved: Pdf? = nil
+    @Published var pdfSaved: PdfEditable? = nil
     @Published var addPasswordCompletedShow: Bool = false
     @Published var removePasswordCompletedShow: Bool = false
-    @Published var pdfToBeShared: Pdf?
+    @Published var pdfToBeShared: PdfEditable?
     @Published var addPasswordError: AddPasswordError? = nil
     @Published var removePasswordError: RemovePasswordError? = nil
     @Published var monetizationShow: Bool = false
@@ -323,7 +323,7 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+        guard let pdfEditable = PdfEditable(storeId: nil, pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
@@ -414,7 +414,7 @@ public class HomeViewModel : ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                } else if let data = data, let pdfEditable = PdfEditable(storeId: nil, data: data) {
                     self.currentAnalyticsFileExtension = fileUrl.pathExtension
                     self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {
@@ -447,7 +447,7 @@ public class HomeViewModel : ObservableObject {
     
     private func convertUiImageToPdf(uiImage: UIImage) {
         let pdfDocument = PDFUtility.convertUiImageToPdf(uiImage: uiImage)
-        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
+        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(storeId: nil, pdfDocument: pdfDocument)))
     }
     
     @MainActor
@@ -487,7 +487,7 @@ public class HomeViewModel : ObservableObject {
             return
         }
         
-        guard var pdfEditable = PdfEditable(data: pdfData) else {
+        guard var pdfEditable = PdfEditable(storeId: nil, data: pdfData) else {
             self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecode))
             resetSharedStorage()
             return
@@ -512,7 +512,7 @@ public class HomeViewModel : ObservableObject {
                 resetSharedStorage()
                 return
             }
-            guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
+            guard let pdfDecryptedEditable = PdfEditable(storeId: nil, data: pdfDecryptedData, password: password) else {
                 self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecodeDecryptedData))
                 resetSharedStorage()
                 return
@@ -535,7 +535,7 @@ public class HomeViewModel : ObservableObject {
     
     private func createPdf() {
         self.trackFullActionChosen(importOption: nil)
-        self.asyncPdf = AsyncOperation(status: .data(PdfEditable()))
+        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(storeId: nil)))
     }
     
     private func performHomePostImportAction(_ action: HomePostImportAction) {
@@ -550,15 +550,14 @@ public class HomeViewModel : ObservableObject {
     }
     
     private func internalSetPassword(_ password: String?) {
-        guard let pdfData = self.asyncPdf.data?.pdfDocument.dataRepresentation() else {
+        guard var pdfEditable = self.asyncPdf.data else {
             assertionFailure("Missing expected pdf editable")
             self.asyncPdf = AsyncOperation(status: .error(.unknownError))
             return
         }
         do {
-            let pdf = Pdf(context: self.repository.pdfManagedContext, pdfData: pdfData, password: password)
-            try self.repository.saveChanges()
-            self.pdfSaved = pdf
+            pdfEditable.updatePassword(password)
+            self.pdfSaved = try self.repository.savePdf(pdfEditable: pdfEditable)
             if password != nil {
                 self.addPasswordCompletedShow = true
             } else {

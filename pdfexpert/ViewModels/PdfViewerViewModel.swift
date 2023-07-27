@@ -17,13 +17,13 @@ extension Container {
 class PdfViewerViewModel: ObservableObject {
     
     struct InputParameter {
-        let pdf: Pdf
+        let pdf: PdfEditable
         let marginsOption: MarginsOption?
         let compression: CGFloat?
     }
     
-    @Published var pdf: Pdf
-    @Published var pdfToBeShared: Pdf?
+    @Published var pdf: PdfEditable
+    @Published var pdfToBeShared: PdfEditable?
     @Published var monetizationShow: Bool = false
     @Published var pdfSaveError: PdfEditSaveError? = nil
     
@@ -63,11 +63,11 @@ class PdfViewerViewModel: ObservableObject {
     
     private func internalSetPassword(_ password: String?) {
         do {
-            self.pdf.password = password
+            self.pdf.updatePassword(password)
             // Setting the password doesn't notify the state change to SwiftUI,
             // so we must force a refresh. Not pretty, but better than uglier things such as adding more states.
             self.objectWillChange.send()
-            try self.repository.saveChanges()
+            self.pdf = try self.repository.savePdf(pdfEditable: self.pdf)
         } catch {
             debugPrint(for: self, message: "Pdf save failed with error: \(error)")
             self.pdfSaveError = .saveFailed

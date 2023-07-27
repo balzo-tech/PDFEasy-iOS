@@ -91,7 +91,7 @@ class PdfEditViewModel: ObservableObject {
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
     
-    var pdf: Pdf? = nil
+    var savedPdf: PdfEditable? = nil
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
@@ -189,16 +189,16 @@ class PdfEditViewModel: ObservableObject {
         let pdfDocument = PDFUtility.applyPostProcess(toPdfDocument: self.pdfEditable.pdfDocument,
                                                       horizontalMargin: self.marginsOption.horizontalMargin,
                                                       quality: 1.0 - self.compression)
-        
-        guard let data = pdfDocument.dataRepresentation() else {
-            debugPrint(for: self, message: "Couldn't convert pdf document to data")
-            self.pdfSaveError = .unknown
-            return
-        }
         do {
-            let pdf = Pdf(context: self.repository.pdfManagedContext, pdfData: data, password: self.pdfEditable.password)
-            self.pdf = pdf
-            try self.repository.saveChanges()
+            let pdfEditableToBeSaved = PdfEditable(
+                storeId: self.pdfEditable.storeId,
+                pdfDocument: pdfDocument,
+                password: self.pdfEditable.password,
+                creationDate: self.pdfEditable.creationDate
+            )
+            let savedPdf = try self.repository.savePdf(pdfEditable: pdfEditableToBeSaved)
+            self.savedPdf = savedPdf
+            self.pdfEditable = savedPdf
             self.shouldShowCloseWarning.wrappedValue = false
             self.viewPdf()
         } catch {
@@ -220,7 +220,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func viewPdf() {
-        guard let pdf = self.pdf else {
+        guard let pdf = self.savedPdf else {
             debugPrint(for: self, message: "Missing expected pdf")
             self.pdfSaveError = .unknown
             return
@@ -285,7 +285,7 @@ class PdfEditViewModel: ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                } else if let data = data, let pdfEditable = PdfEditable(storeId: nil, data: data) {
                     self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
                     self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {
@@ -297,7 +297,7 @@ class PdfEditViewModel: ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+        guard let pdfEditable = PdfEditable(storeId: nil, pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }

@@ -6,13 +6,10 @@
 //
 
 import Foundation
-import CoreData
 
 protocol Repository {
-    var pdfManagedContext: NSManagedObjectContext { get }
-    
-    func saveChanges() throws
+    func savePdf(pdfEditable: PdfEditable) throws -> PdfEditable
     func getDoPdfExist() throws -> Bool
-    func loadPdfs() throws -> [Pdf]
-    func delete(pdf: Pdf)
+    func loadPdfs() throws -> [PdfEditable]
+    func delete(pdfEditable: PdfEditable) throws
 }

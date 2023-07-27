@@ -207,7 +207,7 @@ class PDFUtility {
             return AsyncOperation(status: .error(.unknownError))
         }
         
-        guard let pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData, password: password) else {
+        guard let pdfDecryptedEditable = PdfEditable(storeId: pdfEditable.storeId, data: pdfDecryptedData, password: password) else {
             assertionFailure("Cannot decode pdf from decrypted data")
             return AsyncOperation(status: .error(.unknownError))
         }

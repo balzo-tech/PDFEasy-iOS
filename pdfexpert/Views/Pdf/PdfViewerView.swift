@@ -75,7 +75,7 @@ struct PdfViewerView: View {
 struct PdfViewerView_Previews: PreviewProvider {
     
     static let inputParameter: PdfViewerViewModel.InputParameter? = {
-        if let pdf = K.Test.DebugPdf {
+        if let pdf = K.Test.DebugPdfEditable {
             let marginOption = K.Misc.PdfDefaultMarginOption
             let compression = K.Misc.PdfDefaultCompression
             return PdfViewerViewModel.InputParameter(pdf: pdf,

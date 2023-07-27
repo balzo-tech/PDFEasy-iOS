@@ -52,7 +52,10 @@ class PdfFillFormViewModel: ObservableObject {
     
     private var onConfirm: PdfFillFormViewCallback
     
+    private let originalPdfEditable: PdfEditable
+    
     init(inputParameter: InputParameter) {
+        self.originalPdfEditable = inputParameter.pdfEditable
         var pdfDocumentCopy = PDFDocument()
         if let pdfData = inputParameter.pdfEditable.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
             pdfDocumentCopy = copy
@@ -184,7 +187,7 @@ class PdfFillFormViewModel: ObservableObject {
         
         self.analyticsManager.track(event: .annotationsConfirmed)
         
-        self.onConfirm(PdfEditable(pdfDocument: self.pdfDocument))
+        self.onConfirm(PdfEditable(storeId: self.originalPdfEditable.storeId, pdfDocument: self.pdfDocument))
     }
     
     private func applyCurrentEditedTextAnnotation() {

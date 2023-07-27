@@ -10,42 +10,37 @@ import Factory
 
 struct ArchiveView: View {
     
-    @InjectedObject(\.archiveViewModel) var archiveViewModel
+    @InjectedObject(\.archiveViewModel) var viewModel
     
     @State private var showingDeleteAlert = false
-    @State private var itemToDelete: Pdf? = nil
+    @State private var itemToDelete: PdfEditable? = nil
     @State private var importTutorialShow: Bool = false
     
     var body: some View {
         ZStack {
             self.content
-            if self.archiveViewModel.isLoading {
+            if self.viewModel.isLoading {
                 AnyView(self.getLoadingView())
             }
         }
         .background(ColorPalette.primaryBG)
         .onAppear() {
-            self.archiveViewModel.onAppear()
+            self.viewModel.onAppear()
         }
-        .asyncView(asyncOperation: self.$archiveViewModel.asyncItemDelete)
+        .asyncView(asyncOperation: self.$viewModel.asyncItemDelete)
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
         }
-        .fullScreenCover(item: self.$archiveViewModel.pdfToBeReviewed) { pdf in
-            NavigationStack {
-                let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
-                                                                       marginsOption: nil,
-                                                                       compression: nil)
-                PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
-                    .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                        self.archiveViewModel.pdfToBeReviewed = nil
-                    })
-            }
+        
+        .fullScreenCover(item: self.$viewModel.pdfToBeEdited, onDismiss: {
+            self.viewModel.refresh()
+        }) { pdfEditable in
+            PdfFlowView(pdfEditable: pdfEditable, startAction: nil)
         }
     }
     
     var content: some View {
-        switch self.archiveViewModel.asyncItems.status {
+        switch self.viewModel.asyncItems.status {
         case .empty: return AnyView(Spacer())
         case .loading: return AnyView(self.getLoadingView())
         case .data(let items): return AnyView(self.getItemList(items: items))
@@ -53,11 +48,11 @@ struct ArchiveView: View {
         }
     }
     
-    func getItemList(items: [Pdf]) -> some View {
+    func getItemList(items: [PdfEditable]) -> some View {
         if items.count > 0 {
             return AnyView(
                 List(items) { item in
-                    Button(action: { self.archiveViewModel.reviewItem(item: item) }) {
+                    Button(action: { self.viewModel.editItem(item: item) }) {
                         HStack(spacing: 16) {
                             self.getPdfThumbnail(forPdf: item)
                                 .frame(width: 86)
@@ -113,7 +108,7 @@ struct ArchiveView: View {
                             self.showingDeleteAlert = false
                             withAnimation {
                                 if let itemToDelete = self.itemToDelete {
-                                    self.archiveViewModel.delete(item: itemToDelete)
+                                    self.viewModel.delete(item: itemToDelete)
                                 }
                             }
                         }
@@ -185,13 +180,13 @@ struct ArchiveView: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
             self.getDefaultButton(text: "Retry",
-                                  onButtonPressed: self.archiveViewModel.refresh)
+                                  onButtonPressed: self.viewModel.refresh)
             Spacer()
         }
         .padding([.leading, .trailing], 16)
     }
     
-    func getPdfThumbnail(forPdf pdf: Pdf) -> some View {
+    func getPdfThumbnail(forPdf pdf: PdfEditable) -> some View {
         if let thumbnail = pdf.thumbnail {
             return AnyView(
                 Image(uiImage: thumbnail)
@@ -204,7 +199,7 @@ struct ArchiveView: View {
     }
 }
 
-extension Pdf {
+extension PdfEditable {
     
     var creationDateText: String {
         var text = "File "
@@ -219,11 +214,7 @@ extension Pdf {
     }
     
     var pageCountText: String {
-        var text = "-"
-        if let pageCount = self.pageCount {
-            text = "\(pageCount)"
-        }
-        return text + " pages"
+        "\(self.pageCount) pages"
     }
 }
 

@@ -72,7 +72,7 @@ extension View {
         }
     }
     
-    func sharePdf(_ pdf: Binding<Pdf?>) -> some View {
+    func sharePdf(_ pdf: Binding<PdfEditable?>) -> some View {
         self.sheet(item: pdf) { pdf in
             ActivityViewController(activityItems: [pdf.shareData!],
                                    thumbnail: pdf.thumbnail)

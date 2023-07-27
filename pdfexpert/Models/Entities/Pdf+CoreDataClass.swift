@@ -13,61 +13,18 @@ import PDFKit
 
 @objc(Pdf)
 public class Pdf: NSManagedObject {
-
-    var internalThumbnail: UIImage?
-    var internalPdfDocument: PDFDocument?
-    
-    var thumbnail: UIImage? {
-        if let internalThumbnail = self.internalThumbnail {
-            return internalThumbnail
-        } else if let internalPdfDocument = self.pdfDocument {
-            let thumbnail = PDFUtility.generatePdfThumbnail(
-                pdfDocument: internalPdfDocument,
-                size: K.Misc.ThumbnailSize
-            )
-            self.internalThumbnail = thumbnail
-            return thumbnail
-        } else {
-            return nil
-        }
-    }
     
     var pdfDocument: PDFDocument? {
-        if let internalPdfDocument = self.internalPdfDocument {
-            return internalPdfDocument
-        } else if let data = self.data {
-            let pdfDocument = PDFDocument(data: data)
-            self.internalPdfDocument = pdfDocument
-            return pdfDocument
-        } else {
+        guard let data = self.data else {
             return nil
         }
+        return PDFDocument(data: data)
     }
     
-    var pageCount: Int? {
-        return self.pdfDocument?.pageCount
-    }
-    
-    var shareData: Data? {
-        if let password = self.password, let pdfDocument = self.pdfDocument {
-            if let encryptedPdfDocument = PDFUtility.encryptPdf(pdfDocument: pdfDocument, password: password) {
-                if encryptedPdfDocument.unlock(withPassword: password) {
-                    return encryptedPdfDocument.dataRepresentation() ?? self.data
-                } else {
-                    return self.data
-                }
-            } else {
-                return self.data
-            }
-        } else {
-            return self.data
-        }
-    }
-    
-    convenience init(context: NSManagedObjectContext, pdfData: Data, password: String?) {
+    convenience init(context: NSManagedObjectContext, pdfData: Data, password: String?, creationDate: Date) {
         self.init(context: context)
         self.data = pdfData
-        self.creationDate = Date()
+        self.creationDate = creationDate
         self.password = password
     }
 }

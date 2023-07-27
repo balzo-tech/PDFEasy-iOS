@@ -19,9 +19,9 @@ extension Container {
 
 class ArchiveViewModel: ObservableObject {
     
-    @Published var asyncItems: AsyncOperation<[Pdf], SharedLocalizedError> = AsyncOperation(status: .empty)
+    @Published var asyncItems: AsyncOperation<[PdfEditable], SharedLocalizedError> = AsyncOperation(status: .empty)
     @Published var asyncItemDelete: AsyncOperation<(), SharedLocalizedError> = AsyncOperation(status: .empty)
-    @Published var pdfToBeReviewed: Pdf?
+    @Published var pdfToBeEdited: PdfEditable?
     @Published var isLoading: Bool = false
     
     @Injected(\.repository) private var repository
@@ -50,16 +50,15 @@ class ArchiveViewModel: ObservableObject {
         }.store(in: &self.cancelBag)
     }
     
-    func reviewItem(item: Pdf) {
+    func editItem(item: PdfEditable) {
         self.analyticsManager.track(event: .existingPdfOpened)
-        self.pdfToBeReviewed = item
+        self.pdfToBeEdited = item
     }
     
-    func delete(item: Pdf) {
+    func delete(item: PdfEditable) {
         self.asyncItemDelete = AsyncOperation(status: .empty)
-        self.repository.delete(pdf: item)
         do {
-            try self.repository.saveChanges()
+            try self.repository.delete(pdfEditable: item)
             self.asyncItemDelete = AsyncOperation(status: .empty)
             self.analyticsManager.track(event: .existingPdfRemoved)
         } catch {
