@@ -112,8 +112,8 @@ struct HomeView: View {
             self.viewModel.onAppear()
         }
         .formSheet(item: self.$viewModel.importOptionGroup) {
-            ImportView.getImportView(forImportOptionGroup: $0,
-                                     importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
+            OptionListView.getImportView(forImportOptionGroup: $0,
+                                         importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
         }
         .filePicker(item: self.$viewModel.importFileOption, onPickedFile: {
             self.viewModel.processPickedFileUrl($0)

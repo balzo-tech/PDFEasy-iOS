@@ -33,41 +33,41 @@ enum ImportOptionGroup: Hashable, Identifiable {
     }
 }
 
-extension ImportView {
+extension OptionListView {
     
     @ViewBuilder static func getImportView(forImportOptionGroup importOptionGroup: ImportOptionGroup,
                                            importViewCallback: @escaping (ImportOption) -> ()) -> some View {
-        ImportView(items: importOptionGroup.options.map { importOption in
+        OptionListView(title: "Import from", items: importOptionGroup.options.map { importOption in
             let callback = { importViewCallback(importOption) }
             switch importOption {
             case .camera:
-                return ImportItem(title: "Camera",
+                return OptionItem(title: "Camera",
                                   imageName: "camera",
                                   callBack: callback)
             case .gallery:
-                return ImportItem(title: "Gallery",
+                return OptionItem(title: "Gallery",
                                   imageName: "gallery",
                                   callBack: callback)
             case .scan:
-                return ImportItem(title: "Scan a file",
+                return OptionItem(title: "Scan a file",
                            imageName: "scan",
                            callBack: callback)
             case .file(let fileSource):
                 switch fileSource {
                 case .google:
-                    return ImportItem(title: "Google Drive",
+                    return OptionItem(title: "Google Drive",
                                imageName: "home_file_source_google",
                                callBack: callback)
                 case .dropbox:
-                    return ImportItem(title: "Dropbox",
+                    return OptionItem(title: "Dropbox",
                                imageName: "home_file_source_dropbox",
                                callBack: callback)
                 case .icloud:
-                    return ImportItem(title: "iCloud",
+                    return OptionItem(title: "iCloud",
                                imageName: "home_file_source_icloud",
                                callBack: callback)
                 case .files:
-                    return ImportItem(title: "Files",
+                    return OptionItem(title: "Files",
                                imageName: "home_file_source_files",
                                callBack: callback)
                 }

@@ -77,8 +77,8 @@
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
 		894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */; };
 		894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */; };
-		894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* ImportItemView.swift */; };
-		894D485A29D42CC5002B0230 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* ImportView.swift */; };
+		894D485829D42C9E002B0230 /* OptionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* OptionItemView.swift */; };
+		894D485A29D42CC5002B0230 /* OptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* OptionListView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
 		89504A462A448252000BCACD /* PdfFillWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89504A452A448252000BCACD /* PdfFillWidgetView.swift */; };
 		89504A482A44829C000BCACD /* PdfFillWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */; };
@@ -275,8 +275,8 @@
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialView.swift; sourceTree = "<group>"; };
 		894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialPageView.swift; sourceTree = "<group>"; };
-		894D485729D42C9D002B0230 /* ImportItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportItemView.swift; sourceTree = "<group>"; };
-		894D485929D42CC5002B0230 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
+		894D485729D42C9D002B0230 /* OptionItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionItemView.swift; sourceTree = "<group>"; };
+		894D485929D42CC5002B0230 /* OptionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionListView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		89504A452A448252000BCACD /* PdfFillWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillWidgetView.swift; sourceTree = "<group>"; };
 		89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFillWidgetViewModel.swift; sourceTree = "<group>"; };
@@ -577,8 +577,8 @@
 		8995694829D3473E00566EF4 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				894D485729D42C9D002B0230 /* ImportItemView.swift */,
-				894D485929D42CC5002B0230 /* ImportView.swift */,
+				894D485729D42C9D002B0230 /* OptionItemView.swift */,
+				894D485929D42CC5002B0230 /* OptionListView.swift */,
 				8936AA3F2A683FB5005F6C73 /* ImportOption.swift */,
 				8940FB902A710D8D00A00D8D /* AddPasswordView.swift */,
 			);
@@ -1190,7 +1190,7 @@
 				893C8FD329DED2E9000E35BD /* Repository.swift in Sources */,
 				89923E6929D46A9900E246FC /* FilePicker.swift in Sources */,
 				893ED9D22A6926E8004EE67C /* ChatPdfMessage.swift in Sources */,
-				894D485829D42C9E002B0230 /* ImportItemView.swift in Sources */,
+				894D485829D42C9E002B0230 /* OptionItemView.swift in Sources */,
 				8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */,
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
 				8991485129E851B500DD01F2 /* ConfigService.swift in Sources */,
@@ -1221,7 +1221,7 @@
 				893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */,
 				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
 				899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */,
-				894D485A29D42CC5002B0230 /* ImportView.swift in Sources */,
+				894D485A29D42CC5002B0230 /* OptionListView.swift in Sources */,
 				89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */,
 				89CD7B9929D329B1003F1C3A /* View+Preview.swift in Sources */,
 				893DE8DA29E7F85C0043C02C /* SubscriptionPairsViewModel.swift in Sources */,

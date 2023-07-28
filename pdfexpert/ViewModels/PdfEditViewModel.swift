@@ -24,6 +24,11 @@ enum PdfEditStartAction {
     case openSignature
 }
 
+enum EditAction {
+    case addPassword
+    case removePassword
+}
+
 class PdfEditViewModel: ObservableObject {
     
     struct InputParameter {
@@ -83,6 +88,10 @@ class PdfEditViewModel: ObservableObject {
             self.onPdfFilenameChanged()
         }
     }
+    
+    @Published var editOptionListShow: Bool = false
+    @Published var passwordTextFieldShow: Bool = false
+    @Published var removePasswordAlertShow: Bool = false
     
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
@@ -231,6 +240,33 @@ class PdfEditViewModel: ObservableObject {
         } else {
             self.missingWidgetWarningShow = true
         }
+    }
+    
+    @MainActor
+    func handleEditAction(_ action: EditAction) {
+        
+        self.editOptionListShow = false
+        
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            
+            switch action {
+            case .addPassword: self.passwordTextFieldShow = true
+            case .removePassword: self.removePasswordAlertShow = true
+            }
+        }
+    }
+    
+    func setPassword(_ password: String) {
+        self.internalSetPassword(password)
+        debugPrint(for: self, message: "New password: \(password)")
+        self.analyticsManager.track(event: .passwordAdded)
+    }
+    
+    func removePassword() {
+        self.internalSetPassword(nil)
+        debugPrint(for: self, message: "Password removed")
+        self.analyticsManager.track(event: .passwordRemoved)
     }
     
     @MainActor
@@ -416,6 +452,11 @@ class PdfEditViewModel: ObservableObject {
         default:
             self.cameraPermissionDeniedShow = true
         }
+    }
+    
+    private func internalSetPassword(_ password: String?) {
+        self.pdfEditable.updatePassword(password)
+        self.objectWillChange.send()
     }
     
     private func refreshImages() {

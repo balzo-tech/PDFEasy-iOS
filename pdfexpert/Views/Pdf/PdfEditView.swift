@@ -41,6 +41,15 @@ struct PdfEditView: View {
         .navigationTitle(self.$viewModel.pdfFilename)
         .ignoresSafeArea(.keyboard)
         .background(ColorPalette.primaryBG)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: { self.viewModel.editOptionListShow = true }) {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundColor(ColorPalette.primaryText)
+                }
+            }
+        }
+
         .onAppear(perform:self.viewModel.onAppear)
         // File picker
         .filePicker(isPresented: self.$viewModel.filePickerShow,
@@ -118,9 +127,17 @@ struct PdfEditView: View {
                 self.viewModel.onMonetizationClose()
             })
         }
-        .saveSuccessfulAlert(show: self.$viewModel.saveSuccessfulAlertShow,
+        .formSheet(isPresented: self.$viewModel.editOptionListShow,
+                   size: CGSize(width: 400.0, height: 150.0)) {
+            self.editListView
+        }
+        .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
                              goToArchiveCallback: { self.viewModel.goToArchive() },
                              sharePdfCallback: { self.viewModel.share() })
+        .removePasswordView(show: self.$viewModel.removePasswordAlertShow,
+                            removePasswordCallback: self.viewModel.removePassword)
+        .addPasswordView(show: self.$viewModel.passwordTextFieldShow,
+                         addPasswordCallback: { self.viewModel.setPassword($0) })
     }
     
     @ViewBuilder var pdfView: some View {
@@ -298,6 +315,24 @@ struct PdfEditView: View {
             Spacer()
         }
     }
+    
+    @ViewBuilder var editListView: some View {
+        OptionListView(title: "Edit pdf", items: [
+            self.passwordOptionItem
+        ])
+    }
+    
+    var passwordOptionItem: OptionItem {
+        if self.viewModel.pdfEditable.password != nil {
+            return OptionItem(title: "Unlock",
+                              imageName: "edit_option_password_unlock",
+                              callBack: { self.viewModel.handleEditAction(.removePassword) })
+        } else {
+            return OptionItem(title: "Protect",
+                              imageName: "edit_option_password_lock",
+                              callBack: { self.viewModel.handleEditAction(.addPassword) })
+        }
+    }
 }
 
 fileprivate extension View {
@@ -314,7 +349,7 @@ fileprivate extension View {
             }
     }
     
-    @ViewBuilder func saveSuccessfulAlert(show: Binding<Bool>,
+    @ViewBuilder func saveSuccessfullAlert(show: Binding<Bool>,
                                           goToArchiveCallback: @escaping () -> (),
                                           sharePdfCallback: @escaping () -> ()) -> some View {
         self.alert("PDF saved!", isPresented: show, actions: {

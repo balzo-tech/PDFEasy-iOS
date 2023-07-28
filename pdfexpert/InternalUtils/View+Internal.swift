@@ -84,6 +84,16 @@ extension View {
         }
     }
     
+    func removePasswordView(show: Binding<Bool>,
+                            removePasswordCallback: @escaping () -> ()) -> some View {
+        self.alert("Would you like to remove your password?", isPresented: show, actions: {
+            Button("Delete", role: .destructive, action: removePasswordCallback)
+            Button("Cancel", role: .cancel, action: {})
+        }, message: {
+            Text("If you decide to remove the password, your PDF will no longer be protected.")
+        })
+    }
+    
     func showError<T: LocalizedError>(_ errorBinding: Binding<T?>) -> some View {
         self.alert("Error",
                    isPresented: .constant(errorBinding.wrappedValue != nil),

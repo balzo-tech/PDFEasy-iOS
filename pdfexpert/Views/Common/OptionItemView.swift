@@ -1,5 +1,5 @@
 //
-//  ImportItemView.swift
+//  OptionItemView.swift
 //  PdfExpert
 //
 //  Created by Leonardo Passeri on 29/03/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ImportItemView: View {
+struct OptionItemView: View {
     
     let title: String
     let imageName: String
@@ -19,7 +19,7 @@ struct ImportItemView: View {
                 Image(self.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 30)
+                    .frame(width: 20, height: 20)
                 Text(self.title)
                     .font(FontPalette.fontRegular(withSize: 18))
                     .foregroundColor(ColorPalette.primaryText)
@@ -34,8 +34,8 @@ struct ImportItemView: View {
     }
 }
 
-struct ImportItemView_Previews: PreviewProvider {
+struct OptionItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ImportItemView(title: "File", imageName: "file", onPressed: {})
+        OptionItemView(title: "File", imageName: "edit_option_password_unlock", onPressed: {})
     }
 }

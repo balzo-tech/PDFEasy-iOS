@@ -1,5 +1,5 @@
 //
-//  ImportView.swift
+//  OptionListView.swift
 //  PdfExpert
 //
 //  Created by Leonardo Passeri on 29/03/23.
@@ -7,25 +7,26 @@
 
 import SwiftUI
 
-struct ImportItem {
+struct OptionItem {
     let title: String
     let imageName: String
     let callBack: () -> ()
 }
 
-struct ImportView: View {
+struct OptionListView: View {
     
-    let items: [ImportItem]
+    let title: String
+    let items: [OptionItem]
     
     var body: some View {
         VStack {
-            Text("Import from")
+            Text(self.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(FontPalette.fontMedium(withSize: 20))
                 .foregroundColor(ColorPalette.primaryText)
             Spacer(minLength: 20)
             ForEach(self.items, id: \.title) { item in
-                ImportItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
+                OptionItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
                 Spacer().frame(height: 10)
             }
         }
@@ -35,15 +36,15 @@ struct ImportView: View {
     }
 }
 
-struct ImportView_Previews: PreviewProvider {
+struct OptionListView_Previews: PreviewProvider {
     
     static let items = [
-        ImportItem(title: "File", imageName: "file", callBack: {}),
-        ImportItem(title: "Gallery", imageName: "gallery", callBack: {}),
-        ImportItem(title: "Camera", imageName: "camera", callBack: {}),
+        OptionItem(title: "File", imageName: "file", callBack: {}),
+        OptionItem(title: "Gallery", imageName: "gallery", callBack: {}),
+        OptionItem(title: "Camera", imageName: "camera", callBack: {}),
     ]
     
     static var previews: some View {
-        ImportView(items: items)
+        OptionListView(title: "Import from", items: items)
     }
 }
