@@ -179,6 +179,7 @@
 		89E55BDE29DC64840073F268 /* FirebaseAnalyticsPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E55BDA29DC64840073F268 /* FirebaseAnalyticsPlatform.swift */; };
 		89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E55BDB29DC64840073F268 /* AnalyticsManagerImpl.swift */; };
 		89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E55BE129DC66240073F268 /* AnalyticsPlatform.swift */; };
+		89EACC0D2A741EC700C1F0EA /* UnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EACC0C2A741EC700C1F0EA /* UnlockView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -378,6 +379,7 @@
 		89E55BDA29DC64840073F268 /* FirebaseAnalyticsPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAnalyticsPlatform.swift; sourceTree = "<group>"; };
 		89E55BDB29DC64840073F268 /* AnalyticsManagerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsManagerImpl.swift; sourceTree = "<group>"; };
 		89E55BE129DC66240073F268 /* AnalyticsPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsPlatform.swift; sourceTree = "<group>"; };
+		89EACC0C2A741EC700C1F0EA /* UnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -581,6 +583,7 @@
 				894D485929D42CC5002B0230 /* OptionListView.swift */,
 				8936AA3F2A683FB5005F6C73 /* ImportOption.swift */,
 				8940FB902A710D8D00A00D8D /* AddPasswordView.swift */,
+				89EACC0C2A741EC700C1F0EA /* UnlockView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1222,6 +1225,7 @@
 				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
 				899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */,
 				894D485A29D42CC5002B0230 /* OptionListView.swift in Sources */,
+				89EACC0D2A741EC700C1F0EA /* UnlockView.swift in Sources */,
 				89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */,
 				89CD7B9929D329B1003F1C3A /* View+Preview.swift in Sources */,
 				893DE8DA29E7F85C0043C02C /* SubscriptionPairsViewModel.swift in Sources */,

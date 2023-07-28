@@ -20,7 +20,6 @@ struct PdfEditView: View {
     @State private var indexToDelete: Int? = nil
     @State private var showingSaveErrorAlert = false
     
-    @State private var passwordText: String = ""
     @State private var draggedImage: UIImage? = nil
     
     var body: some View {
@@ -98,18 +97,8 @@ struct PdfEditView: View {
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
         }
-        .alert("Your pdf is protected", isPresented: self.$viewModel.pdfPasswordInputShow, actions: {
-            SecureField("Enter Password", text: self.$passwordText)
-            Button("Confirm", action: {
-                self.viewModel.importLockedPdf(password: self.passwordText)
-                self.passwordText = ""
-            })
-            Button("Cancel", role: .cancel, action: {
-                self.passwordText = ""
-            })
-        }, message: {
-            Text("Enter the password of your pdf in order to import it.")
-        })
+        .unlockView(show: self.$viewModel.pdfPasswordInputShow,
+                    unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,

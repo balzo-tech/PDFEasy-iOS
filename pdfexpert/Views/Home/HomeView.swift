@@ -21,8 +21,6 @@ struct HomeView: View {
     
     @InjectedObject(\.homeViewModel) var viewModel
     
-    @State private var passwordText: String = ""
-    
     let convertItems: [HomeItem] = [
         HomeItem(title: "Image to PDF",
                  description: "Convert image to PDF in seconds",
@@ -118,18 +116,8 @@ struct HomeView: View {
         .filePicker(item: self.$viewModel.importFileOption, onPickedFile: {
             self.viewModel.processPickedFileUrl($0)
         })
-        .alert("Your pdf is protected", isPresented: self.$viewModel.pdfPasswordInputShow, actions: {
-            SecureField("Enter Password", text: self.$passwordText)
-            Button("Confirm", action: {
-                self.viewModel.importLockedPdf(password: self.passwordText)
-                self.passwordText = ""
-            })
-            Button("Cancel", role: .cancel, action: {
-                self.passwordText = ""
-            })
-        }, message: {
-            Text("Enter the password of your pdf in order to import it.")
-        })
+        .unlockView(show: self.$viewModel.pdfPasswordInputShow,
+                    unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
         .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
             // Scanner
             ScannerView(onScannerResult: {
