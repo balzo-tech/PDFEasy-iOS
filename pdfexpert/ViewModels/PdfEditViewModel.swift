@@ -77,6 +77,12 @@ class PdfEditViewModel: ObservableObject {
     
     @Published var saveSuccessfulAlertShow: Bool = false
     
+    @Published var pdfFilename: String {
+        didSet {
+            self.onPdfFilenameChanged()
+        }
+    }
+    
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
@@ -99,6 +105,7 @@ class PdfEditViewModel: ObservableObject {
     
     init(inputParameter: InputParameter) {
         self.pdfEditable = inputParameter.pdfEditable
+        self.pdfFilename = inputParameter.pdfEditable.filename
         self.startAction = inputParameter.startAction
         self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
         self.refreshImages()
@@ -270,6 +277,12 @@ class PdfEditViewModel: ObservableObject {
         }
         self.pdfEditable = try self.repository.savePdf(pdfEditable: self.pdfEditable)
         self.shouldShowCloseWarning.wrappedValue = false
+    }
+    
+    private func onPdfFilenameChanged() {
+        if self.pdfEditable.filename != self.pdfFilename {
+            self.pdfEditable.updateFilename(self.pdfFilename)
+        }
     }
     
     @MainActor

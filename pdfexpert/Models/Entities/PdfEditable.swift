@@ -18,11 +18,11 @@ enum CompressionOption: Int32, CaseIterable {
 }
 
 struct PdfEditable {
-    private(set) var storeId: NSManagedObjectID?
+    private(set) var storeId: NSManagedObjectID? = nil
     private(set) var pdfDocument: PDFDocument
-    private(set) var password: String?
-    private(set) var creationDate: Date?
-    private(set) var filename: String?
+    private(set) var password: String? = nil
+    private(set) var creationDate: Date = Date()
+    private(set) var filename: String
     private(set) var compression: CompressionOption = K.Misc.PdfDefaultCompression
     private(set) var margins: MarginsOption = K.Misc.PdfDefaultMarginsOption
     
@@ -40,44 +40,32 @@ struct PdfEditable {
         self.storeId = storeId
         self.pdfDocument = pdfDocument
         self.password = password
-        self.creationDate = creationDate
-        self.filename = fileName
+        self.creationDate = creationDate ?? Date()
+        self.filename = fileName ?? self.creationDate.creationDateText
         self.compression = compression
         self.margins = margins
     }
     
     init?(data: Data) {
         guard let pdfDocument = PDFDocument(data: data) else { return nil }
-        self.storeId = nil
         self.pdfDocument = pdfDocument
-        self.password = nil
-        self.creationDate = nil
-        self.filename = nil
+        self.filename = self.creationDate.creationDateText
     }
     
     init?(pdfUrl: URL) {
         guard let pdfDocument = PDFDocument(url: pdfUrl) else { return nil }
-        self.storeId = nil
         self.pdfDocument = pdfDocument
-        self.password = nil
-        self.creationDate = nil
-        self.filename = nil
+        self.filename = pdfUrl.filename
     }
     
     init(pdfDocument: PDFDocument) {
-        self.storeId = nil
         self.pdfDocument = pdfDocument
-        self.password = nil
-        self.creationDate = nil
-        self.filename = nil
+        self.filename = self.creationDate.creationDateText
     }
     
     init() {
-        self.storeId = nil
         self.pdfDocument = PDFDocument()
-        self.password = nil
-        self.creationDate = nil
-        self.filename = nil
+        self.filename = self.creationDate.creationDateText
     }
     
     mutating func updateStoreId(_ storeId: NSManagedObjectID?) {
@@ -98,6 +86,10 @@ struct PdfEditable {
     
     mutating func updateMargins(_ newMargins: MarginsOption) {
         self.margins = newMargins
+    }
+    
+    mutating func updateFilename(_ filename: String) {
+        self.filename = filename
     }
     
     var shareData: Data? {
@@ -122,6 +114,15 @@ struct PdfEditable {
     
     var pageCount: Int {
         return self.pdfDocument.pageCount
+    }
+}
+
+fileprivate extension Date {
+    
+    var creationDateText: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-YYYY"
+        return "File-\(dateFormatter.string(from: self))"
     }
 }
 

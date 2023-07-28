@@ -38,11 +38,7 @@ class PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for index in 0..<K.Test.NumberOfPdfs {
-            _ = K.Test.GetDebugCoreDataPdf(context: viewContext,
-                                           password: (index % 2 > 0) ? "Test" : nil,
-                                           filename: "Test Pdf",
-                                           compression: K.Misc.PdfDefaultCompression,
-                                           margins: K.Misc.PdfDefaultMarginsOption)
+            _ = K.Test.GetDebugCoreDataPdf(context: viewContext)
         }
         do {
             try viewContext.save()

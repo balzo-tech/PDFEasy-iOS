@@ -11,22 +11,14 @@ import CoreData
 
 @objc(CDPdf)
 public class CDPdf: NSManagedObject {
-
-    convenience init(context: NSManagedObjectContext,
-                     pdfData: Data,
-                     password: String?,
-                     creationDate: Date,
-                     filename: String?,
-                     compression: CompressionOption,
-                     margins: MarginsOption
-    ) {
-        self.init(context: context)
+    
+    func update(withPdf pdf: PdfEditable, pdfData: Data) {
         self.data = pdfData
-        self.creationDate = creationDate
-        self.password = password
-        self.filename = filename
-        self.compression = compression.rawValue
-        self.margins = margins.rawValue
+        self.creationDate = pdf.creationDate
+        self.password = pdf.password
+        self.filename = pdf.filename
+        self.compression = pdf.compression.rawValue
+        self.margins = pdf.margins.rawValue
     }
 }
 

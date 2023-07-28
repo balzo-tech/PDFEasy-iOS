@@ -53,7 +53,7 @@ struct ArchiveView: View {
                                 .cornerRadius(10)
                             VStack(spacing: 0) {
                                 Spacer()
-                                Text(item.creationDateText)
+                                Text(item.filename)
                                     .font(FontPalette.fontMedium(withSize: 16))
                                     .foregroundColor(ColorPalette.primaryText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -194,18 +194,6 @@ struct ArchiveView: View {
 }
 
 extension PdfEditable {
-    
-    var creationDateText: String {
-        var text = "File "
-        if let creationDate = self.creationDate {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM-dd-YYYY"
-            text += dateFormatter.string(from: creationDate)
-        } else {
-            text += "-"
-        }
-        return text
-    }
     
     var pageCountText: String {
         "\(self.pageCount) pages"

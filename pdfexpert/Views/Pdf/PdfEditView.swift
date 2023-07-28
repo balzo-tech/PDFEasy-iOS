@@ -37,6 +37,8 @@ struct PdfEditView: View {
             .padding([.leading, .trailing], 16)
             self.editOptionsView
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(self.$viewModel.pdfFilename)
         .ignoresSafeArea(.keyboard)
         .background(ColorPalette.primaryBG)
         .onAppear(perform:self.viewModel.onAppear)

@@ -287,7 +287,7 @@ public class HomeViewModel : ObservableObject {
         self.cameraShow = false
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            self.convertUiImageToPdf(uiImage: uiImage)
+            self.convertUiImageToPdf(uiImage: uiImage, filename: nil)
         }
     }
     
@@ -393,7 +393,7 @@ public class HomeViewModel : ObservableObject {
                 return
             }
             self.currentAnalyticsFileExtension = fileImageUrl.pathExtension
-            self.convertUiImageToPdf(uiImage: uiImage)
+            self.convertUiImageToPdf(uiImage: uiImage, filename: fileImageUrl.filename)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
             self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
@@ -411,8 +411,9 @@ public class HomeViewModel : ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                } else if let data = data, var pdfEditable = PdfEditable(data: data) {
                     self.currentAnalyticsFileExtension = fileUrl.pathExtension
+                    pdfEditable.updateFilename(fileUrl.filename)
                     self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
@@ -431,7 +432,7 @@ public class HomeViewModel : ObservableObject {
                 switch result {
                 case .success(let image?):
                     self.asyncImageLoading = AsyncOperation(status: .data(()))
-                    self.convertUiImageToPdf(uiImage: image.uiImage)
+                    self.convertUiImageToPdf(uiImage: image.uiImage, filename: nil)
                 case .success(nil):
                     self.asyncImageLoading = AsyncOperation(status: .empty)
                 case .failure(let error):
@@ -442,9 +443,13 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
-    private func convertUiImageToPdf(uiImage: UIImage) {
+    private func convertUiImageToPdf(uiImage: UIImage, filename: String?) {
         let pdfDocument = PDFUtility.convertUiImageToPdf(uiImage: uiImage)
-        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
+        var pdf = PdfEditable(pdfDocument: pdfDocument)
+        if let filename {
+            pdf.updateFilename(filename)
+        }
+        self.asyncPdf = AsyncOperation(status: .data(pdf))
     }
     
     @MainActor

@@ -100,6 +100,7 @@
 		896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */; };
 		897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */; };
 		897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */; };
+		897967862A73E59B00E91F8E /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897967852A73E59B00E91F8E /* URL+Extensions.swift */; };
 		89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */; };
 		89883B022A45CB9800E684B6 /* InfoTemplate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89883B012A45CB9800E684B6 /* InfoTemplate.plist */; };
 		8991485129E851B500DD01F2 /* ConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8991485029E851B500DD01F2 /* ConfigService.swift */; };
@@ -297,6 +298,7 @@
 		896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalView.swift; sourceTree = "<group>"; };
 		897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalItemView.swift; sourceTree = "<group>"; };
+		897967852A73E59B00E91F8E /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		89847AE02A1BA947000EC14B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResizableView.swift; sourceTree = "<group>"; };
 		89883B012A45CB9800E684B6 /* InfoTemplate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoTemplate.plist; sourceTree = "<group>"; };
@@ -777,6 +779,7 @@
 				89127AA62A17C1980059005F /* PencilKit+Extensions.swift */,
 				896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */,
 				892E404E2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift */,
+				897967852A73E59B00E91F8E /* URL+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1206,6 +1209,7 @@
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
 				893C8FD429DED2E9000E35BD /* RepositoryImpl.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
+				897967862A73E59B00E91F8E /* URL+Extensions.swift in Sources */,
 				89127AA52A17A3600059005F /* PdfSignatureCanvasViewModel.swift in Sources */,
 				89CD7B9729D329B1003F1C3A /* SharedErrors.swift in Sources */,
 				893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */,

@@ -35,19 +35,11 @@ struct K {
             return PDFDocument(data: testFileDataUrl)
         }
         
-        static func GetDebugCoreDataPdf(context: NSManagedObjectContext,
-                                        password: String?,
-                                        filename: String?,
-                                        compression: CompressionOption,
-                                        margins: MarginsOption) -> CDPdf? {
-            guard let testFileData = DebugPdfDocumentData else { return nil }
-            return CDPdf(context: context,
-                         pdfData: testFileData,
-                         password: password,
-                         creationDate: Date(),
-                         filename: filename,
-                         compression: compression,
-                         margins: margins)
+        static func GetDebugCoreDataPdf(context: NSManagedObjectContext) -> CDPdf? {
+            guard let testPdf = DebugPdfEditable, let pdfData = testPdf.rawData else { return nil }
+            let coreDataPdf = CDPdf(context: context)
+            coreDataPdf.update(withPdf: testPdf, pdfData: pdfData)
+            return coreDataPdf
         }
         
         static var DebugPdfEditable: PdfEditable? {

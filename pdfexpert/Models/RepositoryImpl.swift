@@ -120,29 +120,27 @@ enum SaveError: UnderlyingError {
 fileprivate extension PdfEditable {
     
     func getSavedOrNewPdf(context: NSManagedObjectContext) -> CDPdf? {
+        
         guard let pdfData = self.rawData else {
             debugPrint(for: self, message: "Cannot get pdf raw data for given PdfEditable instance")
             return nil
         }
         
+        var result: CDPdf? = nil
+        
         if let objectId = self.storeId {
-            guard let pdf = (try? context.existingObject(with: objectId)) as? CDPdf else {
+            guard let savedPdf = (try? context.existingObject(with: objectId)) as? CDPdf else {
                 debugPrint(for: self, message: "Cannot found expected CDPdf instance for given object id")
                 return nil
             }
-            pdf.creationDate = self.creationDate
-            pdf.data = pdfData
-            pdf.password = self.password
-            return pdf
+            result = savedPdf
         } else {
-            return CDPdf(context: context,
-                         pdfData: pdfData,
-                         password: self.password,
-                         creationDate: self.creationDate ?? Date(),
-                         filename: self.filename,
-                         compression: self.compression,
-                         margins: self.margins)
+            result = CDPdf(context: context)
         }
+        
+        result?.update(withPdf: self, pdfData: pdfData)
+        
+        return result
     }
     
     func getSavedPdf(context: NSManagedObjectContext) -> CDPdf? {
