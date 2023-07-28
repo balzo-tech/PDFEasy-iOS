@@ -9,48 +9,95 @@ import Foundation
 import PDFKit
 import CoreData
 
+enum MarginsOption: Int32, CaseIterable {
+    case noMargins, mediumMargins, heavyMargins
+}
+
+enum CompressionOption: Int32, CaseIterable {
+    case low, medium, high
+}
+
 struct PdfEditable {
     private(set) var storeId: NSManagedObjectID?
     private(set) var pdfDocument: PDFDocument
     private(set) var password: String?
     private(set) var creationDate: Date?
+    private(set) var filename: String?
+    private(set) var compression: CompressionOption = K.Misc.PdfDefaultCompression
+    private(set) var margins: MarginsOption = K.Misc.PdfDefaultMarginsOption
     
     var rawData: Data? {
         return self.pdfDocument.dataRepresentation()
     }
     
-    init?(storeId: NSManagedObjectID?, data: Data, password: String? = nil, creationDate: Date? = nil) {
+    init(storeId: NSManagedObjectID,
+         pdfDocument: PDFDocument,
+         password: String?,
+         creationDate: Date?,
+         fileName: String?,
+         compression: CompressionOption,
+         margins: MarginsOption) {
+        self.storeId = storeId
+        self.pdfDocument = pdfDocument
+        self.password = password
+        self.creationDate = creationDate
+        self.filename = fileName
+        self.compression = compression
+        self.margins = margins
+    }
+    
+    init?(data: Data) {
         guard let pdfDocument = PDFDocument(data: data) else { return nil }
-        self.storeId = storeId
+        self.storeId = nil
         self.pdfDocument = pdfDocument
-        self.password = password
-        self.creationDate = creationDate
+        self.password = nil
+        self.creationDate = nil
+        self.filename = nil
     }
     
-    init?(storeId: NSManagedObjectID?, pdfUrl: URL, password: String? = nil, creationDate: Date? = nil) {
+    init?(pdfUrl: URL) {
         guard let pdfDocument = PDFDocument(url: pdfUrl) else { return nil }
-        self.storeId = storeId
+        self.storeId = nil
         self.pdfDocument = pdfDocument
-        self.password = password
-        self.creationDate = creationDate
+        self.password = nil
+        self.creationDate = nil
+        self.filename = nil
     }
     
-    init(storeId: NSManagedObjectID?, pdfDocument: PDFDocument? = nil, password: String? = nil, creationDate: Date? = nil) {
-        self.storeId = storeId
-        self.pdfDocument = pdfDocument ?? PDFDocument()
-        self.password = password
-        self.creationDate = creationDate
+    init(pdfDocument: PDFDocument) {
+        self.storeId = nil
+        self.pdfDocument = pdfDocument
+        self.password = nil
+        self.creationDate = nil
+        self.filename = nil
     }
     
-    init(storeId: NSManagedObjectID, pdfDocument: PDFDocument, password: String? = nil, creationDate: Date? = nil) {
+    init() {
+        self.storeId = nil
+        self.pdfDocument = PDFDocument()
+        self.password = nil
+        self.creationDate = nil
+        self.filename = nil
+    }
+    
+    mutating func updateStoreId(_ storeId: NSManagedObjectID?) {
         self.storeId = storeId
+    }
+    
+    mutating func updateDocument(_ pdfDocument: PDFDocument) {
         self.pdfDocument = pdfDocument
-        self.password = password
-        self.creationDate = creationDate
     }
     
     mutating func updatePassword(_ newPassword: String?) {
         self.password = newPassword
+    }
+    
+    mutating func updateCompression(_ newCompression: CompressionOption) {
+        self.compression = newCompression
+    }
+    
+    mutating func updateMargins(_ newMargins: MarginsOption) {
+        self.margins = newMargins
     }
     
     var shareData: Data? {

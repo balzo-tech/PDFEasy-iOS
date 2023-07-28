@@ -21,12 +21,12 @@ class ArchiveViewModel: ObservableObject {
     
     @Published var asyncItems: AsyncOperation<[PdfEditable], SharedLocalizedError> = AsyncOperation(status: .empty)
     @Published var asyncItemDelete: AsyncOperation<(), SharedLocalizedError> = AsyncOperation(status: .empty)
-    @Published var pdfToBeEdited: PdfEditable?
     @Published var isLoading: Bool = false
     
     @Injected(\.repository) private var repository
     @Injected(\.store) private var store
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.mainCoordinator) private var mainCoordinator
     
     let syncMonitor = SyncMonitor.shared
     
@@ -48,11 +48,16 @@ class ArchiveViewModel: ObservableObject {
             }
             self?.updateView()
         }.store(in: &self.cancelBag)
+        
+        // Refresh the pdf list every time the pdf edit flow is dismissed
+        self.mainCoordinator.$pdfEditFlowData.filter { $0 == nil }.sink { data in
+            self.refresh()
+        }.store(in: &self.cancelBag)
     }
     
     func editItem(item: PdfEditable) {
         self.analyticsManager.track(event: .existingPdfOpened)
-        self.pdfToBeEdited = item
+        self.mainCoordinator.showPdfEditFlow(pdfEditable: item)
     }
     
     func delete(item: PdfEditable) {

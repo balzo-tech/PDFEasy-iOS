@@ -31,12 +31,6 @@ struct ArchiveView: View {
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
         }
-        
-        .fullScreenCover(item: self.$viewModel.pdfToBeEdited, onDismiss: {
-            self.viewModel.refresh()
-        }) { pdfEditable in
-            PdfFlowView(pdfEditable: pdfEditable, startAction: nil)
-        }
     }
     
     var content: some View {

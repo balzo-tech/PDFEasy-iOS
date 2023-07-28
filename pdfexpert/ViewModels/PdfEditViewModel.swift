@@ -18,10 +18,6 @@ extension Container {
     }
 }
 
-enum MarginsOption: CaseIterable {
-    case noMargins, mediumMargins, heavyMargins
-}
-
 enum PdfEditStartAction {
     case openFillWidget
     case openFillForm
@@ -55,8 +51,6 @@ class PdfEditViewModel: ObservableObject {
     @Published var fillFormViewShow: Bool = false
     @Published var fillWidgetViewShow: Bool = false
     @Published var editMode: EditMode = .add
-    @Published var marginsOption: MarginsOption = K.Misc.PdfDefaultMarginOption
-    @Published var compression: CGFloat = K.Misc.PdfDefaultCompression
     @Published var pdfPasswordInputShow: Bool = false
     @Published var missingWidgetWarningShow: Bool = false
     
@@ -81,8 +75,10 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
+    @Published var saveSuccessfulAlertShow: Bool = false
+    
     @Injected(\.repository) private var repository
-    @Injected(\.pdfCoordinator) private var coordinator
+    @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.store) private var store
     
@@ -91,7 +87,7 @@ class PdfEditViewModel: ObservableObject {
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
     
-    var savedPdf: PdfEditable? = nil
+    var pdfToBeShared: PdfEditable? = nil
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
@@ -181,30 +177,32 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func save() {
-        guard self.pdfEditable.pdfDocument.pageCount > 0 else {
-            self.pdfSaveError = .noPages
-            return
-        }
-        
-        let pdfDocument = PDFUtility.applyPostProcess(toPdfDocument: self.pdfEditable.pdfDocument,
-                                                      horizontalMargin: self.marginsOption.horizontalMargin,
-                                                      quality: 1.0 - self.compression)
         do {
-            let pdfEditableToBeSaved = PdfEditable(
-                storeId: self.pdfEditable.storeId,
-                pdfDocument: pdfDocument,
-                password: self.pdfEditable.password,
-                creationDate: self.pdfEditable.creationDate
-            )
-            let savedPdf = try self.repository.savePdf(pdfEditable: pdfEditableToBeSaved)
-            self.savedPdf = savedPdf
-            self.pdfEditable = savedPdf
-            self.shouldShowCloseWarning.wrappedValue = false
-            self.viewPdf()
-        } catch {
+            try self.internalSave()
+            self.saveSuccessfulAlertShow = true
+        } catch let error as PdfEditSaveError  {
             debugPrint(for: self, message: "Pdf save failed with error: \(error)")
-            self.pdfSaveError = .saveFailed
+            self.pdfSaveError = error
+        } catch {
+            self.pdfSaveError = .unknown
         }
+    }
+    
+    func share() {
+        do {
+            try self.internalSave()
+            self.pdfToBeShared = self.pdfEditable
+        } catch let error as PdfEditSaveError  {
+            debugPrint(for: self, message: "Pdf save failed with error: \(error)")
+            self.pdfSaveError = error
+        } catch {
+            self.pdfSaveError = .unknown
+        }
+    }
+    
+    func goToArchive() {
+        self.mainCoordinator.closePdfEditFlow()
+        self.mainCoordinator.goToArchive()
     }
     
     func showAddSignature() {
@@ -216,17 +214,11 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func showFillWidget() {
-        self.fillWidgetViewShow = true
-    }
-    
-    func viewPdf() {
-        guard let pdf = self.savedPdf else {
-            debugPrint(for: self, message: "Missing expected pdf")
-            self.pdfSaveError = .unknown
-            return
+        if PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) {
+            self.fillWidgetViewShow = true
+        } else {
+            self.missingWidgetWarningShow = true
         }
-        self.analyticsManager.track(event: .pdfEditCompleted(marginsOption: self.marginsOption, compressionValue: self.compression))
-        self.coordinator.showViewer(pdf: pdf, marginOption: self.marginsOption, compression: self.compression)
     }
     
     @MainActor
@@ -272,6 +264,14 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
+    private func internalSave() throws {
+        guard self.pdfEditable.pdfDocument.pageCount > 0 else {
+            throw PdfEditSaveError.noPages
+        }
+        self.pdfEditable = try self.repository.savePdf(pdfEditable: self.pdfEditable)
+        self.shouldShowCloseWarning.wrappedValue = false
+    }
+    
     @MainActor
     private func convertFileByUrl(fileUrl: URL) {
         let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)
@@ -285,7 +285,7 @@ class PdfEditViewModel: ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(storeId: nil, data: data) {
+                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
                     self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
                     self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {
@@ -297,7 +297,7 @@ class PdfEditViewModel: ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(storeId: nil, pdfUrl: pdfUrl) else {
+        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
@@ -412,13 +412,11 @@ class PdfEditViewModel: ObservableObject {
 
 enum PdfEditSaveError: LocalizedError {
     case unknown
-    case saveFailed
     case noPages
     
     var errorDescription: String? {
         switch self {
         case .unknown: return "Internal Error. Please try again later."
-        case .saveFailed: return "The pdf file couldn't be saved on your device. You can still view it and share it."
         case .noPages: return "Your pdf doesn't contain any pages."
         }
     }

@@ -138,7 +138,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(storeId: nil, pdfUrl: pdfUrl) else {
+        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
@@ -173,7 +173,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncImportPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(storeId: nil, data: data) {
+                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
                     self.currentAnalyticsFileExtension = fileUrl.pathExtension
                     self.asyncImportPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {

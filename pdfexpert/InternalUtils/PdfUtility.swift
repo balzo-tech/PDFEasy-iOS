@@ -207,12 +207,14 @@ class PDFUtility {
             return AsyncOperation(status: .error(.unknownError))
         }
         
-        guard let pdfDecryptedEditable = PdfEditable(storeId: pdfEditable.storeId, data: pdfDecryptedData, password: password) else {
+        guard let pdfDecryptedDocument = PDFDocument(data: pdfDecryptedData) else {
             assertionFailure("Cannot decode pdf from decrypted data")
             return AsyncOperation(status: .error(.unknownError))
         }
-        
-        return AsyncOperation(status: .data(pdfDecryptedEditable))
+        var pdfEditable = pdfEditable
+        pdfEditable.updateDocument(pdfDecryptedDocument)
+        pdfEditable.updatePassword(password)
+        return AsyncOperation(status: .data(pdfEditable))
     }
     
     static func hasPdfWidget(pdfEditable: PdfEditable) -> Bool {

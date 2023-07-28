@@ -146,11 +146,6 @@ struct HomeView: View {
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
                       selection: self.$viewModel.imageSelection,
                       matching: .images)
-        .fullScreenCover(isPresented: self.$viewModel.pdfFlowShow) {
-            let pdfEditable = self.viewModel.asyncPdf.data!
-            let editStartAction = self.viewModel.editStartAction
-            PdfFlowView(pdfEditable: pdfEditable, startAction: editStartAction)
-        }
         .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
             self.getSubscriptionView(onComplete: {
                 self.viewModel.onMonetizationClose()

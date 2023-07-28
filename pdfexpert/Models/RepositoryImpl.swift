@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import Factory
 import CloudKit
+import PDFKit
 
 private let DiskFullErrorDomain: String = NSSQLiteErrorDomain
 private let DiskFullErrorCode: Int = 13
@@ -29,14 +30,14 @@ class RepositoryImpl: Repository {
     
     func savePdf(pdfEditable: PdfEditable) throws -> PdfEditable {
         
-        guard let storedOrNewPdf = pdfEditable.getStoredOrNewPdf(context: self.pdfManagedContext) else {
+        guard let savedOrNewPdf = pdfEditable.getSavedOrNewPdf(context: self.pdfManagedContext) else {
             throw SaveError.unknownError
         }
         
         try self.saveChanges()
         
         // Must get the PdfEditable entity after having saved, because its ObjectId changes after having saved the object.
-        guard let updatedPdfEditable = PdfEditable.create(withPdf: storedOrNewPdf) else {
+        guard let updatedPdfEditable = PdfEditable.create(withCoreDataPdf: savedOrNewPdf) else {
             throw SaveError.unknownError
         }
         
@@ -45,7 +46,7 @@ class RepositoryImpl: Repository {
     
     func getDoPdfExist() throws -> Bool {
         var result = false
-        let request = Pdf.fetchRequest()
+        let request = CDPdf.fetchRequest()
         request.includesSubentities = false
         do {
             result = try self.persistence.container
@@ -58,13 +59,13 @@ class RepositoryImpl: Repository {
     }
     
     func loadPdfs() throws -> [PdfEditable] {
-        let fetchRequest = Pdf.fetchRequest()
+        let fetchRequest = CDPdf.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         do {
             return try self.persistence.container.viewContext
                 .fetch(fetchRequest)
                 .map { pdf in
-                    guard let pdfEditable = PdfEditable.create(withPdf: pdf) else {
+                    guard let pdfEditable = PdfEditable.create(withCoreDataPdf: pdf) else {
                         throw SharedUnderlyingError.unknownError
                     }
                     return pdfEditable
@@ -76,7 +77,7 @@ class RepositoryImpl: Repository {
     }
     
     func delete(pdfEditable: PdfEditable) throws {
-        guard let storedPdf = pdfEditable.getStoredPdf(context: self.pdfManagedContext) else {
+        guard let storedPdf = pdfEditable.getSavedPdf(context: self.pdfManagedContext) else {
             debugPrint(for: self, message: "Current PdfEditable instance doesn't exist in the persistent storage")
             return
         }
@@ -118,15 +119,15 @@ enum SaveError: UnderlyingError {
 
 fileprivate extension PdfEditable {
     
-    func getStoredOrNewPdf(context: NSManagedObjectContext) -> Pdf? {
+    func getSavedOrNewPdf(context: NSManagedObjectContext) -> CDPdf? {
         guard let pdfData = self.rawData else {
             debugPrint(for: self, message: "Cannot get pdf raw data for given PdfEditable instance")
             return nil
         }
         
         if let objectId = self.storeId {
-            guard let pdf = (try? context.existingObject(with: objectId)) as? Pdf else {
-                debugPrint(for: self, message: "Cannot found expected pdf for given object id")
+            guard let pdf = (try? context.existingObject(with: objectId)) as? CDPdf else {
+                debugPrint(for: self, message: "Cannot found expected CDPdf instance for given object id")
                 return nil
             }
             pdf.creationDate = self.creationDate
@@ -134,23 +135,35 @@ fileprivate extension PdfEditable {
             pdf.password = self.password
             return pdf
         } else {
-            return Pdf(context: context, pdfData: pdfData, password: self.password, creationDate: self.creationDate ?? Date())
+            return CDPdf(context: context,
+                         pdfData: pdfData,
+                         password: self.password,
+                         creationDate: self.creationDate ?? Date(),
+                         filename: self.filename,
+                         compression: self.compression,
+                         margins: self.margins)
         }
     }
     
-    func getStoredPdf(context: NSManagedObjectContext) -> Pdf? {
+    func getSavedPdf(context: NSManagedObjectContext) -> CDPdf? {
         if let objectId = self.storeId {
-            return (try? context.existingObject(with: objectId)) as? Pdf
+            return (try? context.existingObject(with: objectId)) as? CDPdf
         } else {
             return nil
         }
     }
     
-    static func create(withPdf pdf: Pdf) -> Self? {
-        guard let pdfDocument = pdf.pdfDocument else {
-            debugPrint(for: self, message: "Cannot get pdf document for given Pdf instance")
+    static func create(withCoreDataPdf pdf: CDPdf) -> Self? {
+        guard let pdfData = pdf.data, let pdfDocument = PDFDocument(data: pdfData) else {
+            debugPrint(for: self, message: "Cannot get pdf document for given CDPdf instance")
             return nil
         }
-        return PdfEditable(storeId: pdf.objectID, pdfDocument: pdfDocument, password: pdf.password, creationDate: pdf.creationDate)
+        return PdfEditable(storeId: pdf.objectID,
+                           pdfDocument: pdfDocument,
+                           password: pdf.password,
+                           creationDate: pdf.creationDate,
+                           fileName: pdf.filename,
+                           compression: CompressionOption(rawValue: pdf.compression) ?? K.Misc.PdfDefaultCompression,
+                           margins: MarginsOption(rawValue: pdf.margins) ?? K.Misc.PdfDefaultMarginsOption)
     }
 }

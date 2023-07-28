@@ -16,6 +16,14 @@ enum MainTab: Int, CaseIterable {
     case settings
 }
 
+struct PdfEditFlowData: Hashable, Identifiable {
+    
+    var id: Self { return self }
+    
+    let pdfEditable: PdfEditable
+    let startAction: PdfEditStartAction?
+}
+
 class MainCoordinator: ObservableObject {
     
     enum RootView {
@@ -30,6 +38,7 @@ class MainCoordinator: ObservableObject {
     @Published var rootView: RootView = .onboarding
     @Published var tab: MainTab = MainTab.home
     @Published var path: [Route] = []
+    @Published var pdfEditFlowData: PdfEditFlowData? = nil
     
     @Injected(\.cacheManager) private var cacheManager
     
@@ -51,6 +60,14 @@ class MainCoordinator: ObservableObject {
     
     func goToArchive() {
         self.tab = MainTab.archive
+    }
+    
+    func showPdfEditFlow(pdfEditable: PdfEditable, startAction: PdfEditStartAction? = nil) {
+        self.pdfEditFlowData = PdfEditFlowData(pdfEditable: pdfEditable, startAction: startAction)
+    }
+    
+    func closePdfEditFlow() {
+        self.pdfEditFlowData = nil
     }
 }
 

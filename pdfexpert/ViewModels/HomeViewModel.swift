@@ -149,20 +149,17 @@ public class HomeViewModel : ObservableObject {
     
     @Published var asyncPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
         didSet {
-            if self.asyncPdf.success {
+            if let pdf = self.asyncPdf.data {
                 self.trackFullActionCompleted()
                 if let homePostImportAction = self.action?.homePostImportAction {
                     self.performHomePostImportAction(homePostImportAction)
                 } else {
-                    self.pdfFlowShow = true
+                    self.mainCoordinator.showPdfEditFlow(pdfEditable: pdf, startAction: self.editStartAction)
                 }
-            } else {
-                self.pdfFlowShow = false
             }
         }
     }
     
-    @Published var pdfFlowShow: Bool = false
     @Published var pdfSaved: PdfEditable? = nil
     @Published var addPasswordCompletedShow: Bool = false
     @Published var removePasswordCompletedShow: Bool = false
@@ -323,7 +320,7 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(storeId: nil, pdfUrl: pdfUrl) else {
+        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
@@ -414,7 +411,7 @@ public class HomeViewModel : ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(storeId: nil, data: data) {
+                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
                     self.currentAnalyticsFileExtension = fileUrl.pathExtension
                     self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
                 } else {
@@ -447,7 +444,7 @@ public class HomeViewModel : ObservableObject {
     
     private func convertUiImageToPdf(uiImage: UIImage) {
         let pdfDocument = PDFUtility.convertUiImageToPdf(uiImage: uiImage)
-        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(storeId: nil, pdfDocument: pdfDocument)))
+        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
     }
     
     @MainActor
@@ -487,7 +484,7 @@ public class HomeViewModel : ObservableObject {
             return
         }
         
-        guard var pdfEditable = PdfEditable(storeId: nil, data: pdfData) else {
+        guard var pdfEditable = PdfEditable(data: pdfData) else {
             self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecode))
             resetSharedStorage()
             return
@@ -512,11 +509,12 @@ public class HomeViewModel : ObservableObject {
                 resetSharedStorage()
                 return
             }
-            guard let pdfDecryptedEditable = PdfEditable(storeId: nil, data: pdfDecryptedData, password: password) else {
+            guard var pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData) else {
                 self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecodeDecryptedData))
                 resetSharedStorage()
                 return
             }
+            pdfDecryptedEditable.updatePassword(password)
             pdfEditable = pdfDecryptedEditable
         }
         resetSharedStorage()
@@ -535,7 +533,7 @@ public class HomeViewModel : ObservableObject {
     
     private func createPdf() {
         self.trackFullActionChosen(importOption: nil)
-        self.asyncPdf = AsyncOperation(status: .data(PdfEditable(storeId: nil)))
+        self.asyncPdf = AsyncOperation(status: .data(PdfEditable()))
     }
     
     private func performHomePostImportAction(_ action: HomePostImportAction) {

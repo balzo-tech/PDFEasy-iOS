@@ -32,7 +32,7 @@ class PdfScanUtility {
             }
             
             DispatchQueue.main.async {
-                asyncOperation.wrappedValue = AsyncOperation(status: .data(PdfEditable(storeId: nil, pdfDocument: pdfDocument)))
+                asyncOperation.wrappedValue = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
             }
         }
     }

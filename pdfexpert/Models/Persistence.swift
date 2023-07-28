@@ -38,7 +38,11 @@ class PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for index in 0..<K.Test.NumberOfPdfs {
-            _ = K.Test.GetDebugPdf(context: viewContext, password: (index % 2 > 0) ? "Test" : nil)
+            _ = K.Test.GetDebugCoreDataPdf(context: viewContext,
+                                           password: (index % 2 > 0) ? "Test" : nil,
+                                           filename: "Test Pdf",
+                                           compression: K.Misc.PdfDefaultCompression,
+                                           margins: K.Misc.PdfDefaultMarginsOption)
         }
         do {
             try viewContext.save()
@@ -98,6 +102,8 @@ class PersistenceController {
             
             privateStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
             privateStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+            privateStoreDescription.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
+            privateStoreDescription.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
             
             let cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: CloudKitContainerIdentifier)
             

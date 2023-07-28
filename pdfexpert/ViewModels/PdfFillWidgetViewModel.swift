@@ -35,10 +35,10 @@ class PdfFillWidgetViewModel: ObservableObject {
     
     private var onConfirm: PdfFillWidgetViewModelCallback
     
-    private let originalPdfEditable: PdfEditable
+    private var pdfEditable: PdfEditable
     
     init(inputParameter: InputParameter) {
-        self.originalPdfEditable = inputParameter.pdfEditable
+        self.pdfEditable = inputParameter.pdfEditable
         var pdfDocumentCopy = PDFDocument()
         if let pdfData = inputParameter.pdfEditable.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
             pdfDocumentCopy = copy
@@ -62,6 +62,7 @@ class PdfFillWidgetViewModel: ObservableObject {
     
     func onConfirmButtonPressed() {
         self.analyticsManager.track(event: .fillWidgetConfirmed)
-        self.onConfirm(PdfEditable(storeId: self.originalPdfEditable.storeId, pdfDocument: self.pdfDocument))
+        self.pdfEditable.updateDocument(self.pdfDocument)
+        self.onConfirm(self.pdfEditable)
     }
 }

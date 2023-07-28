@@ -26,24 +26,11 @@ struct PdfFlowView: View {
         switch self.coordinator.rootView {
         case .edit:
             return AnyView(
-                NavigationStack(path: self.$coordinator.path) {
+                NavigationStack {
                     let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: self.pdfEditable,
                                                                          startAction: self.startAction,
                                                                          shouldShowCloseWarning: self.$shouldShowCloseWarning)
                     PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter))
-                        .navigationDestination(for: PdfCoordinator.Route.self) { route in
-                            switch route {
-                            case .viewer(let pdf, let marginsOption, let compression):
-                                let inputParameter = PdfViewerViewModel.InputParameter(pdf: pdf,
-                                                                                       marginsOption: marginsOption,
-                                                                                       compression: compression)
-                                PdfViewerView(viewModel: Container.shared.pdfViewerViewModel(inputParameter))
-                                    .addCustomBackButton(color: ColorPalette.primaryText,
-                                                         onPress: {
-                                        self.coordinator.goBack(fromRoute: route)
-                                    })
-                            }
-                        }
                         .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                             if self.shouldShowCloseWarning {
                                 self.showCloseWarningDialog = true

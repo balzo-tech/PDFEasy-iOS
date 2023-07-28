@@ -24,45 +24,22 @@ struct PdfEditView: View {
     @State private var draggedImage: UIImage? = nil
     
     var body: some View {
-        VStack(spacing: 30) {
-            self.pdfView
-            self.editView
+        VStack(spacing: 16) {
+            VStack(spacing: 16) {
+                VStack(spacing: 0) {
+                    Spacer()
+                    self.pdfView
+                    Spacer()
+                }
+                self.pageListView
+                self.editButtonsView
+            }
+            .padding([.leading, .trailing], 16)
             self.editOptionsView
         }
         .ignoresSafeArea(.keyboard)
-        .padding([.leading, .trailing], 16)
         .background(ColorPalette.primaryBG)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                if self.viewModel.pdfEditable.pdfDocument.pageCount > 0 {
-                    if self.viewModel.showFillWidgetButton {
-                        self.showFillWidgetButton
-                    }
-                    self.showFillFormButton
-                    self.showAddSignatureButton
-                }
-                self.saveButton
-            }
-        }
         .onAppear(perform:self.viewModel.onAppear)
-        .alert("Error",
-               isPresented: .constant(self.viewModel.pdfSaveError != nil),
-               presenting: self.viewModel.pdfSaveError,
-               actions: { pdfSaveError in
-            Button("OK") {
-                self.viewModel.pdfSaveError = nil
-                switch pdfSaveError {
-                case .unknown: break
-                case .saveFailed: self.viewModel.viewPdf()
-                case .noPages: break
-                }
-            }
-            if pdfSaveError == .saveFailed {
-                Button("Cancel") { self.viewModel.pdfSaveError = nil }
-            }
-        }, message: { pdfSaveError in
-            Text(pdfSaveError.errorDescription ?? "")
-        })
         // File picker
         .filePicker(isPresented: self.$viewModel.filePickerShow,
                     fileTypes: K.Misc.ImportFileTypesForAddPage.compactMap { $0 },
@@ -132,6 +109,11 @@ struct PdfEditView: View {
         }, message: {
             Text("Your pdf has no editable fields that you can fill in.")
         })
+        .sharePdf(self.$viewModel.pdfToBeShared)
+        .showError(self.$viewModel.pdfSaveError)
+        .saveSuccessfulAlert(show: self.$viewModel.saveSuccessfulAlertShow,
+                             goToArchiveCallback: { self.viewModel.goToArchive() },
+                             sharePdfCallback: { self.viewModel.share() })
     }
     
     @ViewBuilder var pdfView: some View {
@@ -170,64 +152,27 @@ struct PdfEditView: View {
         }
     }
     
-    @ViewBuilder var editView: some View {
-        VStack {
-            Spacer()
-            switch self.viewModel.editMode {
-            case .add: self.pageListView
-            case .margins: self.marginOptionsView
-            case .compression: self.compressionSliderView
-            }
-            Spacer()
-        }.frame(height: 88)
-    }
-    
-    var editOptionsView: some View {
+    var editButtonsView: some View {
         HStack {
-            ForEach(PdfEditViewModel.EditMode.allCases, id:\.self) { editMode in
-                Button(action: { self.viewModel.editMode = editMode }) {
-                    VStack {
-                        editMode.iconImage
-                            .foregroundColor(self.viewModel.editMode == editMode
-                                             ? ColorPalette.buttonGradientStart
-                                             : ColorPalette.fourthText)
-                        Text(editMode.name)
-                            .foregroundColor(ColorPalette.primaryText)
-                            .font(FontPalette.fontRegular(withSize: 14))
-                    }.frame(maxWidth: .infinity)
-                }
+            self.getDefaultButton(text: "Save PDF") {
+                self.viewModel.save()
             }
+            Button(action: { self.viewModel.share() }) {
+                Image(systemName: "square.and.arrow.up")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .font(.system(size: 16).bold())
+                    .foregroundColor(ColorPalette.primaryText)
+                    .contentShape(Capsule())
+            }
+            .frame(width: 64, height: 48)
+            .background(self.defaultGradientBackground)
+            .cornerRadius(10)
         }
     }
     
     var pageListView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
-                Button(action: {
-                    self.showingImageInputPicker = true
-                }) {
-                    self.addThumbnailCell
-                        .applyCellStyle(highlight: false)
-                }
-                .actionDialog(
-                    Text("Choose your source"),
-                    isPresented: self.$showingImageInputPicker,
-                    titleVisibility: .visible
-                ) {
-                    Button("Photo Gallery") {
-                        self.viewModel.openGallery()
-                    }
-                    Button("Camera") {
-                        self.viewModel.openCamera()
-                    }
-                    Button("File") {
-                        self.viewModel.openFilePicker()
-                    }
-                    Button("Scan") {
-                        self.viewModel.openScanner()
-                    }
-                    Button("Cancel", role: .cancel) {}
-                }
                 ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
                     Button(action: {
                         self.indexToDelete = index
@@ -253,20 +198,49 @@ struct PdfEditView: View {
                     }
                 }
             }
+            .padding([.trailing, .leading], Self.selectedCellBorderWidth)
         }
         .frame(height: Self.cellSide + Self.selectedCellBorderWidth)
     }
     
-    var addThumbnailCell: some View {
-        GeometryReader { geometry in
-            Image(systemName: "plus.circle.fill")
-                .resizable()
-                .frame(width: 30, height: 30)
-                .foregroundColor(ColorPalette.thirdText)
-                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            
+    var editOptionsView: some View {
+        HStack {
+            self.addPageButton.frame(maxWidth: .infinity)
+            self.showAddSignatureButton.frame(maxWidth: .infinity)
+            self.showFillFormButton.frame(maxWidth: .infinity)
+            self.showFillWidgetButton.frame(maxWidth: .infinity)
         }
-        .background(ColorPalette.primaryText)
+        .padding([.trailing, .leading], 16)
+        .frame(height: 100)
+        .frame(maxWidth: .infinity)
+        .background(ColorPalette.secondaryBG)
+    }
+    
+    var addPageButton: some View {
+        Button(action: {
+            self.showingImageInputPicker = true
+        }) {
+            self.getEditOptionView(text: "Add page", imageName: "edit_add_file")
+        }
+        .actionDialog(
+            Text("Choose your source"),
+            isPresented: self.$showingImageInputPicker,
+            titleVisibility: .visible
+        ) {
+            Button("Photo Gallery") {
+                self.viewModel.openGallery()
+            }
+            Button("Camera") {
+                self.viewModel.openCamera()
+            }
+            Button("File") {
+                self.viewModel.openFilePicker()
+            }
+            Button("Scan") {
+                self.viewModel.openScanner()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
     
     func getThumbnailCell(image: UIImage) -> some View {
@@ -285,59 +259,36 @@ struct PdfEditView: View {
         )
     }
     
-    var marginOptionsView: some View {
-        HStack(spacing: 16) {
-            ForEach(MarginsOption.allCases, id:\.self) { marginsOption in
-                Button(action: { self.viewModel.marginsOption = marginsOption }) {
-                    marginsOption.iconImage
-                        .padding(EdgeInsets(top: 13, leading: 9, bottom: 13, trailing: 9))
-                        .frame(width: 60, height: 88)
-                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(
-                            self.viewModel.marginsOption == marginsOption
-                            ? ColorPalette.buttonGradientStart
-                            : .clear, lineWidth: 2))
-                }
-            }
-        }
-    }
-    
-    var compressionSliderView: some View {
-        HStack(spacing: 12) {
-            Text("0")
-                .foregroundColor(ColorPalette.primaryText)
-                .font(FontPalette.fontRegular(withSize: 14))
-            Slider(value: self.$viewModel.compression)
-                .tint(ColorPalette.buttonGradientStart)
-            Text("100")
-                .foregroundColor(ColorPalette.primaryText)
-                .font(FontPalette.fontRegular(withSize: 14))
-        }
-        .padding([.leading, .trailing], 16)
-    }
-    
     var showFillWidgetButton: some View {
         Button(action: { self.viewModel.showFillWidget() }) {
-            Image("manage_widget")
+            self.getEditOptionView(text: "Fill Form", imageName: "edit_fill_form")
         }
     }
     
     var showFillFormButton: some View {
         Button(action: { self.viewModel.showFillForm() }) {
-            Image("manage_annotations")
+            self.getEditOptionView(text: "Add text", imageName: "edit_add_text")
         }
     }
     
     var showAddSignatureButton: some View {
         Button(action: { self.viewModel.showAddSignature() }) {
-            Image("signature")
+            self.getEditOptionView(text: "Signature", imageName: "edit_signature")
         }
     }
     
-    var saveButton: some View {
-        Button(action: { self.viewModel.save() }) {
-            Image(systemName: "square.and.arrow.down")
+    func getEditOptionView(text: String, imageName: String) -> some View {
+        return VStack(spacing: 6) {
+            Spacer()
+            Image(imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 32, height: 32)
                 .foregroundColor(ColorPalette.primaryText)
-                .font(.system(size: 16).bold())
+            Text(text)
+                .font(FontPalette.fontLight(withSize: 12))
+                .foregroundColor(ColorPalette.primaryText)
+            Spacer()
         }
     }
 }
@@ -354,6 +305,18 @@ fileprivate extension View {
                                 lineWidth: PdfEditView.selectedCellBorderWidth)
                 )
             }
+    }
+    
+    @ViewBuilder func saveSuccessfulAlert(show: Binding<Bool>,
+                                          goToArchiveCallback: @escaping () -> (),
+                                          sharePdfCallback: @escaping () -> ()) -> some View {
+        self.alert("PDF saved!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Share pdf", action: sharePdfCallback)
+            Button("Continue edit", action: {})
+        }, message: {
+            Text("Your pdf has been successfully saved")
+        })
     }
 }
 
@@ -395,13 +358,15 @@ fileprivate extension MarginsOption {
 
 struct PdfEditView_Previews: PreviewProvider {
     static var previews: some View {
-        if let pdfEditable = K.Test.DebugPdfEditable {
-            let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: pdfEditable,
-                                                                 startAction: nil,
-                                                                 shouldShowCloseWarning: .constant(true))
-            AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter)))
-        } else {
-            AnyView(Spacer())
+        NavigationStack {
+            if let pdfEditable = K.Test.DebugPdfEditable {
+                let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: pdfEditable,
+                                                                     startAction: nil,
+                                                                     shouldShowCloseWarning: .constant(true))
+                AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter)))
+            } else {
+                AnyView(Spacer())
+            }
         }
     }
 }

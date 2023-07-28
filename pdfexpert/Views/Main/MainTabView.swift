@@ -49,6 +49,9 @@ struct MainTabView: View {
             }
         }
         .background(ColorPalette.primaryBG)
+        .fullScreenCover(item: self.$mainCoordinator.pdfEditFlowData) { data in
+            PdfFlowView(pdfEditable: data.pdfEditable, startAction: data.startAction)
+        }
     }
     
     @MainActor @ViewBuilder private func getRootView(forTab tab: MainTab) -> some View {

@@ -21,10 +21,6 @@ struct K {
         static let UseMockDB = false
         static let NumberOfPdfs = 5
         
-        static var DebugPdf: Pdf? {
-            GetDebugPdf(context: Container.shared.persistence().container.viewContext, password: nil)
-        }
-        
         static var DebugPdfDocumentUrl: URL? {
             return Bundle.main.url(forResource: "test", withExtension: "pdf")
         }
@@ -39,14 +35,24 @@ struct K {
             return PDFDocument(data: testFileDataUrl)
         }
         
-        static func GetDebugPdf(context: NSManagedObjectContext, password: String?) -> Pdf? {
+        static func GetDebugCoreDataPdf(context: NSManagedObjectContext,
+                                        password: String?,
+                                        filename: String?,
+                                        compression: CompressionOption,
+                                        margins: MarginsOption) -> CDPdf? {
             guard let testFileData = DebugPdfDocumentData else { return nil }
-            return Pdf(context: context, pdfData: testFileData, password: password, creationDate: Date())
+            return CDPdf(context: context,
+                         pdfData: testFileData,
+                         password: password,
+                         creationDate: Date(),
+                         filename: filename,
+                         compression: compression,
+                         margins: margins)
         }
         
         static var DebugPdfEditable: PdfEditable? {
             guard let testPdfDocument = DebugPdfDocument else { return nil }
-            return PdfEditable(storeId: nil, pdfDocument: testPdfDocument)
+            return PdfEditable(pdfDocument: testPdfDocument)
         }
         
         struct ChatPdf {
@@ -90,8 +96,8 @@ struct K {
         static let DefaultAnnotationTextFontSize: CGFloat = 10.0
         static let DefaultAnnotationTextFontName: String = "Arial"
         static let PdfMarginsColor: UIColor = .white
-        static let PdfDefaultMarginOption: MarginsOption = .noMargins
-        static let PdfDefaultCompression: CGFloat = 0.0
+        static let PdfDefaultMarginsOption: MarginsOption = .noMargins
+        static let PdfDefaultCompression: CompressionOption = .medium
     }
 }
 
