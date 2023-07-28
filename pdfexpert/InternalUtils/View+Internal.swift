@@ -72,10 +72,15 @@ extension View {
         }
     }
     
-    func sharePdf(_ pdf: Binding<PdfEditable?>) -> some View {
-        self.sheet(item: pdf) { pdf in
-            ActivityViewController(activityItems: [pdf.shareData!],
-                                   thumbnail: pdf.thumbnail)
+    func sharePdf(_ pdf: Binding<PdfEditable?>, applyPostProcess: Bool) -> some View {
+        self.sheet(item: pdf, onDismiss: {
+            if let pdf = pdf.wrappedValue {
+                PDFUtility.cleanSharedPdf(pdf: pdf)
+            }
+        }) { pdf in
+            ActivityViewController(activityItems: [PDFUtility.processToShare(pdf: pdf, applyPostProcess: applyPostProcess)],
+                                   thumbnail: pdf.thumbnail,
+                                   title: pdf.filename)
         }
     }
     

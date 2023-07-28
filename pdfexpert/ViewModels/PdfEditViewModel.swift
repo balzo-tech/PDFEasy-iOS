@@ -53,6 +53,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var editMode: EditMode = .add
     @Published var pdfPasswordInputShow: Bool = false
     @Published var missingWidgetWarningShow: Bool = false
+    @Published var monetizationShow: Bool = false
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -198,7 +199,7 @@ class PdfEditViewModel: ObservableObject {
     func share() {
         do {
             try self.internalSave()
-            self.pdfToBeShared = self.pdfEditable
+            self.internalShare()
         } catch let error as PdfEditSaveError  {
             debugPrint(for: self, message: "Pdf save failed with error: \(error)")
             self.pdfSaveError = error
@@ -210,6 +211,10 @@ class PdfEditViewModel: ObservableObject {
     func goToArchive() {
         self.mainCoordinator.closePdfEditFlow()
         self.mainCoordinator.goToArchive()
+    }
+    
+    func onMonetizationClose() {
+        self.monetizationShow = false
     }
     
     func showAddSignature() {
@@ -277,6 +282,15 @@ class PdfEditViewModel: ObservableObject {
         }
         self.pdfEditable = try self.repository.savePdf(pdfEditable: self.pdfEditable)
         self.shouldShowCloseWarning.wrappedValue = false
+    }
+    
+    private func internalShare() {
+        if self.store.isPremium.value {
+            self.pdfToBeShared = self.pdfEditable
+            self.analyticsManager.track(event: .pdfShared(marginsOption: nil, compressionValue: nil))
+        } else {
+            self.monetizationShow = true
+        }
     }
     
     private func onPdfFilenameChanged() {

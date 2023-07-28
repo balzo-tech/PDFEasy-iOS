@@ -164,7 +164,7 @@ struct HomeView: View {
         .removePasswordCompletedAlert(show: self.$viewModel.removePasswordCompletedShow,
                                       goToArchiveCallback: { self.viewModel.goToArchive() },
                                       sharePdfCallback: { self.viewModel.share() })
-        .sharePdf(self.$viewModel.pdfToBeShared)
+        .sharePdf(self.$viewModel.pdfToBeShared, applyPostProcess: false)
         .showError(self.$viewModel.addPasswordError)
         .showError(self.$viewModel.removePasswordError)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

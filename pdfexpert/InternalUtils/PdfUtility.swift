@@ -70,7 +70,7 @@ class PDFUtility {
         }
     }
     
-    static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, horizontalMargin: CGFloat, quality: CGFloat) -> PDFDocument {
+    static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, margins: MarginsOption, compression: CompressionOption) -> PDFDocument {
         
         guard pdfDocument.pageCount > 0 else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
         
@@ -85,7 +85,7 @@ class PDFUtility {
             
             let originalSize = pageRect.size
             
-            let newWidth = originalSize.width - horizontalMargin * 2
+            let newWidth = originalSize.width - margins.horizontalMargin * 2
             let newHeight = (originalSize.height / originalSize.width) * newWidth
             
             let renderer = UIGraphicsImageRenderer(size: originalSize)
@@ -96,7 +96,7 @@ class PDFUtility {
                 ctx.fill(pageRect)
                 
                 // Translate the context so that we only draw the `cropRect`.
-                ctx.cgContext.translateBy(x: -pageRect.origin.x + horizontalMargin,
+                ctx.cgContext.translateBy(x: -pageRect.origin.x + margins.horizontalMargin,
                                           y: originalSize.height - pageRect.origin.y - (originalSize.height - newHeight)/2)
 
                 // Flip the context vertically because the Core Graphics coordinate system starts from the bottom.
@@ -106,7 +106,7 @@ class PDFUtility {
                 page.draw(with: .mediaBox, to: ctx.cgContext)
             }
             
-            if quality < 1.0, let jpegData = newImage.jpegData(compressionQuality: quality) {
+            if compression.quality < 1.0, let jpegData = newImage.jpegData(compressionQuality: compression.quality) {
                 let nsJpegData = NSData(data: jpegData)
                 let unsafePointer = UnsafePointer<UInt8>(nsJpegData.bytes.bindMemory(to: UInt8.self, capacity: nsJpegData.length))
                 if let dataPtr = CFDataCreate(kCFAllocatorDefault, unsafePointer, nsJpegData.length),
@@ -123,21 +123,46 @@ class PDFUtility {
         return newPdfDocument
     }
     
-    static func encryptPdf(pdfDocument: PDFDocument, password: String) -> PDFDocument? {
-        let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false)
-        let encryptedFileURL = documentDirectory.appendingPathComponent("temp_encrypted_pdf_file").appendingPathExtension(for: .pdf)
+    static func getSharePdfUrl(pdf: PdfEditable) -> URL {
+        let documentDirectory = FileManager.default.temporaryDirectory
+        return documentDirectory.appendingPathComponent(pdf.filename).appendingPathExtension(for: .pdf)
+    }
+    
+    static func processToShare(pdf: PdfEditable, applyPostProcess: Bool) -> URL {
+        
+        var pdfDocument = pdf.pdfDocument
+        if applyPostProcess {
+            pdfDocument = Self.applyPostProcess(toPdfDocument: pdfDocument,
+                                                margins: pdf.margins,
+                                                compression: pdf.compression)
+        }
+        
+        let fileURL = Self.getSharePdfUrl(pdf: pdf)
+        
+        let options: [PDFDocumentWriteOption: Any] = {
+            if let password = pdf.password {
+                return [
+                    PDFDocumentWriteOption.userPasswordOption : password,
+                    PDFDocumentWriteOption.ownerPasswordOption : password
+                ]
+            } else {
+                return [:]
+            }
+        }()
         
         // Write with password protection
-        pdfDocument.write(to: encryptedFileURL, withOptions: [PDFDocumentWriteOption.userPasswordOption : password,
-                                                              PDFDocumentWriteOption.ownerPasswordOption : password])
+        pdfDocument.write(to: fileURL, withOptions: options)
         
-        // Get a new encrypted PdfDocument from the created file
-        let encryptedPdfDocument = PDFDocument(url: encryptedFileURL)
-        
-        // Clean up
-        try? FileManager.default.removeItem(at: encryptedFileURL)
-        
-        return encryptedPdfDocument
+        return fileURL
+    }
+    
+    static func cleanSharedPdf(pdf: PdfEditable) {
+        let fileUrl = Self.getSharePdfUrl(pdf: pdf)
+        do {
+            try FileManager.default.removeItem(at: fileUrl)
+        } catch {
+            print("PdfUtility - Failed to delete temporary file at '\(fileUrl)'. Error: \(error)")
+        }
     }
     
     static func unlock(data: Data, password: String) -> CGPDFDocument? {

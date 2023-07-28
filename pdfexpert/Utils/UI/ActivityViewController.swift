@@ -15,6 +15,8 @@ struct ActivityViewController: UIViewControllerRepresentable {
     var activityItems: [Any]
     var applicationActivities: [UIActivity]? = nil
     var thumbnail: UIImage? = nil
+    var title: String
+    
     @Environment(\.presentationMode) var presentationMode
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
@@ -31,16 +33,18 @@ struct ActivityViewController: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
     
     func makeCoordinator() -> ActivityCoordinator {
-        ActivityCoordinator(thumbnail: self.thumbnail)
+        ActivityCoordinator(thumbnail: self.thumbnail, title: self.title)
     }
 }
 
 class ActivityCoordinator: NSObject, UIActivityItemSource {
     
-    var thumbnail: UIImage? = nil
+    private let thumbnail: UIImage?
+    private let title: String
 
-    init(thumbnail: UIImage?) {
+    init(thumbnail: UIImage?, title: String) {
         self.thumbnail = thumbnail
+        self.title = title
     }
     
     func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
@@ -52,15 +56,17 @@ class ActivityCoordinator: NSObject, UIActivityItemSource {
     }
 
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-        guard let thumbnail = self.thumbnail else { return nil }
         let metadata = LPLinkMetadata()
-        metadata.imageProvider = NSItemProvider(object: thumbnail)
+        if let thumbnail {
+            metadata.imageProvider = NSItemProvider(object: thumbnail)
+        }
+        metadata.title = self.title
         return metadata
     }
 }
 
 struct ActivityViewController_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityViewController(activityItems: [URL(string: "https://www.apple.com")!])
+        ActivityViewController(activityItems: [URL(string: "https://www.apple.com")!], title: "Test File")
     }
 }

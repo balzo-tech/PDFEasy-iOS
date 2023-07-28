@@ -111,8 +111,13 @@ struct PdfEditView: View {
         }, message: {
             Text("Your pdf has no editable fields that you can fill in.")
         })
-        .sharePdf(self.$viewModel.pdfToBeShared)
+        .sharePdf(self.$viewModel.pdfToBeShared, applyPostProcess: true)
         .showError(self.$viewModel.pdfSaveError)
+        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
+            self.getSubscriptionView(onComplete: {
+                self.viewModel.onMonetizationClose()
+            })
+        }
         .saveSuccessfulAlert(show: self.$viewModel.saveSuccessfulAlertShow,
                              goToArchiveCallback: { self.viewModel.goToArchive() },
                              sharePdfCallback: { self.viewModel.share() })

@@ -103,6 +103,16 @@ extension MarginsOption {
     }
 }
 
+extension CompressionOption {
+    var quality: CGFloat {
+        switch self {
+        case .low: return 1.0
+        case .medium: return 0.5
+        case .high: return 0.0
+        }
+    }
+}
+
 extension ImportFileOption: FilePickerTypeProvider {
      
     var fileTypes: [UTType] {

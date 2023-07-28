@@ -92,22 +92,6 @@ struct PdfEditable {
         self.filename = filename
     }
     
-    var shareData: Data? {
-        if let password = self.password {
-            if let encryptedPdfDocument = PDFUtility.encryptPdf(pdfDocument: pdfDocument, password: password) {
-                if encryptedPdfDocument.unlock(withPassword: password) {
-                    return encryptedPdfDocument.dataRepresentation() ?? self.rawData
-                } else {
-                    return self.rawData
-                }
-            } else {
-                return self.rawData
-            }
-        } else {
-            return self.rawData
-        }
-    }
-    
     var thumbnail: UIImage? {
         PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfDocument, size: K.Misc.ThumbnailSize)
     }
