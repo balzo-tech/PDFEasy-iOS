@@ -116,11 +116,6 @@ enum HomePostImportAction: Hashable, Identifiable {
     case addPassword, removePassword
 }
 
-enum HomePostSubscriptionAction: Hashable, Identifiable {
-    var id: Self { return self }
-    case share
-}
-
 public class HomeViewModel : ObservableObject {
     
     @Published var importOptionGroup: ImportOptionGroup? = nil
@@ -163,10 +158,8 @@ public class HomeViewModel : ObservableObject {
     @Published var pdfSaved: PdfEditable? = nil
     @Published var addPasswordCompletedShow: Bool = false
     @Published var removePasswordCompletedShow: Bool = false
-    @Published var pdfToBeShared: PdfEditable?
     @Published var addPasswordError: AddPasswordError? = nil
     @Published var removePasswordError: RemovePasswordError? = nil
-    @Published var monetizationShow: Bool = false
     
     @Injected(\.store) private var store
     @Injected(\.analyticsManager) private var analyticsManager
@@ -175,10 +168,11 @@ public class HomeViewModel : ObservableObject {
     
     var editStartAction: PdfEditStartAction? { self.action?.editStartAction }
     
+    let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: false))
+    
     private var action: HomeAction? = nil
     private var currentAnalyticsImportOption: ImportOption? = nil
     private var currentAnalyticsFileExtension: String? = nil
-    private var homePostSubscriptionAction: HomePostSubscriptionAction? = nil
     
     private var lockedPdfEditable: PdfEditable? = nil
     
@@ -362,26 +356,12 @@ public class HomeViewModel : ObservableObject {
     }
     
     func share() {
-        if self.store.isPremium.value {
-            self.pdfToBeShared = self.pdfSaved
-            self.analyticsManager.track(event: .pdfShared(marginsOption: nil, compressionValue: nil))
-            self.pdfSaved = nil
-        } else {
-            self.monetizationShow = true
-            self.homePostSubscriptionAction = .share
+        guard let pdfSaved else {
+            assertionFailure("Missing expected pdfSaved entity")
+            return
         }
-    }
-    
-    func onMonetizationClose() {
-        self.monetizationShow = false
-        if self.store.isPremium.value, let homePostSubscriptionAction = self.homePostSubscriptionAction {
-            switch homePostSubscriptionAction {
-            case .share:
-                self.share()
-            }
-        } else {
-            self.pdfSaved = nil
-        }
+        self.pdfShareCoordinator.share(pdf: pdfSaved)
+        self.pdfSaved = nil
     }
     
     @MainActor

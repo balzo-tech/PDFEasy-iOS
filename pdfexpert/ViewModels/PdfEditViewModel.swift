@@ -58,7 +58,6 @@ class PdfEditViewModel: ObservableObject {
     @Published var editMode: EditMode = .add
     @Published var pdfPasswordInputShow: Bool = false
     @Published var missingWidgetWarningShow: Bool = false
-    @Published var monetizationShow: Bool = false
     
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -96,20 +95,19 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
-    @Injected(\.store) private var store
     
     var shouldShowCloseWarning: Binding<Bool>
     var urlToFileToConvert: URL?
     var imageToConvert: UIImage?
     var scannerResult: ScannerResult?
     
-    var pdfToBeShared: PdfEditable? = nil
-    
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
     
     var showFillWidgetButton: Bool { PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) }
+    
+    let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: true))
     
     private var lockedPdfEditable: PdfEditable? = nil
     
@@ -222,10 +220,6 @@ class PdfEditViewModel: ObservableObject {
         self.mainCoordinator.goToArchive()
     }
     
-    func onMonetizationClose() {
-        self.monetizationShow = false
-    }
-    
     func showAddSignature() {
         self.signatureAddViewShow = true
     }
@@ -321,12 +315,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalShare() {
-        if self.store.isPremium.value {
-            self.pdfToBeShared = self.pdfEditable
-            self.analyticsManager.track(event: .pdfShared(marginsOption: nil, compressionValue: nil))
-        } else {
-            self.monetizationShow = true
-        }
+        self.pdfShareCoordinator.share(pdf: self.pdfEditable)
     }
     
     private func onPdfFilenameChanged() {

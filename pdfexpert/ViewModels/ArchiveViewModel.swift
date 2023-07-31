@@ -28,6 +28,7 @@ class ArchiveViewModel: ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.mainCoordinator) private var mainCoordinator
     
+    let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: true))
     let syncMonitor = SyncMonitor.shared
     
     private var cancelBag = Set<AnyCancellable>()
@@ -58,6 +59,10 @@ class ArchiveViewModel: ObservableObject {
     func editItem(item: PdfEditable) {
         self.analyticsManager.track(event: .existingPdfOpened)
         self.mainCoordinator.showPdfEditFlow(pdfEditable: item)
+    }
+    
+    func shareItem(item: PdfEditable) {
+        self.pdfShareCoordinator.share(pdf: item)
     }
     
     func delete(item: PdfEditable) {

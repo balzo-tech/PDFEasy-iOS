@@ -85,6 +85,8 @@
 		8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED912A1F61A9009985EE /* OnboardingView.swift */; };
 		8955ED942A1F61BD009985EE /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED932A1F61BD009985EE /* OnboardingPageView.swift */; };
 		8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */; };
+		8957FBA82A77C646008B31ED /* PdfShareCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */; };
+		8957FBAA2A77E6F7008B31ED /* PdfShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBA92A77E6F7008B31ED /* PdfShareView.swift */; };
 		895C1BB02A04FA53005EA190 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895C1BAF2A04FA53005EA190 /* ShareViewController.swift */; };
 		895C1BB32A04FA53005EA190 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895C1BB12A04FA53005EA190 /* MainInterface.storyboard */; };
 		895C1BB72A04FA53005EA190 /* ShareFileExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 895C1BAD2A04FA53005EA190 /* ShareFileExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -284,6 +286,8 @@
 		8955ED912A1F61A9009985EE /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		8955ED932A1F61BD009985EE /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfShareCoordinator.swift; sourceTree = "<group>"; };
+		8957FBA92A77E6F7008B31ED /* PdfShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfShareView.swift; sourceTree = "<group>"; };
 		895C1BAD2A04FA53005EA190 /* ShareFileExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareFileExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		895C1BAF2A04FA53005EA190 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		895C1BB22A04FA53005EA190 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -584,6 +588,7 @@
 				8936AA3F2A683FB5005F6C73 /* ImportOption.swift */,
 				8940FB902A710D8D00A00D8D /* AddPasswordView.swift */,
 				89EACC0C2A741EC700C1F0EA /* UnlockView.swift */,
+				8957FBA92A77E6F7008B31ED /* PdfShareView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -904,6 +909,7 @@
 			children = (
 				89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */,
 				89436AB729E5556600060605 /* PdfCoordinator.swift */,
+				8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -1199,6 +1205,7 @@
 				8991485129E851B500DD01F2 /* ConfigService.swift in Sources */,
 				89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */,
 				895FE2C629D6E17600A99D5B /* AnimationPalette.swift in Sources */,
+				8957FBAA2A77E6F7008B31ED /* PdfShareView.swift in Sources */,
 				89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */,
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
 				893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */,
@@ -1228,6 +1235,7 @@
 				89EACC0D2A741EC700C1F0EA /* UnlockView.swift in Sources */,
 				89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */,
 				89CD7B9929D329B1003F1C3A /* View+Preview.swift in Sources */,
+				8957FBA82A77C646008B31ED /* PdfShareCoordinator.swift in Sources */,
 				893DE8DA29E7F85C0043C02C /* SubscriptionPairsViewModel.swift in Sources */,
 				89436AC729E5B99100060605 /* PdfKitView.swift in Sources */,
 				89CD7B5429D329B1003F1C3A /* Color+Extensions.swift in Sources */,

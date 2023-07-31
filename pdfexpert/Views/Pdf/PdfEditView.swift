@@ -109,13 +109,7 @@ struct PdfEditView: View {
         }, message: {
             Text("Your pdf has no editable fields that you can fill in.")
         })
-        .sharePdf(self.$viewModel.pdfToBeShared, applyPostProcess: true)
         .showError(self.$viewModel.pdfSaveError)
-        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
-            self.getSubscriptionView(onComplete: {
-                self.viewModel.onMonetizationClose()
-            })
-        }
         .formSheet(isPresented: self.$viewModel.editOptionListShow,
                    size: CGSize(width: 400.0, height: 150.0)) {
             self.editListView
@@ -127,6 +121,7 @@ struct PdfEditView: View {
                             removePasswordCallback: self.viewModel.removePassword)
         .addPasswordView(show: self.$viewModel.passwordTextFieldShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
+        .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
     }
     
     @ViewBuilder var pdfView: some View {

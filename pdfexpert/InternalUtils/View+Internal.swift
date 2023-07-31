@@ -72,6 +72,15 @@ extension View {
         }
     }
     
+    func showSubscriptionView(_ show: Binding<Bool>, onComplete: @escaping () -> ()) -> some View {
+        self.fullScreenCover(isPresented: show) {
+            getSubscriptionView(onComplete: {
+                show.wrappedValue = false
+                onComplete()
+            })
+        }
+    }
+    
     func sharePdf(_ pdf: Binding<PdfEditable?>, applyPostProcess: Bool) -> some View {
         self.sheet(item: pdf, onDismiss: {
             if let pdf = pdf.wrappedValue {

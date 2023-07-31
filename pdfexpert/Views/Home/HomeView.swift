@@ -134,11 +134,6 @@ struct HomeView: View {
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
                       selection: self.$viewModel.imageSelection,
                       matching: .images)
-        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
-            self.getSubscriptionView(onComplete: {
-                self.viewModel.onMonetizationClose()
-            })
-        }
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
@@ -152,9 +147,9 @@ struct HomeView: View {
         .removePasswordCompletedAlert(show: self.$viewModel.removePasswordCompletedShow,
                                       goToArchiveCallback: { self.viewModel.goToArchive() },
                                       sharePdfCallback: { self.viewModel.share() })
-        .sharePdf(self.$viewModel.pdfToBeShared, applyPostProcess: false)
         .showError(self.$viewModel.addPasswordError)
         .showError(self.$viewModel.removePasswordError)
+        .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.viewModel.onDidBecomeActive()
         }

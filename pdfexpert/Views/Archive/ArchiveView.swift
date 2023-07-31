@@ -31,6 +31,7 @@ struct ArchiveView: View {
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
         }
+        .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
     }
     
     var content: some View {
@@ -68,8 +69,11 @@ struct ArchiveView: View {
                                     if item.password != nil {
                                         Image("password_entered")
                                     }
-                                    Image(systemName: "square.and.arrow.up")
-                                        .font(.system(size: 20).bold())
+                                    Button(action: { self.viewModel.shareItem(item: item) }) {
+                                        Image(systemName: "square.and.arrow.up")
+                                            .font(.system(size: 20).bold())
+                                            .foregroundColor(ColorPalette.primaryText)
+                                    }
                                 }
                                 
                                 Spacer()
