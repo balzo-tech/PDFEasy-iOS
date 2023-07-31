@@ -16,17 +16,32 @@ struct PdfFillWidgetView: View {
     
     var body: some View {
         NavigationStack {
-            PdfKitViewBinder(
-                pdfView: self.$viewModel.pdfView,
-                singlePage: false,
-                pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
-                backgroundColor: UIColor(ColorPalette.primaryBG),
-                usePaginator: true
-            )
-            .padding([.leading, .trailing], 16)
-            .background(ColorPalette.primaryBG)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Tap to fill in")
+            VStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    Spacer()
+                    PdfKitViewBinder(
+                        pdfView: self.$viewModel.pdfView,
+                        singlePage: false,
+                        pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
+                        backgroundColor: UIColor(ColorPalette.primaryBG),
+                        usePaginator: true
+                    )
+                    .padding([.leading, .trailing], 16)
+                    .background(ColorPalette.primaryBG)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle("Tap to fill in")
+                    Spacer()
+                }
+                self.pageCounter(currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                 totalPages: self.viewModel.pdfDocument.pageCount)
+                Spacer().frame(height: 50)
+                self.getDefaultButton(text: "Finish", onButtonPressed: {
+                    self.viewModel.onConfirmButtonPressed()
+                    self.dismiss()
+                })
+                Spacer().frame(height: 60)
+            }
+            .ignoresSafeArea(.keyboard)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                 if self.viewModel.shouldShowCloseWarning {
                     self.showCancelWarningDialog = true
@@ -35,18 +50,6 @@ struct PdfFillWidgetView: View {
                     self.dismiss()
                 }
             })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        self.viewModel.onConfirmButtonPressed()
-                        self.dismiss()
-                    }) {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 16).bold())
-                            .foregroundColor(ColorPalette.buttonGradientStart)
-                    }
-                }
-            }
             .alert("Are you sure?",
                    isPresented: self.$showCancelWarningDialog,
                    actions: {

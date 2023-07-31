@@ -28,25 +28,39 @@ struct PdfSignatureView: View {
                     usePaginator: true
                 )
                 ColorPalette.primaryBG
-                TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
-                    ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
-                        GeometryReader { geometryReader in
-                            ZStack {
-                                Image(uiImage: page)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .ignoresSafeArea(.keyboard)
+                VStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        Spacer()
+                        TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
+                            ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
+                                GeometryReader { geometryReader in
+                                    ZStack {
+                                        Image(uiImage: page)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .ignoresSafeArea(.keyboard)
+                                    }
+                                    .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
+                                }
                             }
-                            .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
                         }
+                        .allowsHitTesting(self.viewModel.pageScrollingAllowed)
+                        .tabViewStyle(.page(indexDisplayMode: .never))
+                        .onTapGesture { self.viewModel.tapOnPdfView() }
+                        .padding([.leading, .trailing], 16)
+                        .padding([.top], 16)
+                        .background(ColorPalette.primaryBG)
+                        Spacer()
                     }
+                    self.pageCounter(currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                     totalPages: self.viewModel.pageImages.count)
+                    Spacer().frame(height: 50)
+                    self.getDefaultButton(text: "Finish", onButtonPressed: {
+                        self.viewModel.onConfirmButtonPressed()
+                        self.dismiss()
+                    })
+                    Spacer().frame(height: 60)
                 }
-                .allowsHitTesting(self.viewModel.pageScrollingAllowed)
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .onTapGesture { self.viewModel.tapOnPdfView() }
-                .padding([.leading, .trailing], 16)
-                .padding([.top], 16)
-                .background(ColorPalette.primaryBG)
                 if let signatureImage = self.viewModel.signatureImage {
                     ImageResizableView(
                         uiImage: signatureImage,
@@ -68,18 +82,6 @@ struct PdfSignatureView: View {
                     self.dismiss()
                 }
             })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        self.viewModel.onConfirmButtonPressed()
-                        self.dismiss()
-                    }) {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 16).bold())
-                            .foregroundColor(ColorPalette.buttonGradientStart)
-                    }
-                }
-            }
             .formSheet(isPresented: self.$viewModel.isCreatingSignature,
                        size: CGSize(width: 400, height: 400)) {
                 PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({

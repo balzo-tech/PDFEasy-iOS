@@ -28,6 +28,7 @@ class PdfFillWidgetViewModel: ObservableObject {
     
     @Published var pdfDocument: PDFDocument
     @Published var pdfView: PDFView = PDFView()
+    @Published var pdfCurrentPageIndex: Int
     
     @Injected(\.analyticsManager) private var analyticsManager
     
@@ -45,11 +46,22 @@ class PdfFillWidgetViewModel: ObservableObject {
         }
         self.onConfirm = inputParameter.onConfirm
         self.pdfDocument = pdfDocumentCopy
+        self.pdfCurrentPageIndex = inputParameter.currentPageIndex
         self.pdfView.document = pdfDocumentCopy
         
         if let page = self.pdfView.document?.page(at: inputParameter.currentPageIndex) {
             self.pdfView.go(to: page)
         }
+        
+        NotificationCenter.default.addObserver(
+              self,
+              selector: #selector(self.handlePageChange(notification:)),
+              name: Notification.Name.PDFViewPageChanged,
+              object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.PDFViewPageChanged, object: nil)
     }
     
     func onAppear() {
@@ -64,5 +76,13 @@ class PdfFillWidgetViewModel: ObservableObject {
         self.analyticsManager.track(event: .fillWidgetConfirmed)
         self.pdfEditable.updateDocument(self.pdfDocument)
         self.onConfirm(self.pdfEditable)
+    }
+    
+    @objc private func handlePageChange(notification: Notification) {
+        guard let currentPageindex = self.pdfView.currentPageIndex else {
+            assertionFailure("Missing expected page index")
+            return
+        }
+        self.pdfCurrentPageIndex = currentPageindex
     }
 }

@@ -330,3 +330,17 @@ extension CGSize {
         return min(widthScaleFactor, heightScaleFactor)
     }
 }
+
+extension PDFView {
+    var currentPageIndex: Int? {
+        guard let document = self.document, let currentPage = self.currentPage else {
+            return nil
+        }
+        for pageIndex in 0..<document.pageCount {
+            if document.page(at: pageIndex) == currentPage {
+                return pageIndex
+            }
+        }
+        return nil
+    }
+}

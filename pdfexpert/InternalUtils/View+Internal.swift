@@ -93,6 +93,10 @@ extension View {
         }
     }
     
+    func pageCounter(currentPageIndex: Int, totalPages: Int) -> some View {
+        Text("\(currentPageIndex + 1) of \(totalPages)")
+    }
+    
     func removePasswordView(show: Binding<Bool>,
                             removePasswordCallback: @escaping () -> ()) -> some View {
         self.alert("Would you like to remove your password?", isPresented: show, actions: {

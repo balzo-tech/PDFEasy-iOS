@@ -17,37 +17,52 @@ struct PdfFillFormView: View {
     
     var body: some View {
         NavigationStack {
-            GeometryReader { parentGeometryReader in
-                TabView(selection: self.$viewModel.pageIndex) {
-                    ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
-                        GeometryReader { geometryReader in
-                            ZStack {
-                                Image(uiImage: page)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .ignoresSafeArea(.keyboard)
-                                self.getAnnotationViews(forPageIndex: pageIndex)
-                                    .ignoresSafeArea(.keyboard)
+            VStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    Spacer()
+                    GeometryReader { parentGeometryReader in
+                        TabView(selection: self.$viewModel.pageIndex) {
+                            ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
+                                GeometryReader { geometryReader in
+                                    ZStack {
+                                        Image(uiImage: page)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .ignoresSafeArea(.keyboard)
+                                        self.getAnnotationViews(forPageIndex: pageIndex)
+                                            .ignoresSafeArea(.keyboard)
+                                    }
+                                    .onTapGesture {
+                                        self.viewModel.tapOnPdfView(positionInView: $0,
+                                                                    pageIndex: pageIndex,
+                                                                    pageViewSize: geometryReader.size)
+                                    }
+                                    .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
+                                }
                             }
-                            .onTapGesture {
-                                self.viewModel.tapOnPdfView(positionInView: $0,
-                                                            pageIndex: pageIndex,
-                                                            pageViewSize: geometryReader.size)
-                            }
-                            .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
                         }
+                        .tabViewStyle(.page(indexDisplayMode: .never))
+                        .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
+                        .frame(width: parentGeometryReader.size.width,
+                               height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
                     }
+                    .padding([.leading, .trailing], 16)
+                    .padding([.top], 16)
+                    .background(ColorPalette.primaryBG)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle("Tap where you wish to add text")
+                    Spacer()
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
-                .frame(width: parentGeometryReader.size.width,
-                       height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
+                self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
+                                 totalPages: self.viewModel.pageImages.count)
+                Spacer().frame(height: 50)
+                self.getDefaultButton(text: "Finish", onButtonPressed: {
+                    self.viewModel.onConfirmButtonPressed()
+                    self.dismiss()
+                })
+                Spacer().frame(height: 60)
             }
-            .padding([.leading, .trailing], 16)
-            .padding([.top], 16)
-            .background(ColorPalette.primaryBG)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Tap where you wish to add text")
+            .ignoresSafeArea(.keyboard)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                 if self.viewModel.shouldShowCloseWarning {
                     self.showCancelWarningDialog = true
@@ -55,18 +70,6 @@ struct PdfFillFormView: View {
                     self.dismiss()
                 }
             })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        self.viewModel.onConfirmButtonPressed()
-                        self.dismiss()
-                    }) {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 16).bold())
-                            .foregroundColor(ColorPalette.buttonGradientStart)
-                    }
-                }
-            }
             .alert("Are you sure?",
                    isPresented: self.$showCancelWarningDialog,
                    actions: {
