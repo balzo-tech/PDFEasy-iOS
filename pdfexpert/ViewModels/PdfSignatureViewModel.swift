@@ -81,7 +81,7 @@ class PdfSignatureViewModel: ObservableObject {
         if let currentPage = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
            let currentViewPage = self.pdfView.currentPage,
            let signatureImage = self.signatureImage {
-            let signaturePageRect = self.pdfView.convert(signatureRect, to: currentViewPage)
+            let signaturePageRect = self.pdfView.convert(self.signatureRect, to: currentViewPage)
             let signatureAnnotation = ImageStampAnnotation(with: signatureImage, forBounds: signaturePageRect, withProperties: nil)
             currentPage.addAnnotation(signatureAnnotation)
             
