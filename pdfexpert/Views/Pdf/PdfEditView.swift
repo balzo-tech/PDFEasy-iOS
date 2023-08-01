@@ -97,6 +97,9 @@ struct PdfEditView: View {
                                 onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
             PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
         }
+        .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
+            PdfCompressionPickerView(compressionOption: self.$viewModel.compression)
+        }
         .unlockView(show: self.$viewModel.pdfPasswordInputShow,
                     unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
@@ -111,7 +114,7 @@ struct PdfEditView: View {
         })
         .showError(self.$viewModel.pdfSaveError)
         .formSheet(isPresented: self.$viewModel.editOptionListShow,
-                   size: CGSize(width: 400.0, height: 150.0)) {
+                   size: CGSize(width: 400.0, height: 250.0)) {
             self.editListView
         }
         .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
@@ -301,21 +304,25 @@ struct PdfEditView: View {
     }
     
     @ViewBuilder var editListView: some View {
-        OptionListView(title: "Edit pdf", items: [
-            self.passwordOptionItem
-        ])
-    }
-    
-    var passwordOptionItem: OptionItem {
-        if self.viewModel.pdfEditable.password != nil {
-            return OptionItem(title: "Unlock",
-                              imageName: "edit_option_password_unlock",
-                              callBack: { self.viewModel.handleEditAction(.removePassword) })
-        } else {
-            return OptionItem(title: "Protect",
-                              imageName: "edit_option_password_lock",
-                              callBack: { self.viewModel.handleEditAction(.addPassword) })
-        }
+        OptionListView(title: "Edit pdf", items: EditAction.allCases.map { editAction in
+            let callback = { self.viewModel.handleEditAction(editAction) }
+            switch editAction {
+            case .password:
+                if self.viewModel.pdfEditable.password != nil {
+                    return OptionItem(title: "Unlock",
+                                      imageName: "edit_option_password_unlock",
+                                      callBack: callback)
+                } else {
+                    return OptionItem(title: "Protect",
+                                      imageName: "edit_option_password_lock",
+                                      callBack: callback)
+                }
+            case .compression:
+                return OptionItem(title: "Compress",
+                                  imageName: "edit_option_compress",
+                                  callBack: callback)
+            }
+        })
     }
 }
 
@@ -343,25 +350,6 @@ fileprivate extension View {
         }, message: {
             Text("Your pdf has been successfully saved")
         })
-    }
-}
-
-fileprivate extension PdfEditViewModel.EditMode {
-    
-    var name: String {
-        switch self {
-        case .add: return "Add"
-        case .margins: return "Margins"
-        case .compression: return "Compression"
-        }
-    }
-    
-    var iconImage: Image {
-        switch self {
-        case .add: return Image("edit_add_file")
-        case .margins: return Image("edit_margins")
-        case .compression: return Image("edit_compression")
-        }
     }
 }
 

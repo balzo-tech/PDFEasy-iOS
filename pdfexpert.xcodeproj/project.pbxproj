@@ -87,6 +87,7 @@
 		8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */; };
 		8957FBA82A77C646008B31ED /* PdfShareCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */; };
 		8957FBAA2A77E6F7008B31ED /* PdfShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBA92A77E6F7008B31ED /* PdfShareView.swift */; };
+		8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBAB2A7801BA008B31ED /* PdfCompressionPickerView.swift */; };
 		895C1BB02A04FA53005EA190 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895C1BAF2A04FA53005EA190 /* ShareViewController.swift */; };
 		895C1BB32A04FA53005EA190 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895C1BB12A04FA53005EA190 /* MainInterface.storyboard */; };
 		895C1BB72A04FA53005EA190 /* ShareFileExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 895C1BAD2A04FA53005EA190 /* ShareFileExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -288,6 +289,7 @@
 		8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfShareCoordinator.swift; sourceTree = "<group>"; };
 		8957FBA92A77E6F7008B31ED /* PdfShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfShareView.swift; sourceTree = "<group>"; };
+		8957FBAB2A7801BA008B31ED /* PdfCompressionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCompressionPickerView.swift; sourceTree = "<group>"; };
 		895C1BAD2A04FA53005EA190 /* ShareFileExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareFileExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		895C1BAF2A04FA53005EA190 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		895C1BB22A04FA53005EA190 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -511,6 +513,7 @@
 				89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */,
 				8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */,
 				89504A452A448252000BCACD /* PdfFillWidgetView.swift */,
+				8957FBAB2A7801BA008B31ED /* PdfCompressionPickerView.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -1278,6 +1281,7 @@
 				8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */,
 				893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
+				8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */,
 				893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,

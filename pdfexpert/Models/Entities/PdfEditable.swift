@@ -14,7 +14,7 @@ enum MarginsOption: Int32, CaseIterable {
 }
 
 enum CompressionOption: Int32, CaseIterable {
-    case low, medium, high
+    case noCompression, low, medium, high
 }
 
 struct PdfEditable {

@@ -89,7 +89,7 @@ struct K {
         static let DefaultAnnotationTextFontName: String = "Arial"
         static let PdfMarginsColor: UIColor = .white
         static let PdfDefaultMarginsOption: MarginsOption = .noMargins
-        static let PdfDefaultCompression: CompressionOption = .medium
+        static let PdfDefaultCompression: CompressionOption = .noCompression
     }
 }
 
@@ -106,9 +106,10 @@ extension MarginsOption {
 extension CompressionOption {
     var quality: CGFloat {
         switch self {
-        case .low: return 1.0
-        case .medium: return 0.5
-        case .high: return 0.0
+        case .noCompression: return 1.0
+        case .low: return 0.66
+        case .medium: return 0.33
+        case .high: return 0
         }
     }
 }

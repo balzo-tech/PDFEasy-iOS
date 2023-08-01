@@ -24,9 +24,9 @@ enum PdfEditStartAction {
     case openSignature
 }
 
-enum EditAction {
-    case addPassword
-    case removePassword
+enum EditAction: CaseIterable {
+    case password
+    case compression
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -37,25 +37,17 @@ class PdfEditViewModel: ObservableObject {
         let shouldShowCloseWarning: Binding<Bool>
     }
     
-    enum EditMode: CaseIterable {
-        case add, margins, compression
-    }
-    
     @Published private(set)var pdfEditable: PdfEditable
     @Published var pdfCurrentPageIndex: Int = 0
     @Published var pageImages: [UIImage] = []
     @Published var pdfThumbnails: [UIImage] = []
     @Published var pdfSaveError: PdfEditSaveError? = nil
-    
     @Published var filePickerShow: Bool = false
     @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
-    @Published var signatureAddViewShow: Bool = false
-    @Published var fillFormViewShow: Bool = false
-    @Published var fillWidgetViewShow: Bool = false
-    @Published var editMode: EditMode = .add
+    
     @Published var pdfPasswordInputShow: Bool = false
     @Published var missingWidgetWarningShow: Bool = false
     
@@ -84,13 +76,23 @@ class PdfEditViewModel: ObservableObject {
     
     @Published var pdfFilename: String {
         didSet {
-            self.onPdfFilenameChanged()
+            self.onPdfChanged()
         }
     }
+    @Published var compression: CompressionOption {
+        didSet {
+            self.onPdfChanged()
+        }
+    }
+    
+    @Published var signatureAddViewShow: Bool = false
+    @Published var fillFormViewShow: Bool = false
+    @Published var fillWidgetViewShow: Bool = false
     
     @Published var editOptionListShow: Bool = false
     @Published var passwordTextFieldShow: Bool = false
     @Published var removePasswordAlertShow: Bool = false
+    @Published var compressionShow: Bool = false
     
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
@@ -114,6 +116,7 @@ class PdfEditViewModel: ObservableObject {
     init(inputParameter: InputParameter) {
         self.pdfEditable = inputParameter.pdfEditable
         self.pdfFilename = inputParameter.pdfEditable.filename
+        self.compression = inputParameter.pdfEditable.compression
         self.startAction = inputParameter.startAction
         self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
         self.refreshImages()
@@ -245,8 +248,13 @@ class PdfEditViewModel: ObservableObject {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
             
             switch action {
-            case .addPassword: self.passwordTextFieldShow = true
-            case .removePassword: self.removePasswordAlertShow = true
+            case .password:
+                if self.pdfEditable.password != nil {
+                    self.removePasswordAlertShow = true
+                } else {
+                    self.passwordTextFieldShow = true
+                }
+            case .compression: self.compressionShow = true
             }
         }
     }
@@ -318,9 +326,12 @@ class PdfEditViewModel: ObservableObject {
         self.pdfShareCoordinator.share(pdf: self.pdfEditable)
     }
     
-    private func onPdfFilenameChanged() {
+    private func onPdfChanged() {
         if self.pdfEditable.filename != self.pdfFilename {
             self.pdfEditable.updateFilename(self.pdfFilename)
+        }
+        if self.pdfEditable.compression != self.compression {
+            self.pdfEditable.updateCompression(self.compression)
         }
     }
     

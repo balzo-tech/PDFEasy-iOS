@@ -15,7 +15,8 @@ struct PdfShareView: ViewModifier {
     func body(content: Content) -> some View {
         content
             .showSubscriptionView(self.$coordinator.monetizationShow, onComplete: { self.coordinator.onMonetizationClose() })
-            .sharePdf(self.$coordinator.pdfToBeShared, applyPostProcess: false)
+            .sharePdf(self.$coordinator.pdfToBeShared,
+                      applyPostProcess: self.coordinator.applyPostProcess)
     }
 }
 

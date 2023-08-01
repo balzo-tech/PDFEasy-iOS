@@ -95,6 +95,8 @@ extension View {
     
     func pageCounter(currentPageIndex: Int, totalPages: Int) -> some View {
         Text("\(currentPageIndex + 1) of \(totalPages)")
+            .font(FontPalette.fontMedium(withSize: 16))
+            .foregroundColor(ColorPalette.primaryText)
     }
     
     func removePasswordView(show: Binding<Bool>,
