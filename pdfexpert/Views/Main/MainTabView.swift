@@ -50,7 +50,7 @@ struct MainTabView: View {
         }
         .background(ColorPalette.primaryBG)
         .fullScreenCover(item: self.$mainCoordinator.pdfEditFlowData) { data in
-            PdfFlowView(pdfEditable: data.pdfEditable,
+            PdfFlowView(pdf: data.pdf,
                         startAction: data.startAction,
                         shouldShowCloseWarning: data.isNewPdf)
         }

@@ -123,12 +123,12 @@ class PDFUtility {
         return newPdfDocument
     }
     
-    static func getSharePdfUrl(pdf: PdfEditable) -> URL {
+    static func getSharePdfUrl(pdf: Pdf) -> URL {
         let documentDirectory = FileManager.default.temporaryDirectory
         return documentDirectory.appendingPathComponent(pdf.filename).appendingPathExtension(for: .pdf)
     }
     
-    static func processToShare(pdf: PdfEditable, applyPostProcess: Bool) -> URL {
+    static func processToShare(pdf: Pdf, applyPostProcess: Bool) -> URL {
         
         var pdfDocument = pdf.pdfDocument
         if applyPostProcess {
@@ -156,7 +156,7 @@ class PDFUtility {
         return fileURL
     }
     
-    static func cleanSharedPdf(pdf: PdfEditable) {
+    static func cleanSharedPdf(pdf: Pdf) {
         let fileUrl = Self.getSharePdfUrl(pdf: pdf)
         do {
             try FileManager.default.removeItem(at: fileUrl)
@@ -213,16 +213,16 @@ class PDFUtility {
         return nil
     }
     
-    static func decryptFile(pdfEditable: PdfEditable, password: String = "") -> AsyncOperation<PdfEditable, PdfEditableError> {
-        guard pdfEditable.pdfDocument.isEncrypted else {
-            return AsyncOperation(status: .data(pdfEditable))
+    static func decryptFile(pdf: Pdf, password: String = "") -> AsyncOperation<Pdf, PdfError> {
+        guard pdf.pdfDocument.isEncrypted else {
+            return AsyncOperation(status: .data(pdf))
         }
         
-        guard pdfEditable.pdfDocument.unlock(withPassword: password) else {
+        guard pdf.pdfDocument.unlock(withPassword: password) else {
             return AsyncOperation(status: .error(.wrongPassword))
         }
         
-        guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
+        guard let pdfEncryptedData = pdf.pdfDocument.dataRepresentation() else {
             assertionFailure("Missing expected encrypted data")
             return AsyncOperation(status: .error(.unknownError))
         }
@@ -236,15 +236,15 @@ class PDFUtility {
             assertionFailure("Cannot decode pdf from decrypted data")
             return AsyncOperation(status: .error(.unknownError))
         }
-        var pdfEditable = pdfEditable
-        pdfEditable.updateDocument(pdfDecryptedDocument)
-        pdfEditable.updatePassword(password)
-        return AsyncOperation(status: .data(pdfEditable))
+        var pdf = pdf
+        pdf.updateDocument(pdfDecryptedDocument)
+        pdf.updatePassword(password)
+        return AsyncOperation(status: .data(pdf))
     }
     
-    static func hasPdfWidget(pdfEditable: PdfEditable) -> Bool {
-        for pageIndex in 0..<pdfEditable.pdfDocument.pageCount {
-            if let page = pdfEditable.pdfDocument.page(at: pageIndex) {
+    static func hasPdfWidget(pdf: Pdf) -> Bool {
+        for pageIndex in 0..<pdf.pdfDocument.pageCount {
+            if let page = pdf.pdfDocument.page(at: pageIndex) {
                 if page.annotations.contains(where: { $0.isWidgetAnnotation }) {
                     return true
                 }

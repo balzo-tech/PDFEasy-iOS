@@ -66,8 +66,8 @@ struct PdfFillWidgetView: View {
 
 struct PdfFillWidgetView_Previews: PreviewProvider {
     static var previews: some View {
-        if let pdfEditable = K.Test.DebugPdfEditable {
-            let inputParameter = PdfFillWidgetViewModel.InputParameter(pdfEditable: pdfEditable,
+        if let pdf = K.Test.DebugPdf {
+            let inputParameter = PdfFillWidgetViewModel.InputParameter(pdf: pdf,
                                                                        currentPageIndex: 0,
                                                                        onConfirm: { _ in })
             AnyView(PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter)))

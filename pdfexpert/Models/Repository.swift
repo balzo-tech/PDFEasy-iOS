@@ -8,8 +8,8 @@
 import Foundation
 
 protocol Repository {
-    func savePdf(pdfEditable: PdfEditable) throws -> PdfEditable
+    func savePdf(pdf: Pdf) throws -> Pdf
     func getDoPdfExist() throws -> Bool
-    func loadPdfs() throws -> [PdfEditable]
-    func delete(pdfEditable: PdfEditable) throws
+    func loadPdfs() throws -> [Pdf]
+    func delete(pdf: Pdf) throws
 }

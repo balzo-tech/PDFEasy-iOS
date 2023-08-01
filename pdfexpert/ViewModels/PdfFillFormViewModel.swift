@@ -16,12 +16,12 @@ extension Container {
     }
 }
 
-typealias PdfFillFormViewCallback = ((PdfEditable) -> ())
+typealias PdfFillFormViewCallback = ((Pdf) -> ())
 
 class PdfFillFormViewModel: ObservableObject {
     
     struct InputParameter {
-        let pdfEditable: PdfEditable
+        let pdf: Pdf
         let currentPageIndex: Int
         let onConfirm: PdfFillFormViewCallback
     }
@@ -52,12 +52,12 @@ class PdfFillFormViewModel: ObservableObject {
     
     private var onConfirm: PdfFillFormViewCallback
     
-    private var pdfEditable: PdfEditable
+    private var pdf: Pdf
     
     init(inputParameter: InputParameter) {
-        self.pdfEditable = inputParameter.pdfEditable
+        self.pdf = inputParameter.pdf
         var pdfDocumentCopy = PDFDocument()
-        if let pdfData = inputParameter.pdfEditable.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
+        if let pdfData = inputParameter.pdf.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
             pdfDocumentCopy = copy
         }
         self.pdfDocument = pdfDocumentCopy
@@ -184,8 +184,8 @@ class PdfFillFormViewModel: ObservableObject {
                     }
                 }
             }
-            self.pdfEditable.updateDocument(self.pdfDocument)
-            self.onConfirm(self.pdfEditable)
+            self.pdf.updateDocument(self.pdfDocument)
+            self.onConfirm(self.pdf)
         }
         
         self.analyticsManager.track(event: .annotationsConfirmed)

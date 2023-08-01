@@ -12,7 +12,7 @@ import CoreData
 @objc(CDPdf)
 public class CDPdf: NSManagedObject {
     
-    func update(withPdf pdf: PdfEditable, pdfData: Data) {
+    func update(withPdf pdf: Pdf, pdfData: Data) {
         self.data = pdfData
         self.creationDate = pdf.creationDate
         self.password = pdf.password

@@ -27,11 +27,11 @@ class ChatPdfSelectionViewModel: ObservableObject {
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     
-    @MainActor @Published var asyncImportPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
+    @MainActor @Published var asyncImportPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
         didSet {
-            if let pdfEditable = self.asyncImportPdf.data {
+            if let pdf = self.asyncImportPdf.data {
                 self.trackFullActionCompleted()
-                self.uploadPdf(pdfEditable: pdfEditable)
+                self.uploadPdf(pdf: pdf)
             }
         }
     }
@@ -57,7 +57,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
     private var currentAnalyticsImportOption: ImportOption? = nil
     private var currentAnalyticsFileExtension: String? = nil
     
-    private var lockedPdfEditable: PdfEditable? = nil
+    private var lockedPdf: Pdf? = nil
     
     private var cancelBag = Set<AnyCancellable>()
     
@@ -138,28 +138,28 @@ class ChatPdfSelectionViewModel: ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+        guard let pdf = Pdf(pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
         
-        if pdfEditable.pdfDocument.isLocked {
-            self.lockedPdfEditable = pdfEditable
+        if pdf.pdfDocument.isLocked {
+            self.lockedPdf = pdf
             self.pdfPasswordInputShow = true
         } else {
             self.currentAnalyticsFileExtension = "pdf"
-            self.asyncImportPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
+            self.asyncImportPdf = PDFUtility.decryptFile(pdf: pdf)
         }
     }
     
     @MainActor
     func importLockedPdf(password: String) {
-        guard let pdfEditable = self.lockedPdfEditable else {
+        guard let pdf = self.lockedPdf else {
             assertionFailure("Missing expected locked pdf")
             return
         }
         self.currentAnalyticsFileExtension = "pdf"
-        self.asyncImportPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
+        self.asyncImportPdf = PDFUtility.decryptFile(pdf: pdf, password: password)
     }
     
     @MainActor
@@ -173,9 +173,9 @@ class ChatPdfSelectionViewModel: ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncImportPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                } else if let data = data, let pdf = Pdf(data: data) {
                     self.currentAnalyticsFileExtension = fileUrl.pathExtension
-                    self.asyncImportPdf = AsyncOperation(status: .data(pdfEditable))
+                    self.asyncImportPdf = AsyncOperation(status: .data(pdf))
                 } else {
                     self.asyncImportPdf = AsyncOperation(status: .error(.unknownError))
                 }
@@ -194,8 +194,8 @@ class ChatPdfSelectionViewModel: ObservableObject {
     }
     
     @MainActor
-    private func uploadPdf(pdfEditable: PdfEditable) {
-        guard let pdfData = pdfEditable.rawData else {
+    private func uploadPdf(pdf: Pdf) {
+        guard let pdfData = pdf.rawData else {
             assertionFailure("Missing expected pdf data")
             self.asyncChatPdfSetup = AsyncOperation(status: .error(.unknownError))
             return
@@ -208,7 +208,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
             return
         }
         
-        guard pdfEditable.pdfDocument.pageCount <= K.ChatPdf.MaxPages else {
+        guard pdf.pdfDocument.pageCount <= K.ChatPdf.MaxPages else {
             self.asyncChatPdfSetup = AsyncOperation(status: .error(.pdfTooManyPages))
             return
         }

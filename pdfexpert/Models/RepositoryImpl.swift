@@ -29,22 +29,22 @@ class RepositoryImpl: Repository {
         return self.persistence.container.viewContext
     }
     
-    func savePdf(pdfEditable: PdfEditable) throws -> PdfEditable {
+    func savePdf(pdf: Pdf) throws -> Pdf {
         
-        guard let savedOrNewPdf = pdfEditable.getSavedOrNewPdf(context: self.pdfManagedContext) else {
+        guard let savedOrNewPdf = pdf.getSavedOrNewPdf(context: self.pdfManagedContext) else {
             throw SaveError.unknownError
         }
         
         try self.saveChanges()
         
-        // Must get the PdfEditable entity after having saved, because its ObjectId changes after having saved the object.
-        guard let updatedPdfEditable = PdfEditable.create(withCoreDataPdf: savedOrNewPdf) else {
+        // Must get the Pdf entity after having saved, because its ObjectId changes after having saved the object.
+        guard let updatedPdf = Pdf.create(withCoreDataPdf: savedOrNewPdf) else {
             throw SaveError.unknownError
         }
         
         self.analyticsMananger.track(event: .pdfSaved)
         
-        return updatedPdfEditable
+        return updatedPdf
     }
     
     func getDoPdfExist() throws -> Bool {
@@ -61,17 +61,17 @@ class RepositoryImpl: Repository {
         return result
     }
     
-    func loadPdfs() throws -> [PdfEditable] {
+    func loadPdfs() throws -> [Pdf] {
         let fetchRequest = CDPdf.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         do {
             return try self.persistence.container.viewContext
                 .fetch(fetchRequest)
                 .map { pdf in
-                    guard let pdfEditable = PdfEditable.create(withCoreDataPdf: pdf) else {
+                    guard let pdf = Pdf.create(withCoreDataPdf: pdf) else {
                         throw SharedUnderlyingError.unknownError
                     }
-                    return pdfEditable
+                    return pdf
             }
         } catch {
             debugPrint(for: self, message: "Error while fetching stories")
@@ -79,9 +79,9 @@ class RepositoryImpl: Repository {
         }
     }
     
-    func delete(pdfEditable: PdfEditable) throws {
-        guard let storedPdf = pdfEditable.getSavedPdf(context: self.pdfManagedContext) else {
-            debugPrint(for: self, message: "Current PdfEditable instance doesn't exist in the persistent storage")
+    func delete(pdf: Pdf) throws {
+        guard let storedPdf = pdf.getSavedPdf(context: self.pdfManagedContext) else {
+            debugPrint(for: self, message: "Current Pdf instance doesn't exist in the persistent storage")
             return
         }
         self.persistence.container.viewContext.delete(storedPdf)
@@ -120,12 +120,12 @@ enum SaveError: UnderlyingError {
     }
 }
 
-fileprivate extension PdfEditable {
+fileprivate extension Pdf {
     
     func getSavedOrNewPdf(context: NSManagedObjectContext) -> CDPdf? {
         
         guard let pdfData = self.rawData else {
-            debugPrint(for: self, message: "Cannot get pdf raw data for given PdfEditable instance")
+            debugPrint(for: self, message: "Cannot get pdf raw data for given Pdf instance")
             return nil
         }
         
@@ -159,7 +159,7 @@ fileprivate extension PdfEditable {
             debugPrint(for: self, message: "Cannot get pdf document for given CDPdf instance")
             return nil
         }
-        return PdfEditable(storeId: pdf.objectID,
+        return Pdf(storeId: pdf.objectID,
                            pdfDocument: pdfDocument,
                            password: pdf.password,
                            creationDate: pdf.creationDate,

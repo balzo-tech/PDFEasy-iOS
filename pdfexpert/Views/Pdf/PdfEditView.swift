@@ -77,23 +77,23 @@ struct PdfEditView: View {
         }
         .fullScreenCover(isPresented: self.$viewModel.signatureAddViewShow) {
             let inputParameter = PdfSignatureViewModel
-                .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                .InputParameter(pdf: self.viewModel.pdf,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
+                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
             PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
         }
         .fullScreenCover(isPresented: self.$viewModel.fillFormViewShow) {
             let inputParameter = PdfFillFormViewModel
-                .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                .InputParameter(pdf: self.viewModel.pdf,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
+                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
             PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
         }
         .fullScreenCover(isPresented: self.$viewModel.fillWidgetViewShow) {
             let inputParameter = PdfFillWidgetViewModel
-                .InputParameter(pdfEditable: self.viewModel.pdfEditable,
+                .InputParameter(pdf: self.viewModel.pdf,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                onConfirm: { self.viewModel.updatePdf(pdfEditable: $0) })
+                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
             PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
         }
         .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
@@ -109,7 +109,7 @@ struct PdfEditView: View {
         .alert("Info", isPresented: self.$viewModel.missingWidgetWarningShow, actions: {
             Button("Ok", role: .cancel, action: {})
         }, message: {
-            Text("Your pdf has no editable fields that you can fill in.")
+            Text("Your pdf has no  fields that you can fill in.")
         })
         .showError(self.$viewModel.pdfSaveError)
         .formSheet(isPresented: self.$viewModel.editOptionListShow,
@@ -307,7 +307,7 @@ struct PdfEditView: View {
             let callback = { self.viewModel.handleEditAction(editAction) }
             switch editAction {
             case .password:
-                if self.viewModel.pdfEditable.password != nil {
+                if self.viewModel.pdf.password != nil {
                     return OptionItem(title: "Unlock",
                                       imageName: "edit_option_password_unlock",
                                       callBack: callback)
@@ -372,8 +372,8 @@ fileprivate extension MarginsOption {
 struct PdfEditView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            if let pdfEditable = K.Test.DebugPdfEditable {
-                let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: pdfEditable,
+            if let pdf = K.Test.DebugPdf {
+                let inputParameter = PdfEditViewModel.InputParameter(pdf: pdf,
                                                                      startAction: nil,
                                                                      shouldShowCloseWarning: .constant(true))
                 AnyView(PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter)))

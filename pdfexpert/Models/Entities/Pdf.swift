@@ -1,5 +1,5 @@
 //
-//  PdfEditable.swift
+//  Pdf.swift
 //  PdfExpert
 //
 //  Created by Leonardo Passeri on 11/04/23.
@@ -17,7 +17,7 @@ enum CompressionOption: Int32, CaseIterable {
     case noCompression, low, medium, high
 }
 
-struct PdfEditable {
+struct Pdf {
     private(set) var storeId: NSManagedObjectID? = nil
     private(set) var pdfDocument: PDFDocument
     private(set) var password: String? = nil
@@ -110,6 +110,6 @@ fileprivate extension Date {
     }
 }
 
-extension PdfEditable: Hashable, Identifiable {
+extension Pdf: Hashable, Identifiable {
     var id: Self { return self }
 }

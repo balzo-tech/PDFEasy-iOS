@@ -13,7 +13,7 @@ struct ArchiveView: View {
     @InjectedObject(\.archiveViewModel) var viewModel
     
     @State private var showingDeleteAlert = false
-    @State private var itemToDelete: PdfEditable? = nil
+    @State private var itemToDelete: Pdf? = nil
     @State private var importTutorialShow: Bool = false
     
     var body: some View {
@@ -43,7 +43,7 @@ struct ArchiveView: View {
         }
     }
     
-    func getItemList(items: [PdfEditable]) -> some View {
+    func getItemList(items: [Pdf]) -> some View {
         if items.count > 0 {
             return AnyView(
                 List(items) { item in
@@ -184,7 +184,7 @@ struct ArchiveView: View {
         .padding([.leading, .trailing], 16)
     }
     
-    func getPdfThumbnail(forPdf pdf: PdfEditable) -> some View {
+    func getPdfThumbnail(forPdf pdf: Pdf) -> some View {
         if let thumbnail = pdf.thumbnail {
             return AnyView(
                 Image(uiImage: thumbnail)
@@ -197,7 +197,7 @@ struct ArchiveView: View {
     }
 }
 
-extension PdfEditable {
+extension Pdf {
     
     var pageCountText: String {
         "\(self.pageCount) pages"

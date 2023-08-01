@@ -105,8 +105,8 @@ struct PdfSignatureView: View {
 
 struct PdfSignatureView_Previews: PreviewProvider {
     static var previews: some View {
-        if let pdfEditable = K.Test.DebugPdfEditable {
-            let inputParameter = PdfSignatureViewModel.InputParameter(pdfEditable: pdfEditable,
+        if let pdf = K.Test.DebugPdf {
+            let inputParameter = PdfSignatureViewModel.InputParameter(pdf: pdf,
                                                                       currentPageIndex: 0,
                                                                       onConfirm: { _ in })
             AnyView(PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter)))

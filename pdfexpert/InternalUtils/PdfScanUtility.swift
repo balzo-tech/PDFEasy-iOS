@@ -11,7 +11,7 @@ import PDFKit
 
 class PdfScanUtility {
     
-    static func convertScan(scannerResult: ScannerResult, asyncOperation: Binding<AsyncOperation<PdfEditable, PdfEditableError>>) {
+    static func convertScan(scannerResult: ScannerResult, asyncOperation: Binding<AsyncOperation<Pdf, PdfError>>) {
         
         let progress = Progress(totalUnitCount: Int64(scannerResult.scan.pageCount))
         asyncOperation.wrappedValue = AsyncOperation(status: .loading(progress))
@@ -32,7 +32,7 @@ class PdfScanUtility {
             }
             
             DispatchQueue.main.async {
-                asyncOperation.wrappedValue = AsyncOperation(status: .data(PdfEditable(pdfDocument: pdfDocument)))
+                asyncOperation.wrappedValue = AsyncOperation(status: .data(Pdf(pdfDocument: pdfDocument)))
             }
         }
     }

@@ -32,12 +32,12 @@ enum EditAction: CaseIterable {
 class PdfEditViewModel: ObservableObject {
     
     struct InputParameter {
-        let pdfEditable: PdfEditable
+        let pdf: Pdf
         let startAction: PdfEditStartAction?
         let shouldShowCloseWarning: Binding<Bool>
     }
     
-    @Published private(set)var pdfEditable: PdfEditable
+    @Published private(set)var pdf: Pdf
     @Published var pdfCurrentPageIndex: Int = 0
     @Published var pageImages: [UIImage] = []
     @Published var pdfThumbnails: [UIImage] = []
@@ -63,10 +63,10 @@ class PdfEditViewModel: ObservableObject {
     }
     
     @Published var asyncImageLoading: AsyncOperation<(), SharedUnderlyingError> = AsyncOperation(status: .empty)
-    @Published var asyncPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
+    @Published var asyncPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
         didSet {
-            if let pdfEditable = self.asyncPdf.data  {
-                self.appendPdfEditableToPdf(pdfEditable: pdfEditable)
+            if let pdf = self.asyncPdf.data  {
+                self.appendPdfToPdf(pdf: pdf)
                 self.asyncPdf = AsyncOperation(status: .empty)
             }
         }
@@ -111,12 +111,12 @@ class PdfEditViewModel: ObservableObject {
     
     let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: true))
     
-    private var lockedPdfEditable: PdfEditable? = nil
+    private var lockedPdf: Pdf? = nil
     
     init(inputParameter: InputParameter) {
-        self.pdfEditable = inputParameter.pdfEditable
-        self.pdfFilename = inputParameter.pdfEditable.filename
-        self.compression = inputParameter.pdfEditable.compression
+        self.pdf = inputParameter.pdf
+        self.pdfFilename = inputParameter.pdf.filename
+        self.compression = inputParameter.pdf.compression
         self.startAction = inputParameter.startAction
         self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
         self.refreshImages()
@@ -131,7 +131,7 @@ class PdfEditViewModel: ObservableObject {
             if let startAction = self.startAction {
                 switch startAction {
                 case .openFillWidget:
-                    if PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) {
+                    if PDFUtility.hasPdfWidget(pdf: self.pdf) {
                         self.fillWidgetViewShow = true
                     } else {
                         self.missingWidgetWarningShow = true
@@ -147,25 +147,25 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func deletePage(atIndex index: Int) {
-        guard self.pdfThumbnails.count == self.pdfEditable.pdfDocument.pageCount else {
+        guard self.pdfThumbnails.count == self.pdf.pdfDocument.pageCount else {
             assertionFailure("Inconsistency error: pdf thumbnails count doesn't match pdf pages count")
             return
         }
-        guard self.pageImages.count == self.pdfEditable.pdfDocument.pageCount else {
+        guard self.pageImages.count == self.pdf.pdfDocument.pageCount else {
             assertionFailure("Inconsistency error: pdf page images count doesn't match pdf pages count")
             return
         }
-        let maxIndex = self.pdfEditable.pdfDocument.pageCount
+        let maxIndex = self.pdf.pdfDocument.pageCount
         
         guard index >= 0, index < maxIndex else {
             debugPrint(for: self, message: "Out of bound index!")
             return
         }
-        self.pdfEditable.pdfDocument.removePage(at: index)
+        self.pdf.pdfDocument.removePage(at: index)
         self.pdfThumbnails.remove(at: index)
         self.pageImages.remove(at: index)
         
-        let newMaxIndex = self.pdfEditable.pdfDocument.pageCount
+        let newMaxIndex = self.pdf.pdfDocument.pageCount
         
         if self.pdfCurrentPageIndex >= newMaxIndex {
             self.pdfCurrentPageIndex = (newMaxIndex > 0) ? newMaxIndex - 1 : 0
@@ -234,7 +234,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func showFillWidget() {
-        if PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) {
+        if PDFUtility.hasPdfWidget(pdf: self.pdf) {
             self.fillWidgetViewShow = true
         } else {
             self.missingWidgetWarningShow = true
@@ -251,7 +251,7 @@ class PdfEditViewModel: ObservableObject {
             
             switch action {
             case .password:
-                if self.pdfEditable.password != nil {
+                if self.pdf.password != nil {
                     self.removePasswordAlertShow = true
                 } else {
                     self.passwordTextFieldShow = true
@@ -287,9 +287,9 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
-    func updatePdf(pdfEditable: PdfEditable) {
+    func updatePdf(pdf: Pdf) {
         // TODO: Update thumbnails only for changed pages
-        self.pdfEditable = pdfEditable
+        self.pdf = pdf
         self.shouldShowCloseWarning.wrappedValue = true
         self.refreshThumbnails()
         self.refreshImages()
@@ -299,12 +299,12 @@ class PdfEditViewModel: ObservableObject {
         if fromIndex != toIndex {
             // exchangePage throws an exception if used after pages are added. Apparently it doesn't update its internal indices when adding pages,
             // which it relies upon to perform the swap. A manual workaround using removePage and insert methods seems to work fine, though.
-//            self.pdfEditable.pdfDocument.exchangePage(at: fromIndex, withPageAt: toIndex)
-            if let toPage = self.pdfEditable.pdfDocument.page(at: toIndex), let fromPage = self.pdfEditable.pdfDocument.page(at: fromIndex) {
-                self.pdfEditable.pdfDocument.removePage(at: fromIndex)
-                self.pdfEditable.pdfDocument.insert(toPage, at: fromIndex)
-                self.pdfEditable.pdfDocument.removePage(at: toIndex)
-                self.pdfEditable.pdfDocument.insert(fromPage, at: toIndex)
+//            self.pdf.pdfDocument.exchangePage(at: fromIndex, withPageAt: toIndex)
+            if let toPage = self.pdf.pdfDocument.page(at: toIndex), let fromPage = self.pdf.pdfDocument.page(at: fromIndex) {
+                self.pdf.pdfDocument.removePage(at: fromIndex)
+                self.pdf.pdfDocument.insert(toPage, at: fromIndex)
+                self.pdf.pdfDocument.removePage(at: toIndex)
+                self.pdf.pdfDocument.insert(fromPage, at: toIndex)
                 
                 self.pdfThumbnails.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
                 self.pageImages.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
@@ -319,25 +319,25 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalSave() throws {
-        guard self.pdfEditable.pdfDocument.pageCount > 0 else {
+        guard self.pdf.pdfDocument.pageCount > 0 else {
             throw PdfEditSaveError.noPages
         }
-        self.pdfEditable = try self.repository.savePdf(pdfEditable: self.pdfEditable)
+        self.pdf = try self.repository.savePdf(pdf: self.pdf)
         self.shouldShowCloseWarning.wrappedValue = false
     }
     
     private func internalShare() {
-        self.pdfShareCoordinator.share(pdf: self.pdfEditable)
+        self.pdfShareCoordinator.share(pdf: self.pdf)
     }
     
     private func onPdfChanged() {
-        if self.pdfEditable.filename != self.pdfFilename {
-            self.pdfEditable.updateFilename(self.pdfFilename)
+        if self.pdf.filename != self.pdfFilename {
+            self.pdf.updateFilename(self.pdfFilename)
             self.shouldShowCloseWarning.wrappedValue = true
             self.analyticsManager.track(event: .pdfRenamed)
         }
-        if self.pdfEditable.compression != self.compression {
-            self.pdfEditable.updateCompression(self.compression)
+        if self.pdf.compression != self.compression {
+            self.pdf.updateCompression(self.compression)
             self.shouldShowCloseWarning.wrappedValue = true
             self.analyticsManager.track(event: .compressionOptionChanged(compressionOption: self.compression))
         }
@@ -356,9 +356,9 @@ class PdfEditViewModel: ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdfEditable = PdfEditable(data: data) {
+                } else if let data = data, let pdf = Pdf(data: data) {
                     self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
-                    self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
+                    self.asyncPdf = AsyncOperation(status: .data(pdf))
                 } else {
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
                 }
@@ -368,28 +368,28 @@ class PdfEditViewModel: ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+        guard let pdf = Pdf(pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
         
-        if pdfEditable.pdfDocument.isLocked {
-            self.lockedPdfEditable = pdfEditable
+        if pdf.pdfDocument.isLocked {
+            self.lockedPdf = pdf
             self.pdfPasswordInputShow = true
         } else {
             self.currentAnalyticsInputFileExtension = pdfUrl.pathExtension
-            self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
+            self.asyncPdf = PDFUtility.decryptFile(pdf: pdf)
         }
     }
     
     @MainActor
     func importLockedPdf(password: String) {
-        guard let pdfEditable = self.lockedPdfEditable else {
+        guard let pdf = self.lockedPdf else {
             assertionFailure("Missing expected locked pdf")
             return
         }
         self.currentAnalyticsInputFileExtension = "pdf"
-        self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
+        self.asyncPdf = PDFUtility.decryptFile(pdf: pdf, password: password)
     }
     
     @MainActor
@@ -430,13 +430,13 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func appendUiImageToPdf(uiImage: UIImage) {
-        PDFUtility.appendImageToPdfDocument(pdfDocument: self.pdfEditable.pdfDocument, uiImage: uiImage)
-        let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
+        PDFUtility.appendImageToPdfDocument(pdfDocument: self.pdf.pdfDocument, uiImage: uiImage)
+        let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
                                                         size: nil,
-                                                        forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
-        let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdfEditable.pdfDocument,
+                                                        forPageIndex: self.pdf.pdfDocument.pageCount - 1)
+        let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
                                                     size: K.Misc.ThumbnailEditSize,
-                                                    forPageIndex: self.pdfEditable.pdfDocument.pageCount - 1)
+                                                    forPageIndex: self.pdf.pdfDocument.pageCount - 1)
         if let pageImage = pageImage, let thumbnail = thumbnail {
             self.pageImages.append(pageImage)
             self.pdfThumbnails.append(thumbnail)
@@ -445,11 +445,11 @@ class PdfEditViewModel: ObservableObject {
         self.trackPageAddedEvent()
     }
     
-    private func appendPdfEditableToPdf(pdfEditable: PdfEditable) {
-        PDFUtility.appendPdfDocument(pdfEditable.pdfDocument, toPdfDocument: self.pdfEditable.pdfDocument)
-        let pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: nil).compactMap { $0 }
+    private func appendPdfToPdf(pdf: Pdf) {
+        PDFUtility.appendPdfDocument(pdf.pdfDocument, toPdfDocument: self.pdf.pdfDocument)
+        let pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: pdf.pdfDocument, size: nil).compactMap { $0 }
         self.pageImages.append(contentsOf: pageImages)
-        let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
+        let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdf.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
         self.pdfThumbnails.append(contentsOf: thumbnails)
         self.shouldShowCloseWarning.wrappedValue = true
         self.trackPageAddedEvent()
@@ -465,19 +465,19 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalSetPassword(_ password: String?) {
-        if self.pdfEditable.password != password {
-            self.pdfEditable.updatePassword(password)
+        if self.pdf.password != password {
+            self.pdf.updatePassword(password)
             self.shouldShowCloseWarning.wrappedValue = true
             self.objectWillChange.send()
         }
     }
     
     private func refreshImages() {
-        self.pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: nil).compactMap { $0 }
+        self.pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdf.pdfDocument, size: nil).compactMap { $0 }
     }
     
     private func refreshThumbnails() {
-        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
+        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdf.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
     }
     
     private func trackPageAddedEvent() {

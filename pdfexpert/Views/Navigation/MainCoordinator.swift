@@ -20,7 +20,7 @@ struct PdfEditFlowData: Hashable, Identifiable {
     
     var id: Self { return self }
     
-    let pdfEditable: PdfEditable
+    let pdf: Pdf
     let startAction: PdfEditStartAction?
     let isNewPdf: Bool
 }
@@ -63,8 +63,8 @@ class MainCoordinator: ObservableObject {
         self.tab = MainTab.archive
     }
     
-    func showPdfEditFlow(pdfEditable: PdfEditable, startAction: PdfEditStartAction? = nil, isNewPdf: Bool) {
-        self.pdfEditFlowData = PdfEditFlowData(pdfEditable: pdfEditable, startAction: startAction, isNewPdf: isNewPdf)
+    func showPdfEditFlow(pdf: Pdf, startAction: PdfEditStartAction? = nil, isNewPdf: Bool) {
+        self.pdfEditFlowData = PdfEditFlowData(pdf: pdf, startAction: startAction, isNewPdf: isNewPdf)
     }
     
     func closePdfEditFlow() {

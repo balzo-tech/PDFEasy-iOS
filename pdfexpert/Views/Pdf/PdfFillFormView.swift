@@ -123,8 +123,8 @@ struct PdfFillFormView: View {
 
 struct PdfFillFormView_Previews: PreviewProvider {
     static var previews: some View {
-        if let pdfEditable = K.Test.DebugPdfEditable {
-            let inputParameter = PdfFillFormViewModel.InputParameter(pdfEditable: pdfEditable,
+        if let pdf = K.Test.DebugPdf {
+            let inputParameter = PdfFillFormViewModel.InputParameter(pdf: pdf,
                                                                      currentPageIndex: 0,
                                                                      onConfirm: { _ in })
             AnyView(PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter)))

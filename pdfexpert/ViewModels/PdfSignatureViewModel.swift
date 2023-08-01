@@ -17,26 +17,26 @@ extension Container {
     }
 }
 
-typealias PdfSignatureCallback = ((PdfEditable) -> ())
+typealias PdfSignatureCallback = ((Pdf) -> ())
 
 class PdfSignatureViewModel: ObservableObject {
     
     struct InputParameter {
-        let pdfEditable: PdfEditable
+        let pdf: Pdf
         let currentPageIndex: Int
         let onConfirm: PdfSignatureCallback
     }
     
     @Published var pdfCurrentPageIndex: Int = 0 {
         didSet {
-            guard let page = self.pdfEditable.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
+            guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
                 return
             }
             self.pdfView.go(to: page)
         }
     }
     @Published var pageImages: [UIImage]
-    @Published var pdfEditable: PdfEditable
+    @Published var pdf: Pdf
     @Published var isCreatingSignature: Bool = false { didSet { self.updatePdfViewInteraction() } }
     @Published var signatureRect: CGRect = .zero
     @Published var signatureImage: UIImage? = nil { didSet { self.updatePdfViewInteraction() } }
@@ -52,19 +52,19 @@ class PdfSignatureViewModel: ObservableObject {
     var pdfView: PDFView = PDFView()
     
     init(inputParameter: InputParameter) {
-        self.pdfEditable = inputParameter.pdfEditable
+        self.pdf = inputParameter.pdf
         
         self.onConfirm = inputParameter.onConfirm
         
         var pageImages: [UIImage] = []
-        for pageIndex in 0..<inputParameter.pdfEditable.pdfDocument.pageCount {
-            if let page = inputParameter.pdfEditable.pdfDocument.page(at: pageIndex) {
+        for pageIndex in 0..<inputParameter.pdf.pdfDocument.pageCount {
+            if let page = inputParameter.pdf.pdfDocument.page(at: pageIndex) {
                 pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
             }
         }
         self.pageImages = pageImages
         
-        self.pdfView.document = inputParameter.pdfEditable.pdfDocument
+        self.pdfView.document = inputParameter.pdf.pdfDocument
         
         if let page = self.pdfView.document?.page(at: inputParameter.currentPageIndex) {
             self.pdfView.go(to: page)
@@ -78,7 +78,7 @@ class PdfSignatureViewModel: ObservableObject {
     
     func onConfirmButtonPressed() {
         // This distinction between view page and standard page is a workaround to prevent user interaction with annotations. See init.
-        if let currentPage = self.pdfEditable.pdfDocument.page(at: self.pdfCurrentPageIndex),
+        if let currentPage = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
            let currentViewPage = self.pdfView.currentPage,
            let signatureImage = self.signatureImage {
             let signaturePageRect = self.pdfView.convert(signatureRect, to: currentViewPage)
@@ -87,7 +87,7 @@ class PdfSignatureViewModel: ObservableObject {
             
             self.analyticsManager.track(event: .signatureAdded)
             
-            self.onConfirm(self.pdfEditable)
+            self.onConfirm(self.pdf)
         }
     }
     

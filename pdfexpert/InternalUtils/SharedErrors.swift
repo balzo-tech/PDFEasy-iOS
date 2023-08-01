@@ -35,7 +35,7 @@ enum SharedUnderlyingError: LocalizedError, UnderlyingError {
     }
 }
 
-enum PdfEditableError: LocalizedError, UnderlyingError {
+enum PdfError: LocalizedError, UnderlyingError {
     case unknownError
     case underlyingError(errorDescription: String)
     case wrongPassword

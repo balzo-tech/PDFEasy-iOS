@@ -142,20 +142,20 @@ public class HomeViewModel : ObservableObject {
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var addPasswordShow: Bool = false
     
-    @Published var asyncPdf: AsyncOperation<PdfEditable, PdfEditableError> = AsyncOperation(status: .empty) {
+    @Published var asyncPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
         didSet {
             if let pdf = self.asyncPdf.data {
                 self.trackFullActionCompleted()
                 if let homePostImportAction = self.action?.homePostImportAction {
                     self.performHomePostImportAction(homePostImportAction)
                 } else {
-                    self.mainCoordinator.showPdfEditFlow(pdfEditable: pdf, startAction: self.editStartAction, isNewPdf: true)
+                    self.mainCoordinator.showPdfEditFlow(pdf: pdf, startAction: self.editStartAction, isNewPdf: true)
                 }
             }
         }
     }
     
-    @Published var pdfSaved: PdfEditable? = nil
+    @Published var pdfSaved: Pdf? = nil
     @Published var addPasswordCompletedShow: Bool = false
     @Published var removePasswordCompletedShow: Bool = false
     @Published var addPasswordError: AddPasswordError? = nil
@@ -174,7 +174,7 @@ public class HomeViewModel : ObservableObject {
     private var currentAnalyticsImportOption: ImportOption? = nil
     private var currentAnalyticsFileExtension: String? = nil
     
-    private var lockedPdfEditable: PdfEditable? = nil
+    private var lockedPdf: Pdf? = nil
     
     @MainActor
     func onAppear() {
@@ -314,34 +314,34 @@ public class HomeViewModel : ObservableObject {
     
     @MainActor
     func importPdf(pdfUrl: URL) {
-        guard let pdfEditable = PdfEditable(pdfUrl: pdfUrl) else {
+        guard let pdf = Pdf(pdfUrl: pdfUrl) else {
             assertionFailure("Missing expected file for give url")
             return
         }
         
-        if pdfEditable.pdfDocument.isLocked {
+        if pdf.pdfDocument.isLocked {
             if self.action?.homePostImportAction == .addPassword {
                 self.addPasswordError = .pdfHasPassword
             } else {
-                self.lockedPdfEditable = pdfEditable
+                self.lockedPdf = pdf
                 self.pdfPasswordInputShow = true
             }
         } else {
             if self.action?.homePostImportAction == .removePassword {
                 self.removePasswordError = .pdfNoPassword
             } else {
-                self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable)
+                self.asyncPdf = PDFUtility.decryptFile(pdf: pdf)
             }
         }
     }
     
     @MainActor
     func importLockedPdf(password: String) {
-        guard let pdfEditable = self.lockedPdfEditable else {
+        guard let pdf = self.lockedPdf else {
             assertionFailure("Missing expected locked pdf")
             return
         }
-        self.asyncPdf = PDFUtility.decryptFile(pdfEditable: pdfEditable, password: password)
+        self.asyncPdf = PDFUtility.decryptFile(pdf: pdf, password: password)
     }
     
     func setPassword(_ password: String) {
@@ -391,10 +391,10 @@ public class HomeViewModel : ObservableObject {
                 if let error = error {
                     debugPrint(for: self, message: "Error converting word file. Error: \(error)")
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, var pdfEditable = PdfEditable(data: data) {
+                } else if let data = data, var pdf = Pdf(data: data) {
                     self.currentAnalyticsFileExtension = fileUrl.pathExtension
-                    pdfEditable.updateFilename(fileUrl.filename)
-                    self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
+                    pdf.updateFilename(fileUrl.filename)
+                    self.asyncPdf = AsyncOperation(status: .data(pdf))
                 } else {
                     self.asyncPdf = AsyncOperation(status: .error(.unknownError))
                 }
@@ -425,7 +425,7 @@ public class HomeViewModel : ObservableObject {
     
     private func convertUiImageToPdf(uiImage: UIImage, filename: String?) {
         let pdfDocument = PDFUtility.convertUiImageToPdf(uiImage: uiImage)
-        var pdf = PdfEditable(pdfDocument: pdfDocument)
+        var pdf = Pdf(pdfDocument: pdfDocument)
         if let filename {
             pdf.updateFilename(filename)
         }
@@ -469,22 +469,22 @@ public class HomeViewModel : ObservableObject {
             return
         }
         
-        guard var pdfEditable = PdfEditable(data: pdfData) else {
+        guard var pdf = Pdf(data: pdfData) else {
             self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecode))
             resetSharedStorage()
             return
         }
         
-        if pdfEditable.pdfDocument.isEncrypted {
+        if pdf.pdfDocument.isEncrypted {
             let password = SharedStorage.pdfDataShareExtensionPassword ?? ""
             
-            guard pdfEditable.pdfDocument.unlock(withPassword: password) else {
+            guard pdf.pdfDocument.unlock(withPassword: password) else {
                 self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfInvalidPasswordForLockedFile))
                 resetSharedStorage()
                 return
             }
             
-            guard let pdfEncryptedData = pdfEditable.pdfDocument.dataRepresentation() else {
+            guard let pdfEncryptedData = pdf.pdfDocument.dataRepresentation() else {
                 self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfMissingDataForUnlockedFile))
                 resetSharedStorage()
                 return
@@ -494,13 +494,13 @@ public class HomeViewModel : ObservableObject {
                 resetSharedStorage()
                 return
             }
-            guard var pdfDecryptedEditable = PdfEditable(data: pdfDecryptedData) else {
+            guard var pdfDecrypted = Pdf(data: pdfDecryptedData) else {
                 self.analyticsManager.track(event: .reportNonFatalError(.shareExtensionPdfCannotDecodeDecryptedData))
                 resetSharedStorage()
                 return
             }
-            pdfDecryptedEditable.updatePassword(password)
-            pdfEditable = pdfDecryptedEditable
+            pdfDecrypted.updatePassword(password)
+            pdf = pdfDecrypted
         }
         resetSharedStorage()
         // TODO: Ask the user whether to discard the current pdf or not
@@ -513,12 +513,12 @@ public class HomeViewModel : ObservableObject {
         }
         
         self.analyticsManager.track(event: .homeFullActionCompleted(homeAction: .appExtension, importOption: nil, fileExtension: "pdf"))
-        self.asyncPdf = AsyncOperation(status: .data(pdfEditable))
+        self.asyncPdf = AsyncOperation(status: .data(pdf))
     }
     
     private func createPdf() {
         self.trackFullActionChosen(importOption: nil)
-        self.asyncPdf = AsyncOperation(status: .data(PdfEditable()))
+        self.asyncPdf = AsyncOperation(status: .data(Pdf()))
     }
     
     private func performHomePostImportAction(_ action: HomePostImportAction) {
@@ -533,14 +533,14 @@ public class HomeViewModel : ObservableObject {
     }
     
     private func internalSetPassword(_ password: String?) {
-        guard var pdfEditable = self.asyncPdf.data else {
-            assertionFailure("Missing expected pdf editable")
+        guard var pdf = self.asyncPdf.data else {
+            assertionFailure("Missing expected pdf ")
             self.asyncPdf = AsyncOperation(status: .error(.unknownError))
             return
         }
         do {
-            pdfEditable.updatePassword(password)
-            self.pdfSaved = try self.repository.savePdf(pdfEditable: pdfEditable)
+            pdf.updatePassword(password)
+            self.pdfSaved = try self.repository.savePdf(pdf: pdf)
             if password != nil {
                 self.addPasswordCompletedShow = true
             } else {

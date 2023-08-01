@@ -69,7 +69,7 @@
 		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
 		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
 		89436ABD29E5586600060605 /* PdfEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABC29E5586600060605 /* PdfEditView.swift */; };
-		89436ABF29E55EA000060605 /* PdfEditable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABE29E55EA000060605 /* PdfEditable.swift */; };
+		89436ABF29E55EA000060605 /* Pdf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABE29E55EA000060605 /* Pdf.swift */; };
 		89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC229E59C0E00060605 /* PdfEditViewModel.swift */; };
 		89436AC729E5B99100060605 /* PdfKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC629E5B99100060605 /* PdfKitView.swift */; };
 		8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */; };
@@ -271,7 +271,7 @@
 		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
 		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
 		89436ABC29E5586600060605 /* PdfEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditView.swift; sourceTree = "<group>"; };
-		89436ABE29E55EA000060605 /* PdfEditable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditable.swift; sourceTree = "<group>"; };
+		89436ABE29E55EA000060605 /* Pdf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pdf.swift; sourceTree = "<group>"; };
 		89436AC229E59C0E00060605 /* PdfEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditViewModel.swift; sourceTree = "<group>"; };
 		89436AC629E5B99100060605 /* PdfKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitView.swift; sourceTree = "<group>"; };
 		8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfScanUtility.swift; sourceTree = "<group>"; };
@@ -820,7 +820,7 @@
 			isa = PBXGroup;
 			children = (
 				89C2500E2A72B2BC00184C45 /* CDPdf.swift */,
-				89436ABE29E55EA000060605 /* PdfEditable.swift */,
+				89436ABE29E55EA000060605 /* Pdf.swift */,
 				8928F3D02A30BAFB001C1853 /* PickedImage.swift */,
 				8936AA322A6828C9005F6C73 /* ProjectInfo.swift */,
 				893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */,
@@ -1164,7 +1164,7 @@
 				89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */,
 				89CD7B5529D329B1003F1C3A /* Enum+Extensions.swift in Sources */,
 				8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */,
-				89436ABF29E55EA000060605 /* PdfEditable.swift in Sources */,
+				89436ABF29E55EA000060605 /* Pdf.swift in Sources */,
 				8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */,
 				8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */,
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,

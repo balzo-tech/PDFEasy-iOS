@@ -12,7 +12,7 @@ struct PdfFlowView: View {
     
     @InjectedObject(\.pdfCoordinator) var coordinator
     @Environment(\.dismiss) var dismiss
-    let pdfEditable: PdfEditable
+    let pdf: Pdf
     let startAction: PdfEditStartAction?
     
     @State var shouldShowCloseWarning: Bool
@@ -27,7 +27,7 @@ struct PdfFlowView: View {
         case .edit:
             return AnyView(
                 NavigationStack {
-                    let inputParameter = PdfEditViewModel.InputParameter(pdfEditable: self.pdfEditable,
+                    let inputParameter = PdfEditViewModel.InputParameter(pdf: self.pdf,
                                                                          startAction: self.startAction,
                                                                          shouldShowCloseWarning: self.$shouldShowCloseWarning)
                     PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter))
@@ -54,8 +54,8 @@ struct PdfFlowView: View {
 
 struct PdfView_Previews: PreviewProvider {
     static var previews: some View {
-        if let pdfEditable = K.Test.DebugPdfEditable {
-            AnyView(PdfFlowView(pdfEditable: pdfEditable, startAction: nil, shouldShowCloseWarning: true))
+        if let pdf = K.Test.DebugPdf {
+            AnyView(PdfFlowView(pdf: pdf, startAction: nil, shouldShowCloseWarning: true))
         } else {
             AnyView(Color(.clear))
         }

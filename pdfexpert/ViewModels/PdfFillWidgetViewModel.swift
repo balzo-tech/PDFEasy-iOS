@@ -16,12 +16,12 @@ extension Container {
     }
 }
 
-typealias PdfFillWidgetViewModelCallback = ((PdfEditable) -> ())
+typealias PdfFillWidgetViewModelCallback = ((Pdf) -> ())
 
 class PdfFillWidgetViewModel: ObservableObject {
     
     struct InputParameter {
-        let pdfEditable: PdfEditable
+        let pdf: Pdf
         let currentPageIndex: Int
         let onConfirm: PdfFillWidgetViewModelCallback
     }
@@ -36,12 +36,12 @@ class PdfFillWidgetViewModel: ObservableObject {
     
     private var onConfirm: PdfFillWidgetViewModelCallback
     
-    private var pdfEditable: PdfEditable
+    private var pdf: Pdf
     
     init(inputParameter: InputParameter) {
-        self.pdfEditable = inputParameter.pdfEditable
+        self.pdf = inputParameter.pdf
         var pdfDocumentCopy = PDFDocument()
-        if let pdfData = inputParameter.pdfEditable.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
+        if let pdfData = inputParameter.pdf.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
             pdfDocumentCopy = copy
         }
         self.onConfirm = inputParameter.onConfirm
@@ -75,8 +75,8 @@ class PdfFillWidgetViewModel: ObservableObject {
     func onConfirmButtonPressed() {
         // TODO: Check if there are changes in the annotations and propagate changes only in that case
         self.analyticsManager.track(event: .fillWidgetConfirmed)
-        self.pdfEditable.updateDocument(self.pdfDocument)
-        self.onConfirm(self.pdfEditable)
+        self.pdf.updateDocument(self.pdfDocument)
+        self.onConfirm(self.pdf)
     }
     
     @objc private func handlePageChange(notification: Notification) {

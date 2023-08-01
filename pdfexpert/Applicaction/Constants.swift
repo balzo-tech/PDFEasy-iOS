@@ -36,15 +36,15 @@ struct K {
         }
         
         static func GetDebugCoreDataPdf(context: NSManagedObjectContext) -> CDPdf? {
-            guard let testPdf = DebugPdfEditable, let pdfData = testPdf.rawData else { return nil }
+            guard let testPdf = DebugPdf, let pdfData = testPdf.rawData else { return nil }
             let coreDataPdf = CDPdf(context: context)
             coreDataPdf.update(withPdf: testPdf, pdfData: pdfData)
             return coreDataPdf
         }
         
-        static var DebugPdfEditable: PdfEditable? {
+        static var DebugPdf: Pdf? {
             guard let testPdfDocument = DebugPdfDocument else { return nil }
-            return PdfEditable(pdfDocument: testPdfDocument)
+            return Pdf(pdfDocument: testPdfDocument)
         }
         
         struct ChatPdf {
