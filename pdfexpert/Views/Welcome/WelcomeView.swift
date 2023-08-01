@@ -16,7 +16,7 @@ struct WelcomeView: View {
         ZStack {
             GeometryReader { geometry in
                 VStack(spacing: 16) {
-                    Image("subscription")
+                    Image("logo_large")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 600)

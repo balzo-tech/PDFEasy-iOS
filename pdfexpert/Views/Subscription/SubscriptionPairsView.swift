@@ -50,7 +50,7 @@ struct SubscriptionPairsView: View {
             VStack(spacing: 0) {
                 Spacer()
                 Spacer().frame(height: 20)
-                Image("subscription")
+                Image("logo_large")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(maxHeight: 400)
