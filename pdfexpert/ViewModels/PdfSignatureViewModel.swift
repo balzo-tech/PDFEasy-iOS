@@ -86,9 +86,9 @@ class PdfSignatureViewModel: ObservableObject {
             currentPage.addAnnotation(signatureAnnotation)
             
             self.analyticsManager.track(event: .signatureAdded)
+            
+            self.onConfirm(self.pdfEditable)
         }
-        
-        self.onConfirm(self.pdfEditable)
     }
     
     func tapOnPdfView() {

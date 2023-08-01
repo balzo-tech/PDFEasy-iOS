@@ -18,7 +18,6 @@ struct PdfEditView: View {
     @State private var showingImageInputPicker = false
     @State private var showingDeleteConfermation = false
     @State private var indexToDelete: Int? = nil
-    @State private var showingSaveErrorAlert = false
     
     @State private var draggedImage: UIImage? = nil
     

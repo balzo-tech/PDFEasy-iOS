@@ -149,7 +149,7 @@ public class HomeViewModel : ObservableObject {
                 if let homePostImportAction = self.action?.homePostImportAction {
                     self.performHomePostImportAction(homePostImportAction)
                 } else {
-                    self.mainCoordinator.showPdfEditFlow(pdfEditable: pdf, startAction: self.editStartAction)
+                    self.mainCoordinator.showPdfEditFlow(pdfEditable: pdf, startAction: self.editStartAction, isNewPdf: true)
                 }
             }
         }

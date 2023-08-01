@@ -43,7 +43,7 @@ struct PdfFillWidgetView: View {
             }
             .ignoresSafeArea(.keyboard)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                if self.viewModel.shouldShowCloseWarning {
+                if self.viewModel.unsavedChangesExist {
                     self.showCancelWarningDialog = true
                 } else {
                     self.viewModel.onCancelButtonPressed()

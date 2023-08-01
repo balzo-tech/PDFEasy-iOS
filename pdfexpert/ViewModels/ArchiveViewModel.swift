@@ -58,7 +58,7 @@ class ArchiveViewModel: ObservableObject {
     
     func editItem(item: PdfEditable) {
         self.analyticsManager.track(event: .existingPdfOpened)
-        self.mainCoordinator.showPdfEditFlow(pdfEditable: item)
+        self.mainCoordinator.showPdfEditFlow(pdfEditable: item, isNewPdf: false)
     }
     
     func shareItem(item: PdfEditable) {

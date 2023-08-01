@@ -98,6 +98,8 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
     
+    // This boolean is set to true every time a change is applied to the original pdf.
+    // TODO: Find a more robust solution
     var shouldShowCloseWarning: Binding<Bool>
     var urlToFileToConvert: URL?
     var imageToConvert: UIImage?
@@ -106,8 +108,6 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
-    
-    var showFillWidgetButton: Bool { PDFUtility.hasPdfWidget(pdfEditable: self.pdfEditable) }
     
     let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: true))
     
@@ -170,6 +170,8 @@ class PdfEditViewModel: ObservableObject {
         if self.pdfCurrentPageIndex >= newMaxIndex {
             self.pdfCurrentPageIndex = (newMaxIndex > 0) ? newMaxIndex - 1 : 0
         }
+        
+        self.shouldShowCloseWarning.wrappedValue = true
         
         self.analyticsManager.track(event: .pageRemoved)
     }
@@ -288,6 +290,7 @@ class PdfEditViewModel: ObservableObject {
     func updatePdf(pdfEditable: PdfEditable) {
         // TODO: Update thumbnails only for changed pages
         self.pdfEditable = pdfEditable
+        self.shouldShowCloseWarning.wrappedValue = true
         self.refreshThumbnails()
         self.refreshImages()
     }
@@ -310,6 +313,7 @@ class PdfEditViewModel: ObservableObject {
                 } else if self.pdfCurrentPageIndex == toIndex {
                     self.pdfCurrentPageIndex = fromIndex
                 }
+                self.shouldShowCloseWarning.wrappedValue = true
             }
         }
     }
@@ -329,9 +333,11 @@ class PdfEditViewModel: ObservableObject {
     private func onPdfChanged() {
         if self.pdfEditable.filename != self.pdfFilename {
             self.pdfEditable.updateFilename(self.pdfFilename)
+            self.shouldShowCloseWarning.wrappedValue = true
         }
         if self.pdfEditable.compression != self.compression {
             self.pdfEditable.updateCompression(self.compression)
+            self.shouldShowCloseWarning.wrappedValue = true
         }
     }
     
@@ -433,6 +439,7 @@ class PdfEditViewModel: ObservableObject {
             self.pageImages.append(pageImage)
             self.pdfThumbnails.append(thumbnail)
         }
+        self.shouldShowCloseWarning.wrappedValue = true
         self.trackPageAddedEvent()
     }
     
@@ -442,6 +449,7 @@ class PdfEditViewModel: ObservableObject {
         self.pageImages.append(contentsOf: pageImages)
         let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdfEditable.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
         self.pdfThumbnails.append(contentsOf: thumbnails)
+        self.shouldShowCloseWarning.wrappedValue = true
         self.trackPageAddedEvent()
     }
     
@@ -455,8 +463,11 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalSetPassword(_ password: String?) {
-        self.pdfEditable.updatePassword(password)
-        self.objectWillChange.send()
+        if self.pdfEditable.password != password {
+            self.pdfEditable.updatePassword(password)
+            self.shouldShowCloseWarning.wrappedValue = true
+            self.objectWillChange.send()
+        }
     }
     
     private func refreshImages() {

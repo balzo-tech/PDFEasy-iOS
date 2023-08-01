@@ -32,7 +32,7 @@ class PdfFillWidgetViewModel: ObservableObject {
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    var shouldShowCloseWarning: Bool = false
+    var unsavedChangesExist: Bool = true
     
     private var onConfirm: PdfFillWidgetViewModelCallback
     
@@ -73,6 +73,7 @@ class PdfFillWidgetViewModel: ObservableObject {
     }
     
     func onConfirmButtonPressed() {
+        // TODO: Check if there are changes in the annotations and propagate changes only in that case
         self.analyticsManager.track(event: .fillWidgetConfirmed)
         self.pdfEditable.updateDocument(self.pdfDocument)
         self.onConfirm(self.pdfEditable)

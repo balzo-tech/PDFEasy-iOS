@@ -15,7 +15,7 @@ struct PdfFlowView: View {
     let pdfEditable: PdfEditable
     let startAction: PdfEditStartAction?
     
-    @State var shouldShowCloseWarning: Bool = true
+    @State var shouldShowCloseWarning: Bool
     @State var showCloseWarningDialog: Bool = false
     
     var body: some View {
@@ -55,7 +55,7 @@ struct PdfFlowView: View {
 struct PdfView_Previews: PreviewProvider {
     static var previews: some View {
         if let pdfEditable = K.Test.DebugPdfEditable {
-            AnyView(PdfFlowView(pdfEditable: pdfEditable, startAction: nil))
+            AnyView(PdfFlowView(pdfEditable: pdfEditable, startAction: nil, shouldShowCloseWarning: true))
         } else {
             AnyView(Color(.clear))
         }

@@ -40,7 +40,7 @@ class PdfFillFormViewModel: ObservableObject {
     
     var pageScrollingAllowed: Bool { nil == self.editedPageIndex }
     var pageViewSize: CGSize = .zero
-    var shouldShowCloseWarning: Bool = false
+    var unsavedChangesExist: Bool = false
     
     // Used only to perform point and rect conversions from view space to page space and viceversa
     // A dedicated PDFView for each page is needed, because changing page on the fly based on the
@@ -139,7 +139,7 @@ class PdfFillFormViewModel: ObservableObject {
                 self.annotations.removeAll(where: { $0 == textAnnotation })
             }
             // Changes are applied, set the dirty flag
-            self.shouldShowCloseWarning = true
+            self.unsavedChangesExist = true
         } else if let textAnnotation = textAnnotationsInPoint.first {
             // Tapping inside a text annotation -> convert that text annotation to text resizable view
             let rect = self.convertRect(textAnnotation.verticalCenteredTextBounds, viewSize: self.pageViewSize, fromPage: page)
@@ -148,7 +148,7 @@ class PdfFillFormViewModel: ObservableObject {
             self.annotations.removeAll(where: { $0 == textAnnotation })
             // Nothing changes in this exact instant, but it will if the user modify the text resizable view
             // Just set the dirty flag here to keep it simple
-            self.shouldShowCloseWarning = true
+            self.unsavedChangesExist = true
         } else {
             // Tapping in empty area -> create a new text resizable view
             let size = CGSize(width: 100, height: 15)
@@ -157,7 +157,7 @@ class PdfFillFormViewModel: ObservableObject {
             self.editedPageIndex = pageIndex
             // The newly created text resizable view will be added as an annotation upon confirmation
             // thus the dirty flag must be set
-            self.shouldShowCloseWarning = true
+            self.unsavedChangesExist = true
         }
     }
     
@@ -166,28 +166,29 @@ class PdfFillFormViewModel: ObservableObject {
         self.analyticsManager.track(event: .textAnnotationRemoved)
         // A text resizable view has been removed. If that view was associated to an existing text annotation
         // a change has been made to the original file. Just setting the dirty flag anyway to keep it simple
-        self.shouldShowCloseWarning = true
+        self.unsavedChangesExist = true
     }
     
     func onConfirmButtonPressed() {
-        
         if self.editedPageIndex != nil {
             self.applyCurrentEditedTextAnnotation()
         }
         
-        for pageIndex in 0..<self.pdfDocument.pageCount {
-            if let page = self.pdfDocument.page(at: pageIndex) {
-                let pageAnnotations = self.annotations.filter { $0.page == page }
-                // Attach annotations to page
-                for pageAnnotation in pageAnnotations {
-                    page.addAnnotation(pageAnnotation)
+        if self.unsavedChangesExist {
+            for pageIndex in 0..<self.pdfDocument.pageCount {
+                if let page = self.pdfDocument.page(at: pageIndex) {
+                    let pageAnnotations = self.annotations.filter { $0.page == page }
+                    // Attach annotations to page
+                    for pageAnnotation in pageAnnotations {
+                        page.addAnnotation(pageAnnotation)
+                    }
                 }
             }
+            self.pdfEditable.updateDocument(self.pdfDocument)
+            self.onConfirm(self.pdfEditable)
         }
         
         self.analyticsManager.track(event: .annotationsConfirmed)
-        self.pdfEditable.updateDocument(self.pdfDocument)
-        self.onConfirm(self.pdfEditable)
     }
     
     private func applyCurrentEditedTextAnnotation() {
@@ -202,6 +203,7 @@ class PdfFillFormViewModel: ObservableObject {
                                               withProperties: nil)
         annotation.page = page
         self.annotations.append(annotation)
+        self.unsavedChangesExist = true
         self.analyticsManager.track(event: .textAnnotationAdded)
     }
     
