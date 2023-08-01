@@ -35,7 +35,7 @@ class PdfShareCoordinator: ObservableObject {
     private var pdfWantToBeShared: PdfEditable? = nil
     
     func share(pdf: PdfEditable) {
-        self.analyticsManager.track(event: .pdfShared(marginsOption: nil, compressionValue: nil))
+        self.analyticsManager.track(event: .pdfShared)
         if self.store.isPremium.value {
             self.pdfToBeShared = pdf
         } else {

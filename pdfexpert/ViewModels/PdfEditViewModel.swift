@@ -334,10 +334,12 @@ class PdfEditViewModel: ObservableObject {
         if self.pdfEditable.filename != self.pdfFilename {
             self.pdfEditable.updateFilename(self.pdfFilename)
             self.shouldShowCloseWarning.wrappedValue = true
+            self.analyticsManager.track(event: .pdfRenamed)
         }
         if self.pdfEditable.compression != self.compression {
             self.pdfEditable.updateCompression(self.compression)
             self.shouldShowCloseWarning.wrappedValue = true
+            self.analyticsManager.track(event: .compressionOptionChanged(compressionOption: self.compression))
         }
     }
     

@@ -23,6 +23,7 @@ extension Container {
 class RepositoryImpl: Repository {
     
     @Injected(\.persistence) var persistence
+    @Injected(\.analyticsManager) var analyticsMananger
     
     private var pdfManagedContext: NSManagedObjectContext {
         return self.persistence.container.viewContext
@@ -40,6 +41,8 @@ class RepositoryImpl: Repository {
         guard let updatedPdfEditable = PdfEditable.create(withCoreDataPdf: savedOrNewPdf) else {
             throw SaveError.unknownError
         }
+        
+        self.analyticsMananger.track(event: .pdfSaved)
         
         return updatedPdfEditable
     }

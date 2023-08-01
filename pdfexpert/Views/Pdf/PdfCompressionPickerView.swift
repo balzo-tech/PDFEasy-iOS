@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Factory
 
 struct PdfCompressionPickerView: View {
     
@@ -14,6 +15,8 @@ struct PdfCompressionPickerView: View {
     @State var currentCompressionOption: CompressionOption
     
     @Environment(\.dismiss) var dismiss
+    
+    @Injected(\.analyticsManager) private var analyticsManager
     
     init(compressionOption: Binding<CompressionOption>) {
         self._compressionOption = compressionOption
@@ -62,6 +65,9 @@ struct PdfCompressionPickerView: View {
         .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
             self.dismiss()
         })
+        .onAppear {
+            self.analyticsManager.track(event: .reportScreen(.compressionPicker))
+        }
     }
     
     @ViewBuilder func getCheckbox(forCompressionOption compressionOption: CompressionOption) -> some View {

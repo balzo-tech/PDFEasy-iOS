@@ -10,7 +10,7 @@ import FirebaseAnalytics
 import FirebaseCrashlytics
 
 private enum FirebaseEventCustomParameters: String {
-    case compression = "compression"
+    case compressionOption = "compression_option"
     case marginOption = "margin_option"
     case homeActionType = "home_action_type"
     case importOption = "import_option"
@@ -74,6 +74,7 @@ extension AnalyticsScreen {
         case .fillForm: return "FillForm"
         case .fillWidget: return "FillWidget"
         case .chatPdf: return "ChatPdf"
+        case .compressionPicker: return "CompressionPicker"
         }
     }
 }
@@ -90,13 +91,15 @@ extension AnalyticsEvent {
         case .homeFullActionCompleted: return "home_full_action_completed"
         case .pageAdded: return "page_added"
         case .pageRemoved: return "page_remove"
+        case .pdfRenamed: return "pdf_renamed"
         case .passwordAdded: return "password_added"
         case .passwordRemoved: return "password_remove"
+        case .compressionOptionChanged: return "compression_option_changed"
         case .pdfListShown: return "pdf_list_shown"
         case .existingPdfOpened: return "existing_pdf_opened"
         case .existingPdfRemoved: return "existing_pdf_removed"
         case .importTutorialCompleted: return "import_tutorial_completed"
-        case .pdfEditCompleted: return "pdf_edit_completed"
+        case .pdfSaved: return "pdf_saved"
         case .pdfShared: return "pdf_shared"
         case .signatureCreated: return "signature_created"
         case .signatureAdded: return "signature_added"
@@ -149,8 +152,11 @@ extension AnalyticsEvent {
         case .onboardingCompleted: return nil
         case .onboardingSkipped: return nil
         case .pageRemoved: return nil
+        case .pdfRenamed: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil
+        case .compressionOptionChanged(let compressionOption):
+            return [FirebaseEventCustomParameters.compressionOption.rawValue: compressionOption.trackingParameterValue]
         case .pdfListShown: return nil
         case .existingPdfOpened: return nil
         case .existingPdfRemoved: return nil
@@ -162,20 +168,8 @@ extension AnalyticsEvent {
         case .signatureAdded: return nil
         case .fillWidgetCancelled: return nil
         case .fillWidgetConfirmed: return nil
-        case .pdfEditCompleted(let marginsOption, let compressionValue):
-            return [
-             FirebaseEventCustomParameters.marginOption.rawValue: marginsOption.trackingParameterValue,
-             FirebaseEventCustomParameters.compression.rawValue: compressionValue
-            ]
-        case .pdfShared(let marginsOption, let compressionValue):
-            var parameters: [String: Any] = [:]
-            if let marginsOption = marginsOption {
-                parameters[FirebaseEventCustomParameters.marginOption.rawValue] = marginsOption.trackingParameterValue
-            }
-            if let compressionValue = compressionValue {
-                parameters[FirebaseEventCustomParameters.compression.rawValue] = compressionValue
-            }
-            return parameters
+        case .pdfSaved: return nil
+        case .pdfShared: return nil
         case .chatPdfSelectionActionChosen: return nil
         case .chatPdfSelectionFullActionChosen(let importOption):
             var parameters: [String: Any] = [:]
@@ -278,6 +272,18 @@ fileprivate extension ImportOption {
             case .icloud: return "icloud"
             case .files: return "files"
             }
+        }
+    }
+}
+
+fileprivate extension CompressionOption {
+    
+    var trackingParameterValue: String {
+        switch self {
+        case .noCompression: return "no_compression"
+        case .low: return "low"
+        case .medium: return "medium"
+        case .high: return "high"
         }
     }
 }
