@@ -961,7 +961,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 89CD7AAA29D32856003F1C3A /* Build configuration list for PBXNativeTarget "PdfExpert" */;
 			buildPhases = (
-				89883B052A45D07300E684B6 /* Setup Info.plist */,
 				89CD7A9229D32855003F1C3A /* Sources */,
 				89CD7A9329D32855003F1C3A /* Frameworks */,
 				89AA36072A1BB0280077A70A /* Setup Firebase Environment GoogleService-Info.plist */,
@@ -1089,24 +1088,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		89883B052A45D07300E684B6 /* Setup Info.plist */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Setup Info.plist";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Name of the resource we're selectively copying\nINFO_PLIST=Info.plist\n\n# Get references to dev and prod versions of the Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nINFO_STAGING=${PROJECT_DIR}/${TARGET_NAME}/Resources/Staging/${INFO_PLIST}\nINFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Resources/Production/${INFO_PLIST}\n\n# Make sure the staging version of Info.plist exists\necho \"Looking for ${INFO_PLIST} in ${INFO_STAGING}\"\nif [ ! -f $INFO_STAGING ]\nthen\n    echo \"No Staging Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Make sure the prod version of Info.plist exists\necho \"Looking for ${INFO_PLIST} in ${INFO_PROD}\"\nif [ ! -f $INFO_PROD ]\nthen\n    echo \"No Production Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Get a reference to the destination location for the Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod Info.plist for Production builds\nif [ \"${CONFIGURATION}\" == \"Production Release\" ] || [ \"${CONFIGURATION}\" == \"Production Debug\" ]\nthen\n    echo \"Using ${INFO_PROD}\"\n    cp \"${INFO_PROD}\" \"${PLIST_DESTINATION}\"\nelse\n    echo \"Using ${INFO_STAGING}\"\n    cp \"${INFO_STAGING}\" \"${PLIST_DESTINATION}\"\nfi\n\n";
-		};
 		89923E6429D437B400E246FC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1443,10 +1424,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				DISPLAY_NAME = "PDF Easy Staging";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy Staging";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
@@ -1566,10 +1548,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				DISPLAY_NAME = "PDF Easy Staging";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy Staging";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
@@ -1750,10 +1733,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				DISPLAY_NAME = "PDF Easy";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
@@ -1790,10 +1774,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
+				DISPLAY_NAME = "PDF Easy";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "PDF Easy";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need to access your photo library in order to convert your pictures to pdf";
