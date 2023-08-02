@@ -128,7 +128,13 @@ class ChatPdfSelectionViewModel: ObservableObject {
     }
     
     @MainActor
-    func processPickedFileUrl(_ fileUrl: URL) {
+    func processPickedFileUrl(_ fileUrl: URL?) {
+        guard let fileUrl else {
+            assertionFailure("Missing expected url")
+            self.asyncImportPdf = AsyncOperation(status: .error(.unknownError))
+            return
+        }
+        
         self.importFileOption = nil
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)

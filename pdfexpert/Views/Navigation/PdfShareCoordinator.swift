@@ -9,33 +9,26 @@ import Foundation
 import Factory
 
 extension Container {
-    var pdfShareCoordinator: ParameterFactory<PdfShareCoordinator.Params, PdfShareCoordinator> {
-        self { PdfShareCoordinator($0) }
+    var pdfShareCoordinator: Factory<PdfShareCoordinator> {
+        self { PdfShareCoordinator() }
     }
 }
 
 class PdfShareCoordinator: ObservableObject {
     
-    struct Params {
-        let applyPostProcess: Bool
-    }
-    
     @Published var monetizationShow: Bool = false
     @Published var pdfToBeShared: Pdf?
     
-    let applyPostProcess: Bool
-    
-    init(_ params: Params) {
-        self.applyPostProcess = params.applyPostProcess
-    }
+    var applyPostProcess: Bool = false
     
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.store) private var store
     
     private var pdfWantToBeShared: Pdf? = nil
     
-    func share(pdf: Pdf) {
+    func share(pdf: Pdf, applyPostProcess: Bool) {
         self.analyticsManager.track(event: .pdfShared)
+        self.applyPostProcess = applyPostProcess
         if self.store.isPremium.value {
             self.pdfToBeShared = pdf
         } else {

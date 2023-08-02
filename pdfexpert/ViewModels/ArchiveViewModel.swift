@@ -27,8 +27,8 @@ class ArchiveViewModel: ObservableObject {
     @Injected(\.store) private var store
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.mainCoordinator) private var mainCoordinator
+    @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     
-    let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: true))
     let syncMonitor = SyncMonitor.shared
     
     private var cancelBag = Set<AnyCancellable>()
@@ -62,7 +62,7 @@ class ArchiveViewModel: ObservableObject {
     }
     
     func shareItem(item: Pdf) {
-        self.pdfShareCoordinator.share(pdf: item)
+        self.pdfShareCoordinator.share(pdf: item, applyPostProcess: true)
     }
     
     func delete(item: Pdf) {

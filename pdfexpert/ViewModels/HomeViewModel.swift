@@ -29,6 +29,8 @@ enum HomeAction: Hashable, Identifiable {
     case powerpointToPdf
     case scan
     
+    case merge
+    
     case sign
     case formFill
     case addText
@@ -47,6 +49,7 @@ enum HomeAction: Hashable, Identifiable {
         case .excelToPdf: return .excel
         case .powerpointToPdf: return .powerpoint
         case .scan: return nil
+        case .merge: return .pdf
         case .sign: return .allDocs
         case .formFill: return .pdf
         case .addText: return .allDocs
@@ -65,6 +68,7 @@ enum HomeAction: Hashable, Identifiable {
         case .excelToPdf: return nil
         case .powerpointToPdf: return nil
         case .scan: return nil
+        case .merge: return nil
         case .sign: return .openSignature
         case .formFill: return .openFillWidget
         case .addText: return .openFillForm
@@ -83,6 +87,7 @@ enum HomeAction: Hashable, Identifiable {
         case .excelToPdf: return nil
         case .powerpointToPdf: return nil
         case .scan: return nil
+        case .merge: return nil
         case .sign: return nil
         case .formFill: return nil
         case .addText: return nil
@@ -165,10 +170,11 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
+    @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
+    
+    lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     
     var editStartAction: PdfEditStartAction? { self.action?.editStartAction }
-    
-    let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: false))
     
     private var action: HomeAction? = nil
     private var currentAnalyticsImportOption: ImportOption? = nil
@@ -211,6 +217,8 @@ public class HomeViewModel : ObservableObject {
             self.createPdf()
         case .scan:
             self.scanPdf()
+        case .merge:
+            self.pdfMergeViewModel.merge()
         }
     }
     
@@ -295,7 +303,13 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    func processPickedFileUrl(_ fileUrl: URL) {
+    func processPickedFileUrl(_ fileUrl: URL?) {
+        guard let fileUrl else {
+            assertionFailure("Missing expected url")
+            self.asyncPdf = AsyncOperation(status: .error(.unknownError))
+            return
+        }
+        
         self.importFileOption = nil
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
@@ -306,7 +320,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword:
                 self.importPdf(pdfUrl: fileUrl)
-            case .scan, .appExtension, .none:
+            case .scan, .appExtension, .none, .merge:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }
@@ -360,7 +374,7 @@ public class HomeViewModel : ObservableObject {
             assertionFailure("Missing expected pdfSaved entity")
             return
         }
-        self.pdfShareCoordinator.share(pdf: pdfSaved)
+        self.pdfShareCoordinator.share(pdf: pdfSaved, applyPostProcess: false)
         self.pdfSaved = nil
     }
     

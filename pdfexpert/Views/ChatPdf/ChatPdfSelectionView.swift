@@ -36,8 +36,8 @@ struct ChatPdfSelectionView: View {
             OptionListView.getImportView(forImportOptionGroup: $0,
                                          importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
         }
-        .filePicker(item: self.$viewModel.importFileOption, onPickedFile: {
-            self.viewModel.processPickedFileUrl($0)
+        .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
+            self.viewModel.processPickedFileUrl($0.first)
         })
         .unlockView(show: self.$viewModel.pdfPasswordInputShow,
                     unlockCallback: { self.viewModel.importLockedPdf(password: $0) })

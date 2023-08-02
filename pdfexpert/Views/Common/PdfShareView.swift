@@ -28,8 +28,7 @@ extension View {
 
 struct PdfShareView_Previews: PreviewProvider {
     
-    static let coordinator: PdfShareCoordinator
-    = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: false))
+    static let coordinator = Container.shared.pdfShareCoordinator()
     
     static var previews: some View {
         Color(.white)

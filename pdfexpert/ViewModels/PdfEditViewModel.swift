@@ -97,6 +97,7 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     
     // This boolean is set to true every time a change is applied to the original pdf.
     // TODO: Find a more robust solution
@@ -108,8 +109,6 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
-    
-    let pdfShareCoordinator = Container.shared.pdfShareCoordinator(PdfShareCoordinator.Params(applyPostProcess: true))
     
     private var lockedPdf: Pdf? = nil
     
@@ -327,7 +326,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalShare() {
-        self.pdfShareCoordinator.share(pdf: self.pdf)
+        self.pdfShareCoordinator.share(pdf: self.pdf, applyPostProcess: true)
     }
     
     private func onPdfChanged() {

@@ -122,6 +122,10 @@
 		89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFEA629DB2AC4002D348E /* WelcomeView.swift */; };
 		89B72A3029DAD4990076884F /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 89B72A2F29DAD4990076884F /* FacebookCore */; };
 		89B72A3329DADC790076884F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B72A3229DADC790076884F /* SettingsView.swift */; };
+		89BB2DB72A7A5EFC009E6738 /* PdfMergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */; };
+		89BB2DB92A7A6050009E6738 /* PdfMergeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */; };
+		89BB2DBB2A7A7DD7009E6738 /* PdfUnlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */; };
+		89BB2DBD2A7A80A8009E6738 /* PdfUnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DBC2A7A80A8009E6738 /* PdfUnlockView.swift */; };
 		89C2500F2A72B2BC00184C45 /* CDPdf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C2500E2A72B2BC00184C45 /* CDPdf.swift */; };
 		89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */; };
 		89CD7AA129D32856003F1C3A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AA029D32856003F1C3A /* Preview Assets.xcassets */; };
@@ -326,6 +330,10 @@
 		89AAFEA629DB2AC4002D348E /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		89B72A2D29DACBBF0076884F /* EmptyProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = EmptyProducts.storekit; sourceTree = "<group>"; };
 		89B72A3229DADC790076884F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMergeView.swift; sourceTree = "<group>"; };
+		89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMergeViewModel.swift; sourceTree = "<group>"; };
+		89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfUnlockViewModel.swift; sourceTree = "<group>"; };
+		89BB2DBC2A7A80A8009E6738 /* PdfUnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfUnlockView.swift; sourceTree = "<group>"; };
 		89C2500E2A72B2BC00184C45 /* CDPdf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPdf.swift; sourceTree = "<group>"; };
 		89CD7A9629D32855003F1C3A /* PdfExpert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PdfExpert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExpertApp.swift; sourceTree = "<group>"; };
@@ -591,7 +599,9 @@
 				8936AA3F2A683FB5005F6C73 /* ImportOption.swift */,
 				8940FB902A710D8D00A00D8D /* AddPasswordView.swift */,
 				89EACC0C2A741EC700C1F0EA /* UnlockView.swift */,
+				89BB2DBC2A7A80A8009E6738 /* PdfUnlockView.swift */,
 				8957FBA92A77E6F7008B31ED /* PdfShareView.swift */,
+				89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -867,6 +877,8 @@
 				8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */,
 				89127AA42A17A3600059005F /* PdfSignatureCanvasViewModel.swift */,
 				89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */,
+				89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */,
+				89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1152,6 +1164,7 @@
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
 				893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
+				89BB2DB72A7A5EFC009E6738 /* PdfMergeView.swift in Sources */,
 				89C2500F2A72B2BC00184C45 /* CDPdf.swift in Sources */,
 				8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */,
 				894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */,
@@ -1176,8 +1189,10 @@
 				897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */,
 				89CD7B5629D329B1003F1C3A /* Async.swift in Sources */,
 				89CD7B5129D329B1003F1C3A /* UIApplication+Extensions.swift in Sources */,
+				89BB2DBB2A7A7DD7009E6738 /* PdfUnlockViewModel.swift in Sources */,
 				8995694429D3450300566EF4 /* HomeViewModel.swift in Sources */,
 				89CD7B9829D329B1003F1C3A /* SubscriptionViewUtility.swift in Sources */,
+				89BB2DB92A7A6050009E6738 /* PdfMergeViewModel.swift in Sources */,
 				89127AA32A177F170059005F /* PdfSignatureCanvasView.swift in Sources */,
 				8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */,
 				893C8FD329DED2E9000E35BD /* Repository.swift in Sources */,
@@ -1209,6 +1224,7 @@
 				893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */,
 				892201DE2A0BA72D00832CF2 /* PdfSignatureViewModel.swift in Sources */,
 				89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */,
+				89BB2DBD2A7A80A8009E6738 /* PdfUnlockView.swift in Sources */,
 				896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */,
 				89127AA12A177E370059005F /* PencilKitView.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,

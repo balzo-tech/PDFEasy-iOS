@@ -44,6 +44,13 @@ struct HomeView: View {
                  homeAction: .scan)
     ]
     
+    let organizeItems: [HomeItem] = [
+        HomeItem(title: "Merge PDF",
+                 description: "Combine pdf files in the order you want",
+                 imageName: "home_merge",
+                 homeAction: .merge),
+    ]
+        
     let editItems: [HomeItem] = [
         HomeItem(title: "Sign PDF",
                  description: "Sign a document or send a signature request to others",
@@ -97,6 +104,7 @@ struct HomeView: View {
         ScrollView {
             LazyVGrid(columns: gridItemLayout, spacing: 14) {
                 self.section(forItems: self.convertItems, sectionTitle: "Convert to PDF")
+                self.section(forItems: self.organizeItems, sectionTitle: "Organize PDF")
                 self.section(forItems: self.editItems, sectionTitle: "Edit PDF")
                 self.section(forItems: self.importItems, sectionTitle: "Convert from PDF")
                 self.section(forItems: self.protectItems, sectionTitle: "Protect PDF")
@@ -113,8 +121,8 @@ struct HomeView: View {
             OptionListView.getImportView(forImportOptionGroup: $0,
                                          importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
         }
-        .filePicker(item: self.$viewModel.importFileOption, onPickedFile: {
-            self.viewModel.processPickedFileUrl($0)
+        .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
+            self.viewModel.processPickedFileUrl($0.first)
         })
         .unlockView(show: self.$viewModel.pdfPasswordInputShow,
                     unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
@@ -150,6 +158,7 @@ struct HomeView: View {
         .showError(self.$viewModel.addPasswordError)
         .showError(self.$viewModel.removePasswordError)
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
+        .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.viewModel.onDidBecomeActive()
         }

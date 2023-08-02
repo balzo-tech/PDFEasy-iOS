@@ -247,6 +247,7 @@ fileprivate extension HomeAction {
         case .excelToPdf: return "excel_to_pdf"
         case .powerpointToPdf: return "powerpoint_to_pdf"
         case .scan: return "scan"
+        case .merge: return "merge"
         case .sign: return "sign"
         case .formFill: return "form_fill"
         case .addText: return "add_text"
