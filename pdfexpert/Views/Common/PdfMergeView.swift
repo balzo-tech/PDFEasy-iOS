@@ -21,8 +21,6 @@ struct PdfMergeView: ViewModifier {
                 self.viewModel.processSelectedUrls($0)
             })
             .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
-            .asyncView(asyncOperation: self.$viewModel.asyncUnlockedPdf,
-                       loadingView: { AnimationType.pdf.view })
     }
 }
 

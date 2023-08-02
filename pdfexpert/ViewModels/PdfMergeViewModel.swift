@@ -23,30 +23,19 @@ class PdfMergeViewModel: ObservableObject {
     
     @Published var showFilePicker: Bool = false
     @Published var showMergeManager: Bool = false
-    @Published var asyncUnlockedPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
+    @Published var asyncUnlockedPdfs: AsyncOperation<[Pdf], PdfError> = AsyncOperation(status: .empty) {
         didSet {
-            switch self.asyncUnlockedPdf.status {
-            case .empty:
-                // Just in case this reset is caused by an error alert dismiss, go the next pdf
-                self.processNextPdf()
-            case .loading:
-                break
-            case .error:
-                // The error will be shown in the view
-                break
-            case .data(let unlockedPdf):
-                self.onProcessCompleted(forPdf: unlockedPdf)
+            if let unlockedPdfs = self.asyncUnlockedPdfs.data {
+                self.mergePdfs(pdfs: unlockedPdfs)
+                self.asyncUnlockedPdfs = .init(status: .empty)
             }
         }
     }
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = Container.shared
-        .pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncPdf: self.asyncSubject(\.asyncUnlockedPdf)))
+        .pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfs: self.asyncSubject(\.asyncUnlockedPdfs)))
     
     private let mergedPdf: Binding<AsyncOperation<Pdf, PdfError>>
-    
-    private var pendingPdfs: [Pdf] = []
-    private var processedPdfs: [Pdf] = []
     
     init(params: Params) {
         self.mergedPdf = params.asyncPdf
@@ -57,43 +46,19 @@ class PdfMergeViewModel: ObservableObject {
     }
     
     func processSelectedUrls(_ urls: [URL]) {
-        
-        guard urls.count > 0 else {
-            self.mergedPdf.wrappedValue = .init(status: .empty)
-            return
-        }
-        
-        self.pendingPdfs = urls.compactMap { Pdf(pdfUrl: $0) }
-        
-        self.processNextPdf()
+        self.pdfUnlockViewModel.unlockPdfs(urls.compactMap { Pdf(pdfUrl: $0) })
     }
     
-    private func processNextPdf() {
-        guard let pdf = self.pendingPdfs.popLast() else {
-            let mergedPdf = self.processedPdfs.reduce(Pdf()) { accumulatedPdf, currentPdf in
-                var accumulatedPdf = accumulatedPdf
-                let document = accumulatedPdf.pdfDocument
-                PDFUtility.appendPdfDocument(currentPdf.pdfDocument, toPdfDocument: document)
-                accumulatedPdf.updateDocument(document)
-                return accumulatedPdf
-            }
-            self.mergedPdf.wrappedValue = AsyncOperation(status: .data(mergedPdf))
-            self.processedPdfs = []
-            
-            self.showMergeManager = true
-            
-            return
+    private func mergePdfs(pdfs: [Pdf]) {
+        // TODO: Allow pdf re-ordering in dedicated view
+//        self.showMergeManager = true
+        let mergedPdf = pdfs.reduce(Pdf()) { accumulatedPdf, currentPdf in
+            var accumulatedPdf = accumulatedPdf
+            let document = accumulatedPdf.pdfDocument
+            PDFUtility.appendPdfDocument(currentPdf.pdfDocument, toPdfDocument: document)
+            accumulatedPdf.updateDocument(document)
+            return accumulatedPdf
         }
-        
-        if pdf.pdfDocument.isLocked {
-            self.pdfUnlockViewModel.unlock(pdf: pdf)
-        } else {
-            self.onProcessCompleted(forPdf: pdf)
-        }
-    }
-    
-    private func onProcessCompleted(forPdf pdf: Pdf) {
-        self.processedPdfs.append(pdf)
-        self.processNextPdf()
+        self.mergedPdf.wrappedValue = AsyncOperation(status: .data(mergedPdf))
     }
 }

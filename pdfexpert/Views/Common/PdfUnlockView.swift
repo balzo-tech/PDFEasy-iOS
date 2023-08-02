@@ -24,8 +24,10 @@ struct PdfUnlockView: ViewModifier {
                 })
                 Button("Cancel", role: .cancel, action: {})
             }, message: {
-                Text("Enter the password of\n\(self.viewModel.pdf?.filename ?? "")\nin order to import it.")
+                Text("Enter the password of\n\(self.viewModel.unlockingPdf?.filename ?? "")\nin order to import it.")
             })
+            .asyncView(asyncOperation: self.$viewModel.asyncUnlockedPdf,
+                       loadingView: { AnimationType.pdf.view })
     }
 }
 
@@ -37,9 +39,9 @@ extension View {
 
 struct PdfUnlockView_Previews: PreviewProvider {
     
-    static let asyncPdf: AsyncOperation<Pdf, PdfError> = .init(status: .empty)
+    static let asyncUnlockedPdfs: AsyncOperation<[Pdf], PdfError> = .init(status: .empty)
     static let viewModel = Container.shared
-        .pdfUnlockViewModel(.init(asyncPdf: .constant(Self.asyncPdf)))
+        .pdfUnlockViewModel(.init(asyncUnlockedPdfs: .constant(Self.asyncUnlockedPdfs)))
     
     static var previews: some View {
         Color(.white)
