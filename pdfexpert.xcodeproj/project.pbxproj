@@ -33,6 +33,7 @@
 		8936AA402A683FB5005F6C73 /* ImportOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3F2A683FB5005F6C73 /* ImportOption.swift */; };
 		8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA412A6840D1005F6C73 /* ChatPdfView.swift */; };
 		8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */; };
+		893875012A7BDD3B00267AFD /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893875002A7BDD3B00267AFD /* LoadingView.swift */; };
 		893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */; };
 		893BE52B2A6A7864004B05B9 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 893BE52A2A6A7864004B05B9 /* CombineMoya */; };
 		893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */; };
@@ -242,6 +243,7 @@
 		8936AA3F2A683FB5005F6C73 /* ImportOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportOption.swift; sourceTree = "<group>"; };
 		8936AA412A6840D1005F6C73 /* ChatPdfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfView.swift; sourceTree = "<group>"; };
 		8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfViewModel.swift; sourceTree = "<group>"; };
+		893875002A7BDD3B00267AFD /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerImpl.swift; sourceTree = "<group>"; };
 		893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtility.swift; sourceTree = "<group>"; };
@@ -772,6 +774,7 @@
 			isa = PBXGroup;
 			children = (
 				89CD7ACF29D329B1003F1C3A /* AsyncView.swift */,
+				893875002A7BDD3B00267AFD /* LoadingView.swift */,
 				89CD7AD029D329B1003F1C3A /* CircularProgressView.swift */,
 				89CD7AD129D329B1003F1C3A /* UnderlyingError.swift */,
 				89CD7AD229D329B1003F1C3A /* LottieView.swift */,
@@ -1222,6 +1225,7 @@
 				895FE2C429D6D7E500A99D5B /* ScannerView.swift in Sources */,
 				89CD7B4E29D329B1003F1C3A /* LottieView.swift in Sources */,
 				8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */,
+				893875012A7BDD3B00267AFD /* LoadingView.swift in Sources */,
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
 				893C8FD429DED2E9000E35BD /* RepositoryImpl.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,

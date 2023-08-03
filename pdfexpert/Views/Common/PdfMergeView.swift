@@ -20,6 +20,7 @@ struct PdfMergeView: ViewModifier {
                         onPickedFiles: {
                 self.viewModel.processSelectedUrls($0)
             })
+            .loadingView(show: self.$viewModel.loading)
             .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
             .showSortView(isPresented: self.$viewModel.showPdfSorter,
                           onDismiss: { self.viewModel.onSortedCompleted() },

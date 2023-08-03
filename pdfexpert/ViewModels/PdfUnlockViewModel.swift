@@ -74,14 +74,21 @@ class PdfUnlockViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func decryptPdf() {
         guard let pdf = self.unlockingPdf else {
             assertionFailure("Missing expected pdf")
             self.asyncUnlockedPdf = AsyncOperation(status: .empty)
             return
         }
-        self.asyncUnlockedPdf = PDFUtility.decryptFile(pdf: pdf, password: self.passwordText)
-        self.unlockingPdf = nil
+        self.asyncUnlockedPdf = .init(status: .loading(Progress(totalUnitCount: 1)))
+        Task {
+            let task = Task<AsyncOperation<Pdf, PdfError>, Never> {
+                return PDFUtility.decryptFile(pdf: pdf, password: self.passwordText)
+            }
+            self.asyncUnlockedPdf = await task.value
+            self.unlockingPdf = nil
+        }
     }
     
     private func unlockNextPdf() {

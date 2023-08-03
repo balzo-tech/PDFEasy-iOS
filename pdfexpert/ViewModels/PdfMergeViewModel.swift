@@ -21,6 +21,7 @@ class PdfMergeViewModel: ObservableObject {
         let asyncPdf: Binding<AsyncOperation<Pdf, PdfError>>
     }
     
+    @Published var loading: Bool = false
     @Published var showFilePicker: Bool = false
     @Published var showPdfSorter: Bool = false
     @Published var asyncUnlockedPdfs: AsyncOperation<[Pdf], PdfError> = AsyncOperation(status: .empty) {
@@ -31,7 +32,6 @@ class PdfMergeViewModel: ObservableObject {
             }
         }
     }
-    
     @Published var toBeSortedPdfs: [Pdf] = []
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
@@ -48,8 +48,20 @@ class PdfMergeViewModel: ObservableObject {
         self.showFilePicker = true
     }
     
+    @MainActor
     func processSelectedUrls(_ urls: [URL]) {
-        self.pdfUnlockViewModel.unlockPdfs(urls.compactMap { Pdf(pdfUrl: $0) })
+        guard urls.count > 0 else {
+            return
+        }
+        self.loading = true
+        Task {
+            let task = Task<[Pdf], Never> {
+                return urls.compactMap { Pdf(pdfUrl: $0) }
+            }
+            let pdfs = await task.value
+            self.loading = false
+            self.pdfUnlockViewModel.unlockPdfs(pdfs)
+        }
     }
     
     func onSortedCancelled() {
@@ -61,6 +73,7 @@ class PdfMergeViewModel: ObservableObject {
         self.showPdfSorter = false
     }
     
+    @MainActor
     func onSortedCompleted() {
         if self.toBeSortedPdfs.count > 0 {
             self.mergePdfs(pdfs: self.toBeSortedPdfs)
@@ -81,14 +94,23 @@ class PdfMergeViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     private func mergePdfs(pdfs: [Pdf]) {
-        let mergedPdf = pdfs.reduce(Pdf()) { accumulatedPdf, currentPdf in
-            var accumulatedPdf = accumulatedPdf
-            let document = accumulatedPdf.pdfDocument
-            PDFUtility.appendPdfDocument(currentPdf.pdfDocument, toPdfDocument: document)
-            accumulatedPdf.updateDocument(document)
-            return accumulatedPdf
+        self.loading = true
+        
+        Task {
+            let task = Task<Pdf, Never> {
+                return pdfs.reduce(Pdf()) { accumulatedPdf, currentPdf in
+                    var accumulatedPdf = accumulatedPdf
+                    let document = accumulatedPdf.pdfDocument
+                    PDFUtility.appendPdfDocument(currentPdf.pdfDocument, toPdfDocument: document)
+                    accumulatedPdf.updateDocument(document)
+                    return accumulatedPdf
+                }
+            }
+            let mergedPdf = await task.value
+            self.loading = false
+            self.asyncMergedPdf.wrappedValue = AsyncOperation(status: .data(mergedPdf))
         }
-        self.asyncMergedPdf.wrappedValue = AsyncOperation(status: .data(mergedPdf))
     }
 }

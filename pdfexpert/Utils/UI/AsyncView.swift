@@ -41,6 +41,7 @@ struct AsyncView<LoadingView: View, DataType, ErrorType: LocalizedError>: ViewMo
     func body(content: Content) -> some View {
         ZStack {
             content
+                .allowsHitTesting(!self.asyncOperation.isLoading)
             self.additionalContent
         }.errorAlert(asyncOperation: self.$asyncOperation)
     }

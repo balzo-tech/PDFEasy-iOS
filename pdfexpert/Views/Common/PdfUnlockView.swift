@@ -26,8 +26,7 @@ struct PdfUnlockView: ViewModifier {
             }, message: {
                 Text("Enter the password of\n\(self.viewModel.unlockingPdf?.filename ?? "")\nin order to import it.")
             })
-            .asyncView(asyncOperation: self.$viewModel.asyncUnlockedPdf,
-                       loadingView: { AnimationType.pdf.view })
+            .asyncView(asyncOperation: self.$viewModel.asyncUnlockedPdf)
     }
 }
 

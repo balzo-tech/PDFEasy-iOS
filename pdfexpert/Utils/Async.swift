@@ -30,6 +30,15 @@ extension AsyncOperation where E: LocalizedError {
         }
     }
     
+    var isLoading: Bool {
+        switch self.status {
+        case .empty: return false
+        case .data: return false
+        case .error: return false
+        case .loading: return true
+        }
+    }
+    
     var data: T? {
         switch self.status {
         case .empty: return nil
