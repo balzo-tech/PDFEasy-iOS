@@ -47,8 +47,6 @@ class PdfEditViewModel: ObservableObject {
     @Published var imagePickerShow: Bool = false
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
-    
-    @Published var pdfPasswordInputShow: Bool = false
     @Published var missingWidgetWarningShow: Bool = false
     
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -99,6 +97,10 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     
+    lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
+        Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
+    }()
+    
     // This boolean is set to true every time a change is applied to the original pdf.
     // TODO: Find a more robust solution
     var shouldShowCloseWarning: Binding<Bool>
@@ -109,8 +111,6 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
-    
-    private var lockedPdf: Pdf? = nil
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
@@ -372,23 +372,8 @@ class PdfEditViewModel: ObservableObject {
             return
         }
         
-        if pdf.pdfDocument.isLocked {
-            self.lockedPdf = pdf
-            self.pdfPasswordInputShow = true
-        } else {
-            self.currentAnalyticsInputFileExtension = pdfUrl.pathExtension
-            self.asyncPdf = PDFUtility.decryptFile(pdf: pdf)
-        }
-    }
-    
-    @MainActor
-    func importLockedPdf(password: String) {
-        guard let pdf = self.lockedPdf else {
-            assertionFailure("Missing expected locked pdf")
-            return
-        }
-        self.currentAnalyticsInputFileExtension = "pdf"
-        self.asyncPdf = PDFUtility.decryptFile(pdf: pdf, password: password)
+        self.currentAnalyticsInputFileExtension = pdfUrl.pathExtension
+        self.pdfUnlockViewModel.unlock(pdf: pdf)
     }
     
     @MainActor

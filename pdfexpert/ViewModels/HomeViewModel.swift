@@ -126,8 +126,6 @@ public class HomeViewModel : ObservableObject {
     @Published var importOptionGroup: ImportOptionGroup? = nil
     @Published var importFileOption: ImportFileOption? = nil
     
-    @Published var pdfPasswordInputShow: Bool = false
-    
     @Published var imagePickerShow: Bool = false
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
@@ -172,6 +170,10 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     
+    lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
+        Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
+    }()
+    
     lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     
     var editStartAction: PdfEditStartAction? { self.action?.editStartAction }
@@ -179,8 +181,6 @@ public class HomeViewModel : ObservableObject {
     private var action: HomeAction? = nil
     private var currentAnalyticsImportOption: ImportOption? = nil
     private var currentAnalyticsFileExtension: String? = nil
-    
-    private var lockedPdf: Pdf? = nil
     
     @MainActor
     func onAppear() {
@@ -333,29 +333,14 @@ public class HomeViewModel : ObservableObject {
             return
         }
         
-        if pdf.pdfDocument.isLocked {
-            if self.action?.homePostImportAction == .addPassword {
-                self.addPasswordError = .pdfHasPassword
-            } else {
-                self.lockedPdf = pdf
-                self.pdfPasswordInputShow = true
-            }
+        self.currentAnalyticsFileExtension = pdfUrl.pathExtension
+        if pdf.pdfDocument.isLocked, self.action?.homePostImportAction == .addPassword {
+            self.addPasswordError = .pdfHasPassword
+        } else if !pdf.pdfDocument.isLocked, self.action?.homePostImportAction == .removePassword {
+            self.removePasswordError = .pdfNoPassword
         } else {
-            if self.action?.homePostImportAction == .removePassword {
-                self.removePasswordError = .pdfNoPassword
-            } else {
-                self.asyncPdf = PDFUtility.decryptFile(pdf: pdf)
-            }
+            self.pdfUnlockViewModel.unlock(pdf: pdf)
         }
-    }
-    
-    @MainActor
-    func importLockedPdf(password: String) {
-        guard let pdf = self.lockedPdf else {
-            assertionFailure("Missing expected locked pdf")
-            return
-        }
-        self.asyncPdf = PDFUtility.decryptFile(pdf: pdf, password: password)
     }
     
     func setPassword(_ password: String) {

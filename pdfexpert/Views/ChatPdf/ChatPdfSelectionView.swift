@@ -39,8 +39,6 @@ struct ChatPdfSelectionView: View {
         .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
             self.viewModel.processPickedFileUrl($0.first)
         })
-        .unlockView(show: self.$viewModel.pdfPasswordInputShow,
-                    unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
         .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
             // Scanner
             ScannerView(onScannerResult: {
@@ -59,6 +57,7 @@ struct ChatPdfSelectionView: View {
         .asyncView(asyncOperation: self.$viewModel.asyncImportPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncChatPdfSetup)
+        .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     

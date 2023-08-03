@@ -124,8 +124,6 @@ struct HomeView: View {
         .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
             self.viewModel.processPickedFileUrl($0.first)
         })
-        .unlockView(show: self.$viewModel.pdfPasswordInputShow,
-                    unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
         .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
             // Scanner
             ScannerView(onScannerResult: {
@@ -159,6 +157,7 @@ struct HomeView: View {
         .showError(self.$viewModel.removePasswordError)
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
         .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
+        .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.viewModel.onDidBecomeActive()
         }

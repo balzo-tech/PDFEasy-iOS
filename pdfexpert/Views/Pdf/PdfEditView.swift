@@ -99,8 +99,6 @@ struct PdfEditView: View {
         .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
             PdfCompressionPickerView(compressionOption: self.$viewModel.compression)
         }
-        .unlockView(show: self.$viewModel.pdfPasswordInputShow,
-                    unlockCallback: { self.viewModel.importLockedPdf(password: $0) })
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
@@ -124,6 +122,7 @@ struct PdfEditView: View {
         .addPasswordView(show: self.$viewModel.passwordTextFieldShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
+        .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
     }
     
     @ViewBuilder var pdfView: some View {

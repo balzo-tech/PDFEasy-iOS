@@ -20,7 +20,6 @@ struct PdfUnlockView: ViewModifier {
                 SecureField("Enter Password", text: self.$viewModel.passwordText)
                 Button("Confirm", action: {
                     self.viewModel.decryptPdf()
-                    self.viewModel.passwordText = ""
                 })
                 Button("Cancel", role: .cancel, action: {})
             }, message: {
@@ -38,9 +37,9 @@ extension View {
 
 struct PdfUnlockView_Previews: PreviewProvider {
     
-    static let asyncUnlockedPdfs: AsyncOperation<[Pdf], PdfError> = .init(status: .empty)
+    static let asyncUnlockedPdfSingle: AsyncOperation<Pdf, PdfError> = .init(status: .empty)
     static let viewModel = Container.shared
-        .pdfUnlockViewModel(.init(asyncUnlockedPdfs: .constant(Self.asyncUnlockedPdfs)))
+        .pdfUnlockViewModel(.init(asyncUnlockedPdfSingleOutput: .constant(Self.asyncUnlockedPdfSingle)))
     
     static var previews: some View {
         Color(.white)

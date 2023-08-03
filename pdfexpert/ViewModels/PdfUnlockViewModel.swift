@@ -18,7 +18,18 @@ extension Container {
 class PdfUnlockViewModel: ObservableObject {
     
     struct Params {
-        let asyncUnlockedPdfs: Binding<AsyncOperation<[Pdf], PdfError>>
+        let asyncUnlockedPdfMultipleOutput: Binding<AsyncOperation<[Pdf], PdfError>>?
+        let asyncUnlockedPdfSingleOutput: Binding<AsyncOperation<Pdf, PdfError>>?
+        
+        init(asyncUnlockedPdfMultipleOutput: Binding<AsyncOperation<[Pdf], PdfError>>) {
+            self.asyncUnlockedPdfMultipleOutput = asyncUnlockedPdfMultipleOutput
+            self.asyncUnlockedPdfSingleOutput = nil
+        }
+        
+        init(asyncUnlockedPdfSingleOutput: Binding<AsyncOperation<Pdf, PdfError>>) {
+            self.asyncUnlockedPdfMultipleOutput = nil
+            self.asyncUnlockedPdfSingleOutput = asyncUnlockedPdfSingleOutput
+        }
     }
     
     @Published var showPasswordInputView: Bool = false
@@ -42,18 +53,21 @@ class PdfUnlockViewModel: ObservableObject {
     
     var unlockingPdf: Pdf? = nil
     
-    private let asyncUnlockedPdfs: Binding<AsyncOperation<[Pdf], PdfError>>
+    private let asyncUnlockedPdfMultipleOutput: Binding<AsyncOperation<[Pdf], PdfError>>?
+    private let asyncUnlockedPdfSingleOutput: Binding<AsyncOperation<Pdf, PdfError>>?
     
     private var toBeUnlockedPdfs: [Pdf] = []
     private var unlockedPdfs: [Pdf] = []
     
     init(params: Params) {
-        self.asyncUnlockedPdfs = params.asyncUnlockedPdfs
+        self.asyncUnlockedPdfMultipleOutput = params.asyncUnlockedPdfMultipleOutput
+        self.asyncUnlockedPdfSingleOutput = params.asyncUnlockedPdfSingleOutput
     }
     
     func unlockPdfs(_ pdfs: [Pdf]) {
         guard pdfs.count > 0 else {
-            self.asyncUnlockedPdfs.wrappedValue = .init(status: .empty)
+            self.asyncUnlockedPdfMultipleOutput?.wrappedValue = .init(status: .empty)
+            self.asyncUnlockedPdfSingleOutput?.wrappedValue = .init(status: .empty)
             return
         }
         self.toBeUnlockedPdfs = pdfs
@@ -65,12 +79,12 @@ class PdfUnlockViewModel: ObservableObject {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             
-            guard pdf.pdfDocument.isLocked else {
-                self.unlockNextPdf()
-                return
+            if pdf.pdfDocument.isLocked {
+                self.unlockingPdf = pdf
+                self.showPasswordInputView = true
+            } else {
+                self.onUnlockCompleted(forPdf: pdf)
             }
-            self.unlockingPdf = pdf
-            self.showPasswordInputView = true
         }
     }
     
@@ -87,22 +101,24 @@ class PdfUnlockViewModel: ObservableObject {
                 return PDFUtility.decryptFile(pdf: pdf, password: self.passwordText)
             }
             self.asyncUnlockedPdf = await task.value
+            self.passwordText = ""
             self.unlockingPdf = nil
         }
     }
     
     private func unlockNextPdf() {
         guard let pdf = self.toBeUnlockedPdfs.popLast() else {
-            self.asyncUnlockedPdfs.wrappedValue = AsyncOperation(status: .data(self.unlockedPdfs))
+            self.asyncUnlockedPdfMultipleOutput?.wrappedValue = AsyncOperation(status: .data(self.unlockedPdfs))
+            if let unlockedPdf = self.unlockedPdfs.first {
+                self.asyncUnlockedPdfSingleOutput?.wrappedValue = AsyncOperation(status: .data(unlockedPdf))
+            } else {
+                self.asyncUnlockedPdfSingleOutput?.wrappedValue = AsyncOperation(status: .empty)
+            }
             self.unlockedPdfs = []
             return
         }
         
-        if pdf.pdfDocument.isLocked {
-            self.unlock(pdf: pdf)
-        } else {
-            self.onUnlockCompleted(forPdf: pdf)
-        }
+        self.unlock(pdf: pdf)
     }
     
     private func onUnlockCompleted(forPdf pdf: Pdf) {

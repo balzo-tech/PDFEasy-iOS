@@ -35,7 +35,7 @@ class PdfMergeViewModel: ObservableObject {
     @Published var toBeSortedPdfs: [Pdf] = []
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
-        Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfs: self.asyncSubject(\.asyncUnlockedPdfs)))
+        Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfMultipleOutput: self.asyncSubject(\.asyncUnlockedPdfs)))
     }()
     
     private let asyncMergedPdf: Binding<AsyncOperation<Pdf, PdfError>>

@@ -22,8 +22,6 @@ class ChatPdfSelectionViewModel: ObservableObject {
     @Published var importOptionGroup: ImportOptionGroup? = nil
     @Published var importFileOption: ImportFileOption? = nil
     
-    @Published var pdfPasswordInputShow: Bool = false
-    
     @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     
@@ -54,10 +52,12 @@ class ChatPdfSelectionViewModel: ObservableObject {
     @Injected(\.chatPdfManager) private var chatPdfManager
     @Injected(\.analyticsManager) private var analyticsManager
     
+    lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
+        Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncImportPdf)))
+    }()
+    
     private var currentAnalyticsImportOption: ImportOption? = nil
     private var currentAnalyticsFileExtension: String? = nil
-    
-    private var lockedPdf: Pdf? = nil
     
     private var cancelBag = Set<AnyCancellable>()
     
@@ -149,23 +149,8 @@ class ChatPdfSelectionViewModel: ObservableObject {
             return
         }
         
-        if pdf.pdfDocument.isLocked {
-            self.lockedPdf = pdf
-            self.pdfPasswordInputShow = true
-        } else {
-            self.currentAnalyticsFileExtension = "pdf"
-            self.asyncImportPdf = PDFUtility.decryptFile(pdf: pdf)
-        }
-    }
-    
-    @MainActor
-    func importLockedPdf(password: String) {
-        guard let pdf = self.lockedPdf else {
-            assertionFailure("Missing expected locked pdf")
-            return
-        }
-        self.currentAnalyticsFileExtension = "pdf"
-        self.asyncImportPdf = PDFUtility.decryptFile(pdf: pdf, password: password)
+        self.currentAnalyticsFileExtension = pdfUrl.pathExtension
+        self.pdfUnlockViewModel.unlock(pdf: pdf)
     }
     
     @MainActor
