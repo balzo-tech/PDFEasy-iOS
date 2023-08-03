@@ -51,14 +51,12 @@ struct ArchiveView: View {
                         HStack(spacing: 16) {
                             self.getPdfThumbnail(forPdf: item)
                                 .frame(width: 86)
-                                .cornerRadius(10)
                             VStack(spacing: 0) {
                                 Spacer()
                                 Text(item.filename)
                                     .font(FontPalette.fontMedium(withSize: 16))
                                     .foregroundColor(ColorPalette.primaryText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .minimumScaleFactor(0.5)
                                     .lineLimit(1)
                                 Spacer().frame(height: 16)
                                 HStack(spacing: 16) {
@@ -75,7 +73,6 @@ struct ArchiveView: View {
                                             .foregroundColor(ColorPalette.primaryText)
                                     }
                                 }
-                                
                                 Spacer()
                             }
                             .frame(maxWidth: .infinity)
@@ -184,15 +181,17 @@ struct ArchiveView: View {
         .padding([.leading, .trailing], 16)
     }
     
-    func getPdfThumbnail(forPdf pdf: Pdf) -> some View {
+    @ViewBuilder private func getPdfThumbnail(forPdf pdf: Pdf) -> some View {
         if let thumbnail = pdf.thumbnail {
-            return AnyView(
-                Image(uiImage: thumbnail)
+            Color.clear
+                .overlay(Image(uiImage: thumbnail)
                     .resizable()
-                    .scaledToFill()
-            )
+                    .scaledToFill())
+                .clipShape(RoundedRectangle(cornerRadius: 10,
+                            style: .continuous))
         } else {
-            return AnyView(ColorPalette.secondaryBG)
+            ColorPalette.secondaryBG
+                .cornerRadius(10)
         }
     }
 }

@@ -126,6 +126,8 @@
 		89BB2DB92A7A6050009E6738 /* PdfMergeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */; };
 		89BB2DBB2A7A7DD7009E6738 /* PdfUnlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */; };
 		89BB2DBD2A7A80A8009E6738 /* PdfUnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DBC2A7A80A8009E6738 /* PdfUnlockView.swift */; };
+		89BB2DBF2A7AB0CE009E6738 /* PdfSortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DBE2A7AB0CE009E6738 /* PdfSortViewModel.swift */; };
+		89BB2DC12A7AB4A8009E6738 /* PdfSortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DC02A7AB4A8009E6738 /* PdfSortView.swift */; };
 		89C2500F2A72B2BC00184C45 /* CDPdf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C2500E2A72B2BC00184C45 /* CDPdf.swift */; };
 		89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */; };
 		89CD7AA129D32856003F1C3A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89CD7AA029D32856003F1C3A /* Preview Assets.xcassets */; };
@@ -334,6 +336,8 @@
 		89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMergeViewModel.swift; sourceTree = "<group>"; };
 		89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfUnlockViewModel.swift; sourceTree = "<group>"; };
 		89BB2DBC2A7A80A8009E6738 /* PdfUnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfUnlockView.swift; sourceTree = "<group>"; };
+		89BB2DBE2A7AB0CE009E6738 /* PdfSortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSortViewModel.swift; sourceTree = "<group>"; };
+		89BB2DC02A7AB4A8009E6738 /* PdfSortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSortView.swift; sourceTree = "<group>"; };
 		89C2500E2A72B2BC00184C45 /* CDPdf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPdf.swift; sourceTree = "<group>"; };
 		89CD7A9629D32855003F1C3A /* PdfExpert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PdfExpert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89CD7A9929D32855003F1C3A /* PdfExpertApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExpertApp.swift; sourceTree = "<group>"; };
@@ -602,6 +606,7 @@
 				89BB2DBC2A7A80A8009E6738 /* PdfUnlockView.swift */,
 				8957FBA92A77E6F7008B31ED /* PdfShareView.swift */,
 				89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */,
+				89BB2DC02A7AB4A8009E6738 /* PdfSortView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -879,6 +884,7 @@
 				89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */,
 				89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */,
 				89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */,
+				89BB2DBE2A7AB0CE009E6738 /* PdfSortViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1165,6 +1171,7 @@
 				893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
 				89BB2DB72A7A5EFC009E6738 /* PdfMergeView.swift in Sources */,
+				89BB2DBF2A7AB0CE009E6738 /* PdfSortViewModel.swift in Sources */,
 				89C2500F2A72B2BC00184C45 /* CDPdf.swift in Sources */,
 				8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */,
 				894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */,
@@ -1263,6 +1270,7 @@
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
 				8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */,
 				89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */,
+				89BB2DC12A7AB4A8009E6738 /* PdfSortView.swift in Sources */,
 				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
 				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,

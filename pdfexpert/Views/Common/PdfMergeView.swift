@@ -21,6 +21,17 @@ struct PdfMergeView: ViewModifier {
                 self.viewModel.processSelectedUrls($0)
             })
             .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
+            .showSortView(isPresented: self.$viewModel.showPdfSorter,
+                          onDismiss: { self.viewModel.onSortedCompleted() },
+                          params: PdfSortViewModel.Params(
+                            pdfs: self.$viewModel.toBeSortedPdfs,
+                            confirmButtonText: "Merge PDF",
+                            confirmCallback: {
+                                self.viewModel.onSortedConfirmed()
+                            },
+                            cancelCallback: {
+                                self.viewModel.onSortedCancelled()
+                            }))
     }
 }
 

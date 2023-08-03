@@ -24,7 +24,19 @@ enum AnalyticsPdfInputType {
 }
 
 enum AnalyticsScreen {
-    case onboarding, home, files, chatPdfSelection, settings, subscription, importTutorial, signature, fillForm, fillWidget, chatPdf, compressionPicker
+    case onboarding
+    case home
+    case files
+    case chatPdfSelection
+    case settings
+    case subscription
+    case importTutorial
+    case signature
+    case fillForm
+    case fillWidget
+    case chatPdf
+    case compressionPicker
+    case sortPdf
 }
 
 enum AnalyticsEvent {

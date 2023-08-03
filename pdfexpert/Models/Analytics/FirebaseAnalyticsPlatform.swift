@@ -75,6 +75,7 @@ extension AnalyticsScreen {
         case .fillWidget: return "FillWidget"
         case .chatPdf: return "ChatPdf"
         case .compressionPicker: return "CompressionPicker"
+        case .sortPdf: return "SortPdf"
         }
     }
 }
