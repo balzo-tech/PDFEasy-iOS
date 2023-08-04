@@ -73,17 +73,19 @@ struct K {
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
-        static let ImportFileTypesForAddPage: [UTType?] = [
-            UTType.image,
-            UTType.pdf,
-            .presentation,
-            .spreadsheet,
-            UTType("com.microsoft.word.doc"),
-            UTType("com.apple.iwork.pages.sffpages")
-        ]
-        static let ImportFileTypesForMerge: [UTType?] = [
-            UTType.pdf
-        ]
+        static let ImportFileTypesForAddPage: [UTType] = {
+            [
+                UTType.image,
+                UTType.pdf,
+                .presentation,
+                .spreadsheet,
+                UTType("com.microsoft.word.doc"),
+                UTType("com.apple.iwork.pages.sffpages")
+            ].compactMap { $0 }
+        }()
+        static let ImportFileTypesForMerge: [UTType] = { [UTType.pdf].compactMap { $0 } }()
+        static let ImportFileTypesForSplit: [UTType] = { [UTType.pdf].compactMap { $0 } }()
+        
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
         static let PdfPageSize: CGSize = CGSize(width: 595, height: 842)

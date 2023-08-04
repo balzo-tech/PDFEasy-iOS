@@ -51,7 +51,7 @@ struct PdfEditView: View {
         .onAppear(perform:self.viewModel.onAppear)
         // File picker
         .filePicker(isPresented: self.$viewModel.filePickerShow,
-                    fileTypes: K.Misc.ImportFileTypesForAddPage.compactMap { $0 },
+                    fileTypes: K.Misc.ImportFileTypesForAddPage,
                     onPickedFiles: {
             // Callback is called on modal dismiss, thus we can assign and convert in a row
             self.viewModel.urlToFileToConvert = $0.first

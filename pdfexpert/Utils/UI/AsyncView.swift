@@ -70,3 +70,95 @@ struct AsyncView_Previews: PreviewProvider {
             .asyncView(asyncOperation: $testAsyncOperation)
     }
 }
+
+
+
+
+
+extension View {
+    
+    func asyncView<AsyncItem: AsyncFailable & AsyncLoadable>(
+        asyncItem: Binding<AsyncItem>) -> some View {
+            return self
+                .asyncFailableView(asyncItem: asyncItem)
+                .asyncLoadableView(asyncItem: asyncItem, loadingView: { ProgressView() })
+    }
+    
+    func asyncView<LoadingView: View, AsyncItem: AsyncFailable & AsyncLoadable>(
+        asyncItem: Binding<AsyncItem>,
+        @ViewBuilder loadingView: @escaping () -> LoadingView) -> some View {
+            return self
+                .asyncFailableView(asyncItem: asyncItem)
+                .asyncLoadableView(asyncItem: asyncItem, loadingView: loadingView)
+    }
+    
+    func asyncView<AsyncItem: AsyncFailable>(
+        asyncItem: Binding<AsyncItem>) -> some View {
+            return self
+                .asyncFailableView(asyncItem: asyncItem)
+    }
+    
+    func asyncView<AsyncItem: AsyncLoadable>(
+        asyncItem: Binding<AsyncItem>) -> some View {
+            return self
+                .asyncLoadableView(asyncItem: asyncItem, loadingView: { ProgressView() })
+    }
+    
+    func asyncView<LoadingView: View, AsyncItem: AsyncLoadable>(
+        asyncItem: Binding<AsyncItem>,
+        @ViewBuilder loadingView: @escaping () -> LoadingView) -> some View {
+            return self
+                .asyncLoadableView(asyncItem: asyncItem, loadingView: loadingView)
+    }
+    
+    func asyncFailableView<AsyncItem: AsyncFailable>(
+        asyncItem: Binding<AsyncItem>) -> some View {
+        return self.modifier(
+            AsyncFailableView(asyncItem: asyncItem)
+        )
+    }
+    
+    func asyncLoadableView<LoadingView: View, AsyncItem: AsyncLoadable>(
+        asyncItem: Binding<AsyncItem>,
+        @ViewBuilder loadingView: @escaping () -> LoadingView) -> some View {
+        return self.modifier(
+            AsyncLoadableView(asyncItem: asyncItem, loadingView: loadingView)
+        )
+    }
+}
+
+struct AsyncFailableView<AsyncItem: AsyncFailable>: ViewModifier {
+    
+    @Binding var asyncItem: AsyncItem
+    
+    init(asyncItem: Binding<AsyncItem>) {
+        self._asyncItem = asyncItem
+    }
+    
+    func body(content: Content) -> some View {
+        content.errorAlert(asyncFailable: self.$asyncItem)
+    }
+}
+
+struct AsyncLoadableView<LoadingView: View, AsyncItem: AsyncLoadable>: ViewModifier {
+    
+    @Binding var asyncItem: AsyncItem
+    
+    var loadingView: (() -> LoadingView)
+    
+    init(asyncItem: Binding<AsyncItem>, loadingView: @escaping (() -> LoadingView)) {
+        self._asyncItem = asyncItem
+        self.loadingView = loadingView
+    }
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            content.allowsHitTesting(!self.asyncItem.isLoading)
+            if self.asyncItem.isLoading {
+                Color(.black).opacity(0.5)
+                    .edgesIgnoringSafeArea(.all)
+                self.loadingView()
+            }
+        }
+    }
+}

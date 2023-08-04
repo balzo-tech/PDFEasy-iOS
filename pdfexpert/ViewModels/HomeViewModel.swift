@@ -30,6 +30,7 @@ enum HomeAction: Hashable, Identifiable {
     case scan
     
     case merge
+    case split
     
     case sign
     case formFill
@@ -50,6 +51,7 @@ enum HomeAction: Hashable, Identifiable {
         case .powerpointToPdf: return .powerpoint
         case .scan: return nil
         case .merge: return .pdf
+        case .split: return .pdf
         case .sign: return .allDocs
         case .formFill: return .pdf
         case .addText: return .allDocs
@@ -69,6 +71,7 @@ enum HomeAction: Hashable, Identifiable {
         case .powerpointToPdf: return nil
         case .scan: return nil
         case .merge: return nil
+        case .split: return nil
         case .sign: return .openSignature
         case .formFill: return .openFillWidget
         case .addText: return .openFillForm
@@ -88,6 +91,7 @@ enum HomeAction: Hashable, Identifiable {
         case .powerpointToPdf: return nil
         case .scan: return nil
         case .merge: return nil
+        case .split: return nil
         case .sign: return nil
         case .formFill: return nil
         case .addText: return nil
@@ -169,6 +173,7 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
+    @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -219,6 +224,8 @@ public class HomeViewModel : ObservableObject {
             self.scanPdf()
         case .merge:
             self.pdfMergeViewModel.merge()
+        case .split:
+            self.pdfSplitViewModel.split()
         }
     }
     
@@ -320,7 +327,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword:
                 self.importPdf(pdfUrl: fileUrl)
-            case .scan, .appExtension, .none, .merge:
+            case .scan, .appExtension, .none, .merge, .split:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }
@@ -339,7 +346,7 @@ public class HomeViewModel : ObservableObject {
         } else if !pdf.pdfDocument.isLocked, self.action?.homePostImportAction == .removePassword {
             self.removePasswordError = .pdfNoPassword
         } else {
-            self.pdfUnlockViewModel.unlock(pdf: pdf)
+            self.pdfUnlockViewModel.unlockPdf(pdf: pdf)
         }
     }
     

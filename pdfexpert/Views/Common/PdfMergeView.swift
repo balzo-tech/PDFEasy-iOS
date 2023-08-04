@@ -14,14 +14,9 @@ struct PdfMergeView: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .filePicker(isPresented: self.$viewModel.showFilePicker,
-                        fileTypes: K.Misc.ImportFileTypesForMerge.compactMap { $0 },
-                        multipleSelection: true,
-                        onPickedFiles: {
-                self.viewModel.processSelectedUrls($0)
-            })
+            .showImportMultipleView(viewModel: self.viewModel.pdfImportMultipleViewModel)
             .loadingView(show: self.$viewModel.loading)
-            .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
+            .asyncView(asyncOperation: self.$viewModel.asyncImportedPdfs)
             .showSortView(isPresented: self.$viewModel.showPdfSorter,
                           onDismiss: { self.viewModel.onSortedCompleted() },
                           params: PdfSortViewModel.Params(

@@ -22,20 +22,19 @@ class PdfMergeViewModel: ObservableObject {
     }
     
     @Published var loading: Bool = false
-    @Published var showFilePicker: Bool = false
     @Published var showPdfSorter: Bool = false
-    @Published var asyncUnlockedPdfs: AsyncOperation<[Pdf], PdfError> = AsyncOperation(status: .empty) {
+    @Published var asyncImportedPdfs: AsyncOperation<[Pdf], PdfError> = AsyncOperation(status: .empty) {
         didSet {
-            if let unlockedPdfs = self.asyncUnlockedPdfs.data {
-                self.onUnlockCompleted(pdfs: unlockedPdfs)
-                self.asyncUnlockedPdfs = .init(status: .empty)
+            if let importedPdfs = self.asyncImportedPdfs.data {
+                self.onImportCompleted(pdfs: importedPdfs)
+                self.asyncImportedPdfs = .init(status: .empty)
             }
         }
     }
     @Published var toBeSortedPdfs: [Pdf] = []
     
-    lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
-        Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfMultipleOutput: self.asyncSubject(\.asyncUnlockedPdfs)))
+    lazy var pdfImportMultipleViewModel: PdfImportMultipleViewModel = {
+        Container.shared.pdfImportMultipleViewModel(PdfImportMultipleViewModel.Params(asyncPdfs: self.asyncSubject(\.asyncImportedPdfs)))
     }()
     
     private let asyncMergedPdf: Binding<AsyncOperation<Pdf, PdfError>>
@@ -45,23 +44,7 @@ class PdfMergeViewModel: ObservableObject {
     }
     
     func merge() {
-        self.showFilePicker = true
-    }
-    
-    @MainActor
-    func processSelectedUrls(_ urls: [URL]) {
-        guard urls.count > 0 else {
-            return
-        }
-        self.loading = true
-        Task {
-            let task = Task<[Pdf], Never> {
-                return urls.compactMap { Pdf(pdfUrl: $0) }
-            }
-            let pdfs = await task.value
-            self.loading = false
-            self.pdfUnlockViewModel.unlockPdfs(pdfs)
-        }
+        self.pdfImportMultipleViewModel.importPdfs(importFileTypes: K.Misc.ImportFileTypesForMerge)
     }
     
     func onSortedCancelled() {
@@ -83,7 +66,7 @@ class PdfMergeViewModel: ObservableObject {
         }
     }
     
-    private func onUnlockCompleted(pdfs: [Pdf]) {
+    private func onImportCompleted(pdfs: [Pdf]) {
         if pdfs.count > 1 {
             self.toBeSortedPdfs = pdfs
             self.showPdfSorter = true

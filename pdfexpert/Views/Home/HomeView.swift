@@ -49,6 +49,10 @@ struct HomeView: View {
                  description: "Combine pdf files in the order you want",
                  imageName: "home_merge",
                  homeAction: .merge),
+        HomeItem(title: "Split PDF",
+                 description: "Separate a set of pages for easy conversion into PDF",
+                 imageName: "home_split",
+                 homeAction: .split),
     ]
         
     let editItems: [HomeItem] = [
@@ -157,6 +161,7 @@ struct HomeView: View {
         .showError(self.$viewModel.removePasswordError)
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
         .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
+        .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.viewModel.onDidBecomeActive()

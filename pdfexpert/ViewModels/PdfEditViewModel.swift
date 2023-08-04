@@ -373,7 +373,7 @@ class PdfEditViewModel: ObservableObject {
         }
         
         self.currentAnalyticsInputFileExtension = pdfUrl.pathExtension
-        self.pdfUnlockViewModel.unlock(pdf: pdf)
+        self.pdfUnlockViewModel.unlockPdf(pdf: pdf)
     }
     
     @MainActor

@@ -76,6 +76,7 @@ extension AnalyticsScreen {
         case .chatPdf: return "ChatPdf"
         case .compressionPicker: return "CompressionPicker"
         case .sortPdf: return "SortPdf"
+        case .pageRangeEditor: return "PageRangeEditor"
         }
     }
 }
@@ -249,6 +250,7 @@ fileprivate extension HomeAction {
         case .powerpointToPdf: return "powerpoint_to_pdf"
         case .scan: return "scan"
         case .merge: return "merge"
+        case .split: return "split"
         case .sign: return "sign"
         case .formFill: return "form_fill"
         case .addText: return "add_text"

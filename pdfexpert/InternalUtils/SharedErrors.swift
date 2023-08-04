@@ -37,6 +37,7 @@ enum SharedUnderlyingError: LocalizedError, UnderlyingError {
 
 enum PdfError: LocalizedError, UnderlyingError {
     case unknownError
+    case urlToPdfConversionError
     case underlyingError(errorDescription: String)
     case wrongPassword
     
@@ -48,7 +49,8 @@ enum PdfError: LocalizedError, UnderlyingError {
     
     var errorDescription: String? {
         switch self {
-        case .unknownError: return "Internal Error. Please try again later"
+        case .unknownError, .urlToPdfConversionError:
+            return "Internal Error. Please try again later"
         case .underlyingError(let errorMessage): return errorMessage
         case .wrongPassword: return "Wrong Password"
         }
@@ -75,6 +77,29 @@ enum RemovePasswordError: LocalizedError {
         switch self {
         case .unknownError: return "Internal Error. Please try again later"
         case .pdfNoPassword: return "Your pdf is already unlocked"
+        }
+    }
+}
+
+enum PdfSplitError: LocalizedError, UnderlyingError {
+    case unknownError
+    case pdfNoPage
+    case pdfSinglePage
+    case incompatibleRange
+    case underlyingError(errorDescription: String)
+    
+    static func getUnknownError() -> Self { Self.unknownError }
+    
+    static func getUnderlyingError(errorDescription: String) -> Self {
+        return .underlyingError(errorDescription: errorDescription)
+    }
+    
+    var errorDescription: String? {
+        switch self {
+        case .unknownError, .incompatibleRange: return "Internal Error. Please try again later"
+        case .pdfNoPage: return "Your pdf has no pages"
+        case .pdfSinglePage: return "Your pdf has only one page"
+        case .underlyingError(let errorMessage): return errorMessage
         }
     }
 }

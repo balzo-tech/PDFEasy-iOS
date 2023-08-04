@@ -150,7 +150,7 @@ class ChatPdfSelectionViewModel: ObservableObject {
         }
         
         self.currentAnalyticsFileExtension = pdfUrl.pathExtension
-        self.pdfUnlockViewModel.unlock(pdf: pdf)
+        self.pdfUnlockViewModel.unlockPdf(pdf: pdf)
     }
     
     @MainActor

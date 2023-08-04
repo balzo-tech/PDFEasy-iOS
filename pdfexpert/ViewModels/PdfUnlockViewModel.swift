@@ -64,7 +64,7 @@ class PdfUnlockViewModel: ObservableObject {
         self.asyncUnlockedPdfSingleOutput = params.asyncUnlockedPdfSingleOutput
     }
     
-    func unlockPdfs(_ pdfs: [Pdf]) {
+    func unlockPdfs(pdfs: [Pdf]) {
         guard pdfs.count > 0 else {
             self.asyncUnlockedPdfMultipleOutput?.wrappedValue = .init(status: .empty)
             self.asyncUnlockedPdfSingleOutput?.wrappedValue = .init(status: .empty)
@@ -74,7 +74,7 @@ class PdfUnlockViewModel: ObservableObject {
         self.unlockNextPdf()
     }
     
-    func unlock(pdf: Pdf) {
+    func unlockPdf(pdf: Pdf) {
         // Must skip a frame to make the view correctly dismiss and show again the password input alert
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -118,7 +118,7 @@ class PdfUnlockViewModel: ObservableObject {
             return
         }
         
-        self.unlock(pdf: pdf)
+        self.unlockPdf(pdf: pdf)
     }
     
     private func onUnlockCompleted(forPdf pdf: Pdf) {
