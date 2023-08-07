@@ -66,6 +66,10 @@ class PdfPageRangeEditorViewModel: ObservableObject {
             }.store(in: &self.cancelBag)
     }
     
+    func focus(index: Int, isLowerBound: Bool) {
+        self.pdfPageRangeInFocus = isLowerBound ? .lowerBound(index: index) : .upperBound(index: index)
+    }
+    
     func confirm() {
         self.pdfPageRangeInFocus = nil
         guard let pageRanges = self.getPageRangesFromRangeStrings() else {
@@ -129,6 +133,26 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         } else {
             self.pageRangeLowerBounds[index] = 1.toString
         }
+    }
+    
+    func getTextFieldText(index: Int, isLowerBound: Bool) -> Binding<String> {
+        Binding(get: {
+            guard index < self.pageRangeLowerBounds.count else {
+                return ""
+            }
+            return isLowerBound
+            ? self.pageRangeLowerBounds[index]
+            : self.pageRangeUpperBounds[index]
+        }, set: { newValue in
+            guard index < self.pageRangeLowerBounds.count else {
+                return
+            }
+            if isLowerBound {
+                self.pageRangeLowerBounds[index] = newValue
+            } else {
+                self.pageRangeUpperBounds[index] = newValue
+            }
+        })
     }
     
     private func validateField(field: PdfPageRangeFocusable) {

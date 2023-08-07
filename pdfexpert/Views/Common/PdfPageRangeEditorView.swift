@@ -62,11 +62,9 @@ struct PdfPageRangeEditorView: View {
         .onAppear {
             self.analyticsManager.track(event: .reportScreen(.pageRangeEditor))
         }
-        // Syncing focus state in both direction allow validation upon focues change
-        // in view model
-        .onChange(of: self.pdfPageRangeInFocus) { self.viewModel.pdfPageRangeInFocus = $0 }
+        // The focus state in the viewmodel is the one in charge and allow field validation.
+        // The one in the view must by synced with it
         .onChange(of: self.viewModel.pdfPageRangeInFocus) { self.pdfPageRangeInFocus = $0 }
-
     }
     
     private var addRangeButton: some View {
@@ -106,38 +104,30 @@ struct PdfPageRangeEditorView: View {
     
     private func getBoundView(index: Int, isLowerBound: Bool) -> some View {
         ZStack {
-            Text(isLowerBound ? "From page number" : "To page number")
-                .font(FontPalette.fontMedium(withSize: 12))
-                .foregroundColor(ColorPalette.thirdText)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text(isLowerBound ? "From page number" : "To page number")
+                    .font(FontPalette.fontMedium(withSize: 12))
+                    .foregroundColor(ColorPalette.thirdText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(1)
+                // Inline binding avoid out of index exception when deleting an in-focus range
+                TextField("", text: self.viewModel.getTextFieldText(index: index,
+                                                                    isLowerBound: isLowerBound))
+                .font(FontPalette.fontMedium(withSize: 14))
+                .foregroundColor(ColorPalette.primaryText)
                 .lineLimit(1)
-            // Inline binding avoid out of index exception when deleting an in-focus range
-            TextField("", text: Binding(get: {
-                guard index < self.viewModel.pageRangeLowerBounds.count else {
-                    return ""
-                }
-                return isLowerBound
-                ? self.viewModel.pageRangeLowerBounds[index]
-                : self.viewModel.pageRangeUpperBounds[index]
-            }, set: { newValue in
-                guard index < self.viewModel.pageRangeLowerBounds.count else {
-                    return
-                }
-                if isLowerBound {
-                    self.viewModel.pageRangeLowerBounds[index] = newValue
-                } else {
-                    self.viewModel.pageRangeUpperBounds[index] = newValue
-                }
-            }))
-            .font(FontPalette.fontMedium(withSize: 14))
-            .foregroundColor(ColorPalette.primaryText)
-            .lineLimit(1)
-            .disableAutocorrection(true)
-            .autocapitalization(.none)
-            .multilineTextAlignment(.trailing)
-            .focused(self.$pdfPageRangeInFocus,
-                     equals: isLowerBound ? .lowerBound(index: index) : .upperBound(index: index))
-            .keyboardType(.numberPad)
+                .disableAutocorrection(true)
+                .autocapitalization(.none)
+                .fixedSize(horizontal: true, vertical: true)
+                .allowsHitTesting(false)
+                .focused(self.$pdfPageRangeInFocus,
+                         equals: isLowerBound ? .lowerBound(index: index) : .upperBound(index: index))
+                .keyboardType(.numberPad)
+            }
+            Button("") {
+                self.viewModel.focus(index: index, isLowerBound: isLowerBound)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
