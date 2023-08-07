@@ -14,8 +14,7 @@ struct PdfPageRangeEditorView: View {
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    @FocusState private var focusedFieldLowerBound: Int?
-    @FocusState private var focusedFieldUpperBound: Int?
+    @FocusState private var pdfPageRangeInFocus: PdfPageRangeFocusable?
     
     var body: some View {
         NavigationStack {
@@ -49,15 +48,8 @@ struct PdfPageRangeEditorView: View {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
                     Button(action: {
-                        if let focusedFieldLowerBound {
-                            self.viewModel.validateLowerBound(forIndex: focusedFieldLowerBound)
-                            self.focusedFieldLowerBound = nil
-                        } else if let focusedFieldUpperBound {
-                            self.viewModel.validateUpperBound(forIndex: focusedFieldUpperBound)
-                            self.focusedFieldUpperBound = nil
-                        } else {
-                            assertionFailure("Missing focused field!")
-                        }
+                        self.viewModel.onConfirmRange()
+
                     }) {
                         Text("Done")
                             .foregroundColor(ColorPalette.secondaryText)
@@ -70,6 +62,11 @@ struct PdfPageRangeEditorView: View {
         .onAppear {
             self.analyticsManager.track(event: .reportScreen(.pageRangeEditor))
         }
+        // Syncing focus state in both direction allow validation upon focues change
+        // in view model
+        .onChange(of: self.pdfPageRangeInFocus) { self.viewModel.pdfPageRangeInFocus = $0 }
+        .onChange(of: self.viewModel.pdfPageRangeInFocus) { self.pdfPageRangeInFocus = $0 }
+
     }
     
     private var addRangeButton: some View {
@@ -114,17 +111,32 @@ struct PdfPageRangeEditorView: View {
                 .foregroundColor(ColorPalette.thirdText)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(1)
-            TextField("", text: isLowerBound
-                      ? self.$viewModel.pageRangeLowerBounds[index]
-                      : self.$viewModel.pageRangeUpperBounds[index])
+            // Inline binding avoid out of index exception when deleting an in-focus range
+            TextField("", text: Binding(get: {
+                guard index < self.viewModel.pageRangeLowerBounds.count else {
+                    return ""
+                }
+                return isLowerBound
+                ? self.viewModel.pageRangeLowerBounds[index]
+                : self.viewModel.pageRangeUpperBounds[index]
+            }, set: { newValue in
+                guard index < self.viewModel.pageRangeLowerBounds.count else {
+                    return
+                }
+                if isLowerBound {
+                    self.viewModel.pageRangeLowerBounds[index] = newValue
+                } else {
+                    self.viewModel.pageRangeUpperBounds[index] = newValue
+                }
+            }))
             .font(FontPalette.fontMedium(withSize: 14))
             .foregroundColor(ColorPalette.primaryText)
             .lineLimit(1)
             .disableAutocorrection(true)
             .autocapitalization(.none)
             .multilineTextAlignment(.trailing)
-            .focused(isLowerBound ? self.$focusedFieldLowerBound : self.$focusedFieldUpperBound,
-                     equals: index)
+            .focused(self.$pdfPageRangeInFocus,
+                     equals: isLowerBound ? .lowerBound(index: index) : .upperBound(index: index))
             .keyboardType(.numberPad)
         }
     }

@@ -8,6 +8,7 @@
 import Foundation
 import Factory
 import SwiftUI
+import Combine
 
 extension Container {
     var pdfPageRangeEditorViewModel: ParameterFactory<PdfPageRangeEditorViewModel.Params, PdfPageRangeEditorViewModel> {
@@ -17,6 +18,11 @@ extension Container {
 
 typealias PdfPageRangeEditorConfirmCallback = () -> ()
 typealias PdfPageRangeEditorCancelCallback = () -> ()
+
+enum PdfPageRangeFocusable: Hashable {
+    case lowerBound(index: Int)
+    case upperBound(index: Int)
+}
 
 class PdfPageRangeEditorViewModel: ObservableObject {
     
@@ -32,9 +38,13 @@ class PdfPageRangeEditorViewModel: ObservableObject {
     @Published var pageRangeLowerBounds: [String]
     @Published var pageRangeUpperBounds: [String]
     
+    @Published var pdfPageRangeInFocus: PdfPageRangeFocusable? = nil
+    
     private let totalPages: Int
     private let confirmCallback: PdfPageRangeEditorConfirmCallback
     private let cancelCallback: PdfPageRangeEditorCancelCallback
+    
+    private var cancelBag = Set<AnyCancellable>()
     
     init(params: Params) {
         self.pageRanges = params.pageRanges
@@ -44,9 +54,20 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         
         self.pageRangeLowerBounds = params.pageRanges.wrappedValue.map { "\($0.lowerBound + 1)" }
         self.pageRangeUpperBounds = params.pageRanges.wrappedValue.map { "\($0.upperBound + 1)" }
+        
+        self.$pdfPageRangeInFocus
+            .withPrevious(nil)
+            .sink { [weak self] previousField, _ in
+                guard let self else { return }
+                // Validate the focus field that is losing focus.
+                if let previousField {
+                    self.validateField(field: previousField)
+                }
+            }.store(in: &self.cancelBag)
     }
     
     func confirm() {
+        self.pdfPageRangeInFocus = nil
         guard let pageRanges = self.getPageRangesFromRangeStrings() else {
             self.cancelCallback()
             return
@@ -56,15 +77,22 @@ class PdfPageRangeEditorViewModel: ObservableObject {
     }
     
     func cancel() {
+        self.pdfPageRangeInFocus = nil
         self.cancelCallback()
     }
     
+    func onConfirmRange() {
+        self.pdfPageRangeInFocus = nil
+    }
+    
     func addRange() {
+        self.pdfPageRangeInFocus = nil
         self.pageRangeLowerBounds.append("1")
-        self.pageRangeUpperBounds.append("\(self.totalPages + 1)")
+        self.pageRangeUpperBounds.append("\(self.totalPages)")
     }
     
     func removeRange(atIndex index: Int) {
+        self.pdfPageRangeInFocus = nil
         self.pageRangeLowerBounds.remove(at: index)
         self.pageRangeUpperBounds.remove(at: index)
     }
@@ -89,8 +117,6 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         
         let userFriendlyLowerBound = Int(self.pageRangeLowerBounds[index])
         
-        debugPrint(for: self, message: "Lower Bound. Current: \(self.pageRangeLowerBounds[index])")
-        
         if let userFriendlyLowerBound {
             if userFriendlyLowerBound < 1 {
                 self.pageRangeLowerBounds[index] = 1.toString
@@ -103,8 +129,15 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         } else {
             self.pageRangeLowerBounds[index] = 1.toString
         }
-        
-        debugPrint(for: self, message: "Lower Bound. New: \(self.pageRangeLowerBounds[index])")
+    }
+    
+    private func validateField(field: PdfPageRangeFocusable) {
+        switch field {
+        case .lowerBound(let index):
+            self.validateLowerBound(forIndex: index)
+        case .upperBound(let index):
+            self.validateUpperBound(forIndex: index)
+        }
     }
     
     func validateUpperBound(forIndex index: Int) {
@@ -127,8 +160,6 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         
         let userFriendlyUpperBound = Int(self.pageRangeUpperBounds[index])
         
-        debugPrint(for: self, message: "Upper Bound. Current: \(self.pageRangeUpperBounds[index])")
-        
         if let userFriendlyUpperBound {
             if userFriendlyUpperBound > self.totalPages {
                 self.pageRangeUpperBounds[index] = self.totalPages.toString
@@ -141,8 +172,6 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         } else {
             self.pageRangeUpperBounds[index] = self.totalPages.toString
         }
-        
-        debugPrint(for: self, message: "Upper Bound. New: \(self.pageRangeUpperBounds[index])")
     }
     
     private func getPageRangesFromRangeStrings() -> [ClosedRange<Int>]? {
@@ -168,6 +197,10 @@ class PdfPageRangeEditorViewModel: ObservableObject {
                 assertionFailure("Lower or upper bound strings couldn't be parsed")
             }
         }
+        
+//        print("PdfPageRangeEditorViewModel - Lower Bounds: \(self.pageRangeLowerBounds)")
+//        print("PdfPageRangeEditorViewModel - Upper Bounds: \(self.pageRangeUpperBounds)")
+//        print("PdfPageRangeEditorViewModel - Result: \(result)")
         
         return result
     }
