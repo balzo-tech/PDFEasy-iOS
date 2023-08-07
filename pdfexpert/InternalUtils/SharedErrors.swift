@@ -97,8 +97,8 @@ enum PdfSplitError: LocalizedError, UnderlyingError {
     var errorDescription: String? {
         switch self {
         case .unknownError, .incompatibleRange: return "Internal Error. Please try again later"
-        case .pdfNoPage: return "Your pdf has no pages"
-        case .pdfSinglePage: return "Your pdf has only one page"
+        case .pdfNoPage: return "Your pdf has no pages."
+        case .pdfSinglePage: return "Your pdf has only one page, so you cannot split it into multiple pdfs."
         case .underlyingError(let errorMessage): return errorMessage
         }
     }

@@ -14,32 +14,24 @@ struct PdfPageRangeEditorView: View {
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    @State private var scrollProxy: ScrollViewProxy? = nil
-    
-    @Namespace var bottomID
+    @FocusState private var focusedFieldLowerBound: Int?
+    @FocusState private var focusedFieldUpperBound: Int?
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                ScrollViewReader { proxy in
-                    List {
-                        ForEach(Array(self.viewModel.pageRangeLowerBounds.enumerated()), id:\.offset) { index, item in
-                            self.getItemView(atIndex: index)
-                                .listRowBackground(ColorPalette.secondaryBG)
-                        }
-                        HStack {
-                            Spacer()
-                            self.addRangeButton
-                        }
-                        .listRowBackground(ColorPalette.primaryBG)
-                        .id(self.bottomID)
+                List {
+                    ForEach(Array(self.viewModel.pageRangeLowerBounds.enumerated()), id:\.offset) { index, item in
+                        self.getItemView(atIndex: index)
+                            .listRowBackground(ColorPalette.secondaryBG)
                     }
-                    .scrollContentBackground(.hidden)
-                    .onAppear {
-                        self.scrollProxy = proxy
+                    HStack {
+                        Spacer()
+                        self.addRangeButton
                     }
+                    .listRowBackground(ColorPalette.primaryBG)
                 }
-                Spacer()
+                .scrollContentBackground(.hidden)
                 self.getDefaultButton(text: "Split PDF", onButtonPressed: {
                     self.viewModel.confirm()
                 })
@@ -53,19 +45,30 @@ struct PdfPageRangeEditorView: View {
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                 self.viewModel.cancel()
             })
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button(action: {
+                        if let focusedFieldLowerBound {
+                            self.viewModel.validateLowerBound(forIndex: focusedFieldLowerBound)
+                            self.focusedFieldLowerBound = nil
+                        } else if let focusedFieldUpperBound {
+                            self.viewModel.validateUpperBound(forIndex: focusedFieldUpperBound)
+                            self.focusedFieldUpperBound = nil
+                        } else {
+                            assertionFailure("Missing focused field!")
+                        }
+                    }) {
+                        Text("Done")
+                            .foregroundColor(ColorPalette.secondaryText)
+                            .bold()
+                    }
+                }
+            }
         }
         .background(ColorPalette.primaryBG)
         .onAppear {
             self.analyticsManager.track(event: .reportScreen(.pageRangeEditor))
-        }
-        .onChange(of: self.viewModel.pageRangeLowerBounds, perform: { _ in
-            self.scrollToBottom()
-        })
-    }
-    
-    private func scrollToBottom() {
-        withAnimation {
-            self.scrollProxy?.scrollTo(self.bottomID, anchor: .bottom)
         }
     }
     
@@ -88,37 +91,41 @@ struct PdfPageRangeEditorView: View {
                 .font(FontPalette.fontMedium(withSize: 16))
                 .foregroundColor(ColorPalette.primaryText)
             Spacer()
-            Button(action: { self.viewModel.removeRange(atIndex: index) }) {
-                Image(systemName: "trash.fill")
-                    .foregroundColor(ColorPalette.thirdText)
+            if index > 0 {
+                Button(action: { self.viewModel.removeRange(atIndex: index) }) {
+                    Image(systemName: "trash.fill")
+                        .foregroundColor(ColorPalette.thirdText)
+                }
             }
         }
     }
     
     private func getItemView(atIndex index: Int) -> some View {
         Section(header: self.getRangeHeader(atIndex: index)) {
-                self.getBoundView(forBound: self.$viewModel.pageRangeLowerBounds[index],
-                                  withText: "From page number")
-                self.getBoundView(forBound: self.$viewModel.pageRangeUpperBounds[index],
-                                  withText: "To page number")
-            }
+            self.getBoundView(index: index, isLowerBound: true)
+            self.getBoundView(index: index, isLowerBound: false)
+        }
     }
     
-    private func getBoundView(forBound bound: Binding<String>, withText text: String) -> some View {
+    private func getBoundView(index: Int, isLowerBound: Bool) -> some View {
         ZStack {
-            Text(text)
+            Text(isLowerBound ? "From page number" : "To page number")
                 .font(FontPalette.fontMedium(withSize: 12))
                 .foregroundColor(ColorPalette.thirdText)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(1)
-            TextField("", text: bound)
-                .font(FontPalette.fontMedium(withSize: 14))
-                .foregroundColor(ColorPalette.primaryText)
-                .lineLimit(1)
-                .disableAutocorrection(true)
-                .autocapitalization(.none)
-                .multilineTextAlignment(.trailing)
-                .keyboardType(.numberPad)
+            TextField("", text: isLowerBound
+                      ? self.$viewModel.pageRangeLowerBounds[index]
+                      : self.$viewModel.pageRangeUpperBounds[index])
+            .font(FontPalette.fontMedium(withSize: 14))
+            .foregroundColor(ColorPalette.primaryText)
+            .lineLimit(1)
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
+            .multilineTextAlignment(.trailing)
+            .focused(isLowerBound ? self.$focusedFieldLowerBound : self.$focusedFieldUpperBound,
+                     equals: index)
+            .keyboardType(.numberPad)
         }
     }
 }

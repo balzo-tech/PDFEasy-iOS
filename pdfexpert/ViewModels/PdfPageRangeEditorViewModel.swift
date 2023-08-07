@@ -69,6 +69,82 @@ class PdfPageRangeEditorViewModel: ObservableObject {
         self.pageRangeUpperBounds.remove(at: index)
     }
     
+    func validateLowerBound(forIndex index: Int) {
+        guard self.pageRangeLowerBounds.count == self.pageRangeUpperBounds.count else {
+            assertionFailure("lower bounds count and upper bounds count don't match")
+            return
+        }
+        
+        guard index >= 0, index < self.pageRangeLowerBounds.count else {
+            assertionFailure("Given index is out of range!")
+            return
+        }
+        
+        let userFriendlyUpperBound = Int(self.pageRangeUpperBounds[index])
+        
+        guard let userFriendlyUpperBound else {
+            assertionFailure("Upper bound strings couldn't be parsed")
+            return
+        }
+        
+        let userFriendlyLowerBound = Int(self.pageRangeLowerBounds[index])
+        
+        debugPrint(for: self, message: "Lower Bound. Current: \(self.pageRangeLowerBounds[index])")
+        
+        if let userFriendlyLowerBound {
+            if userFriendlyLowerBound < 1 {
+                self.pageRangeLowerBounds[index] = 1.toString
+            } else if userFriendlyLowerBound > userFriendlyUpperBound {
+                self.pageRangeLowerBounds[index] = userFriendlyUpperBound.toString
+            } else {
+                // This is a normalizing step. E.g.: Input: 03 -> Output 3
+                self.pageRangeLowerBounds[index] = userFriendlyLowerBound.toString
+            }
+        } else {
+            self.pageRangeLowerBounds[index] = 1.toString
+        }
+        
+        debugPrint(for: self, message: "Lower Bound. New: \(self.pageRangeLowerBounds[index])")
+    }
+    
+    func validateUpperBound(forIndex index: Int) {
+        guard self.pageRangeLowerBounds.count == self.pageRangeUpperBounds.count else {
+            assertionFailure("lower bounds count and upper bounds count don't match")
+            return
+        }
+        
+        guard index >= 0, index < self.pageRangeUpperBounds.count else {
+            assertionFailure("Given index is out of range!")
+            return
+        }
+        
+        let userFriendlyLowerBound = Int(self.pageRangeLowerBounds[index])
+        
+        guard let userFriendlyLowerBound else {
+            assertionFailure("Lower bound strings couldn't be parsed")
+            return
+        }
+        
+        let userFriendlyUpperBound = Int(self.pageRangeUpperBounds[index])
+        
+        debugPrint(for: self, message: "Upper Bound. Current: \(self.pageRangeUpperBounds[index])")
+        
+        if let userFriendlyUpperBound {
+            if userFriendlyUpperBound > self.totalPages {
+                self.pageRangeUpperBounds[index] = self.totalPages.toString
+            } else if userFriendlyLowerBound > userFriendlyUpperBound {
+                self.pageRangeUpperBounds[index] = userFriendlyLowerBound.toString
+            } else {
+                // This is a normalizing step. E.g.: Input: 03 -> Output 3
+                self.pageRangeUpperBounds[index] = userFriendlyUpperBound.toString
+            }
+        } else {
+            self.pageRangeUpperBounds[index] = self.totalPages.toString
+        }
+        
+        debugPrint(for: self, message: "Upper Bound. New: \(self.pageRangeUpperBounds[index])")
+    }
+    
     private func getPageRangesFromRangeStrings() -> [ClosedRange<Int>]? {
         guard self.pageRangeLowerBounds.count == self.pageRangeUpperBounds.count else {
             assertionFailure("lower bounds count and upper bounds count don't match")
