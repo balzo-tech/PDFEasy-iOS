@@ -136,6 +136,7 @@ class PdfPageRangeEditorViewModel: ObservableObject {
     }
     
     func getTextFieldText(index: Int, isLowerBound: Bool) -> Binding<String> {
+        // Inline binding avoid out of index exception when deleting an in-focus range
         Binding(get: {
             guard index < self.pageRangeLowerBounds.count else {
                 return ""

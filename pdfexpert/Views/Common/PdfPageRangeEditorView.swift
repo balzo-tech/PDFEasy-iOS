@@ -18,26 +18,12 @@ struct PdfPageRangeEditorView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                List {
-                    ForEach(Array(self.viewModel.pageRangeLowerBounds.enumerated()), id:\.offset) { index, item in
-                        self.getItemView(atIndex: index)
-                            .listRowBackground(ColorPalette.secondaryBG)
-                    }
-                    HStack {
-                        Spacer()
-                        self.addRangeButton
-                    }
-                    .listRowBackground(ColorPalette.primaryBG)
-                }
-                .scrollContentBackground(.hidden)
-                self.getDefaultButton(text: "Split PDF", onButtonPressed: {
-                    self.viewModel.confirm()
-                })
-                .padding([.leading, .trailing], 16)
+            ZStack {
+                self.listView
+                self.bottomView
+                    .ignoresSafeArea(.keyboard)
             }
             .padding(.top, 48)
-            .padding(.bottom, 80)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Split pages into ranges")
             .background(ColorPalette.primaryBG)
@@ -65,6 +51,42 @@ struct PdfPageRangeEditorView: View {
         // The focus state in the viewmodel is the one in charge and allow field validation.
         // The one in the view must by synced with it
         .onChange(of: self.viewModel.pdfPageRangeInFocus) { self.pdfPageRangeInFocus = $0 }
+    }
+    
+    private var listView: some View {
+        List {
+            ForEach(Array(self.viewModel.pageRangeLowerBounds.enumerated()), id:\.offset) { index, item in
+                self.getItemView(atIndex: index)
+                    .listRowBackground(ColorPalette.secondaryBG)
+            }
+            HStack {
+                Spacer()
+                self.addRangeButton
+            }
+            .listRowBackground(ColorPalette.primaryBG)
+            .listRowSeparator(.hidden)
+            Spacer()
+                .frame(height: 135)
+                .listRowBackground(ColorPalette.primaryBG)
+        }
+        .safeAreaInset(edge: .bottom, content: {
+            Spacer().frame(height: 8)
+        })
+        .scrollContentBackground(.hidden)
+    }
+    
+    private var bottomView: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            VStack(spacing: 0) {
+                self.getDefaultButton(text: "Split PDF", onButtonPressed: {
+                    self.viewModel.confirm()
+                })
+                .padding([.leading, .trailing], 16)
+                .padding(.bottom, 80)
+                .padding(.top, 16)
+            }.background(ColorPalette.primaryBG)
+        }
     }
     
     private var addRangeButton: some View {
@@ -110,7 +132,6 @@ struct PdfPageRangeEditorView: View {
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(1)
-                // Inline binding avoid out of index exception when deleting an in-focus range
                 TextField("", text: self.viewModel.getTextFieldText(index: index,
                                                                     isLowerBound: isLowerBound))
                 .font(FontPalette.fontMedium(withSize: 14))
