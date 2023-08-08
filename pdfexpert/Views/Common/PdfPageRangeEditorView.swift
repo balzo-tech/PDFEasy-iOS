@@ -16,6 +16,10 @@ struct PdfPageRangeEditorView: View {
     
     @FocusState private var pdfPageRangeInFocus: PdfPageRangeFocusable?
     
+    @Namespace var bottomID
+    
+    @State var previousNumberOfRanges: Int = 0
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -35,7 +39,6 @@ struct PdfPageRangeEditorView: View {
                     Spacer()
                     Button(action: {
                         self.viewModel.onConfirmRange()
-
                     }) {
                         Text("Done")
                             .foregroundColor(ColorPalette.secondaryText)
@@ -54,25 +57,36 @@ struct PdfPageRangeEditorView: View {
     }
     
     private var listView: some View {
-        List {
-            ForEach(Array(self.viewModel.pageRangeLowerBounds.enumerated()), id:\.offset) { index, item in
-                self.getItemView(atIndex: index)
-                    .listRowBackground(ColorPalette.secondaryBG)
-            }
-            HStack {
-                Spacer()
-                self.addRangeButton
-            }
-            .listRowBackground(ColorPalette.primaryBG)
-            .listRowSeparator(.hidden)
-            Spacer()
-                .frame(height: 135)
+        ScrollViewReader { scrollViewProxy in
+            List {
+                ForEach(Array(self.viewModel.pageRangeLowerBounds.enumerated()), id:\.offset) { index, item in
+                    self.getItemView(atIndex: index)
+                        .listRowBackground(ColorPalette.secondaryBG)
+                }
+                .onChange(of: self.viewModel.pageRangeLowerBounds.count) { newValue in
+                    if newValue > self.previousNumberOfRanges {
+                        withAnimation {
+                            scrollViewProxy.scrollTo(self.bottomID, anchor: .bottom)
+                        }
+                    }
+                    self.previousNumberOfRanges = newValue
+                }
+                HStack {
+                    Spacer()
+                    self.addRangeButton
+                }
                 .listRowBackground(ColorPalette.primaryBG)
+                .listRowSeparator(.hidden)
+                Spacer()
+                    .frame(height: 135)
+                    .listRowBackground(ColorPalette.primaryBG)
+                    .id(self.bottomID)
+            }
+            .safeAreaInset(edge: .bottom, content: {
+                Spacer().frame(height: 8)
+            })
+            .scrollContentBackground(.hidden)
         }
-        .safeAreaInset(edge: .bottom, content: {
-            Spacer().frame(height: 8)
-        })
-        .scrollContentBackground(.hidden)
     }
     
     private var bottomView: some View {
@@ -90,7 +104,11 @@ struct PdfPageRangeEditorView: View {
     }
     
     private var addRangeButton: some View {
-        Button(action: self.viewModel.addRange) {
+        Button(action: {
+            withAnimation {
+                self.viewModel.addRange()
+            }
+        }) {
             HStack(spacing: 10) {
                 Image(systemName: "plus.circle.fill")
                     .foregroundColor(ColorPalette.secondaryText)
@@ -109,7 +127,11 @@ struct PdfPageRangeEditorView: View {
                 .foregroundColor(ColorPalette.primaryText)
             Spacer()
             if index > 0 {
-                Button(action: { self.viewModel.removeRange(atIndex: index) }) {
+                Button(action: {
+                    withAnimation {
+                        self.viewModel.removeRange(atIndex: index)
+                    }
+                }) {
                     Image(systemName: "trash.fill")
                         .foregroundColor(ColorPalette.thirdText)
                 }
