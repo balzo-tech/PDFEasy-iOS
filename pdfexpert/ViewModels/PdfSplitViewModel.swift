@@ -147,7 +147,7 @@ class PdfSplitViewModel: ObservableObject {
                     assertionFailure("Missing expected page!")
                 }
             }
-            pdfSlice.updateFilename(pdfSlice.filename + pageRange.pdfFilenameSuffix)
+            pdfSlice.updateFilename(pdf.filename + pageRange.pdfFilenameSuffix)
             return pdfSlice
         }
         return await task.value
