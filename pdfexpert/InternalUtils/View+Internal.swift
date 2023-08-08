@@ -68,7 +68,12 @@ extension View {
     @ViewBuilder func getSubscriptionView(onComplete: @escaping () -> ()) -> some View {
         switch Container.shared.configService().remoteConfigData.value.subcriptionViewType {
         case .pairs: SubscriptionPairsView(onComplete: onComplete)
-        case .vertical: SubscriptionVerticalView(onComplete: onComplete)
+        case .verticalHighlightLongPeriod:
+            let viewModel = Container.shared.subscriptionVerticalViewModel(.highlightLongPeriod)
+            SubscriptionVerticalView(viewModel: viewModel, onComplete: onComplete)
+        case .verticalHighlightShortPeriod:
+            let viewModel = Container.shared.subscriptionVerticalViewModel(.highlightShortPeriod)
+            SubscriptionVerticalView(viewModel: viewModel, onComplete: onComplete)
         }
     }
     

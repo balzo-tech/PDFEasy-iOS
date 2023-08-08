@@ -10,7 +10,8 @@ import Factory
 
 struct SubscriptionVerticalView: View {
     
-    @InjectedObject(\.subscriptionVerticalViewModel) var viewModel
+    @StateObject var viewModel: SubscriptionVerticalViewModel
+    
     var onComplete: () -> ()
     
     var body: some View {
@@ -122,7 +123,16 @@ struct SubscriptionVerticalView: View {
 }
 
 struct SubscriptionVerticalView_Previews: PreviewProvider {
+    
+    static let highlightLongPeriodViewModel = SubscriptionVerticalViewModel(mode: .highlightLongPeriod)
+    static let highlightShortPeriodViewModel = SubscriptionVerticalViewModel(mode: .highlightShortPeriod)
+    
     static var previews: some View {
-        SubscriptionVerticalView(onComplete: {})
+        SubscriptionVerticalView(viewModel: Self.highlightLongPeriodViewModel,
+                                 onComplete: { print("Complete!") })
+        .previewDisplayName("Highlight Long Period")
+        SubscriptionVerticalView(viewModel: Self.highlightShortPeriodViewModel,
+                                 onComplete: { print("Complete!") })
+        .previewDisplayName("Highlight Short Period")
     }
 }

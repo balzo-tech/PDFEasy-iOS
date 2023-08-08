@@ -13,7 +13,8 @@ import Factory
 
 enum SubscriptionViewType: CaseIterable {
     case pairs
-    case vertical
+    case verticalHighlightLongPeriod
+    case verticalHighlightShortPeriod
 }
 
 struct K {
@@ -55,7 +56,7 @@ struct K {
     }
     
     struct MonetizationK {
-        static let defaultSubscriptionViewType: SubscriptionViewType = .vertical
+        static let defaultSubscriptionViewType: SubscriptionViewType = .verticalHighlightLongPeriod
     }
     
     struct RemoteConfigK {

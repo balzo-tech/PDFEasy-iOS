@@ -135,8 +135,9 @@ fileprivate extension RemoteConfig {
 fileprivate extension SubscriptionViewType {
     var remoteConfigValue: String {
         switch self {
-        case .vertical: return "vertical"
         case .pairs: return "pairs"
+        case .verticalHighlightLongPeriod: return "vertical"
+        case .verticalHighlightShortPeriod: return "vertical_highlight_short_period"
         }
     }
     

@@ -11,9 +11,14 @@ import Combine
 import Factory
 import Collections
 
+enum SubscriptionVerticalViewMode {
+    case highlightLongPeriod
+    case highlightShortPeriod
+}
+
 extension Container {
-    var subscriptionVerticalViewModel: Factory<SubscriptionVerticalViewModel> {
-        self { SubscriptionVerticalViewModel() }
+    var subscriptionVerticalViewModel: ParameterFactory<SubscriptionVerticalViewMode, SubscriptionVerticalViewModel> {
+        self { SubscriptionVerticalViewModel(mode: $0) }
     }
 }
 
@@ -28,13 +33,13 @@ struct SubscriptionPlanVerticalItem: SubscriptionPlan {
 }
 
 fileprivate extension Product {
-    func getSubscriptionPlanVerticalItem(totalProducts: [Product]) -> SubscriptionPlanVerticalItem {
+    func getSubscriptionPlanVerticalItem(totalProducts: [Product], hideBestDiscount: Bool) -> SubscriptionPlanVerticalItem {
         return SubscriptionPlanVerticalItem(product: self,
                                             titleShort: self.titleShort,
                                             descriptionText: self.descriptionText,
                                             fullDescriptionText: self.fullDescriptionText,
                                             freeTrialText: self.freeTrialText,
-                                            bestDiscountText: self.getBestDiscount(forProducts: totalProducts),
+                                            bestDiscountText: hideBestDiscount ? nil : self.getBestDiscount(forProducts: totalProducts),
                                             discountText: self.getDiscount(forProducts: totalProducts))
     }
 }
@@ -52,6 +57,14 @@ class SubscriptionVerticalViewModel: SubscribeViewModel<SubscriptionPlanVertical
     }
     
     @Injected(\.store) private var store
+    
+    let mode: SubscriptionVerticalViewMode
+    
+    
+    init(mode: SubscriptionVerticalViewMode) {
+        self.mode = mode
+        super.init()
+    }
     
     @MainActor
     override func refresh() {
@@ -81,7 +94,16 @@ class SubscriptionVerticalViewModel: SubscribeViewModel<SubscriptionPlanVertical
             product1.subscription?.subscriptionPeriod.days ?? 0 > product2.subscription?.subscriptionPeriod.days ?? 0
         }
         
-        return subscriptions.map { $0.getSubscriptionPlanVerticalItem(totalProducts: subscriptions) }
+        var hideBestDiscount = false
+        switch self.mode {
+        case .highlightLongPeriod:
+            break
+        case .highlightShortPeriod:
+            hideBestDiscount = true
+            subscriptions.reverse()
+        }
+        
+        return subscriptions.map { $0.getSubscriptionPlanVerticalItem(totalProducts: subscriptions, hideBestDiscount: hideBestDiscount) }
     }
     
     private func updateCurrentSubscriptionPlan() {
