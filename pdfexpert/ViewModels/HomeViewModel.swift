@@ -225,7 +225,11 @@ public class HomeViewModel : ObservableObject {
         case .merge:
             self.pdfMergeViewModel.merge()
         case .split:
-            self.pdfSplitViewModel.split()
+            self.pdfSplitViewModel.split(pdf: nil,
+                                         onSplitCompleted: { [weak self] in
+                self?.trackFullActionCompleted()
+                self?.mainCoordinator.goToArchive()
+            })
         }
     }
     

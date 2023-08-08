@@ -97,7 +97,8 @@ extension AnalyticsEvent {
         case .passwordAdded: return "password_added"
         case .passwordRemoved: return "password_remove"
         case .compressionOptionChanged: return "compression_option_changed"
-        case .pdfListShown: return "pdf_list_shown"
+        case .pdfMerge: return "pdf_merge"
+        case .pdfSplit: return "pdf_split"
         case .existingPdfOpened: return "existing_pdf_opened"
         case .existingPdfRemoved: return "existing_pdf_removed"
         case .importTutorialCompleted: return "import_tutorial_completed"
@@ -159,7 +160,8 @@ extension AnalyticsEvent {
         case .passwordRemoved: return nil
         case .compressionOptionChanged(let compressionOption):
             return [FirebaseEventCustomParameters.compressionOption.rawValue: compressionOption.trackingParameterValue]
-        case .pdfListShown: return nil
+        case .pdfMerge: return nil
+        case .pdfSplit: return nil
         case .existingPdfOpened: return nil
         case .existingPdfRemoved: return nil
         case .importTutorialCompleted: return nil

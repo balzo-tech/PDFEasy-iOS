@@ -27,6 +27,7 @@ enum PdfEditStartAction {
 enum EditAction: CaseIterable {
     case password
     case compression
+    case split
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -90,12 +91,14 @@ class PdfEditViewModel: ObservableObject {
     @Published var editOptionListShow: Bool = false
     @Published var passwordTextFieldShow: Bool = false
     @Published var removePasswordAlertShow: Bool = false
+    @Published var splitSuccessAlertShow: Bool = false
     @Published var compressionShow: Bool = false
     
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
+    @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -255,7 +258,12 @@ class PdfEditViewModel: ObservableObject {
                 } else {
                     self.passwordTextFieldShow = true
                 }
-            case .compression: self.compressionShow = true
+            case .compression:
+                self.compressionShow = true
+            case .split:
+                self.pdfSplitViewModel.split(pdf: self.pdf, onSplitCompleted: { [weak self] in
+                    self?.splitSuccessAlertShow = true
+                })
             }
         }
     }

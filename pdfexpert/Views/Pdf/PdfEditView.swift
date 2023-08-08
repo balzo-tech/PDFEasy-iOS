@@ -123,6 +123,9 @@ struct PdfEditView: View {
                          addPasswordCallback: { self.viewModel.setPassword($0) })
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
+        .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
+        .splitSuccessfulAlert(show: self.$viewModel.splitSuccessAlertShow,
+                              goToArchiveCallback: { self.viewModel.goToArchive() })
     }
     
     @ViewBuilder var pdfView: some View {
@@ -319,6 +322,10 @@ struct PdfEditView: View {
                 return OptionItem(title: "Compress",
                                   imageName: "edit_option_compress",
                                   callBack: callback)
+            case .split:
+                return OptionItem(title: "Split",
+                                  imageName: "edit_option_split",
+                                  callBack: callback)
             }
         })
     }
@@ -347,6 +354,16 @@ fileprivate extension View {
             Button("Continue edit", action: {})
         }, message: {
             Text("Your pdf has been successfully saved")
+        })
+    }
+    
+    func splitSuccessfulAlert(show: Binding<Bool>,
+                              goToArchiveCallback: @escaping () -> ()) -> some View {
+        self.alert("PDF split!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Continue edit", action: {})
+        }, message: {
+            Text("Your pdf has been successfully split and saved!")
         })
     }
 }

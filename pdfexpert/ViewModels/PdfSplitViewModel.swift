@@ -15,6 +15,8 @@ extension Container {
     }
 }
 
+typealias SplitCompletedCallback = (() -> ())
+
 class PdfSplitViewModel: ObservableObject {
     
     @Published var showPageRangeEditor: Bool = false
@@ -32,7 +34,7 @@ class PdfSplitViewModel: ObservableObject {
     @Published var asyncSplit: AsyncEmptyFailable<PdfSplitError> = .idle
     
     @Injected(\.repository) private var repository
-    @Injected(\.mainCoordinator) private var mainCoordinator
+    @Injected(\.analyticsManager) private var analyticsManager
     
     lazy var pdfImportViewModel: PdfImportViewModel = {
         Container.shared.pdfImportViewModel(PdfImportViewModel.Params(asyncPdf: self.asyncSubject(\.asyncImportedPdf)))
@@ -40,8 +42,15 @@ class PdfSplitViewModel: ObservableObject {
     
     var totalPages: Int = 0
     
-    func split() {
-        self.pdfImportViewModel.importPdf(importFileTypes: K.Misc.ImportFileTypesForSplit)
+    private var onSplitCompleted: SplitCompletedCallback?
+    
+    func split(pdf: Pdf?, onSplitCompleted: SplitCompletedCallback?) {
+        self.onSplitCompleted = onSplitCompleted
+        if let pdf = pdf {
+            self.asyncImportedPdf = .init(status: .data(pdf))
+        } else {
+            self.pdfImportViewModel.importPdf(importFileTypes: K.Misc.ImportFileTypesForSplit)
+        }
     }
     
     func onPageRangeEditingCancelled() {
@@ -92,7 +101,8 @@ class PdfSplitViewModel: ObservableObject {
                 let splitPdfs = try await Self.splitPdf(pdf: pdf, pageRanges: self.pageRanges)
                 try self.savePdfs(pdfs: splitPdfs)
                 self.asyncSplit = .idle
-                self.goToArchive()
+                self.analyticsManager.track(event: .pdfSplit)
+                self.onSplitCompleted?()
             } catch let splitError as PdfSplitError {
                 self.asyncSplit = .error(splitError)
             } catch {
@@ -103,10 +113,6 @@ class PdfSplitViewModel: ObservableObject {
             self.pageRanges = []
             self.totalPages = 0
         }
-    }
-    
-    private func goToArchive() {
-        self.mainCoordinator.goToArchive()
     }
     
     private static func splitPdf(pdf: Pdf, pageRanges: [ClosedRange<Int>]) async throws -> [Pdf] {

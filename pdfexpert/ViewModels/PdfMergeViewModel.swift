@@ -33,6 +33,8 @@ class PdfMergeViewModel: ObservableObject {
     }
     @Published var toBeSortedPdfs: [Pdf] = []
     
+    @Injected(\.analyticsManager) private var analyticsManager
+    
     lazy var pdfImportMultipleViewModel: PdfImportMultipleViewModel = {
         Container.shared.pdfImportMultipleViewModel(PdfImportMultipleViewModel.Params(asyncPdfs: self.asyncSubject(\.asyncImportedPdfs)))
     }()
@@ -94,6 +96,7 @@ class PdfMergeViewModel: ObservableObject {
             let mergedPdf = await task.value
             self.loading = false
             self.asyncMergedPdf.wrappedValue = AsyncOperation(status: .data(mergedPdf))
+            self.analyticsManager.track(event: .pdfMerge)
         }
     }
 }
