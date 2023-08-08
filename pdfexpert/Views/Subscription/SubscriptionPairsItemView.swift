@@ -33,7 +33,7 @@ struct SubscriptionPairsItemView: View {
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
-                Spacer().frame(minHeight: 12)
+                Spacer(minLength: 12)
                 Text(self.subscriptionPlan.descriptionText)
                     .font(FontPalette.fontLight(withSize: 10))
                     .foregroundColor(ColorPalette.thirdText)
