@@ -9,7 +9,6 @@ import Foundation
 import StoreKit
 import Combine
 import Factory
-import Collections
 
 extension Container {
     var subscribtionPairsViewModel: Factory<SubscriptionPairsViewModel> {
@@ -33,10 +32,7 @@ fileprivate extension Product {
     }
 }
 
-struct SubscriptionPlanPair {
-    let standardSubscriptionPlan: SubscriptionPlanPairItem?
-    let freeTrialSubscriptionPlan: SubscriptionPlanPairItem?
-}
+typealias SubscriptionPlanPair = SubscriptionPlanCombo<SubscriptionPlanPairItem>
 
 fileprivate let productMetaViewValuePairs: String = "pairs"
 
@@ -78,36 +74,8 @@ class SubscriptionPairsViewModel: SubscribeViewModel<SubscriptionPlanPairItem> {
     }
     
     private func productsToSubscriptionPairs(products: [Product]) async throws -> [SubscriptionPlanPair] {
-        let subscriptions = getSubscriptionsForView(products: products, store: self.store, viewKey: productMetaViewValuePairs)
-        
-        var groupedSubscriptions: OrderedDictionary<Int, [Product]> = subscriptions.reduce([:]) { partialResult, subscription in
-            var partialResult = partialResult
-            if let subscriptionInfo = subscription.subscription {
-                let key = subscriptionInfo.subscriptionPeriod.days
-                var subscriptions = partialResult[key] ?? []
-                subscriptions.append(subscription)
-                partialResult[key] = subscriptions
-            }
-            return partialResult
-        }
-        
-        groupedSubscriptions.sort { pair1, pair2 in
-            pair1.key > pair2.key
-        }
-        
-        let subscriptionPlanPairs: [SubscriptionPlanPair] = groupedSubscriptions.reduce([]) { partialResult, rawPair in
-            var partialResult = partialResult
-            let freeTrialSubscriptionPlan = rawPair.value.first (where: { $0.subscription?.introductoryOffer?.paymentMode == .freeTrial })?
-                .subscriptionPlanPairItem
-            let standardSubscriptionPlan = rawPair.value.first (where: { $0.subscription?.introductoryOffer == nil })?
-                .subscriptionPlanPairItem
-            if standardSubscriptionPlan != nil || freeTrialSubscriptionPlan != nil {
-                partialResult.append(SubscriptionPlanPair(standardSubscriptionPlan: standardSubscriptionPlan,
-                                                          freeTrialSubscriptionPlan: freeTrialSubscriptionPlan))
-            }
-            return partialResult
-        }
-        return subscriptionPlanPairs
+        let subscriptionProducts = getSubscriptionsForView(products: products, store: self.store, viewKey: productMetaViewValuePairs)
+        return try await subscriptionProducts.subscriptionPairs(conversion: { $0?.subscriptionPlanPairItem })
     }
     
     private func updateCurrentSubscriptionPlan() {

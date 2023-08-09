@@ -9,7 +9,6 @@ import Foundation
 import StoreKit
 import Combine
 import Factory
-import Collections
 
 enum SubscriptionVerticalViewMode {
     case highlightLongPeriod
@@ -58,8 +57,7 @@ class SubscriptionVerticalViewModel: SubscribeViewModel<SubscriptionPlanVertical
     
     @Injected(\.store) private var store
     
-    let mode: SubscriptionVerticalViewMode
-    
+    private let mode: SubscriptionVerticalViewMode
     
     init(mode: SubscriptionVerticalViewMode) {
         self.mode = mode

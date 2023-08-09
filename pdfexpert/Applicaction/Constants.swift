@@ -15,6 +15,7 @@ enum SubscriptionViewType: CaseIterable {
     case pairs
     case verticalHighlightLongPeriod
     case verticalHighlightShortPeriod
+    case picker
 }
 
 struct K {
@@ -56,7 +57,7 @@ struct K {
     }
     
     struct MonetizationK {
-        static let defaultSubscriptionViewType: SubscriptionViewType = .verticalHighlightLongPeriod
+        static let defaultSubscriptionViewType: SubscriptionViewType = .picker
     }
     
     struct RemoteConfigK {

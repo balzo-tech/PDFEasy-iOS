@@ -138,6 +138,7 @@ fileprivate extension SubscriptionViewType {
         case .pairs: return "pairs"
         case .verticalHighlightLongPeriod: return "vertical"
         case .verticalHighlightShortPeriod: return "vertical_highlight_short_period"
+        case .picker: return "picker"
         }
     }
     

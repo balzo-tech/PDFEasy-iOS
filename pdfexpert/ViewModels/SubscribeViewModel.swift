@@ -15,6 +15,15 @@ protocol SubscriptionPlan: Hashable {
     var product: Product? { get }
 }
 
+struct SubscriptionPlanCombo<T: SubscriptionPlan> {
+    let standardSubscriptionPlan: T?
+    let freeTrialSubscriptionPlan: T?
+    
+    func getPlan(forFreeTrialState freeTrialState: Bool) -> T? {
+        return freeTrialState ? self.freeTrialSubscriptionPlan : self.standardSubscriptionPlan
+    }
+}
+
 class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
     
     @Published var isPremium: Bool = false

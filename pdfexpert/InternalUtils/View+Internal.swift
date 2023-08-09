@@ -74,6 +74,7 @@ extension View {
         case .verticalHighlightShortPeriod:
             let viewModel = Container.shared.subscriptionVerticalViewModel(.highlightShortPeriod)
             SubscriptionVerticalView(viewModel: viewModel, onComplete: onComplete)
+        case .picker: SubscriptionPickerView(onComplete: onComplete)
         }
     }
     

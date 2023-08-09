@@ -7,6 +7,7 @@
 
 import Foundation
 import StoreKit
+import Collections
 
 fileprivate struct InternalSubscriptionPeriod {
     let unit: Product.SubscriptionPeriod.Unit
@@ -99,6 +100,15 @@ fileprivate extension InternalSubscriptionPeriod {
         }
     }
     
+    // period == 1 ? "daily" : "5 days"
+    var displayFrequency: String {
+        if self.value > 1 {
+            return "\(self.value) \(self.unit.displayUnitMultiple)"
+        } else {
+            return self.unit.displayUnitPeriod
+        }
+    }
+    
     // period == 1 ? "1 day" : "5 days"
     var displayPeriodWithNumber: String {
         "\(self.value) \(self.value > 1 ? self.unit.displayUnitMultiple : self.unit.displayUnitSingle)"
@@ -140,11 +150,24 @@ extension Product {
     var titleShort: String {
         var text = ""
         if let subscription = self.subscription {
-            text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).unit.displayUnitPeriod)"
+            text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).displayFrequency)"
         }
         text += " \(self.displayPrice)"
         text = text.capitalizingFirstLetter()
         return text
+    }
+    
+    var period: String {
+        var text = ""
+        if let subscription = self.subscription {
+            text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).displayFrequency)"
+        }
+        text = text.capitalizingFirstLetter()
+        return text
+    }
+    
+    var priceText: String {
+        return self.displayPrice
     }
     
     var descriptionText: String {
@@ -177,7 +200,10 @@ extension Product {
     // - The current product is the most convenient one
     // - There is another product which is a subscription and is less convenient
     func getBestDiscount(forProducts products: [Product]) -> String? {
-        guard self == Self.getMostConvenientSubscription(fromProducts: products) else {
+        // Compare subscription periods instead of the products themselves to handle cases of identical
+        // subscriptions that varies only for introductory offers (e.g.: yearly with free trial, yearly without free trial)
+        let mostConvenientSubscriptionPeriod = Self.getMostConvenientSubscription(fromProducts: products)?.subscription?.subscriptionPeriod
+        guard let mostConvenientSubscriptionPeriod, self.subscription?.subscriptionPeriod == mostConvenientSubscriptionPeriod else {
             return nil
         }
         guard let discountPercentage = self.getDiscountPercentage(forProducts: products) else {
@@ -262,7 +288,7 @@ extension Product {
             if let customUnitPeriod = customUnitPeriod {
                 let pricePerUnit = (self.price / Decimal(subscription.subscriptionPeriod.days)) * Decimal(customUnitPeriod.days)
                 text += self.priceFormatStyle
-                    .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 2...2))
+                    .precision(.integerAndFractionLength(integerLimits: 1..<3, fractionLimits: 2...2))
                     .format(pricePerUnit)
                 if showTrailing {
                     text += "/\(customUnitPeriod.displayUnitSingle)"
@@ -292,5 +318,36 @@ func getSubscriptionsForView(products: [Product], store: Store, viewKey: String)
         } else {
             return false
         }
+    }
+}
+
+extension Array where Element == Product {
+    func subscriptionPairs<T: SubscriptionPlan>(conversion: ((Product?) -> T?)) async throws -> [SubscriptionPlanCombo<T>] {
+        var groupedSubscriptions: OrderedDictionary<Int, [Product]> = self.reduce([:]) { partialResult, subscription in
+            var partialResult = partialResult
+            if let subscriptionInfo = subscription.subscription {
+                let key = subscriptionInfo.subscriptionPeriod.days
+                var subscriptions = partialResult[key] ?? []
+                subscriptions.append(subscription)
+                partialResult[key] = subscriptions
+            }
+            return partialResult
+        }
+        
+        groupedSubscriptions.sort { pair1, pair2 in
+            pair1.key > pair2.key
+        }
+        
+        let subscriptionPlanPairs: [SubscriptionPlanCombo<T>] = groupedSubscriptions.reduce([]) { partialResult, rawPair in
+            var partialResult = partialResult
+            let freeTrialSubscriptionPlan = conversion(rawPair.value.first (where: { $0.subscription?.introductoryOffer?.paymentMode == .freeTrial }))
+            let standardSubscriptionPlan = conversion(rawPair.value.first (where: { $0.subscription?.introductoryOffer == nil }))
+            if standardSubscriptionPlan != nil || freeTrialSubscriptionPlan != nil {
+                partialResult.append(SubscriptionPlanCombo<T>(standardSubscriptionPlan: standardSubscriptionPlan,
+                                                              freeTrialSubscriptionPlan: freeTrialSubscriptionPlan))
+            }
+            return partialResult
+        }
+        return subscriptionPlanPairs
     }
 }
