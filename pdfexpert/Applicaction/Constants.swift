@@ -57,7 +57,7 @@ struct K {
     }
     
     struct MonetizationK {
-        static let defaultSubscriptionViewType: SubscriptionViewType = .picker
+        static let defaultSubscriptionViewType: SubscriptionViewType = .verticalHighlightLongPeriod
     }
     
     struct RemoteConfigK {

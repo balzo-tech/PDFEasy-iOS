@@ -34,11 +34,11 @@ fileprivate extension Product {
     }
 }
 
-typealias SubscriptionPlanPair = SubscriptionPlanCombo<SubscriptionPlanPairItem>
-
 fileprivate let productMetaViewValuePairs: String = "pairs"
 
 class SubscriptionPairsViewModel: SubscribeViewModel<SubscriptionPlanPairItem> {
+    
+    typealias PlanPair = SubscriptionPlanCombo<SubscriptionPlanPairItem>
     
     @Published var selectedSubscriptionPairIndex: Int = 0 {
         didSet { self.updateCurrentSubscriptionPlan() }
@@ -46,11 +46,11 @@ class SubscriptionPairsViewModel: SubscribeViewModel<SubscriptionPlanPairItem> {
     @Published var isFreeTrialEnabled: Bool = false {
         didSet { self.updateCurrentSubscriptionPlan() }
     }
-    @Published var asyncSubscriptionPlanPairs: AsyncOperation<[SubscriptionPlanPair], RefreshError> = AsyncOperation(status: .empty) {
+    @Published var asyncSubscriptionPlanPairs: AsyncOperation<[PlanPair], RefreshError> = AsyncOperation(status: .empty) {
         didSet { self.updateCurrentSubscriptionPlan() }
     }
     
-    @Published var currentSubscriptionPlanPair: SubscriptionPlanPair?
+    @Published var currentSubscriptionPlanPair: PlanPair?
     
     @Injected(\.store) private var store
     
@@ -75,7 +75,7 @@ class SubscriptionPairsViewModel: SubscribeViewModel<SubscriptionPlanPairItem> {
         }
     }
     
-    private func productsToSubscriptionPairs(products: [Product]) async throws -> [SubscriptionPlanPair] {
+    private func productsToSubscriptionPairs(products: [Product]) async throws -> [PlanPair] {
         let subscriptionProducts = getSubscriptionsForView(products: products, store: self.store, viewKey: productMetaViewValuePairs)
         return try await subscriptionProducts.subscriptionPairs(conversion: { $0?.subscriptionPlanPairItem })
     }

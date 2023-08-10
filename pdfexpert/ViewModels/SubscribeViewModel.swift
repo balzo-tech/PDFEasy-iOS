@@ -87,6 +87,7 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
     @MainActor
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.subscription))
+        self.analyticsManager.track(event: .subscriptionShown)
         self.refresh()
     }
     

@@ -77,7 +77,6 @@ struct SubscriptionPairsView: View {
                 Spacer().frame(height: 16)
             }
             self.freeTrialView
-            Spacer().frame(height: 20)
             self.getDefaultButton(text: "Subscribe",
                                   onButtonPressed: { self.viewModel.subscribe() })
             self.currentSubscriptionPlanView
@@ -97,64 +96,15 @@ struct SubscriptionPairsView: View {
         .frame(height: 44)
     }
     
-    var freeTrialView: some View {
-        let view: AnyView
-        if let currentSubscriptionPlanPair = self.viewModel.currentSubscriptionPlanPair,
-           currentSubscriptionPlanPair.standardSubscriptionPlan != nil,
-           currentSubscriptionPlanPair.freeTrialSubscriptionPlan != nil {
-            view = AnyView(
-                Button(action: {
-                    self.onFreeTrialSwitchPressed()
-                }) {
-                    HStack {
-                        self.freeTrialDescriptionView
-                        self.checkMark
-                    }
-                    .padding([.leading, .trailing], 16)
-                }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 62)
-                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(ColorPalette.secondaryBG))
-                    .overlay(RoundedRectangle(cornerRadius: 10)
-                        .stroke(self.viewModel.isFreeTrialEnabled
-                                ? ColorPalette.buttonGradientStart
-                                : .clear,
-                                lineWidth: 2))
-            )
-        } else {
-            view = AnyView(Spacer())
+    private var freeTrialView: some View {
+        VStack(spacing: 0) {
+            if let currentSubscriptionPlanPair = self.viewModel.currentSubscriptionPlanPair,
+               currentSubscriptionPlanPair.standardSubscriptionPlan != nil,
+               currentSubscriptionPlanPair.freeTrialSubscriptionPlan != nil {
+                SubscriptionFreeTrialToggleView(isFreeTrial: self.$viewModel.isFreeTrialEnabled)
+                Spacer().frame(height: 20)
+            }
         }
-        return view.frame(height: 62)
-    }
-    
-    var freeTrialDescriptionView: some View {
-        return AnyView(VStack(spacing: 0) {
-            Text("Not sure yet?")
-                .font(FontPalette.fontMedium(withSize: 16))
-                .foregroundColor(ColorPalette.primaryText)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Spacer().frame(height: 4)
-            Text("Enable free trial")
-                .font(FontPalette.fontRegular(withSize: 12))
-                .foregroundColor(ColorPalette.primaryText)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        })
-    }
-    
-    var checkMark: some View {
-        let view: AnyView
-        if self.viewModel.isFreeTrialEnabled {
-            view = AnyView(
-                Image(systemName: "checkmark.circle")
-                    .resizable()
-                    .foregroundColor(ColorPalette.buttonGradientStart))
-        } else {
-            view = AnyView(Image(systemName: "circle")
-                .resizable()
-                .foregroundColor(ColorPalette.thirdText))
-        }
-        return view
-            .frame(width: 22, height: 22)
     }
     
     var currentSubscriptionPlanView: some View {
@@ -183,11 +133,7 @@ struct SubscriptionPairsView: View {
         }
     }
     
-    func onFreeTrialSwitchPressed() {
-        self.viewModel.isFreeTrialEnabled = !self.viewModel.isFreeTrialEnabled
-    }
-    
-    func getSubscriptionPlan(from subscriptionPlanPair: SubscriptionPlanPair) -> SubscriptionPlanPairItem? {
+    func getSubscriptionPlan(from subscriptionPlanPair: SubscriptionPairsViewModel.PlanPair) -> SubscriptionPlanPairItem? {
         if self.viewModel.isFreeTrialEnabled {
             return subscriptionPlanPair.freeTrialSubscriptionPlan ?? subscriptionPlanPair.standardSubscriptionPlan
         } else {

@@ -72,6 +72,7 @@ enum AnalyticsEvent {
     case chatPdfSelectionFullActionChosen(importOption: ImportOption?)
     case chatPdfSelectionFullActionCompleted(importOption: ImportOption?, fileExtension: String?)
     case chatPdfMessageSent
+    case subscriptionShown
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

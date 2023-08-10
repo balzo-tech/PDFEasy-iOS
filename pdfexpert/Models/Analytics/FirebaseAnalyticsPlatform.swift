@@ -115,6 +115,7 @@ extension AnalyticsEvent {
         case .chatPdfSelectionFullActionChosen: return "chat_pdf_selection_full_action_chosen"
         case .chatPdfSelectionFullActionCompleted: return "chat_pdf_selection_full_action_completed"
         case .chatPdfMessageSent: return "chat_pdf_message_sent"
+        case .subscriptionShown: return "subscription_shown"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -191,6 +192,7 @@ extension AnalyticsEvent {
             }
             return parameters
         case .chatPdfMessageSent: return nil
+        case .subscriptionShown: return nil
         case .reportScreen(let screen): return [AnalyticsParameterScreenName: screen.name]
         case .reportNonFatalError: return nil
         }
