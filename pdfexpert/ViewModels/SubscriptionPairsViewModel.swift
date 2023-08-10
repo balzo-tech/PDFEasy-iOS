@@ -19,16 +19,18 @@ extension Container {
 struct SubscriptionPlanPairItem: SubscriptionPlan {
     let product: Product?
     let title: String
-    let descriptionText: String
+    let weeklyPriceAndPeriod: String
     let fullDescriptionText: String
 }
 
 fileprivate extension Product {
     var subscriptionPlanPairItem: SubscriptionPlanPairItem? {
-        return SubscriptionPlanPairItem(product: self,
-                                            title: self.title,
-                                            descriptionText: self.descriptionText,
-                                            fullDescriptionText: self.fullDescriptionText)
+        return SubscriptionPlanPairItem(
+            product: self,
+            title: self.title,
+            weeklyPriceAndPeriod: self.weeklyPriceAndPeriod,
+            fullDescriptionText: self.fullDescriptionText
+        )
     }
 }
 

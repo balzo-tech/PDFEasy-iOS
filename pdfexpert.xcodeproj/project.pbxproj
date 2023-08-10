@@ -175,6 +175,8 @@
 		89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */; };
 		89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBA29D330FB003F1C3A /* HomeView.swift */; };
 		89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */; };
+		89D1FE7E2A84D428009AC57C /* SubscriptionPickerPlanListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D1FE7D2A84D428009AC57C /* SubscriptionPickerPlanListView.swift */; };
+		89D1FE802A84D76B009AC57C /* FullScreenClearBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */; };
 		89D79DF82A654DC80086A8E5 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89D79DE62A654DC70086A8E5 /* Poppins-ExtraLightItalic.ttf */; };
 		89D79DF92A654DC80086A8E5 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89D79DE72A654DC70086A8E5 /* Poppins-SemiBold.ttf */; };
 		89D79DFA2A654DC80086A8E5 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89D79DE82A654DC80086A8E5 /* Poppins-Black.ttf */; };
@@ -396,6 +398,8 @@
 		89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		89CD7BBA29D330FB003F1C3A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		89D1FE7D2A84D428009AC57C /* SubscriptionPickerPlanListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerPlanListView.swift; sourceTree = "<group>"; };
+		89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenClearBackground.swift; sourceTree = "<group>"; };
 		89D79DE62A654DC70086A8E5 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		89D79DE72A654DC70086A8E5 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		89D79DE82A654DC80086A8E5 /* Poppins-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Black.ttf"; sourceTree = "<group>"; };
@@ -592,6 +596,7 @@
 				897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */,
 				89E601612A829556009492DA /* SubscriptionPickerView.swift */,
 				89EBC9062A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift */,
+				89D1FE7D2A84D428009AC57C /* SubscriptionPickerPlanListView.swift */,
 				89EBC9042A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift */,
 			);
 			path = Subscription;
@@ -818,6 +823,7 @@
 				8932ECE82A20F10500CBCD7A /* TextResizableView.swift */,
 				896CCF6C2A28910B008F268E /* SizePrinter.swift */,
 				893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */,
+				89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1295,6 +1301,7 @@
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89B72A3329DADC790076884F /* SettingsView.swift in Sources */,
 				896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */,
+				89D1FE802A84D76B009AC57C /* FullScreenClearBackground.swift in Sources */,
 				8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
@@ -1332,6 +1339,7 @@
 				8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */,
 				8932ECE52A20DC7700CBCD7A /* PdfFillFormView.swift in Sources */,
 				893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */,
+				89D1FE7E2A84D428009AC57C /* SubscriptionPickerPlanListView.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
 				8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */,
 				893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */,

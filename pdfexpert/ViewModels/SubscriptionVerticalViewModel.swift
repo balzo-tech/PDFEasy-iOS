@@ -24,7 +24,7 @@ extension Container {
 struct SubscriptionPlanVerticalItem: SubscriptionPlan {
     let product: Product?
     let titleShort: String
-    let descriptionText: String
+    let weeklyPriceAndPeriod: String
     let fullDescriptionText: String
     let freeTrialText: String?
     let bestDiscountText: String?
@@ -33,13 +33,15 @@ struct SubscriptionPlanVerticalItem: SubscriptionPlan {
 
 fileprivate extension Product {
     func getSubscriptionPlanVerticalItem(totalProducts: [Product], hideBestDiscount: Bool) -> SubscriptionPlanVerticalItem {
-        return SubscriptionPlanVerticalItem(product: self,
-                                            titleShort: self.titleShort,
-                                            descriptionText: self.descriptionText,
-                                            fullDescriptionText: self.fullDescriptionText,
-                                            freeTrialText: self.freeTrialText,
-                                            bestDiscountText: hideBestDiscount ? nil : self.getBestDiscount(forProducts: totalProducts),
-                                            discountText: self.getDiscount(forProducts: totalProducts))
+        return SubscriptionPlanVerticalItem(
+            product: self,
+            titleShort: self.titleShort,
+            weeklyPriceAndPeriod: self.weeklyPriceAndPeriod,
+            fullDescriptionText: self.fullDescriptionText,
+            freeTrialText: self.freeTrialText,
+            bestDiscountText: hideBestDiscount ? nil : self.getBestDiscount(forProducts: totalProducts),
+            discountText: self.getDiscount(forProducts: totalProducts)
+        )
     }
 }
 

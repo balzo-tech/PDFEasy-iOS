@@ -47,31 +47,12 @@ struct SubscriptionPickerView: View {
         .onAppear() {
             self.viewModel.onAppear()
         }
-        .fullScreenCover(isPresented: self.$showPlansPicker) {
-            Button(action: { self.showPlansPicker = false }) {
-                VStack(spacing: 0) {
-                    Spacer()
-                    VStack(spacing: 0) {
-                        Text("Choose period")
-                            .font(FontPalette.fontRegular(withSize: 20))
-                            .foregroundColor(ColorPalette.primaryText)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Spacer().frame(height: 20)
-                        ForEach(Array(self.viewModel.subscriptionPlans.enumerated()), id: \.offset) { index, item in
-                            VStack(spacing: 0) {
-                                self.getSubscriptionPlan(subscriptionPlan: item, index: index)
-                                Spacer().frame(height: 21)
-                            }
-                        }
-                    }
-                    .padding([.leading, .trailing], 16)
-                    .padding(.top, 40)
-//                    .cornerRadius(10, corners: [.topLeft, .topRight])
-                    .background(ColorPalette.secondaryBG)
-                }
-            }
-            .background(FullScreenClearBackground())
-        }
+        .sheetAutoHeight(isPresented: self.$showPlansPicker,
+                         backgroundColor: ColorPalette.secondaryBG,
+                         topCornerRadius: 10,
+                         content: {
+            SubscriptionPickerPlanListView(viewModel: self.viewModel)
+        })
         .onChange(of: self.viewModel.isPremium, perform: { newValue in
             if newValue {
                 self.onComplete()
@@ -79,14 +60,14 @@ struct SubscriptionPickerView: View {
         })
     }
     
-    var content: some View {
+    @ViewBuilder var content: some View {
         switch self.viewModel.asyncSubscriptionPlanPairs.status {
-        case .empty: return AnyView(Spacer())
-        case .loading: return AnyView(AnimationType.dots.view)
-        case .data: return AnyView(self.mainView)
-        case .error: return AnyView(SubscriptionErrorView(onButtonPressed: {
+        case .empty: Spacer()
+        case .loading: AnimationType.dots.view
+        case .data: self.mainView
+        case .error: SubscriptionErrorView(onButtonPressed: {
             self.viewModel.refresh()
-        }))
+        })
         }
     }
     
@@ -97,7 +78,7 @@ struct SubscriptionPickerView: View {
                 VStack(spacing: 0) {
                     Spacer().frame(height: 26)
                     Text("Choose a plan")
-                        .font(FontPalette.fontRegular(withSize: 16))
+                        .font(FontPalette.fontMedium(withSize: 16))
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Spacer().frame(height: 26)
@@ -110,7 +91,7 @@ struct SubscriptionPickerView: View {
                 }
                 VStack(spacing: 0) {
                     Text("What you get")
-                        .font(FontPalette.fontRegular(withSize: 16))
+                        .font(FontPalette.fontMedium(withSize: 16))
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Spacer().frame(height: 16)
@@ -140,7 +121,7 @@ struct SubscriptionPickerView: View {
             Text("Restore purchase")
                 .frame(maxHeight: .infinity)
                 .underline()
-                .font(FontPalette.fontLight(withSize: 15))
+                .font(FontPalette.fontLight(withSize: 14))
                 .foregroundColor(ColorPalette.primaryText)
         }
         .frame(maxWidth: .infinity)
@@ -154,7 +135,7 @@ struct SubscriptionPickerView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 20, height: 20)
             Text(feature.text)
-                .font(FontPalette.fontMedium(withSize: 12))
+                .font(FontPalette.fontRegular(withSize: 12))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Image(systemName: "checkmark.circle")
@@ -183,82 +164,10 @@ struct SubscriptionPickerView: View {
             .frame(height: 40)
             .minimumScaleFactor(0.5)
     }
-    
-    private func getSubscriptionPlan(subscriptionPlan: SubscriptionPlanPickerItem, index: Int) -> some View {
-        ZStack {
-            Button(action: {
-                self.showPlansPicker = false
-                self.viewModel.selectedSubscriptionPairIndex = index
-            }) {
-                HStack(spacing: 0) {
-                    Text(subscriptionPlan.period + " | ")
-                        .font(FontPalette.fontMedium(withSize: 18))
-                        .foregroundColor(ColorPalette.primaryText)
-                    Text(subscriptionPlan.priceText)
-                        .font(FontPalette.fontMedium(withSize: 18))
-                        .foregroundColor(ColorPalette.thirdText)
-                    Spacer()
-                    Text(subscriptionPlan.descriptionText)
-                        .font(FontPalette.fontRegular(withSize: 12))
-                        .foregroundColor(ColorPalette.thirdText)
-                }
-                .padding(16)
-            }
-            .overlay(RoundedRectangle(cornerRadius: 10).stroke(ColorPalette.fourthText, lineWidth: 1))
-            if let bestDiscountText = subscriptionPlan.bestDiscountText {
-                HStack {
-                    Spacer()
-                    GeometryReader { geometry in
-                        HStack {
-                            Spacer()
-                            Text(bestDiscountText)
-                                .font(FontPalette.fontRegular(withSize: 12))
-                                .foregroundColor(.black)
-                                .frame(alignment: .trailing)
-                                .padding([.leading, .trailing], 6)
-                                .padding([.bottom, .top], 2)
-                                .background(ColorPalette.extra)
-                                .cornerRadius(2)
-                        }.position(x: geometry.size.width/2, y: 0)
-                    }
-                }
-                .padding([.trailing], 16)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 48)
-//        .padding([.leading, .trailing], 1)
-    }
 }
 
 struct SubscriptionPickerView_Previews: PreviewProvider {
     static var previews: some View {
         SubscriptionPickerView(onComplete: {})
-    }
-}
-
-
-
-struct FullScreenClearBackground: UIViewControllerRepresentable {
-    
-    public func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> UIViewController {
-        return Controller()
-    }
-    
-    public func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<Self>) {
-    }
-    
-    class Controller: UIViewController {
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            self.view.backgroundColor = .clear
-        }
-        
-        override func willMove(toParent parent: UIViewController?) {
-            super.willMove(toParent: parent)
-            parent?.view?.backgroundColor = .clear
-            parent?.modalPresentationStyle = .overCurrentContext
-        }
     }
 }

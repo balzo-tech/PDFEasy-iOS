@@ -17,7 +17,7 @@ struct SubscriptionPickerPlanView: View {
             VStack(spacing: 0) {
                 HStack(alignment: .top, spacing: 12) {
                     Text(self.subscriptionPlanPickerItem?.title ?? "")
-                        .font(FontPalette.fontRegular(withSize: 16))
+                        .font(FontPalette.fontMedium(withSize: 16))
                         .foregroundColor(ColorPalette.primaryText)
                         .multilineTextAlignment(.leading)
                     Spacer()
@@ -25,13 +25,13 @@ struct SubscriptionPickerPlanView: View {
                 }
                 Spacer()
                 Text("Maximum flexibility, you decide\nhow long to stay")
-                    .font(FontPalette.fontMedium(withSize: 10))
+                    .font(FontPalette.fontRegular(withSize: 10))
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                 Spacer()
                 HStack {
-                    Text(self.subscriptionPlanPickerItem?.descriptionText ?? "")
+                    Text(self.subscriptionPlanPickerItem?.weeklyPriceAndPeriod ?? "")
                         .font(FontPalette.fontLight(withSize: 10))
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -62,7 +62,7 @@ struct SubscriptionPickerPlanView: View {
         Button(action: { self.pickerButtonPressed() }) {
             HStack(spacing: 12) {
                 Text(self.subscriptionPlanPickerItem?.period ?? "")
-                    .font(FontPalette.fontRegular(withSize: 12))
+                    .font(FontPalette.fontMedium(withSize: 12))
                     .foregroundColor(ColorPalette.primaryText)
                 Image(systemName: "chevron.down")
                     .foregroundColor(ColorPalette.primaryText)
@@ -82,7 +82,7 @@ struct SubscriptionPickerPlanView_Previews: PreviewProvider {
             product: nil,
             title: "Premium 1 year",
             period: "Yearly",
-            descriptionText: "$1,38/week",
+            weeklyPriceAndPeriod: "$1,38/week",
             fullDescriptionText: "Free for 7 days, then $89.99/year",
             priceText: "$89.99",
             bestDiscountText: "53% DISCOUNT"

@@ -34,7 +34,7 @@ struct SubscriptionPairsItemView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                 Spacer(minLength: 12)
-                Text(self.subscriptionPlan.descriptionText)
+                Text(self.subscriptionPlan.weeklyPriceAndPeriod)
                     .font(FontPalette.fontLight(withSize: 10))
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -67,13 +67,13 @@ struct SubscriptionPairsItemView_Previews: PreviewProvider {
     private static let subscriptionPlanYearly = {
         SubscriptionPlanPairItem(product: nil,
                                  title: "Premium 1 year",
-                                 descriptionText: "$1,38/week",
+                                 weeklyPriceAndPeriod: "$1,38/week",
                                  fullDescriptionText: "")
     }()
     private static let subscriptionPlanMonthly = {
         SubscriptionPlanPairItem(product: nil,
                                  title: "Premium 1 month",
-                                 descriptionText: "$2,09/week",
+                                 weeklyPriceAndPeriod: "$2,09/week",
                                  fullDescriptionText: "")
     }()
     

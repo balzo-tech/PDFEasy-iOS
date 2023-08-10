@@ -32,7 +32,7 @@ struct SubscriptionFreeTrialToggleView: View {
     var freeTrialDescriptionView: some View {
         return VStack(spacing: 0) {
             Text("Not sure yet?")
-                .font(FontPalette.fontMedium(withSize: 16))
+                .font(FontPalette.fontRegular(withSize: 16))
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Spacer().frame(height: 4)

@@ -20,7 +20,7 @@ struct SubscriptionPlanPickerItem: SubscriptionPlan {
     let product: Product?
     let title: String
     let period: String
-    let descriptionText: String
+    let weeklyPriceAndPeriod: String
     let fullDescriptionText: String
     let priceText: String
     let bestDiscountText: String?
@@ -32,7 +32,7 @@ fileprivate extension Product {
             product: self,
             title: self.title,
             period: self.period,
-            descriptionText: self.descriptionText,
+            weeklyPriceAndPeriod: self.weeklyPriceAndPeriod,
             fullDescriptionText: self.fullDescriptionText,
             priceText: self.priceText,
             bestDiscountText: self.getBestDiscount(forProducts: totalProducts)

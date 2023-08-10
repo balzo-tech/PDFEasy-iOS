@@ -170,7 +170,7 @@ extension Product {
         return self.displayPrice
     }
     
-    var descriptionText: String {
+    var weeklyPriceAndPeriod: String {
         var text = self.getPriceText(weekFrom7days: false, customUnitPeriod: .week)
         text = text.capitalizingFirstLetter()
         return text
@@ -209,7 +209,7 @@ extension Product {
         guard let discountPercentage = self.getDiscountPercentage(forProducts: products) else {
             return nil
         }
-        return "SAVE \(discountPercentage)"
+        return "\(discountPercentage) OFF"
     }
     
     // Returned only if:

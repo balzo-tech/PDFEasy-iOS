@@ -99,7 +99,7 @@ struct SubscriptionVerticalItemView_Previews: PreviewProvider {
     private static let subscriptionPlanYearly = {
         SubscriptionPlanVerticalItem(product: nil,
                                      titleShort: "Yearly",
-                                     descriptionText: "$1,38/week",
+                                     weeklyPriceAndPeriod: "$1,38/week",
                                      fullDescriptionText: "Free for 7 days, then $89.99/year",
                                      freeTrialText: "FREE TRIAL for 7 days",
                                      bestDiscountText: "53% DISCOUNT",
@@ -109,7 +109,7 @@ struct SubscriptionVerticalItemView_Previews: PreviewProvider {
     private static let subscriptionPlanMonthly = {
         SubscriptionPlanVerticalItem(product: nil,
                                      titleShort: "Monthly",
-                                     descriptionText: "$2,47/week",
+                                     weeklyPriceAndPeriod: "$2,47/week",
                                      fullDescriptionText: "$89.99/month",
                                      freeTrialText: nil,
                                      bestDiscountText: nil,
@@ -119,7 +119,7 @@ struct SubscriptionVerticalItemView_Previews: PreviewProvider {
     private static let subscriptionPlanWeekly = {
         SubscriptionPlanVerticalItem(product: nil,
                                      titleShort: "Weekly",
-                                     descriptionText: "$4,99/week",
+                                     weeklyPriceAndPeriod: "$4,99/week",
                                      fullDescriptionText: "$4,99/week",
                                      freeTrialText: nil,
                                      bestDiscountText: nil,
