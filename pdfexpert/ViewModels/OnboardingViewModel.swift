@@ -24,11 +24,6 @@ public class OnboardingViewModel : ObservableObject {
     
     let items: [OnboardingItem] = [
         OnboardingItem(
-            imageName: "onboarding_chat_pdf",
-            title: "Chat with any PDF files",
-            description: "You can ask questions to any PDF and get quick insights and clarifications."
-        ),
-        OnboardingItem(
             imageName: "onboarding_convert",
             title: "Convert files to PDF",
             description: "You can convert to pdf a lot of file types from the programs you prefer."
@@ -42,6 +37,11 @@ public class OnboardingViewModel : ObservableObject {
             imageName: "onboarding_password",
             title: "Protect your files with password",
             description: "Enter a password to protect your pdf, you can delete it and change it whenever you want."
+        ),
+        OnboardingItem(
+            imageName: "onboarding_chat_pdf",
+            title: "Chat with any PDF files",
+            description: "You can ask questions to any PDF and get quick insights and clarifications."
         ),
     ]
     
