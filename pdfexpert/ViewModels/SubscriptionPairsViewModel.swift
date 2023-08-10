@@ -77,7 +77,7 @@ class SubscriptionPairsViewModel: SubscribeViewModel<SubscriptionPlanPairItem> {
     
     private func productsToSubscriptionPairs(products: [Product]) async throws -> [PlanPair] {
         let subscriptionProducts = getSubscriptionsForView(products: products, store: self.store, viewKey: productMetaViewValuePairs)
-        return try await subscriptionProducts.subscriptionPairs(conversion: { $0?.subscriptionPlanPairItem })
+        return try await subscriptionProducts.subscriptionPairs(periodOrderDesc: true, conversion: { $0?.subscriptionPlanPairItem })
     }
     
     private func updateCurrentSubscriptionPlan() {

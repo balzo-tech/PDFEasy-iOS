@@ -94,7 +94,7 @@ class SubscriptionPickerViewModel: SubscribeViewModel<SubscriptionPlanPickerItem
     
     private func productsToSubscriptionPairs(products: [Product]) async throws -> [PlanPair] {
         let subscriptionProducts = getSubscriptionsForView(products: products, store: self.store, viewKey: Self.productMetaViewValue)
-        return try await subscriptionProducts.subscriptionPairs(conversion: { $0?.getSubscriptionPlanPickerItem(totalProducts: products) })
+        return try await subscriptionProducts.subscriptionPairs(periodOrderDesc: false, conversion: { $0?.getSubscriptionPlanPickerItem(totalProducts: products) })
     }
     
     private func updateCurrentSubscriptionPlan() {

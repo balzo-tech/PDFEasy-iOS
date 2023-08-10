@@ -322,7 +322,7 @@ func getSubscriptionsForView(products: [Product], store: Store, viewKey: String)
 }
 
 extension Array where Element == Product {
-    func subscriptionPairs<T: SubscriptionPlan>(conversion: ((Product?) -> T?)) async throws -> [SubscriptionPlanCombo<T>] {
+    func subscriptionPairs<T: SubscriptionPlan>(periodOrderDesc: Bool, conversion: ((Product?) -> T?)) async throws -> [SubscriptionPlanCombo<T>] {
         var groupedSubscriptions: OrderedDictionary<Int, [Product]> = self.reduce([:]) { partialResult, subscription in
             var partialResult = partialResult
             if let subscriptionInfo = subscription.subscription {
@@ -335,7 +335,7 @@ extension Array where Element == Product {
         }
         
         groupedSubscriptions.sort { pair1, pair2 in
-            pair1.key > pair2.key
+            periodOrderDesc ? pair1.key > pair2.key : pair1.key < pair2.key
         }
         
         let subscriptionPlanPairs: [SubscriptionPlanCombo<T>] = groupedSubscriptions.reduce([]) { partialResult, rawPair in
