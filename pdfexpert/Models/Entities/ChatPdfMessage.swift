@@ -21,4 +21,14 @@ struct ChatPdfMessage: Hashable {
     let role: ChatPdfMessageRole
     let type: ChatPdfMessageType
     let content: String
+    let suggestedQuestions: [String]
+}
+
+extension ChatPdfMessage {
+    init(role: ChatPdfMessageRole, type: ChatPdfMessageType, content: String) {
+        self.role = role
+        self.type = type
+        self.content = content
+        self.suggestedQuestions = []
+    }
 }

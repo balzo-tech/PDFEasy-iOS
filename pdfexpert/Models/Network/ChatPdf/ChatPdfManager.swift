@@ -36,6 +36,7 @@ enum ChatPdfError: LocalizedError, UnderlyingError {
 protocol ChatPdfManager {
     func sendPdf(pdf: Data) -> AnyPublisher<ChatPdfRef, ChatPdfError>
     func generateText(ref: ChatPdfRef, prompt: String) -> AnyPublisher<ChatPdfMessage, ChatPdfError>
+    func getSetupData(ref: ChatPdfRef) -> AnyPublisher<ChatPdfSetupData, ChatPdfError>
     func deletePdf(ref: ChatPdfRef)
 }
 

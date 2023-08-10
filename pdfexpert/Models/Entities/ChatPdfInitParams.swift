@@ -12,5 +12,5 @@ struct ChatPdfInitParams: Hashable, Identifiable {
     var id: Self { return self }
     
     let chatPdfRef: ChatPdfRef
-    let introductoryMessage: ChatPdfMessage
+    let setupData: ChatPdfSetupData
 }

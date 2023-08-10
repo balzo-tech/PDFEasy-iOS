@@ -206,8 +206,8 @@ class ChatPdfSelectionViewModel: ObservableObject {
         
         self.chatPdfManager.sendPdf(pdf: pdfData)
             .flatMap { chatPdfRef in
-                self.chatPdfManager.generateText(ref: chatPdfRef, prompt: K.ChatPdf.IntroductoryMessageRequest)
-                    .map { ChatPdfInitParams(chatPdfRef: chatPdfRef, introductoryMessage: $0) }
+                self.chatPdfManager.getSetupData(ref: chatPdfRef)
+                    .map { ChatPdfInitParams(chatPdfRef: chatPdfRef, setupData: $0) }
             }
             .sinkToAsyncStatus { [weak self] status in
                 self?.asyncChatPdfSetup = AsyncOperation(status: status)

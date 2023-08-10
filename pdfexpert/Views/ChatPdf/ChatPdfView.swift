@@ -25,7 +25,10 @@ struct ChatPdfView: View {
                         ScrollView(.vertical) {
                             ForEach(self.viewModel.messages.indices, id: \.self){ index in
                                 let message = self.viewModel.messages[index]
-                                MessageView(message: message)
+                                MessageView(message: message,
+                                            onSuggestedQuestionTapped: {
+                                    self.viewModel.getResponse(text: $0)
+                                })
                             }
                             Text("").id(self.bottomID)
                         }
@@ -99,13 +102,18 @@ struct ChatPdfView: View {
 
 struct ChatPdfView_Previews: PreviewProvider {
     
-    private static let testChatPdfRef = ChatPdfRef(sourceId: "test_source_id")
-    private static let testChatPdfMessage = ChatPdfMessage(role: .assistant,
-                                                           type: .text,
-                                                           content: "Welcome message")
-    private static let testChatPdfInitParams = ChatPdfInitParams(chatPdfRef: testChatPdfRef,
-                                                                 introductoryMessage: testChatPdfMessage)
-    private static let testParameters = ChatPdfViewModel.Parameters(chatPdfInitParams: Self.testChatPdfInitParams)
+    private static let testRef = ChatPdfRef(sourceId: "test_source_id")
+    private static let testSummary = "Welcome Message"
+    private static let testSuggestedQuestions = [
+        "How many pages this file has?",
+        "Which color is more predominant?",
+        "Who is the author?",
+    ]
+    private static let testSetupData = ChatPdfSetupData(summary: testSummary,
+                                                        suggestedQuestions: testSuggestedQuestions)
+    private static let testInitParams = ChatPdfInitParams(chatPdfRef: testRef,
+                                                                 setupData: testSetupData)
+    private static let testParameters = ChatPdfViewModel.Parameters(chatPdfInitParams: testInitParams)
     
     static var previews: some View {
         let _ = Container.shared.chatPdfManager.register { ChatPdfManagerMock() }

@@ -32,7 +32,7 @@ class ChatPdfViewModel: ObservableObject {
     
     init(parameters: Parameters) {
         self.chatPdfRef = parameters.chatPdfInitParams.chatPdfRef
-        self.messages.append(parameters.chatPdfInitParams.introductoryMessage)
+        self.messages.append(parameters.chatPdfInitParams.setupData.message)
     }
     
     func onAppear() {
@@ -73,5 +73,11 @@ class ChatPdfViewModel: ObservableObject {
             // otherwise, add new message to the end of the list
             self.messages.append(message)
         }
+    }
+}
+
+fileprivate extension ChatPdfSetupData {
+    var message: ChatPdfMessage {
+        ChatPdfMessage(role: .assistant, type: .text, content: self.summary, suggestedQuestions: self.suggestedQuestions)
     }
 }

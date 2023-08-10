@@ -52,6 +52,18 @@ class ChatPdfManagerImpl: ChatPdfManager {
         self.send(request: .generateText(ref: ref, prompt: prompt))
     }
     
+    func getSetupData(ref: ChatPdfRef) -> AnyPublisher<ChatPdfSetupData, ChatPdfError> {
+        self.generateText(ref: ref, prompt: K.ChatPdf.SetupMessageRequest)
+            .map { (message: ChatPdfMessage) in
+                let decoder = JSONDecoder()
+                if let setupData = try? decoder.decode(ChatPdfSetupData.self, from: Data(message.content.utf8)) {
+                    return setupData
+                } else {
+                    return ChatPdfSetupData(summary: K.ChatPdf.SetupMessageFallbackResponse, suggestedQuestions: [])
+                }
+            }.eraseToAnyPublisher()
+    }
+    
     func deletePdf(ref: ChatPdfRef) {
         // Must be fire and forget by design, to avoid blocking the user and show unfriendly errors
         // TODO: Improve with a queue of to-be-deleted pdfs that periodically get flushed
@@ -145,7 +157,11 @@ extension ChatPdfService: TargetType {
         switch self {
         // Misc
         case .sendPdf: return "{\"sourceId\": \"TestSourceId\"}".utf8Encoded
-        case .generateText: return "{\"content\": \"Test Message\"}".utf8Encoded
+        case .generateText:
+            return "{\"content\": \"Test Message\"}".utf8Encoded
+//            return "{\"content\": \"{\\\"summary\\\": \\\"content of the summary\\\",\\\"suggested_questions\\\": [\\\"suggested question number 1\\\",\\\"suggested question number 2\\\",\\\"suggested question number 3\\\"]}\"}".utf8Encoded
+//            return "{\"content\": \"{\\\"summary\\\": \\\"content of the summary\\\",\\\"suggested_questions\\\": \\\"suggested question number 1\\\"}\"}".utf8Encoded
+//            return "{\"content\": \"invalid text\"}".utf8Encoded
         case .deletePdf: return "".utf8Encoded
         }
     }

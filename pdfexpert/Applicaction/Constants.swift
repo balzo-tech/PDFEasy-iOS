@@ -68,7 +68,18 @@ struct K {
     struct ChatPdf {
         static let MaxBytes: UInt64 = 32 * 1_048_576 // 32 MB
         static let MaxPages: Int = 2000
-        static let IntroductoryMessageRequest: String = "Make a summary and suggest three questions"
+        static let SetupMessageFallbackResponse: String = "Ask me something about your pdf!"
+        static let SetupMessageRequest: String = """
+Make a summary and suggest three questions. Format your response as a json with the following structure:
+{
+    "\(ChatPdfSetupData.CodingKeys.summary.rawValue)": "content of the summary",
+    "\(ChatPdfSetupData.CodingKeys.suggestedQuestions.rawValue)": [
+        "suggested question number 1",
+        "suggested question number 2",
+        "suggested question number 3"
+    ]
+}
+"""
     }
     
     struct Misc {

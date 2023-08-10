@@ -11,6 +11,7 @@ import Factory
 struct MessageView: View {
     
     let message: ChatPdfMessage
+    let onSuggestedQuestionTapped: ((String) -> ())
     
     var body: some View {
         HStack(spacing: 0) {
@@ -27,9 +28,27 @@ struct MessageView: View {
                         MessageIndicatorView()
                     }
                 }
-                .padding([.top, .bottom])
-                .padding([.leading, .trailing], 16)
+                if self.message.suggestedQuestions.count > 0 {
+                    Spacer().frame(height: 16)
+                    Text("Suggested questions:")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(self.message.textColor)
+                        .font(FontPalette.fontRegular(withSize: 12))
+                    Spacer().frame(height: 16)
+                    ForEach(self.message.suggestedQuestions, id:\.self) { suggestedQuestion in
+                        Text(suggestedQuestion)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundColor(ColorPalette.secondaryText)
+                            .font(FontPalette.fontRegular(withSize: 12).bold())
+                            .onTapGesture {
+                                self.onSuggestedQuestionTapped(suggestedQuestion)
+                            }
+                        Spacer().frame(height: 16)
+                    }
+                }
             }
+            .padding([.top, .bottom])
+            .padding([.leading, .trailing], 16)
             Spacer()
         }
         .background(RoundedCorner(radius: 16, corners: self.message.roundedCorners)
@@ -95,19 +114,43 @@ fileprivate extension ChatPdfMessage {
 struct MessageView_Previews: PreviewProvider {
     
     static var previews: some View {
-        VStack {
-            MessageView(message: ChatPdfMessage(role: .user, type: .text, content: "Test Message"))
-            .padding()
-            .previewDisplayName("User Message")
-            MessageView(message: ChatPdfMessage(role: .assistant, type: .text, content: "Test Message"))
-            .padding()
-            .previewDisplayName("Chat Bot Message")
-            MessageView(message: ChatPdfMessage(role: .assistant, type: .text, content: "I guess you guys aren't ready for that, yet. But your kids are gonna love it"))
-            .padding()
-            MessageView(message: ChatPdfMessage(role: .assistant, type: .text, content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?"))
-            .padding()
+        ScrollView {
+            VStack {
+                MessageView(
+                    message: ChatPdfMessage(role: .assistant, type: .text, content: "This text explains in detail the meaning of life, without ambiguities, questionable assumptions or subjective points of view of any kind. The author also warns the reader that fully reading this text will cause an invitable transcendence to a new state of existence, and thus doing so only if truly prepared.", suggestedQuestions: [
+                        "Can you give me a hint about the meaning of life, while avoiding transcendence?",
+                        "Can I use the meaning of life for commercial purposes?",
+                        "Who is the author?"
+                    ]),
+                    onSuggestedQuestionTapped: { print("Suggested question: '\($0)'") }
+                )
+                .padding()
+                .previewDisplayName("Introductory Message")
+                MessageView(
+                    message: ChatPdfMessage(role: .user, type: .text, content: "Test Message"),
+                    onSuggestedQuestionTapped: { print("Suggested question: '\($0)'") }
+                )
+                .padding()
+                .previewDisplayName("User Message")
+                MessageView(
+                    message: ChatPdfMessage(role: .assistant, type: .text, content: "Test Message"),
+                    onSuggestedQuestionTapped: { print("Suggested question: '\($0)'") }
+                )
+                .padding()
+                .previewDisplayName("Chat Bot Message")
+                MessageView(
+                    message: ChatPdfMessage(role: .assistant, type: .text, content: "I guess you guys aren't ready for that, yet. But your kids are gonna love it"),
+                    onSuggestedQuestionTapped: { print("Suggested question: '\($0)'") }
+                )
+                .padding()
+                MessageView(
+                    message: ChatPdfMessage(role: .assistant, type: .text, content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?"),
+                    onSuggestedQuestionTapped: { print("Suggested question: '\($0)'") }
+                )
+                .padding()
+            }
+            .previewLayout(PreviewLayout.fixed(width: 500, height: 1500))
         }
-        .previewLayout(PreviewLayout.fixed(width: 500, height: 1500))
     }
 }
 

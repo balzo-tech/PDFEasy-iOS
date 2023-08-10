@@ -17,5 +17,6 @@ extension ChatPdfMessage: Decodable {
         self.content = try container.decode(String.self, forKey: .content)
         self.type = .text
         self.role = .assistant
+        self.suggestedQuestions = []
     }
 }
