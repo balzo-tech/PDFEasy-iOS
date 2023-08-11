@@ -24,7 +24,7 @@ struct OptionListView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(FontPalette.fontMedium(withSize: 20))
                 .foregroundColor(ColorPalette.primaryText)
-            Spacer(minLength: 20)
+            Spacer().frame(height: 20)
             ForEach(self.items, id: \.title) { item in
                 OptionItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
                 Spacer().frame(height: 10)
@@ -32,7 +32,7 @@ struct OptionListView: View {
         }
         .padding(EdgeInsets(top: 44, leading: 16, bottom: 32, trailing: 16))
         .background(ColorPalette.secondaryBG)
-        .cornerRadius(20, corners: [.topLeft, .topRight])
+//        .cornerRadius(20, corners: [.topLeft, .topRight])
     }
 }
 

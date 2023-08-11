@@ -88,6 +88,7 @@
 		8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED912A1F61A9009985EE /* OnboardingView.swift */; };
 		8955ED942A1F61BD009985EE /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED932A1F61BD009985EE /* OnboardingPageView.swift */; };
 		8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */; };
+		895781CF2A86728F00547D7C /* ResizableSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895781CE2A86728F00547D7C /* ResizableSheetView.swift */; };
 		8957FBA82A77C646008B31ED /* PdfShareCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */; };
 		8957FBAA2A77E6F7008B31ED /* PdfShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBA92A77E6F7008B31ED /* PdfShareView.swift */; };
 		8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8957FBAB2A7801BA008B31ED /* PdfCompressionPickerView.swift */; };
@@ -312,6 +313,7 @@
 		8955ED912A1F61A9009985EE /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		8955ED932A1F61BD009985EE /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		8955ED952A1F73DC009985EE /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		895781CE2A86728F00547D7C /* ResizableSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableSheetView.swift; sourceTree = "<group>"; };
 		8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfShareCoordinator.swift; sourceTree = "<group>"; };
 		8957FBA92A77E6F7008B31ED /* PdfShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfShareView.swift; sourceTree = "<group>"; };
 		8957FBAB2A7801BA008B31ED /* PdfCompressionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCompressionPickerView.swift; sourceTree = "<group>"; };
@@ -829,6 +831,7 @@
 				896CCF6C2A28910B008F268E /* SizePrinter.swift */,
 				893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */,
 				89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */,
+				895781CE2A86728F00547D7C /* ResizableSheetView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1348,6 +1351,7 @@
 				893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */,
 				89D1FE7E2A84D428009AC57C /* SubscriptionPickerPlanListView.swift in Sources */,
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
+				895781CF2A86728F00547D7C /* ResizableSheetView.swift in Sources */,
 				8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */,
 				893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,

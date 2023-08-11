@@ -121,10 +121,16 @@ struct HomeView: View {
         .onAppear() {
             self.viewModel.onAppear()
         }
-        .formSheet(item: self.$viewModel.importOptionGroup) {
+        .resizableSheet(item: self.$viewModel.importOptionGroup,
+                        backgroundColor: ColorPalette.secondaryBG,
+                        content: {
             OptionListView.getImportView(forImportOptionGroup: $0,
                                          importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
-        }
+//        })
+//        .formSheet(item: self.$viewModel.importOptionGroup) {
+//            OptionListView.getImportView(forImportOptionGroup: $0,
+//                                         importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
+//        }
         .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
             self.viewModel.processPickedFileUrl($0.first)
         })
