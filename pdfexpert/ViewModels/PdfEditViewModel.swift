@@ -148,7 +148,7 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
-    func deletePage(atIndex index: Int) {
+    func deleteCurrentPage() {
         guard self.pdfThumbnails.count == self.pdf.pdfDocument.pageCount else {
             assertionFailure("Inconsistency error: pdf thumbnails count doesn't match pdf pages count")
             return
@@ -159,13 +159,13 @@ class PdfEditViewModel: ObservableObject {
         }
         let maxIndex = self.pdf.pdfDocument.pageCount
         
-        guard index >= 0, index < maxIndex else {
+        guard self.pdfCurrentPageIndex >= 0, self.pdfCurrentPageIndex < maxIndex else {
             debugPrint(for: self, message: "Out of bound index!")
             return
         }
-        self.pdf.pdfDocument.removePage(at: index)
-        self.pdfThumbnails.remove(at: index)
-        self.pageImages.remove(at: index)
+        self.pdf.pdfDocument.removePage(at: self.pdfCurrentPageIndex)
+        self.pdfThumbnails.remove(at: self.pdfCurrentPageIndex)
+        self.pageImages.remove(at: self.pdfCurrentPageIndex)
         
         let newMaxIndex = self.pdf.pdfDocument.pageCount
         

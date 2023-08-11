@@ -17,7 +17,6 @@ struct PdfEditView: View {
     @StateObject var viewModel: PdfEditViewModel
     @State private var showingImageInputPicker = false
     @State private var showingDeleteConfermation = false
-    @State private var indexToDelete: Int? = nil
     
     @State private var draggedImage: UIImage? = nil
     
@@ -41,6 +40,12 @@ struct PdfEditView: View {
         .background(ColorPalette.primaryBG)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                if self.viewModel.pageImages.count > 0 {
+                    Button(action: { self.showingDeleteConfermation = true }) {
+                        Image(systemName: "trash")
+                            .foregroundColor(ColorPalette.primaryText)
+                    }
+                }
                 Button(action: { self.viewModel.editOptionListShow = true }) {
                     Image(systemName: "ellipsis.circle")
                         .foregroundColor(ColorPalette.primaryText)
@@ -187,9 +192,7 @@ struct PdfEditView: View {
             LazyHStack {
                 ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
                     Button(action: {
-                        self.indexToDelete = index
                         self.viewModel.pdfCurrentPageIndex = index
-                        self.showingDeleteConfermation = true
                     }) {
                         self.getThumbnailCell(image: image)
                             .applyCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
@@ -199,12 +202,10 @@ struct PdfEditView: View {
                         isPresented: self.$showingDeleteConfermation,
                         titleVisibility: .visible
                     ) {
-                        Button("Delete", role: .destructive) {
+                        Button("Delete this page", role: .destructive) {
                             self.showingDeleteConfermation = false
                             withAnimation {
-                                if let indexToDelete = self.indexToDelete {
-                                    self.viewModel.deletePage(atIndex: indexToDelete)
-                                }
+                                self.viewModel.deleteCurrentPage()
                             }
                         }
                     }
