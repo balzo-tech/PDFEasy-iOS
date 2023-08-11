@@ -98,6 +98,20 @@ extension View {
             self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility, actions: actions)
         }
     }
+    
+    var isScrollToAvailable: Bool {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // ScrollViewProxy.scrollTo() method crashes on certain conditions on iPadOS < 16.4.1
+            // https://developer.apple.com/forums/thread/712510
+            if #available(iOS 16.4.1, *) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return true
+        }
+    }
 }
 
 extension Binding where Value == String {

@@ -33,13 +33,17 @@ struct ChatPdfView: View {
                             Text("").id(self.bottomID)
                         }
                         .onAppear{
-                            withAnimation{
-                                reader.scrollTo(self.bottomID)
+                            if self.isScrollToAvailable {
+                                withAnimation{
+                                    reader.scrollTo(self.bottomID)
+                                }
                             }
                         }
                         .onChange(of: self.viewModel.messages.count){ _ in
-                            withAnimation{
-                                reader.scrollTo(self.bottomID)
+                            if self.isScrollToAvailable {
+                                withAnimation{
+                                    reader.scrollTo(self.bottomID)
+                                }
                             }
                         }
                     }

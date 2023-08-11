@@ -64,7 +64,7 @@ struct PdfPageRangeEditorView: View {
                         .listRowBackground(ColorPalette.secondaryBG)
                 }
                 .onChange(of: self.viewModel.pageRangeLowerBounds.count) { newValue in
-                    if newValue > self.previousNumberOfRanges {
+                    if self.isScrollToAvailable, newValue > self.previousNumberOfRanges {
                         withAnimation {
                             scrollViewProxy.scrollTo(self.bottomID, anchor: .bottom)
                         }
