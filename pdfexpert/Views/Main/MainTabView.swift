@@ -15,7 +15,6 @@ fileprivate extension MainTab {
         case .archive: return "File"
         case .home: return "Explore"
         case .chatPdf: return "ChatPDF"
-        case .settings: return "Settings"
         }
     }
     
@@ -24,7 +23,6 @@ fileprivate extension MainTab {
         case .archive: return "tab_archive"
         case .home: return "tab_home"
         case .chatPdf: return "tab_chat_pdf"
-        case .settings: return "tab_settings"
         }
     }
 }
@@ -39,8 +37,10 @@ struct MainTabView: View {
                 NavigationStack {
                     self.getRootView(forTab: tab)
                         .navigationTitle(tab.name)
+                        .navigationBarTitleDisplayMode(.inline)
                         .toolbarBackground(ColorPalette.secondaryBG, for: .navigationBar)
                         .toolbarBackground(.visible, for: .navigationBar)
+                        .settingsButton(showSettings: self.$mainCoordinator.settingsShow)
                 }
                 .tabItem {
                     Label(tab.name, image: tab.imageName)
@@ -49,11 +49,8 @@ struct MainTabView: View {
             }
         }
         .background(ColorPalette.primaryBG)
-        .fullScreenCover(item: self.$mainCoordinator.pdfEditFlowData) { data in
-            PdfFlowView(pdf: data.pdf,
-                        startAction: data.startAction,
-                        shouldShowCloseWarning: data.isNewPdf)
-        }
+        .pdfEditFlowView(pdfEditFlowData: self.$mainCoordinator.pdfEditFlowData)
+        .settingsView(showSettings: self.$mainCoordinator.settingsShow)
     }
     
     @MainActor @ViewBuilder private func getRootView(forTab tab: MainTab) -> some View {
@@ -61,7 +58,44 @@ struct MainTabView: View {
         case .archive: ArchiveView()
         case .home: HomeView()
         case .chatPdf: ChatPdfSelectionView()
-        case .settings: SettingsView()
+        }
+    }
+}
+
+fileprivate extension View {
+    
+    func pdfEditFlowView(pdfEditFlowData: Binding<PdfEditFlowData?>) -> some View {
+        self.fullScreenCover(item: pdfEditFlowData) { data in
+            PdfFlowView(
+                pdf: data.pdf,
+                startAction: data.startAction,
+                shouldShowCloseWarning: data.isNewPdf
+            )
+        }
+    }
+    
+    func settingsView(showSettings: Binding<Bool>) -> some View {
+        self.fullScreenCover(isPresented: showSettings) {
+            NavigationStack {
+                SettingsView()
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle("Settings")
+                    .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                        showSettings.wrappedValue = false
+                    })
+            }
+            .background(ColorPalette.primaryBG)
+        }
+    }
+    
+    func settingsButton(showSettings: Binding<Bool>) -> some View {
+        self.toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showSettings.wrappedValue = true }) {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(ColorPalette.primaryText)
+                }
+            }
         }
     }
 }

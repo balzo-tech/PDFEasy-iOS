@@ -13,7 +13,6 @@ enum MainTab: Int, CaseIterable {
     case archive
     case home
     case chatPdf
-    case settings
 }
 
 struct PdfEditFlowData: Hashable, Identifiable {
@@ -40,6 +39,7 @@ class MainCoordinator: ObservableObject {
     @Published var tab: MainTab = MainTab.home
     @Published var path: [Route] = []
     @Published var pdfEditFlowData: PdfEditFlowData? = nil
+    @Published var settingsShow: Bool = false
     
     @Injected(\.cacheManager) private var cacheManager
     

@@ -24,18 +24,18 @@ struct SettingsView: View {
     
     var body: some View {
         List(self.disclamers, id: \.self) { disclamer in
-                Link(destination: URL(string: disclamer.urlString)!) {
-                    HStack {
-                        Text(disclamer.text)
-                            .font(FontPalette.fontRegular(withSize: 16))
-                            .foregroundColor(ColorPalette.primaryText)
-                        Spacer()
-                        Self.getSystemChevron(color: ColorPalette.primaryText,
-                                              directionRight: true)
-                    }
+            Link(destination: URL(string: disclamer.urlString)!) {
+                HStack {
+                    Text(disclamer.text)
+                        .font(FontPalette.fontRegular(withSize: 16))
+                        .foregroundColor(ColorPalette.primaryText)
+                    Spacer()
+                    Self.getSystemChevron(color: ColorPalette.primaryText,
+                                          directionRight: true)
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color(.clear))
+            }
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color(.clear))
         }
         .padding(.top, 16)
         .listStyle(.plain)
@@ -48,9 +48,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            SettingsView()
-        }
-
+        SettingsView()
     }
 }
