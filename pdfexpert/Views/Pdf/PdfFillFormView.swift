@@ -24,13 +24,17 @@ struct PdfFillFormView: View {
                         TabView(selection: self.$viewModel.pageIndex) {
                             ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
                                 GeometryReader { geometryReader in
-                                    ZStack {
-                                        Image(uiImage: page)
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .ignoresSafeArea(.keyboard)
-                                        self.getAnnotationViews(forPageIndex: pageIndex)
-                                            .ignoresSafeArea(.keyboard)
+                                    HStack {
+                                        Spacer()
+                                        ZStack {
+                                            Image(uiImage: page)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .ignoresSafeArea(.keyboard)
+                                            self.getAnnotationViews(forPageIndex: pageIndex)
+                                                .ignoresSafeArea(.keyboard)
+                                        }
+                                        Spacer()
                                     }
                                     .onTapGesture {
                                         self.viewModel.tapOnPdfView(positionInView: $0,
@@ -44,10 +48,8 @@ struct PdfFillFormView: View {
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
                         .frame(width: parentGeometryReader.size.width,
-                               height: parentGeometryReader.size.width * (K.Misc.PdfPageSize.height / K.Misc.PdfPageSize.width))
+                               height: parentGeometryReader.size.height)
                     }
-                    .padding([.leading, .trailing], 16)
-                    .padding([.top], 16)
                     .background(ColorPalette.primaryBG)
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationTitle("Tap where you wish to add text")
@@ -62,6 +64,7 @@ struct PdfFillFormView: View {
                 })
                 Spacer().frame(height: 60)
             }
+            .padding([.leading, .trailing], 16)
             .ignoresSafeArea(.keyboard)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                 if self.viewModel.unsavedChangesExist {
@@ -78,6 +81,7 @@ struct PdfFillFormView: View {
                     self.dismiss()
                 })
             }, message: { Text("If you quit, you will lose the changes you have just made.") })
+            .background(ColorPalette.primaryBG)
         }
         .onAppear(perform: self.viewModel.onAppear)
     }
