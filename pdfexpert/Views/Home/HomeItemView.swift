@@ -20,11 +20,11 @@ struct HomeItemView: View {
         }) {
             GeometryReader { geometryReader in
                 VStack(spacing: 0) {
-                    Spacer()
+                    Spacer().frame(height: 24)
                     Image(self.imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: geometryReader.size.height * 0.2)
+                        .frame(height: UIDevice.current.userInterfaceIdiom == .pad ? 54.0 : 32.0)
                     Spacer().frame(height: 16)
                     Text(self.title)
                         .font(FontPalette.fontMedium(withSize: 16))
@@ -35,18 +35,16 @@ struct HomeItemView: View {
                         .lineLimit(1)
                         .padding([.leading, .trailing], 12)
                     Spacer().frame(height: 4)
-                    VStack {
-                        Text(self.description)
-                            .font(FontPalette.fontLight(withSize: 12))
-                            .foregroundColor(ColorPalette.primaryText)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(3)
-                            .padding([.leading, .trailing], 12)
-                        Spacer()
-                    }
-                    .frame(height: 65)
+                    Text(self.description)
+                        .font(FontPalette.fontLight(withSize: 12))
+                        .foregroundColor(ColorPalette.primaryText)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .minimumScaleFactor(0.5)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .padding([.leading, .trailing], 12)
                     Spacer()
+                    Spacer().frame(height: 12)
                 }
             }
         }

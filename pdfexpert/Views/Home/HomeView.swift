@@ -21,11 +21,18 @@ struct HomeView: View {
     
     @InjectedObject(\.homeViewModel) var viewModel
     
-    let convertItems: [HomeItem] = [
+    let mostUsedItems: [HomeItem] = [
         HomeItem(title: "Image to PDF",
                  description: "Convert image to PDF in seconds",
                  imageName: "home_image_to_pdf",
                  homeAction: .imageToPdf),
+        HomeItem(title: "Scan",
+                 description: "Scan file from your smartphone or your camera",
+                 imageName: "home_scan",
+                 homeAction: .scan)
+    ]
+    
+    let convertItems: [HomeItem] = [
         HomeItem(title: "Word to PDF",
                  description: "Make DOC file easy to read by converting them to PDF",
                  imageName: "home_word_to_pdf",
@@ -37,11 +44,7 @@ struct HomeView: View {
         HomeItem(title: "Powerpoint to PDF",
                  description: "Make PPT file easy to view by converting them to PDF",
                  imageName: "home_power_to_pdf",
-                 homeAction: .powerpointToPdf),
-        HomeItem(title: "Scan",
-                 description: "Scan file from your smartphone or your camera",
-                 imageName: "home_scan",
-                 homeAction: .scan)
+                 homeAction: .powerpointToPdf)
     ]
     
     let organizeItems: [HomeItem] = [
@@ -92,7 +95,7 @@ struct HomeView: View {
                  homeAction: .addPassword)
     ]
     
-    private let gridItemLayout: [GridItem] = {
+    private static let standardGridItemLayout: [GridItem] = {
         if UIDevice.current.userInterfaceIdiom == .pad {
             return [GridItem(.flexible(), spacing: 14),
                     GridItem(.flexible(), spacing: 14),
@@ -104,16 +107,32 @@ struct HomeView: View {
         }
     }()
     
+    private static let expandedGridItemLayout: [GridItem] = {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return [
+                    GridItem(.flexible(), spacing: 14),
+                    GridItem(.flexible(), spacing: 14)]
+        } else {
+            return [GridItem(.flexible(), spacing: 14)]
+        }
+    }()
+    
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: gridItemLayout, spacing: 14) {
-                self.section(forItems: self.convertItems, sectionTitle: "Convert to PDF")
-                self.section(forItems: self.organizeItems, sectionTitle: "Organize PDF")
-                self.section(forItems: self.editItems, sectionTitle: "Edit PDF")
-                self.section(forItems: self.importItems, sectionTitle: "Convert from PDF")
-                self.section(forItems: self.protectItems, sectionTitle: "Protect PDF")
+            VStack {
+                LazyVGrid(columns: Self.expandedGridItemLayout, spacing: 14) {
+                    self.section(forItems: self.mostUsedItems, sectionTitle: "Most used", aspectRatio: 2.5)
+                }
+                .padding(14)
+                LazyVGrid(columns: Self.standardGridItemLayout, spacing: 14) {
+                    self.section(forItems: self.convertItems, sectionTitle: "Convert to PDF")
+                    self.section(forItems: self.organizeItems, sectionTitle: "Organize PDF")
+                    self.section(forItems: self.editItems, sectionTitle: "Edit PDF")
+                    self.section(forItems: self.importItems, sectionTitle: "Convert from PDF")
+                    self.section(forItems: self.protectItems, sectionTitle: "Protect PDF")
+                }
+                .padding(14)
             }
-            .padding(14)
         }
         .padding(.top, 16)
         .listStyle(.plain)
@@ -168,14 +187,16 @@ struct HomeView: View {
         }
     }
     
-    @ViewBuilder func section(forItems items: [HomeItem], sectionTitle: String) -> some View {
+    @ViewBuilder func section(forItems items: [HomeItem],
+                              sectionTitle: String,
+                              aspectRatio: CGFloat = 1.0) -> some View {
         Section {
             ForEach(items, id: \.id) { item in
                 HomeItemView(title: item.title,
                              description: item.description,
                              imageName: item.imageName,
                              onButtonPressed: { self.viewModel.performHomeAction(item.homeAction) })
-                .aspectRatio(1.0, contentMode: .fit)
+                .aspectRatio(aspectRatio, contentMode: .fit)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color(.clear))
                 .listRowInsets(EdgeInsets())
