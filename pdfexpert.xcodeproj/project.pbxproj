@@ -73,6 +73,11 @@
 		89436ABF29E55EA000060605 /* Pdf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABE29E55EA000060605 /* Pdf.swift */; };
 		89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC229E59C0E00060605 /* PdfEditViewModel.swift */; };
 		89436AC729E5B99100060605 /* PdfKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AC629E5B99100060605 /* PdfKitView.swift */; };
+		89436D192A936C9F000868B5 /* PdfReadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436D182A936C9F000868B5 /* PdfReadView.swift */; };
+		89436D1B2A939CBB000868B5 /* PdfReadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436D1A2A939CBB000868B5 /* PdfReadViewModel.swift */; };
+		89436D1D2A93AE76000868B5 /* PdfReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436D1C2A93AE76000868B5 /* PdfReaderView.swift */; };
+		89436D1F2A93AEB4000868B5 /* PdfReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436D1E2A93AEB4000868B5 /* PdfReaderViewModel.swift */; };
+		89436D212A93B97E000868B5 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436D202A93B97E000868B5 /* NSAttributedString+Extensions.swift */; };
 		8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */; };
 		89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */; };
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
@@ -297,6 +302,11 @@
 		89436ABE29E55EA000060605 /* Pdf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pdf.swift; sourceTree = "<group>"; };
 		89436AC229E59C0E00060605 /* PdfEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditViewModel.swift; sourceTree = "<group>"; };
 		89436AC629E5B99100060605 /* PdfKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfKitView.swift; sourceTree = "<group>"; };
+		89436D182A936C9F000868B5 /* PdfReadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfReadView.swift; sourceTree = "<group>"; };
+		89436D1A2A939CBB000868B5 /* PdfReadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfReadViewModel.swift; sourceTree = "<group>"; };
+		89436D1C2A93AE76000868B5 /* PdfReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfReaderView.swift; sourceTree = "<group>"; };
+		89436D1E2A93AEB4000868B5 /* PdfReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfReaderViewModel.swift; sourceTree = "<group>"; };
+		89436D202A93B97E000868B5 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfScanUtility.swift; sourceTree = "<group>"; };
 		89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionErrorView.swift; sourceTree = "<group>"; };
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
@@ -647,6 +657,8 @@
 				8968761D2A7CEE320014A320 /* PdfImportView.swift */,
 				896876212A7CF3220014A320 /* PdfImportMultipleView.swift */,
 				896876272A7D2EC20014A320 /* PdfPageRangeEditorView.swift */,
+				89436D182A936C9F000868B5 /* PdfReadView.swift */,
+				89436D1C2A93AE76000868B5 /* PdfReaderView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -848,6 +860,7 @@
 				896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */,
 				892E404E2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift */,
 				897967852A73E59B00E91F8E /* URL+Extensions.swift */,
+				89436D202A93B97E000868B5 /* NSAttributedString+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -933,6 +946,8 @@
 				8968761B2A7CEB650014A320 /* PdfImportViewModel.swift */,
 				8968761F2A7CF1E00014A320 /* PdfImportMultipleViewModel.swift */,
 				896876252A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift */,
+				89436D1A2A939CBB000868B5 /* PdfReadViewModel.swift */,
+				89436D1E2A93AEB4000868B5 /* PdfReaderViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1214,6 +1229,7 @@
 				89436ABF29E55EA000060605 /* Pdf.swift in Sources */,
 				8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */,
 				8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */,
+				89436D1B2A939CBB000868B5 /* PdfReadViewModel.swift in Sources */,
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
 				893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */,
@@ -1240,6 +1256,7 @@
 				893E849E29D5944E00F6B99A /* CameraPreviewView.swift in Sources */,
 				893DE8DC29E7F9A10043C02C /* SubscriptionVerticalViewModel.swift in Sources */,
 				893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */,
+				89436D1F2A93AEB4000868B5 /* PdfReaderViewModel.swift in Sources */,
 				895FE2CD29D724B900A99D5B /* SubscriptionPairsItemView.swift in Sources */,
 				892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */,
 				896876262A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift in Sources */,
@@ -1277,6 +1294,8 @@
 				89CD7B4E29D329B1003F1C3A /* LottieView.swift in Sources */,
 				8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */,
 				893875012A7BDD3B00267AFD /* LoadingView.swift in Sources */,
+				89436D1D2A93AE76000868B5 /* PdfReaderView.swift in Sources */,
+				89436D192A936C9F000868B5 /* PdfReadView.swift in Sources */,
 				89CD7B5F29D329B1003F1C3A /* StoreImpl.swift in Sources */,
 				893C8FD429DED2E9000E35BD /* RepositoryImpl.swift in Sources */,
 				893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */,
@@ -1306,6 +1325,7 @@
 				897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */,
 				8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */,
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
+				89436D212A93B97E000868B5 /* NSAttributedString+Extensions.swift in Sources */,
 				89B72A3329DADC790076884F /* SettingsView.swift in Sources */,
 				896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */,
 				89D1FE802A84D76B009AC57C /* FullScreenClearBackground.swift in Sources */,

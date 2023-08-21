@@ -29,7 +29,11 @@ struct HomeView: View {
         HomeItem(title: "Scan",
                  description: "Scan file from your smartphone or your camera",
                  imageName: "home_scan",
-                 homeAction: .scan)
+                 homeAction: .scan),
+        HomeItem(title: "Read PDF",
+                 description: "Read PDF improves the readability of your PDF",
+                 imageName: "home_read",
+                 homeAction: .readPdf)
     ]
     
     let convertItems: [HomeItem] = [
@@ -181,6 +185,7 @@ struct HomeView: View {
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
         .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
         .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
+        .showReadView(viewModel: self.viewModel.pdfReadViewModel)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             self.viewModel.onDidBecomeActive()

@@ -98,6 +98,7 @@ Make a summary and suggest three questions. Format your response as a json with 
         }()
         static let ImportFileTypesForMerge: [UTType] = { [UTType.pdf].compactMap { $0 } }()
         static let ImportFileTypesForSplit: [UTType] = { [UTType.pdf].compactMap { $0 } }()
+        static let ImportFileTypesForRead: [UTType] = { [UTType.pdf].compactMap { $0 } }()
         
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)
@@ -108,6 +109,7 @@ Make a summary and suggest three questions. Format your response as a json with 
         static let PdfMarginsColor: UIColor = .white
         static let PdfDefaultMarginsOption: MarginsOption = .noMargins
         static let PdfDefaultCompression: CompressionOption = .noCompression
+        static let PdfReaderDefaultFontScale: CGFloat = 1.5
     }
 }
 

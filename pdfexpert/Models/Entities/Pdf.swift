@@ -113,3 +113,20 @@ fileprivate extension Date {
 extension Pdf: Hashable, Identifiable {
     var id: Self { return self }
 }
+
+extension Pdf: Collection {
+    
+    typealias Index = Int
+    typealias Element = PDFPage
+    
+    var startIndex: Index { return 0 }
+    var endIndex: Index { return self.pageCount }
+    
+    subscript(index: Index) -> Element {
+        get { return self.pdfDocument.page(at: index)! }
+    }
+    
+    func index(after i: Index) -> Index {
+        return i + 1
+    }
+}

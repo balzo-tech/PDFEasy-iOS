@@ -38,6 +38,7 @@ enum AnalyticsScreen {
     case compressionPicker
     case sortPdf
     case pageRangeEditor
+    case reader
 }
 
 enum AnalyticsEvent {

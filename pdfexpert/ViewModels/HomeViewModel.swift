@@ -39,6 +39,8 @@ enum HomeAction: Hashable, Identifiable {
     
     case importPdf
     
+    case readPdf
+    
     case removePassword
     case addPassword
     
@@ -57,6 +59,7 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return .allDocs
         case .createPdf: return nil
         case .importPdf: return .pdf
+        case .readPdf: return .pdf
         case .removePassword: return .pdf
         case .addPassword: return .pdf
         }
@@ -77,6 +80,7 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return .openFillForm
         case .createPdf: return nil
         case .importPdf: return nil
+        case .readPdf: return nil
         case .removePassword: return nil
         case .addPassword: return nil
         }
@@ -97,6 +101,7 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return nil
         case .createPdf: return nil
         case .importPdf: return nil
+        case .readPdf: return nil
         case .removePassword: return .removePassword
         case .addPassword: return .addPassword
         }
@@ -174,6 +179,7 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
+    @Injected(\.pdfReadViewModel) var pdfReadViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -224,6 +230,8 @@ public class HomeViewModel : ObservableObject {
             self.scanPdf()
         case .merge:
             self.pdfMergeViewModel.merge()
+        case .readPdf:
+            self.pdfReadViewModel.read(pdf: nil)
         case .split:
             self.pdfSplitViewModel.split(pdf: nil,
                                          onSplitCompleted: { [weak self] in
@@ -331,7 +339,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword:
                 self.importPdf(pdfUrl: fileUrl)
-            case .scan, .appExtension, .none, .merge, .split:
+            case .scan, .appExtension, .none, .merge, .split, .readPdf:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }

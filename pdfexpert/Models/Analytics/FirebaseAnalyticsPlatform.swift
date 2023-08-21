@@ -77,6 +77,7 @@ extension AnalyticsScreen {
         case .compressionPicker: return "CompressionPicker"
         case .sortPdf: return "SortPdf"
         case .pageRangeEditor: return "PageRangeEditor"
+        case .reader: return "Reader"
         }
     }
 }
@@ -260,6 +261,7 @@ fileprivate extension HomeAction {
         case .addText: return "add_text"
         case .createPdf: return "create_pdf"
         case .importPdf: return "import_pdf"
+        case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
         case .addPassword: return "add_password"
         }
