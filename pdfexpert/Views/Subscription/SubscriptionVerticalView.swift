@@ -77,7 +77,7 @@ struct SubscriptionVerticalView: View {
                 self.subscriptionPlansView
                 Spacer().frame(height: 4)
             }
-            self.getDefaultButton(text: "Subscribe",
+            self.getDefaultButton(text: "Continue",
                                   onButtonPressed: { self.viewModel.subscribe() })
             self.currentSubscriptionPlanView
         }

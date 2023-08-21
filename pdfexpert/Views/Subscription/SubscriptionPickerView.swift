@@ -106,7 +106,7 @@ struct SubscriptionPickerView: View {
             .scrollIndicators(.hidden)
             VStack(spacing: 0) {
                 self.freeTrialView
-                self.getDefaultButton(text: "Subscribe",
+                self.getDefaultButton(text: "Continue",
                                       onButtonPressed: { self.viewModel.subscribe() })
                 self.currentSubscriptionPlanView
             }
