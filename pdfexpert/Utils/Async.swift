@@ -136,6 +136,46 @@ enum AsyncEmpty: AsyncLoadable {
     }
 }
 
+enum AsyncItem<T>: AsyncLoadable {
+    
+    case empty
+    case loading(Progress)
+    case data(T)
+    
+    var hasData: Bool {
+        switch self {
+        case .empty: return false
+        case .loading: return false
+        case .data: return true
+        }
+    }
+    
+    var isLoading: Bool {
+        switch self {
+        case .empty: return false
+        case .loading: return true
+        case .data: return false
+        }
+    }
+    
+    var data: T? {
+        switch self {
+        case .empty: return nil
+        case .loading: return nil
+        case .data(let data): return data
+        }
+    }
+    
+    func updateLoadingProgress(loadingProgress: Progress, onlyIfLess: Bool = true) -> Self {
+        switch self {
+        case .loading(let progress):
+            return .loading(progress.update(newProgress: loadingProgress, onlyIfLess: onlyIfLess))
+        default:
+            return self
+        }
+    }
+}
+
 extension Progress {
     static var undeterminedProgress: Self {
         .init(totalUnitCount: 1)

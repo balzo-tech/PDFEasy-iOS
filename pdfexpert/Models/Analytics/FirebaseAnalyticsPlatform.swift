@@ -78,6 +78,7 @@ extension AnalyticsScreen {
         case .sortPdf: return "SortPdf"
         case .pageRangeEditor: return "PageRangeEditor"
         case .reader: return "Reader"
+        case .pageSelection: return "PageSelection"
         }
     }
 }
