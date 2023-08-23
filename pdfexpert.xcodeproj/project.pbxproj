@@ -211,6 +211,9 @@
 		89E601642A8295A2009492DA /* SubscriptionPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E601632A8295A2009492DA /* SubscriptionPickerViewModel.swift */; };
 		89EBC9052A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EBC9042A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift */; };
 		89EBC9072A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EBC9062A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift */; };
+		89F9E4F92A95FEEE0001D48B /* PDFImageExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */; };
+		89F9E4FB2A9606ED0001D48B /* PdfImageViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */; };
+		89F9E4FD2A9635EC0001D48B /* ZoomImageModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -442,6 +445,9 @@
 		89E601632A8295A2009492DA /* SubscriptionPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerViewModel.swift; sourceTree = "<group>"; };
 		89EBC9042A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFreeTrialToggleView.swift; sourceTree = "<group>"; };
 		89EBC9062A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerPlanView.swift; sourceTree = "<group>"; };
+		89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFImageExtractor.swift; sourceTree = "<group>"; };
+		89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfImageViewerView.swift; sourceTree = "<group>"; };
+		89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomImageModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -662,6 +668,7 @@
 				89436D182A936C9F000868B5 /* PdfReadView.swift */,
 				89436D1C2A93AE76000868B5 /* PdfReaderView.swift */,
 				89436D222A93C1CE000868B5 /* PdfPageSelectionView.swift */,
+				89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -819,6 +826,7 @@
 				89CD7ADB29D329B1003F1C3A /* Async.swift */,
 				89CD7ADC29D329B1003F1C3A /* DebugUtils.swift */,
 				893ED9D32A692805004EE67C /* CombineUtils.swift */,
+				89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -844,6 +852,7 @@
 				896CCF6C2A28910B008F268E /* SizePrinter.swift */,
 				893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */,
 				89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */,
+				89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1338,6 +1347,7 @@
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
+				89F9E4FB2A9606ED0001D48B /* PdfImageViewerView.swift in Sources */,
 				894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */,
 				892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */,
 				893E84A029D5944E00F6B99A /* CameraService.swift in Sources */,
@@ -1351,6 +1361,7 @@
 				89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */,
 				893ED9D92A693013004EE67C /* MessageView.swift in Sources */,
 				893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */,
+				89F9E4FD2A9635EC0001D48B /* ZoomImageModifier.swift in Sources */,
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
 				8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */,
 				89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */,
@@ -1365,6 +1376,7 @@
 				89436ABD29E5586600060605 /* PdfEditView.swift in Sources */,
 				89CD7B9329D329B1003F1C3A /* ContentView.swift in Sources */,
 				89127AA72A17C1980059005F /* PencilKit+Extensions.swift in Sources */,
+				89F9E4F92A95FEEE0001D48B /* PDFImageExtractor.swift in Sources */,
 				893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */,
 				8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */,
 				8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */,

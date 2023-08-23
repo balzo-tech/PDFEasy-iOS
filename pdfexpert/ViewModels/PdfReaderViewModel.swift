@@ -23,11 +23,17 @@ class PdfReaderViewModel: ObservableObject {
     
     var pdfFileName: String { self.pdf.filename }
     var pdfPageCount: Int { self.pdf.pageCount }
-    @Published var pageThumbnails: AsyncItem<[UIImage?]> = .empty
+    
     @Published var pages: [AttributedString?] = []
     @Published var pageIndex: Int = 0
-    @Published var showPageSelection: Bool = false
+    
     @Published var fontScale: CGFloat = K.Misc.PdfReaderDefaultFontScale
+    
+    @Published var pageThumbnails: AsyncItem<[UIImage?]> = .empty
+    @Published var showPageSelection: Bool = false
+    
+    @Published var pageImages: AsyncItemFailable<[PdfImage], SharedUnderlyingError> = .empty
+    @Published var showPageImages: Bool = false
     
     @Injected(\.analyticsManager) private var analyticsManager
     
@@ -60,6 +66,38 @@ class PdfReaderViewModel: ObservableObject {
                 self.pageThumbnails = .data(await task.value)
                 self.showPageSelection = true
             }
+        }
+    }
+    
+    @MainActor
+    func presentPageImages() {
+        guard self.pageIndex < self.pdf.pageCount else {
+            self.pageImages = .error(.unknownError)
+            return
+        }
+        
+        let page = self.pdf[self.pageIndex]
+        
+        self.pageImages = .loading(.undeterminedProgress)
+        do {
+            var images: [PdfImage] = []
+            try extractImages(from: page) { image, name in
+                let uiImage: UIImage? = {
+                    switch image {
+                    case .jpg(let data):
+                        return UIImage(data: data)
+                    case .raw(let cgImage):
+                        return UIImage(cgImage: cgImage)
+                    }
+                }()
+                if let uiImage {
+                    images.append(PdfImage(image: uiImage, caption: name))
+                }
+            }
+            self.pageImages = .data(images)
+            self.showPageImages = true
+        } catch {
+            self.pageImages = .error(SharedUnderlyingError.convertError(fromError: error))
         }
     }
 }

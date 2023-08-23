@@ -176,6 +176,61 @@ enum AsyncItem<T>: AsyncLoadable {
     }
 }
 
+enum AsyncItemFailable<T, E: LocalizedError>: AsyncLoadable, AsyncFailable {
+    
+    case empty
+    case loading(Progress)
+    case data(T)
+    case error(E)
+    
+    var success: Bool {
+        switch self {
+        case .empty: return false
+        case .data: return true
+        case .error: return false
+        case .loading: return false
+        }
+    }
+    
+    var isLoading: Bool {
+        switch self {
+        case .empty: return false
+        case .loading: return true
+        case .data: return false
+        case .error: return false
+        }
+    }
+    
+    var data: T? {
+        switch self {
+        case .empty: return nil
+        case .loading: return nil
+        case .data(let data): return data
+        case .error: return nil
+        }
+    }
+    
+    var error: E? {
+        switch self {
+        case .empty: return nil
+        case .data: return nil
+        case .error(let error): return error
+        case .loading: return nil
+        }
+    }
+    
+    func updateLoadingProgress(loadingProgress: Progress, onlyIfLess: Bool = true) -> Self {
+        switch self {
+        case .loading(let progress):
+            return .loading(progress.update(newProgress: loadingProgress, onlyIfLess: onlyIfLess))
+        default:
+            return self
+        }
+    }
+    
+    static var resetState: Self { .empty }
+}
+
 extension Progress {
     static var undeterminedProgress: Self {
         .init(totalUnitCount: 1)

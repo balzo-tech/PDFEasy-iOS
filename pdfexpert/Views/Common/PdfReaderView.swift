@@ -34,33 +34,42 @@ struct PdfReaderView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .background(ColorPalette.primaryBG)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle(self.viewModel.pdfFileName)
-                .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                    self.dismiss()
-                })
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: { self.viewModel.presentPageSelection() }) {
-                            Image("page_selection")
-                                .foregroundColor(ColorPalette.primaryText)
-                        }
-                    }
-                }
-                .fullScreenCover(isPresented: self.$viewModel.showPageSelection) {
-                    PdfPageSelectionView(pageIndex: self.$viewModel.pageIndex,
-                                         title: self.viewModel.pdfFileName,
-                                         pageThumbnails: self.viewModel.pageThumbnails.data ?? [])
-                }
                 self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
                                  totalPages: self.viewModel.pdfPageCount)
             }
             .padding(16)
             .background(ColorPalette.primaryBG)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(self.viewModel.pdfFileName)
+            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                self.dismiss()
+            })
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: { self.viewModel.presentPageImages() }) {
+                        Image(systemName: "photo.stack")
+                            .foregroundColor(ColorPalette.primaryText)
+                    }
+                    Button(action: { self.viewModel.presentPageSelection() }) {
+                        Image("page_selection")
+                            .foregroundColor(ColorPalette.primaryText)
+                    }
+                }
+            }
+            .fullScreenCover(isPresented: self.$viewModel.showPageSelection) {
+                PdfPageSelectionView(pageIndex: self.$viewModel.pageIndex,
+                                     title: self.viewModel.pdfFileName,
+                                     pageThumbnails: self.viewModel.pageThumbnails.data ?? [])
+            }
+            .fullScreenCover(isPresented: self.$viewModel.showPageImages) {
+                PdfImageViewerView(pageIndex: self.viewModel.pageIndex,
+                                   images: self.viewModel.pageImages.data ?? [])
+            }
         }
         .background(ColorPalette.primaryBG)
         .onAppear(perform: self.viewModel.onAppear)
         .asyncView(asyncItem: self.$viewModel.pageThumbnails)
+        .asyncView(asyncItem: self.$viewModel.pageImages)
     }
 }
 
