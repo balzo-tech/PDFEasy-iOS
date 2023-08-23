@@ -16,19 +16,22 @@ struct PdfKitViewBinder: UIViewRepresentable {
     let pageMargins: UIEdgeInsets?
     let backgroundColor: UIColor?
     let usePaginator: Bool
+    let autoScale: Bool
 
     init(
         pdfView: Binding<PDFView>,
         singlePage: Bool = false,
         pageMargins: UIEdgeInsets? = nil,
         backgroundColor: UIColor? = nil,
-        usePaginator: Bool = false
+        usePaginator: Bool = false,
+        autoScale: Bool = true
     ) {
         self._pdfView = pdfView
         self.singlePage = singlePage
         self.pageMargins = pageMargins
         self.backgroundColor = backgroundColor
         self.usePaginator = usePaginator
+        self.autoScale = autoScale
     }
 
     func makeUIView(context: Context) -> UIViewType {
@@ -41,11 +44,20 @@ struct PdfKitViewBinder: UIViewRepresentable {
     }
     
     private func updatePdfView(_ pdfView: UIViewType) {
-        pdfView.autoScales = true
+        self.updateScale(pdfView: pdfView)
         self.updateBackground(pdfView: pdfView)
         self.updateSinglePage(pdfView: pdfView)
         self.updatePageMargins(pdfView: pdfView)
         self.updateUsePaginator(pdfView: pdfView)
+    }
+    
+    private func updateScale(pdfView: UIViewType) {
+        if self.autoScale {
+            pdfView.autoScales = true
+        } else {
+            pdfView.maxScaleFactor = 4.0
+            pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
+        }
     }
     
     private func updateBackground(pdfView: UIViewType) {
@@ -82,7 +94,6 @@ struct PdfKitViewBinder_Previews: PreviewProvider {
     static var previews: some View {
         PdfKitViewBinder(
             pdfView: .constant(pdfView),
-//            pdfViewOverlayProvider: .constant(nil),
             singlePage: false,
             pageMargins: nil,
             backgroundColor: nil,

@@ -18,47 +18,22 @@ struct PdfReaderView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                TabView(selection: self.$viewModel.pageIndex) {
-                    ForEach(Array(self.viewModel.pages.enumerated()), id:\.offset) { _, page in
-                        if let page = page {
-                            ScrollView {
-                                Text(page)
-                            }
-                        } else {
-                            Text("No text available on this page")
-                                .font(FontPalette.fontMedium(withSize: 16))
-                                .foregroundColor(ColorPalette.primaryText)
-                        }
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .background(ColorPalette.primaryBG)
-                self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
-                                 totalPages: self.viewModel.pdfPageCount)
-            }
+            self.contentView
             .padding(16)
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(self.viewModel.pdfFileName)
+            .navigationTitle(self.viewModel.pdf.filename)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                 self.dismiss()
             })
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: { self.viewModel.presentPageImages() }) {
-                        Image(systemName: "photo.stack")
-                            .foregroundColor(ColorPalette.primaryText)
-                    }
-                    Button(action: { self.viewModel.presentPageSelection() }) {
-                        Image("page_selection")
-                            .foregroundColor(ColorPalette.primaryText)
-                    }
+                    self.toolbar
                 }
             }
             .fullScreenCover(isPresented: self.$viewModel.showPageSelection) {
                 PdfPageSelectionView(pageIndex: self.$viewModel.pageIndex,
-                                     title: self.viewModel.pdfFileName,
+                                     title: self.viewModel.pdf.filename,
                                      pageThumbnails: self.viewModel.pageThumbnails.data ?? [])
             }
             .fullScreenCover(isPresented: self.$viewModel.showPageImages) {
@@ -70,6 +45,62 @@ struct PdfReaderView: View {
         .onAppear(perform: self.viewModel.onAppear)
         .asyncView(asyncItem: self.$viewModel.pageThumbnails)
         .asyncView(asyncItem: self.$viewModel.pageImages)
+    }
+    
+    @ViewBuilder var contentView: some View {
+        VStack(spacing: 16) {
+            if self.viewModel.textMode {
+                self.textView
+            } else {
+                self.standardView
+            }
+            self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
+                             totalPages: self.viewModel.pdf.pageCount)
+        }
+    }
+    
+    var textView: some View {
+        TabView(selection: self.$viewModel.pageIndex) {
+            ForEach(Array(self.viewModel.pages.enumerated()), id:\.offset) { _, page in
+                if let page = page {
+                    ScrollView {
+                        Text(page)
+                    }
+                } else {
+                    Text("No text available on this page")
+                        .font(FontPalette.fontMedium(withSize: 16))
+                        .foregroundColor(ColorPalette.primaryText)
+                }
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .background(ColorPalette.primaryBG)
+    }
+    
+    var standardView: some View {
+        PdfKitViewBinder(
+            pdfView: self.$viewModel.pdfView,
+            singlePage: false,
+            pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
+            backgroundColor: UIColor(ColorPalette.primaryBG),
+            usePaginator: true,
+            autoScale: false
+        )
+    }
+    
+    @ViewBuilder var toolbar: some View {
+        Button(action: { self.viewModel.switchTextMode() }) {
+            Image(systemName: self.viewModel.textMode ? "doc" : "doc.text")
+                .foregroundColor(ColorPalette.primaryText)
+        }
+        Button(action: { self.viewModel.presentPageImages() }) {
+            Image(systemName: "photo.stack")
+                .foregroundColor(ColorPalette.primaryText)
+        }
+        Button(action: { self.viewModel.presentPageSelection() }) {
+            Image("page_selection")
+                .foregroundColor(ColorPalette.primaryText)
+        }
     }
 }
 

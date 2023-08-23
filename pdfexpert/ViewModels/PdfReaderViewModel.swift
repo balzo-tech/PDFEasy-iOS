@@ -8,6 +8,7 @@
 import Foundation
 import Factory
 import SwiftUI
+import PDFKit
 
 extension Container {
     var pdfReaderViewModel: ParameterFactory<PdfReaderViewModel.Params, PdfReaderViewModel> {
@@ -21,12 +22,18 @@ class PdfReaderViewModel: ObservableObject {
         let pdf: Pdf
     }
     
-    var pdfFileName: String { self.pdf.filename }
-    var pdfPageCount: Int { self.pdf.pageCount }
-    
     @Published var pages: [AttributedString?] = []
-    @Published var pageIndex: Int = 0
+    @Published var pageIndex: Int = 0 {
+        didSet {
+            if let page = self.pdfView.document?.page(at: self.pageIndex) {
+                self.pdfView.go(to: page)
+            }
+        }
+    }
     
+    @Published var pdfView: PDFView = PDFView()
+    
+    @Published var textMode: Bool = false
     @Published var fontScale: CGFloat = K.Misc.PdfReaderDefaultFontScale
     
     @Published var pageThumbnails: AsyncItem<[UIImage?]> = .empty
@@ -37,11 +44,27 @@ class PdfReaderViewModel: ObservableObject {
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    private let pdf: Pdf
+    let pdf: Pdf
     
     init(params: Params) {
         self.pdf = params.pdf
+        // TODO: find a reversable way to disable annotations
+        self.pdf.forEach{ $0.annotations.forEach { $0.isReadOnly = true } }
         self.updatePages()
+        
+        self.pdfView.document = self.pdf.pdfDocument
+        self.pdfView.displayDirection = .horizontal
+        self.pdfView.scaleFactor = self.pdfView.scaleFactorForSizeToFit
+        
+        NotificationCenter.default.addObserver(
+              self,
+              selector: #selector(self.handlePageChange(notification:)),
+              name: Notification.Name.PDFViewPageChanged,
+              object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.PDFViewPageChanged, object: nil)
     }
     
     func onAppear() {
@@ -99,6 +122,18 @@ class PdfReaderViewModel: ObservableObject {
         } catch {
             self.pageImages = .error(SharedUnderlyingError.convertError(fromError: error))
         }
+    }
+    
+    func switchTextMode() {
+        self.textMode = !self.textMode
+    }
+    
+    @objc private func handlePageChange(notification: Notification) {
+        guard let currentPageindex = self.pdfView.currentPageIndex, notification.object as? PDFView == self.pdfView else {
+            assertionFailure("Missing expected page index")
+            return
+        }
+        self.pageIndex = currentPageindex
     }
 }
 
