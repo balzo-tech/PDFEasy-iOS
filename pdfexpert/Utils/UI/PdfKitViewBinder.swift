@@ -16,22 +16,19 @@ struct PdfKitViewBinder: UIViewRepresentable {
     let pageMargins: UIEdgeInsets?
     let backgroundColor: UIColor?
     let usePaginator: Bool
-    let autoScale: Bool
 
     init(
         pdfView: Binding<PDFView>,
         singlePage: Bool = false,
         pageMargins: UIEdgeInsets? = nil,
         backgroundColor: UIColor? = nil,
-        usePaginator: Bool = false,
-        autoScale: Bool = true
+        usePaginator: Bool = false
     ) {
         self._pdfView = pdfView
         self.singlePage = singlePage
         self.pageMargins = pageMargins
         self.backgroundColor = backgroundColor
         self.usePaginator = usePaginator
-        self.autoScale = autoScale
     }
 
     func makeUIView(context: Context) -> UIViewType {
@@ -52,11 +49,10 @@ struct PdfKitViewBinder: UIViewRepresentable {
     }
     
     private func updateScale(pdfView: UIViewType) {
-        if self.autoScale {
-            pdfView.autoScales = true
-        } else {
-            pdfView.maxScaleFactor = 4.0
-            pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
+        pdfView.autoScales = true
+        let minScaleFactor = pdfView.scaleFactorForSizeToFit
+        if minScaleFactor > 0 {
+            pdfView.minScaleFactor = minScaleFactor
         }
     }
     

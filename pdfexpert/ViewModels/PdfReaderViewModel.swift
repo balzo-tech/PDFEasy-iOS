@@ -54,7 +54,6 @@ class PdfReaderViewModel: ObservableObject {
         
         self.pdfView.document = self.pdf.pdfDocument
         self.pdfView.displayDirection = .horizontal
-        self.pdfView.scaleFactor = self.pdfView.scaleFactorForSizeToFit
         
         NotificationCenter.default.addObserver(
               self,
