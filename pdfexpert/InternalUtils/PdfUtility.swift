@@ -73,6 +73,7 @@ class PDFUtility {
     static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, margins: MarginsOption, compression: CompressionOption) -> PDFDocument {
         
         guard pdfDocument.pageCount > 0 else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
+        guard margins != .noMargins, compression != .noCompression else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
         
         let newPdfDocument = PDFDocument()
         for pageIndex in 0..<pdfDocument.pageCount {
