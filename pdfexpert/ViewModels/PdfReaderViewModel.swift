@@ -44,15 +44,21 @@ class PdfReaderViewModel: ObservableObject {
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    let pdf: Pdf
+    var filename: String { self.pdf.filename }
+    var pageCount: Int { self.pdf.pageCount }
+    
+    private let pdf: Pdf
     
     init(params: Params) {
         self.pdf = params.pdf
-        // TODO: find a reversable way to disable annotations
-        self.pdf.forEach{ $0.annotations.forEach { $0.isReadOnly = true } }
         self.updatePages()
         
-        self.pdfView.document = self.pdf.pdfDocument
+        var pdfDocumentCopy = PDFDocument()
+        if let pdfData = params.pdf.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
+            pdfDocumentCopy = copy
+        }
+        pdfDocumentCopy.forEach{ $0.annotations.forEach { $0.isReadOnly = true } }
+        self.pdfView.document = pdfDocumentCopy
         self.pdfView.displayDirection = .horizontal
         
         NotificationCenter.default.addObserver(

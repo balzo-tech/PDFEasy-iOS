@@ -22,7 +22,7 @@ struct PdfReaderView: View {
             .padding(16)
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(self.viewModel.pdf.filename)
+            .navigationTitle(self.viewModel.filename)
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
                 self.dismiss()
             })
@@ -33,7 +33,7 @@ struct PdfReaderView: View {
             }
             .fullScreenCover(isPresented: self.$viewModel.showPageSelection) {
                 PdfPageSelectionView(pageIndex: self.$viewModel.pageIndex,
-                                     title: self.viewModel.pdf.filename,
+                                     title: self.viewModel.filename,
                                      pageThumbnails: self.viewModel.pageThumbnails.data ?? [])
             }
             .fullScreenCover(isPresented: self.$viewModel.showPageImages) {
@@ -55,7 +55,7 @@ struct PdfReaderView: View {
                 self.standardView
             }
             self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
-                             totalPages: self.viewModel.pdf.pageCount)
+                             totalPages: self.viewModel.pageCount)
         }
     }
     

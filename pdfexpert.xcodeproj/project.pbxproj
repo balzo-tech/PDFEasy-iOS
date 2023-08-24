@@ -137,6 +137,7 @@
 		89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFE9F29DB2672002D348E /* CacheManager.swift */; };
 		89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFEA029DB2672002D348E /* CacheManagerImpl.swift */; };
 		89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFEA629DB2AC4002D348E /* WelcomeView.swift */; };
+		89ABAA592A97B29C00721045 /* PdfDocument+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ABAA582A97B29C00721045 /* PdfDocument+Extensions.swift */; };
 		89B72A3029DAD4990076884F /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 89B72A2F29DAD4990076884F /* FacebookCore */; };
 		89B72A3329DADC790076884F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B72A3229DADC790076884F /* SettingsView.swift */; };
 		89BB2DB72A7A5EFC009E6738 /* PdfMergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */; };
@@ -372,6 +373,7 @@
 		89AAFE9F29DB2672002D348E /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		89AAFEA029DB2672002D348E /* CacheManagerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManagerImpl.swift; sourceTree = "<group>"; };
 		89AAFEA629DB2AC4002D348E /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		89ABAA582A97B29C00721045 /* PdfDocument+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PdfDocument+Extensions.swift"; sourceTree = "<group>"; };
 		89B72A2D29DACBBF0076884F /* EmptyProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = EmptyProducts.storekit; sourceTree = "<group>"; };
 		89B72A3229DADC790076884F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMergeView.swift; sourceTree = "<group>"; };
@@ -873,6 +875,7 @@
 				892E404E2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift */,
 				897967852A73E59B00E91F8E /* URL+Extensions.swift */,
 				89436D202A93B97E000868B5 /* NSAttributedString+Extensions.swift */,
+				89ABAA582A97B29C00721045 /* PdfDocument+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1365,6 +1368,7 @@
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
 				8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */,
 				89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */,
+				89ABAA592A97B29C00721045 /* PdfDocument+Extensions.swift in Sources */,
 				89BB2DC12A7AB4A8009E6738 /* PdfSortView.swift in Sources */,
 				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
 				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
