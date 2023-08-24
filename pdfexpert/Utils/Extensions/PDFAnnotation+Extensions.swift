@@ -8,6 +8,14 @@
 import Foundation
 import PDFKit
 
+private enum PDFCustomKey: String {
+    case annotationType = "type"
+}
+
+private enum PDFAnnotationTypeValue: String {
+    case signature = "signature"
+}
+
 extension PDFAnnotation {
     
     var text: String { self.contents ?? "" }
@@ -21,6 +29,15 @@ extension PDFAnnotation {
     
     var isWidgetAnnotation: Bool {
         guard let subType = self.annotationKeyValues[PDFAnnotationKey.subtype] as? PDFAnnotationSubtype, subType == PDFAnnotationSubtype.widget else {
+            return false
+        }
+        return true
+    }
+    
+    var isSignatureAnnotation: Bool {
+        guard let subType = self.annotationKeyValues[PDFAnnotationKey.subtype] as? PDFAnnotationSubtype,
+              subType == PDFAnnotationSubtype.stamp,
+              self.annotationKeyValues.getCustomPdfValue(forKey: PDFCustomKey.annotationType.rawValue) == PDFAnnotationTypeValue.signature.rawValue else {
             return false
         }
         return true
@@ -43,6 +60,14 @@ extension PDFAnnotation {
         annotation.font = font
         annotation.alignment = .center
         annotation.contents = text
+        return annotation
+    }
+    
+    static func createSignature(with image: UIImage,
+         forBounds bounds: CGRect) -> PDFAnnotation {
+        var properties: [AnyHashable: Any] = [:]
+        properties.addCustomPdfValue(PDFAnnotationTypeValue.signature.rawValue, forKey: PDFCustomKey.annotationType.rawValue)
+        let annotation = ImageStampAnnotation(with: image, forBounds: bounds, withProperties: properties)
         return annotation
     }
 }
@@ -68,5 +93,18 @@ fileprivate extension CGRect {
                                     left: Self.safetyMargin,
                                     bottom: Self.safetyMargin,
                                     right: Self.safetyMargin))
+    }
+}
+
+fileprivate extension Dictionary where Key == AnyHashable, Value == Any {
+    
+    private static var keyPrefix: String { "PdfExpert" }
+    
+    mutating func addCustomPdfValue(_ value: Any, forKey key: AnyHashable) {
+        self["\(Self.keyPrefix)\(key)"] = value
+    }
+    
+    func getCustomPdfValue<T>(forKey key: AnyHashable) -> T? {
+        return self["/\(Self.keyPrefix)\(key)"] as? T
     }
 }

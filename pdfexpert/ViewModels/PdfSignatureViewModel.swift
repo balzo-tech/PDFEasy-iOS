@@ -70,6 +70,9 @@ class PdfSignatureViewModel: ObservableObject {
             self.pdfView.go(to: page)
         }
         self.pdfCurrentPageIndex = inputParameter.currentPageIndex
+        
+//        let signatureAnnotations = self.pdf.flatMap{ $0.annotations.signatureAnnotations }
+//        print("PdfSignatureViewModel - Existing signature annotations count: \(signatureAnnotations.count)")
     }
     
     func onAppear() {
@@ -82,7 +85,7 @@ class PdfSignatureViewModel: ObservableObject {
            let currentViewPage = self.pdfView.currentPage,
            let signatureImage = self.signatureImage {
             let signaturePageRect = self.pdfView.convert(self.signatureRect, to: currentViewPage)
-            let signatureAnnotation = ImageStampAnnotation(with: signatureImage, forBounds: signaturePageRect, withProperties: nil)
+            let signatureAnnotation = PDFAnnotation.createSignature(with: signatureImage, forBounds: signaturePageRect)
             currentPage.addAnnotation(signatureAnnotation)
             
             self.analyticsManager.track(event: .signatureAdded)
@@ -109,5 +112,11 @@ class PdfSignatureViewModel: ObservableObject {
     private func updatePdfViewInteraction() {
         // this is an alternative to allowHitTest, since that one caused the view model to memory leak.
         self.pdfView.isUserInteractionEnabled = self.pageScrollingAllowed
+    }
+}
+
+fileprivate extension Array where Element == PDFAnnotation {
+    var signatureAnnotations: [PDFAnnotation] {
+        self.filter { $0.isSignatureAnnotation }
     }
 }

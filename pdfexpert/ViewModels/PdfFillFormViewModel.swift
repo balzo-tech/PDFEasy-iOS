@@ -245,7 +245,7 @@ class PdfFillFormViewModel: ObservableObject {
     }
 }
 
-extension Array where Element == PDFAnnotation {
+fileprivate extension Array where Element == PDFAnnotation {
     var supportedAnnotations: [PDFAnnotation] {
         self.filter { $0.isTextAnnotation }
     }
