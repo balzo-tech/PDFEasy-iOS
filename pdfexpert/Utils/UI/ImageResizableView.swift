@@ -8,6 +8,8 @@
 import SwiftUI
 import UIKit
 
+typealias ImageResizableViewDeleteCallback = (() -> ())
+
 struct ImageResizableView: View {
     
     enum HandlePosition { case bottomLeft, bottomRight, topLeft, topRight }
@@ -19,6 +21,7 @@ struct ImageResizableView: View {
     let handleColor: Color
     let handleSize: CGFloat
     let handleTapSize: CGFloat
+    let deleteCallback: ImageResizableViewDeleteCallback
     
     @State var bottomLeft: CGPoint
     @State var bottomRight: CGPoint
@@ -43,7 +46,8 @@ struct ImageResizableView: View {
          borderWidth: CGFloat,
          handleColor: Color,
          handleSize: CGFloat,
-         handleTapSize: CGFloat) {
+         handleTapSize: CGFloat,
+         deleteCallback: @escaping ImageResizableViewDeleteCallback) {
         self.uiImage = uiImage
         self._imageRect = imageRect
         self.borderColor = borderColor
@@ -51,6 +55,7 @@ struct ImageResizableView: View {
         self.handleColor = handleColor
         self.handleSize = handleSize
         self.handleTapSize = handleTapSize
+        self.deleteCallback = deleteCallback
         self.bottomLeft = CGPoint(x: imageRect.wrappedValue.origin.x,
                                   y: imageRect.wrappedValue.origin.y + imageRect.wrappedValue.size.height)
         self.bottomRight = CGPoint(x: imageRect.wrappedValue.origin.x + imageRect.wrappedValue.size.width,
@@ -87,6 +92,13 @@ struct ImageResizableView: View {
                                parentViewSize: parentGeometryReader.size)
                 self.getHandle(handlePosition: .topRight,
                                parentViewSize: parentGeometryReader.size)
+            }
+        }
+        .contextMenu {
+            Button(role: .destructive) {
+                self.deleteCallback()
+            } label: {
+                Label("Delete", systemImage: "trash")
             }
         }
     }
@@ -245,7 +257,8 @@ struct ImageResizableView_Previews: PreviewProvider {
                     borderWidth: 2,
                     handleColor: .white,
                     handleSize: 10,
-                    handleTapSize: 50
+                    handleTapSize: 50,
+                    deleteCallback: { print("Delete!") }
                 )
             }
         } else {

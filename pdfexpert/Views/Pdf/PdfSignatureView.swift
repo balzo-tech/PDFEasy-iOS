@@ -114,7 +114,8 @@ struct PdfSignatureView: View {
                 borderWidth: 2,
                 handleColor: ColorPalette.buttonGradientStart,
                 handleSize: 10,
-                handleTapSize: 50
+                handleTapSize: 50,
+                deleteCallback: { self.viewModel.onDeleteAnnotationPressed() }
             )
         }
     }
