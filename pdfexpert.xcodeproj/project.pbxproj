@@ -67,6 +67,7 @@
 		893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D82A693013004EE67C /* MessageIndicatorView.swift */; };
 		8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8940FB902A710D8D00A00D8D /* AddPasswordView.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
+		89431FC62A9900740042A636 /* MathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89431FC52A9900740042A636 /* MathUtils.swift */; };
 		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
 		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
 		89436ABD29E5586600060605 /* PdfEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABC29E5586600060605 /* PdfEditView.swift */; };
@@ -301,6 +302,7 @@
 		893ED9D72A693013004EE67C /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		893ED9D82A693013004EE67C /* MessageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageIndicatorView.swift; sourceTree = "<group>"; };
 		8940FB902A710D8D00A00D8D /* AddPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPasswordView.swift; sourceTree = "<group>"; };
+		89431FC52A9900740042A636 /* MathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathUtils.swift; sourceTree = "<group>"; };
 		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
 		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
 		89436ABC29E5586600060605 /* PdfEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfEditView.swift; sourceTree = "<group>"; };
@@ -829,6 +831,7 @@
 				89CD7ADC29D329B1003F1C3A /* DebugUtils.swift */,
 				893ED9D32A692805004EE67C /* CombineUtils.swift */,
 				89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */,
+				89431FC52A9900740042A636 /* MathUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1246,6 +1249,7 @@
 				8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */,
 				89436D1B2A939CBB000868B5 /* PdfReadViewModel.swift in Sources */,
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,
+				89431FC62A9900740042A636 /* MathUtils.swift in Sources */,
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
 				893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,

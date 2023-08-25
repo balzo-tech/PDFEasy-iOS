@@ -21,12 +21,23 @@ struct ImageResizableView: View {
     let handleColor: Color
     let handleSize: CGFloat
     let handleTapSize: CGFloat
+    let keepAspectRatio: Bool
     let deleteCallback: ImageResizableViewDeleteCallback
     
     @State var tapImageOffset: CGPoint? = nil
     
     private var topLeft: CGPoint {
         self.imageRect.origin
+    }
+    
+    private var topRight: CGPoint {
+        CGPoint(x: self.imageRect.origin.x + self.imageRect.size.width,
+                y: self.imageRect.origin.y)
+    }
+    
+    private var bottomLeft: CGPoint {
+        CGPoint(x: self.imageRect.origin.x,
+                y: self.imageRect.origin.y + self.imageRect.size.height)
     }
     
     private var bottomRight: CGPoint {
@@ -51,6 +62,7 @@ struct ImageResizableView: View {
          handleColor: Color,
          handleSize: CGFloat,
          handleTapSize: CGFloat,
+         keepAspectRatio: Bool,
          deleteCallback: @escaping ImageResizableViewDeleteCallback) {
         self.uiImage = uiImage
         self._imageRect = imageRect
@@ -59,6 +71,7 @@ struct ImageResizableView: View {
         self.handleColor = handleColor
         self.handleSize = handleSize
         self.handleTapSize = handleTapSize
+        self.keepAspectRatio = keepAspectRatio
         self.deleteCallback = deleteCallback
     }
     
@@ -132,7 +145,8 @@ struct ImageResizableView: View {
                         dragGestureValue: DragGesture.Value,
                         parentViewSize: CGSize) {
         
-        let location = dragGestureValue.location
+        let location = self.getDragLocation(originalDragLocation: dragGestureValue.location,
+                                            handle: handlePosition)
         
         var bottomRight: CGPoint = .zero
         var topLeft: CGPoint = .zero
@@ -141,7 +155,10 @@ struct ImageResizableView: View {
         case .bottomLeft:
             var bottomLeft = CGPoint(x: location.x,
                                      y: location.y)
-                .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
+                .getBoundedPoint(containerSize: parentViewSize,
+                                 margin: self.handleSize / 2,
+                                 keepAspectRatio: self.keepAspectRatio,
+                                 originalPoint: self.bottomLeft)
             bottomLeft = CGPoint(
                 x: min(bottomLeft.x, self.bottomRight.x - self.handleSize),
                 y: max(bottomLeft.y, self.topLeft.y + self.handleSize)
@@ -151,7 +168,10 @@ struct ImageResizableView: View {
         case .bottomRight:
             bottomRight = CGPoint(x: location.x,
                                   y: location.y)
-            .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
+            .getBoundedPoint(containerSize: parentViewSize,
+                             margin: self.handleSize / 2,
+                             keepAspectRatio: self.keepAspectRatio,
+                             originalPoint: self.bottomRight)
             bottomRight = CGPoint(
                 x: max(bottomRight.x, self.topLeft.x + self.handleSize),
                 y: max(bottomRight.y, self.topLeft.y + self.handleSize)
@@ -160,7 +180,10 @@ struct ImageResizableView: View {
         case .topLeft:
             topLeft = CGPoint(x: location.x,
                               y: location.y)
-            .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
+            .getBoundedPoint(containerSize: parentViewSize,
+                             margin: self.handleSize / 2,
+                             keepAspectRatio: self.keepAspectRatio,
+                             originalPoint: self.topLeft)
             topLeft = CGPoint(
                 x: min(topLeft.x, self.bottomRight.x - self.handleSize),
                 y: min(topLeft.y, self.bottomRight.y - self.handleSize)
@@ -169,7 +192,10 @@ struct ImageResizableView: View {
         case .topRight:
             var topRight = CGPoint(x: location.x,
                                    y: location.y)
-                .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
+                .getBoundedPoint(containerSize: parentViewSize,
+                                 margin: self.handleSize / 2,
+                                 keepAspectRatio: self.keepAspectRatio,
+                                 originalPoint: self.topRight)
             topRight = CGPoint(
                 x: max(topRight.x, self.topLeft.x + self.handleSize),
                 y: min(topRight.y, self.bottomRight.y - self.handleSize)
@@ -207,6 +233,22 @@ struct ImageResizableView: View {
                                 width: bottomRight.x - topLeft.x,
                                 height: bottomRight.y - topLeft.y)
     }
+    
+    private func getDragLocation(originalDragLocation: CGPoint, handle: HandlePosition) -> CGPoint {
+        guard self.keepAspectRatio else {
+            return originalDragLocation
+        }
+        
+        let line = {
+            switch handle {
+            case .bottomLeft, .topRight:
+                return MathUtils.getLine(ofLinePassingThrough: self.bottomLeft, and: self.topRight)
+            case .bottomRight, .topLeft:
+                return MathUtils.getLine(ofLinePassingThrough: self.bottomRight, and: self.topLeft)
+            }
+        }()
+        return line.closestPoint(toPoint: originalDragLocation)
+    }
 }
 
 fileprivate extension ImageResizableView.HandlePosition {
@@ -225,11 +267,26 @@ fileprivate extension ImageResizableView.HandlePosition {
 }
 
 fileprivate extension CGPoint {
-    func getBoundedPoint(containerSize: CGSize, margin: CGFloat) -> CGPoint {
-        return CGPoint(
-            x: min(max(self.x, margin), containerSize.width - margin),
-            y: min(max(self.y, margin), containerSize.height - margin)
-        )
+    func getBoundedPoint(containerSize: CGSize,
+                         margin: CGFloat,
+                         keepAspectRatio: Bool,
+                         originalPoint: CGPoint) -> CGPoint {
+        if keepAspectRatio {
+            // If aspect ratio must be kept, discard any change outside margins.
+            if self.x < margin
+                || self.x > containerSize.width - margin
+                || self.y < margin
+                || self.y > containerSize.height - margin {
+                return originalPoint
+            } else {
+                return self
+            }
+        } else {
+            return CGPoint(
+                x: min(max(self.x, margin), containerSize.width - margin),
+                y: min(max(self.y, margin), containerSize.height - margin)
+            )
+        }
     }
 }
 
@@ -251,6 +308,7 @@ struct ImageResizableView_Previews: PreviewProvider {
                     handleColor: .white,
                     handleSize: 10,
                     handleTapSize: 50,
+                    keepAspectRatio: true,
                     deleteCallback: { print("Delete!") }
                 )
             }
