@@ -23,21 +23,25 @@ struct ImageResizableView: View {
     let handleTapSize: CGFloat
     let deleteCallback: ImageResizableViewDeleteCallback
     
-    @State var bottomLeft: CGPoint
-    @State var bottomRight: CGPoint
-    @State var topLeft: CGPoint
-    @State var topRight: CGPoint
-    
     @State var tapImageOffset: CGPoint? = nil
     
-    var computedCenter: CGPoint {
-        CGPoint(x: self.bottomLeft.x + (self.bottomRight.x - self.bottomLeft.x) / 2,
-                y: self.topLeft.y + (self.bottomLeft.y - self.topLeft.y) / 2)
+    private var topLeft: CGPoint {
+        self.imageRect.origin
     }
     
-    var computedSize: CGSize {
-        CGSize(width: self.bottomRight.x - self.bottomLeft.x,
-               height: self.bottomLeft.y - self.topLeft.y)
+    private var bottomRight: CGPoint {
+        CGPoint(x: self.imageRect.origin.x + self.imageRect.size.width,
+                y: self.imageRect.origin.y + self.imageRect.size.height)
+    }
+    
+    private var computedCenter: CGPoint {
+        CGPoint(x: self.topLeft.x + (self.bottomRight.x - self.topLeft.x) / 2,
+                y: self.topLeft.y + (self.bottomRight.y - self.topLeft.y) / 2)
+    }
+    
+    private var computedSize: CGSize {
+        CGSize(width: self.bottomRight.x - self.topLeft.x,
+               height: self.bottomRight.y - self.topLeft.y)
     }
     
     init(uiImage: UIImage,
@@ -56,14 +60,6 @@ struct ImageResizableView: View {
         self.handleSize = handleSize
         self.handleTapSize = handleTapSize
         self.deleteCallback = deleteCallback
-        self.bottomLeft = CGPoint(x: imageRect.wrappedValue.origin.x,
-                                  y: imageRect.wrappedValue.origin.y + imageRect.wrappedValue.size.height)
-        self.bottomRight = CGPoint(x: imageRect.wrappedValue.origin.x + imageRect.wrappedValue.size.width,
-                                   y: imageRect.wrappedValue.origin.y + imageRect.wrappedValue.size.height)
-        self.topLeft = CGPoint(x: imageRect.wrappedValue.origin.x,
-                               y: imageRect.wrappedValue.origin.y)
-        self.topRight = CGPoint(x: imageRect.wrappedValue.origin.x + imageRect.wrappedValue.size.width,
-                                y: imageRect.wrappedValue.origin.y)
     }
     
     var body: some View {
@@ -125,15 +121,11 @@ struct ImageResizableView: View {
         
         let currentEventTranslation: CGPoint = CGPoint(x: newCenterX - center.x,
                                                        y: newCenterY - center.y)
-        self.bottomLeft = CGPoint(x: self.bottomLeft.x + currentEventTranslation.x,
-                                  y: self.bottomLeft.y + currentEventTranslation.y)
-        self.bottomRight = CGPoint(x: self.bottomRight.x + currentEventTranslation.x,
-                                   y: self.bottomRight.y + currentEventTranslation.y)
-        self.topLeft = CGPoint(x: self.topLeft.x + currentEventTranslation.x,
-                               y: self.topLeft.y + currentEventTranslation.y)
-        self.topRight = CGPoint(x: self.topRight.x + currentEventTranslation.x,
-                                y: self.topRight.y + currentEventTranslation.y)
-        self.updateRect()
+        let bottomRight = CGPoint(x: self.bottomRight.x + currentEventTranslation.x,
+                                  y: self.bottomRight.y + currentEventTranslation.y)
+        let topLeft = CGPoint(x: self.topLeft.x + currentEventTranslation.x,
+                              y: self.topLeft.y + currentEventTranslation.y)
+        self.updateRect(topLeft: topLeft, bottomRight: bottomRight)
     }
     
     private func OnDrag(handlePosition: HandlePosition,
@@ -141,52 +133,53 @@ struct ImageResizableView: View {
                         parentViewSize: CGSize) {
         
         let location = dragGestureValue.location
-
+        
+        var bottomRight: CGPoint = .zero
+        var topLeft: CGPoint = .zero
+        
         switch handlePosition {
         case .bottomLeft:
-            self.bottomLeft = CGPoint(x: location.x,
-                                      y: location.y)
-            .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
-            self.bottomLeft = CGPoint(
-                x: min(self.bottomLeft.x, self.bottomRight.x - self.handleSize),
-                y: max(self.bottomLeft.y, self.topLeft.y + self.handleSize)
+            var bottomLeft = CGPoint(x: location.x,
+                                     y: location.y)
+                .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
+            bottomLeft = CGPoint(
+                x: min(bottomLeft.x, self.bottomRight.x - self.handleSize),
+                y: max(bottomLeft.y, self.topLeft.y + self.handleSize)
             )
-            self.bottomRight = CGPoint(x: self.bottomRight.x, y: self.bottomLeft.y)
-            self.topLeft = CGPoint(x: self.bottomLeft.x, y: self.topLeft.y)
+            bottomRight = CGPoint(x: self.bottomRight.x, y: bottomLeft.y)
+            topLeft = CGPoint(x: bottomLeft.x, y: self.topLeft.y)
         case .bottomRight:
-            self.bottomRight = CGPoint(x: location.x,
-                                       y: location.y)
+            bottomRight = CGPoint(x: location.x,
+                                  y: location.y)
             .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
-            self.bottomRight = CGPoint(
-                x: max(self.bottomRight.x, self.bottomLeft.x + self.handleSize),
-                y: max(self.bottomRight.y, self.topRight.y + self.handleSize)
+            bottomRight = CGPoint(
+                x: max(bottomRight.x, self.topLeft.x + self.handleSize),
+                y: max(bottomRight.y, self.topLeft.y + self.handleSize)
             )
-            self.bottomLeft = CGPoint(x: self.bottomLeft.x, y: self.bottomRight.y)
-            self.topRight = CGPoint(x: self.bottomRight.x, y: self.topRight.y)
+            topLeft = self.topLeft
         case .topLeft:
-            self.topLeft = CGPoint(x: location.x,
-                                   y: location.y)
+            topLeft = CGPoint(x: location.x,
+                              y: location.y)
             .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
-            self.topLeft = CGPoint(
-                x: min(self.topLeft.x, self.topRight.x - self.handleSize),
-                y: min(self.topLeft.y, self.bottomLeft.y - self.handleSize)
+            topLeft = CGPoint(
+                x: min(topLeft.x, self.bottomRight.x - self.handleSize),
+                y: min(topLeft.y, self.bottomRight.y - self.handleSize)
             )
-            self.bottomLeft = CGPoint(x: self.topLeft.x, y: self.bottomLeft.y)
-            self.topRight = CGPoint(x: self.topRight.x, y: self.topLeft.y)
+            bottomRight = self.bottomRight
         case .topRight:
-            self.topRight = CGPoint(x: location.x,
-                                    y: location.y)
-            .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
-            self.topRight = CGPoint(
-                x: max(self.topRight.x, self.topLeft.x + self.handleSize),
-                y: min(self.topRight.y, self.bottomRight.y - self.handleSize)
+            var topRight = CGPoint(x: location.x,
+                                   y: location.y)
+                .getBoundedPoint(containerSize: parentViewSize, margin: self.handleSize / 2)
+            topRight = CGPoint(
+                x: max(topRight.x, self.topLeft.x + self.handleSize),
+                y: min(topRight.y, self.bottomRight.y - self.handleSize)
             )
-            self.bottomRight = CGPoint(x: self.topRight.x, y: self.bottomRight.y)
-            self.topLeft = CGPoint(x: self.topLeft.x, y: self.topRight.y)
+            bottomRight = CGPoint(x: topRight.x, y: self.bottomRight.y)
+            topLeft = CGPoint(x: self.topLeft.x, y: topRight.y)
         }
-        self.updateRect()
+        self.updateRect(topLeft: topLeft, bottomRight: bottomRight)
     }
-
+    
     private func getHandle(handlePosition: HandlePosition,
                            parentViewSize: CGSize) -> some View {
         Group {
@@ -198,21 +191,21 @@ struct ImageResizableView: View {
         .contentShape(Circle())
         .position(handlePosition.getPosition(forParentViewSize: self.computedSize,
                                              parentCenter: self.computedCenter))
-            .gesture(
-                DragGesture()
-                    .onChanged { gesture in
-                        self.OnDrag(handlePosition: handlePosition,
-                                    dragGestureValue: gesture,
-                                    parentViewSize: parentViewSize)
-                    }
-            )
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    self.OnDrag(handlePosition: handlePosition,
+                                dragGestureValue: gesture,
+                                parentViewSize: parentViewSize)
+                }
+        )
     }
-
-    private func updateRect() {
-        self.imageRect = CGRect(x: self.topLeft.x,
-                                y: self.topLeft.y,
-                                width: self.bottomRight.x - self.topLeft.x,
-                                height: self.bottomRight.y - self.topLeft.y)
+    
+    private func updateRect(topLeft: CGPoint, bottomRight: CGPoint) {
+        self.imageRect = CGRect(x: topLeft.x,
+                                y: topLeft.y,
+                                width: bottomRight.x - topLeft.x,
+                                height: bottomRight.y - topLeft.y)
     }
 }
 
