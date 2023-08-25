@@ -108,6 +108,8 @@ extension AnalyticsEvent {
         case .pdfShared: return "pdf_shared"
         case .signatureCreated: return "signature_created"
         case .signatureAdded: return "signature_added"
+        case .signatureRemoved: return "signature_removed"
+        case .signaturesConfirmed: return "signatures_confirmed"
         case .textAnnotationAdded: return "text_annotation_added"
         case .textAnnotationRemoved: return "text_annotation_removed"
         case .annotationsConfirmed: return "annotations_confirmed"
@@ -173,6 +175,8 @@ extension AnalyticsEvent {
         case .annotationsConfirmed: return nil
         case .signatureCreated: return nil
         case .signatureAdded: return nil
+        case .signatureRemoved: return nil
+        case .signaturesConfirmed: return nil
         case .fillWidgetCancelled: return nil
         case .fillWidgetConfirmed: return nil
         case .pdfSaved: return nil

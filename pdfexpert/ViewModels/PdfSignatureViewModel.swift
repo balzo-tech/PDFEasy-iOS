@@ -9,7 +9,7 @@ import Foundation
 import Factory
 import PDFKit
 import UIKit
-import PencilKit
+import Combine
 
 extension Container {
     var pdfSignatureViewModel: ParameterFactory<PdfSignatureViewModel.InputParameter, PdfSignatureViewModel> {
@@ -27,91 +27,241 @@ class PdfSignatureViewModel: ObservableObject {
         let onConfirm: PdfSignatureCallback
     }
     
-    @Published var pdfCurrentPageIndex: Int = 0 {
-        didSet {
-            guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
-                return
-            }
-            self.pdfView.go(to: page)
-        }
-    }
+    @Published var pdfDocument: PDFDocument
     @Published var pageImages: [UIImage]
-    @Published var pdf: Pdf
-    @Published var isCreatingSignature: Bool = false { didSet { self.updatePdfViewInteraction() } }
+    @Published var pageIndex: Int
+    @Published var editedPageIndex: Int? = nil
+    @Published var annotations: [PDFAnnotation]
+    @Published var isCreatingSignature: Bool = false
     @Published var signatureRect: CGRect = .zero
-    @Published var signatureImage: UIImage? = nil { didSet { self.updatePdfViewInteraction() } }
+    @Published var signatureImage: UIImage? = nil
+    
+    var pageScrollingAllowed: Bool { nil == self.editedPageIndex }
+    var pageViewSize: CGSize = .zero
+    var unsavedChangesExist: Bool = false
+    
+    // Used only to perform point and rect conversions from view space to page space and viceversa
+    // A dedicated PDFView for each page is needed, because changing page on the fly based on the
+    // needed page appears not to be done instantly, giving wrong results.
+    // This way we achieve correctness but at the cost of an increased memory consumption.
+    private let pdfViews: [PDFView]
     
     @Injected(\.analyticsManager) private var analyticsManager
     
-    var pageScrollingAllowed: Bool { !self.isPositioningSignature && !self.isCreatingSignature }
-    
-    var isPositioningSignature: Bool { self.signatureImage != nil }
-    
     private var onConfirm: PdfSignatureCallback
     
-    var pdfView: PDFView = PDFView()
+    private var pdf: Pdf
+    
+    private var cancelBag = Set<AnyCancellable>()
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
+        var pdfDocumentCopy = PDFDocument()
+        if let pdfData = inputParameter.pdf.pdfDocument.dataRepresentation(), let copy = PDFDocument(data: pdfData) {
+            pdfDocumentCopy = copy
+        }
+        self.pdfDocument = pdfDocumentCopy
         
         self.onConfirm = inputParameter.onConfirm
         
+        var pdfViews: [PDFView] = []
+        var annotationLists: [PDFAnnotation] = []
         var pageImages: [UIImage] = []
-        for pageIndex in 0..<inputParameter.pdf.pdfDocument.pageCount {
-            if let page = inputParameter.pdf.pdfDocument.page(at: pageIndex) {
+        for pageIndex in 0..<pdfDocumentCopy.pageCount {
+            if let page = pdfDocumentCopy.page(at: pageIndex) {
+                let annotations = page.annotations.signatureAnnotations
+                // Store annotations
+                annotationLists.append(contentsOf: annotations)
+                // Detach annotations from page
+                for annotation in annotations {
+                    page.removeAnnotation(annotation)
+                }
+                // Render page
                 pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
+                
+                let pdfView = PDFView()
+                pdfView.document = pdfDocumentCopy
+                pdfView.autoScales = true
+                pdfView.displayMode = .singlePage
+                pdfView.go(to: page)
+                pdfViews.append(pdfView)
             }
         }
+        self.annotations = annotationLists
         self.pageImages = pageImages
+        self.pdfViews = pdfViews
         
-        self.pdfView.document = inputParameter.pdf.pdfDocument
+        self.pageIndex = inputParameter.currentPageIndex
         
-        if let page = self.pdfView.document?.page(at: inputParameter.currentPageIndex) {
-            self.pdfView.go(to: page)
-        }
-        self.pdfCurrentPageIndex = inputParameter.currentPageIndex
-        
-//        let signatureAnnotations = self.pdf.flatMap{ $0.annotations.signatureAnnotations }
-//        print("PdfSignatureViewModel - Existing signature annotations count: \(signatureAnnotations.count)")
+        self.$pageIndex
+            .sink { [weak self] _ in
+                self?.applyCurrentEditedAnnotation()
+            }.store(in: &self.cancelBag)
     }
     
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.signature))
     }
     
-    func onConfirmButtonPressed() {
-        // This distinction between view page and standard page is a workaround to prevent user interaction with annotations. See init.
-        if let currentPage = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
-           let currentViewPage = self.pdfView.currentPage,
-           let signatureImage = self.signatureImage {
-            let signaturePageRect = self.pdfView.convert(self.signatureRect, to: currentViewPage)
-            let signatureAnnotation = PDFAnnotation.createSignature(with: signatureImage, forBounds: signaturePageRect)
-            currentPage.addAnnotation(signatureAnnotation)
-            
-            self.analyticsManager.track(event: .signatureAdded)
-            
-            self.onConfirm(self.pdf)
+    func getAnnotations(forPageIndex pageIndex: Int) -> [PDFAnnotation] {
+        guard let page = self.pdfDocument.page(at: pageIndex) else {
+            return []
         }
+        return self.annotations
+            .filter { $0.page == page }
     }
     
-    func tapOnPdfView() {
-        if !self.isPositioningSignature && !self.isCreatingSignature {
+    func tapOnPdfView(positionInView: CGPoint, pageIndex: Int, pageViewSize: CGSize) {
+        guard let page = self.pdfDocument.page(at: pageIndex) else {
+            return
+        }
+        
+        self.pageViewSize = pageViewSize
+        
+        let pointInPage = self.convertPoint(positionInView, viewSize: pageViewSize, toPage: page)
+        let annotationsInPoint = self.annotations.filter { $0.page == page && $0.bounds.contains(pointInPage) }
+        
+        if self.editedPageIndex != nil, self.signatureRect.contains(positionInView) {
+            // Tapping inside the currently selected image resizable view -> Do nothing
+            return
+        }
+        
+        if self.editedPageIndex != nil {
+            // Tapping outside the currently selected image resizable view -> convert that image resizable view to signature annotation
+            self.applyCurrentEditedAnnotation()
+
+            if let annotationInPoint = annotationsInPoint.first {
+                // Tapping inside a different signature annotation -> convert that signature annotation to image resizable view
+                self.convertAnnotationToView(annotation: annotationInPoint,
+                                             pageIndex: pageIndex)
+            }
+            // Changes are applied, set the dirty flag
+            self.unsavedChangesExist = true
+        } else if let annotationInPoint = annotationsInPoint.first {
+            // Tapping inside a signature annotation -> convert that signature annotation to image resizable view
+            self.convertAnnotationToView(annotation: annotationInPoint,
+                                         pageIndex: pageIndex)
+            // Nothing changes in this exact instant, but it will if the user changes the image of the signature
+            // Just set the dirty flag here to keep it simple
+            self.unsavedChangesExist = true
+        } else {
+            // Tapping in empty area -> start the signature creation flow
+            self.editedPageIndex = pageIndex
             self.isCreatingSignature = true
         }
     }
     
-    func onSignatureCreated(signatureImage: UIImage) {
-        self.analyticsManager.track(event: .signatureCreated)
-        self.signatureImage = signatureImage
-        self.signatureRect = CGRect(origin: CGPoint(x: self.pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
-                                                    y: self.pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
-                                    size: signatureImage.size)
-        self.isCreatingSignature = false
+    func onDeleteAnnotationPressed() {
+        self.signatureImage = nil
+        self.editedPageIndex = nil
+        self.analyticsManager.track(event: .signatureRemoved)
+        // A image resizable view has been removed. If that view was associated to an existing signature annotation
+        // a change has been made to the original file. Just setting the dirty flag anyway to keep it simple.
+        self.unsavedChangesExist = true
     }
     
-    private func updatePdfViewInteraction() {
-        // this is an alternative to allowHitTest, since that one caused the view model to memory leak.
-        self.pdfView.isUserInteractionEnabled = self.pageScrollingAllowed
+    func onConfirmButtonPressed() {
+        self.applyCurrentEditedAnnotation()
+        
+        if self.unsavedChangesExist {
+            for pageIndex in 0..<self.pdfDocument.pageCount {
+                if let page = self.pdfDocument.page(at: pageIndex) {
+                    let pageAnnotations = self.annotations.filter { $0.page == page }
+                    // Attach annotations to page
+                    for pageAnnotation in pageAnnotations {
+                        page.addAnnotation(pageAnnotation)
+                    }
+                }
+            }
+            self.pdf.updateDocument(self.pdfDocument)
+            self.onConfirm(self.pdf)
+        }
+        
+        self.analyticsManager.track(event: .signaturesConfirmed)
+    }
+    
+    private func applyCurrentEditedAnnotation() {
+        if let signatureImage = self.signatureImage,
+           let pageIndex = self.editedPageIndex,
+           let page = self.pdfDocument.page(at: pageIndex) {
+            let bounds = self.convertRect(self.signatureRect, viewSize: self.pageViewSize, toPage: page)
+            let annotation = PDFAnnotation.createSignature(with: signatureImage, forBounds: bounds)
+            annotation.page = page
+            self.annotations.append(annotation)
+            self.unsavedChangesExist = true
+            self.signatureImage = nil
+            self.analyticsManager.track(event: .signatureAdded)
+        }
+        self.editedPageIndex = nil
+    }
+    
+    private func convertAnnotationToView(annotation: PDFAnnotation,
+                                         pageIndex: Int) {
+        guard let page = self.pdfDocument.page(at: pageIndex) else {
+            assertionFailure("Missing page with given page index")
+            return
+        }
+        self.signatureRect = self.convertRect(annotation.bounds, viewSize: self.pageViewSize, fromPage: page)
+        self.signatureImage = annotation.image
+        self.annotations.removeAll(where: { $0 == annotation })
+        self.editedPageIndex = pageIndex
+    }
+    
+    func onSignatureCreated(signatureImage: UIImage) {
+        guard let page = self.pdfDocument.page(at: self.pageIndex) else {
+            assertionFailure("Missing page with given page index")
+            return
+        }
+        guard let pdfView = self.getPdfView(viewSize: self.pageViewSize, page: page) else {
+            assertionFailure("Missing page view with given page")
+            return
+        }
+        self.analyticsManager.track(event: .signatureCreated)
+        self.signatureImage = signatureImage
+        self.signatureRect = CGRect(origin: CGPoint(x: pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
+                                                    y: pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
+                                    size: signatureImage.size)
+        self.isCreatingSignature = false
+        // The newly created image resizable view will be added as a signature annotation upon confirmation
+        // thus the dirty flag must be set
+        self.unsavedChangesExist = true
+    }
+    
+    func convertPoint(_ point: CGPoint, viewSize: CGSize, toPage: PDFPage) -> CGPoint {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: toPage) else {
+            return .zero
+        }
+        return pdfView.convert(point, to: toPage)
+    }
+
+    func convertPoint(_ point: CGPoint, viewSize: CGSize, fromPage: PDFPage) -> CGPoint {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: fromPage) else {
+            return .zero
+        }
+        return pdfView.convert(point, from: fromPage)
+    }
+    
+    func convertRect(_ rect: CGRect, viewSize: CGSize, toPage: PDFPage) -> CGRect {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: toPage) else {
+            return .zero
+        }
+        return pdfView.convert(rect, to: toPage)
+    }
+    
+    func convertRect(_ rect: CGRect, viewSize: CGSize, fromPage: PDFPage) -> CGRect {
+        guard let pdfView = self.getPdfView(viewSize: viewSize, page: fromPage) else {
+            return .zero
+        }
+        return pdfView.convert(rect, from: fromPage)
+    }
+    
+    private func getPdfView(viewSize: CGSize, page: PDFPage) -> PDFView? {
+        guard let pdfView = self.pdfViews.first(where: { $0.currentPage == page }) else {
+            assertionFailure("Missing PdfView with given page")
+            return nil
+        }
+        pdfView.frame = CGRect(origin: .zero, size: viewSize)
+        return pdfView
     }
 }
 

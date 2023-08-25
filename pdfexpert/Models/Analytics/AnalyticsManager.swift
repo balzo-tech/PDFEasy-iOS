@@ -63,6 +63,8 @@ enum AnalyticsEvent {
     case importTutorialCompleted
     case signatureCreated
     case signatureAdded
+    case signatureRemoved
+    case signaturesConfirmed
     case textAnnotationAdded
     case textAnnotationRemoved
     case annotationsConfirmed

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Factory
+import PDFKit
 
 struct PdfSignatureView: View {
     
@@ -19,10 +20,10 @@ struct PdfSignatureView: View {
             VStack(spacing: 0) {
                 VStack(spacing: 0) {
                     Spacer()
-                    self.pdfViewStack
+                    self.pdfView
                     Spacer()
                 }
-                self.pageCounter(currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
                                  totalPages: self.viewModel.pageImages.count)
                 Spacer().frame(height: 50)
                 self.getDefaultButton(text: "Finish", onButtonPressed: {
@@ -35,7 +36,7 @@ struct PdfSignatureView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Tap where you wish to sign")
             .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                if self.viewModel.isPositioningSignature {
+                if self.viewModel.unsavedChangesExist {
                     self.showCancelWarningDialog = true
                 } else {
                     self.dismiss()
@@ -61,49 +62,77 @@ struct PdfSignatureView: View {
         .onAppear(perform: self.viewModel.onAppear)
     }
     
-    var pdfViewStack: some View {
-        ZStack {
-            // This PDFView is behind everything so that it can be easily laid out
-            // and used for rect conversion.
-            // TODO: Improve this removing the need of a PDFView (especially in the view hierarchy)
-            PdfKitViewBinder(
-                pdfView: self.$viewModel.pdfView,
-                singlePage: false,
-                pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 24, right: 0),
-                backgroundColor: UIColor(ColorPalette.primaryBG),
-                usePaginator: true
-            )
-            TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
-                ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
-                    GeometryReader { geometryReader in
-                        ZStack {
-                            Image(uiImage: page)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .ignoresSafeArea(.keyboard)
+    var pdfView: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            GeometryReader { parentGeometryReader in
+                TabView(selection: self.$viewModel.pageIndex) {
+                    ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, page) in
+                        GeometryReader { geometryReader in
+                            HStack {
+                                Spacer()
+                                ZStack {
+                                    Image(uiImage: page)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .ignoresSafeArea(.keyboard)
+                                    self.getAnnotationViews(forPageIndex: pageIndex)
+                                        .ignoresSafeArea(.keyboard)
+                                }
+                                Spacer()
+                            }
+                            .onTapGesture {
+                                self.viewModel.tapOnPdfView(positionInView: $0,
+                                                            pageIndex: pageIndex,
+                                                            pageViewSize: geometryReader.size)
+                            }
+                            .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
                         }
-                        .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
                     }
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
+                .frame(width: parentGeometryReader.size.width,
+                       height: parentGeometryReader.size.height)
             }
-            .allowsHitTesting(self.viewModel.pageScrollingAllowed)
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .onTapGesture { self.viewModel.tapOnPdfView() }
             .background(ColorPalette.primaryBG)
-            if let signatureImage = self.viewModel.signatureImage {
-                ImageResizableView(
-                    uiImage: signatureImage,
-                    imageRect: self.$viewModel.signatureRect,
-                    borderColor: ColorPalette.thirdText,
-                    borderWidth: 2,
-                    handleColor: ColorPalette.buttonGradientStart,
-                    handleSize: 10,
-                    handleTapSize: 50
-                )
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Tap where you wish to add text")
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder func getAnnotationViews(forPageIndex pageIndex: Int) -> some View {
+        ForEach(self.viewModel.getAnnotations(forPageIndex: pageIndex), id:\.self) { pageAnnotation in
+            self.getView(forAnnotation: pageAnnotation)
+        }
+        if self.viewModel.editedPageIndex == pageIndex, let signatureImage = self.viewModel.signatureImage {
+            ImageResizableView(
+                uiImage: signatureImage,
+                imageRect: self.$viewModel.signatureRect,
+                borderColor: ColorPalette.thirdText,
+                borderWidth: 2,
+                handleColor: ColorPalette.buttonGradientStart,
+                handleSize: 10,
+                handleTapSize: 50
+            )
+        }
+    }
+    
+    @ViewBuilder func getView(forAnnotation annotation: PDFAnnotation) -> some View {
+        if let page = annotation.page {
+            GeometryReader { geometryReader in
+                let annotationBounds = self.viewModel.convertRect(annotation.bounds,
+                                                                        viewSize: geometryReader.size,
+                                                                        fromPage: page)
+                let position = CGPoint(x: annotationBounds.origin.x + annotationBounds.size.width / 2,
+                                       y: annotationBounds.origin.y + annotationBounds.size.height / 2)
+                Image(uiImage: annotation.image)
+                    .resizable()
+                    .frame(width: annotationBounds.width, height: annotationBounds.height)
+                    .position(position)
             }
         }
-        .padding([.leading, .trailing], 16)
-        .padding([.top], 16)
     }
 }
 

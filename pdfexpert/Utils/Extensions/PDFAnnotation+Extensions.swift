@@ -43,6 +43,19 @@ extension PDFAnnotation {
         return true
     }
     
+    var image: UIImage {
+        let renderer = UIGraphicsImageRenderer(size: self.bounds.size)
+        return renderer.image { ctx in
+            
+            ctx.cgContext.translateBy(x: -self.bounds.origin.x, y: self.bounds.origin.y)
+            // Flip the context vertically because the Core Graphics coordinate system starts from the bottom.
+            ctx.cgContext.translateBy(x: 0, y: self.bounds.size.height)
+            ctx.cgContext.scaleBy(x: 1, y: -1)
+            
+            self.draw(with: .mediaBox, in: ctx.cgContext)
+        }
+    }
+    
     var verticalCenteredTextBounds: CGRect {
         self.bounds.decode(forText: self.contents ?? "", withFont: self.font)
     }
@@ -101,10 +114,10 @@ fileprivate extension Dictionary where Key == AnyHashable, Value == Any {
     private static var keyPrefix: String { "PdfExpert" }
     
     mutating func addCustomPdfValue(_ value: Any, forKey key: AnyHashable) {
-        self["\(Self.keyPrefix)\(key)"] = value
+        self["\(Self.keyPrefix)_\(key)"] = value
     }
     
     func getCustomPdfValue<T>(forKey key: AnyHashable) -> T? {
-        return self["/\(Self.keyPrefix)\(key)"] as? T
+        return self["/\(Self.keyPrefix)_\(key)"] as? T
     }
 }
