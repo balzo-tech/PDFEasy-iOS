@@ -12,4 +12,9 @@ protocol Repository {
     func getDoPdfExist() throws -> Bool
     func loadPdfs() throws -> [Pdf]
     func delete(pdf: Pdf) throws
+    
+    func saveSignature(signature: Signature) throws -> Signature
+    func getDoSignatureExist() throws -> Bool
+    func loadSignatures() throws -> [Signature]
+    func delete(signature: Signature) throws
 }

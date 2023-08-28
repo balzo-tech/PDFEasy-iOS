@@ -110,6 +110,7 @@ Make a summary and suggest three questions. Format your response as a json with 
         static let PdfDefaultMarginsOption: MarginsOption = .noMargins
         static let PdfDefaultCompression: CompressionOption = .noCompression
         static let PdfReaderDefaultFontScale: CGFloat = 1.5
+        static let SignatureSize: CGSize = CGSize(width: 300, height: 100)
     }
 }
 

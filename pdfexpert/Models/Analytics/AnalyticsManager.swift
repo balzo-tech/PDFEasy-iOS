@@ -32,6 +32,7 @@ enum AnalyticsScreen {
     case subscription
     case importTutorial
     case signature
+    case signaturePicker
     case fillForm
     case fillWidget
     case chatPdf
@@ -65,6 +66,8 @@ enum AnalyticsEvent {
     case signatureAdded
     case signatureRemoved
     case signaturesConfirmed
+    case signatureFileSaved
+    case signatureFileDeleted
     case textAnnotationAdded
     case textAnnotationRemoved
     case annotationsConfirmed

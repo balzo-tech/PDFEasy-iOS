@@ -71,6 +71,7 @@ extension AnalyticsScreen {
         case .subscription: return "Subscription"
         case .importTutorial: return "ImportTutorial"
         case .signature: return "Signature"
+        case .signaturePicker: return "SignaturePicker"
         case .fillForm: return "FillForm"
         case .fillWidget: return "FillWidget"
         case .chatPdf: return "ChatPdf"
@@ -110,6 +111,8 @@ extension AnalyticsEvent {
         case .signatureAdded: return "signature_added"
         case .signatureRemoved: return "signature_removed"
         case .signaturesConfirmed: return "signatures_confirmed"
+        case .signatureFileSaved: return "signatures_file_saved"
+        case .signatureFileDeleted: return "signatures_file_deleted"
         case .textAnnotationAdded: return "text_annotation_added"
         case .textAnnotationRemoved: return "text_annotation_removed"
         case .annotationsConfirmed: return "annotations_confirmed"
@@ -177,6 +180,8 @@ extension AnalyticsEvent {
         case .signatureAdded: return nil
         case .signatureRemoved: return nil
         case .signaturesConfirmed: return nil
+        case .signatureFileSaved: return nil
+        case .signatureFileDeleted: return nil
         case .fillWidgetCancelled: return nil
         case .fillWidgetConfirmed: return nil
         case .pdfSaved: return nil

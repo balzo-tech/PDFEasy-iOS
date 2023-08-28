@@ -9,5 +9,4 @@ import Foundation
 
 protocol CacheManager {
     var onboardingShown: Bool { get set }
-    var signatureData: Data? { get set }
 }

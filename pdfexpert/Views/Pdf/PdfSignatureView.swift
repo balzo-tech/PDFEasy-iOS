@@ -42,13 +42,21 @@ struct PdfSignatureView: View {
                     self.dismiss()
                 }
             })
-            .formSheet(isPresented: self.$viewModel.isCreatingSignature,
-                       size: CGSize(width: 400, height: 400)) {
+            .formSheet(isPresented: self.$viewModel.showSignatureCreation,
+                       size: CGSize(width: 400, height: 355)) {
                 PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({
-                    self.viewModel.onSignatureCreated(signatureImage: $0)
+                    self.viewModel.onSignatureSelected(signatureImage: $0.image)
                 }))
                 .background(ColorPalette.primaryText)
-                .cornerRadius(20, corners: [.topLeft, .topRight])
+            }.formSheet(isPresented: self.$viewModel.showSignaturePicker,
+                        size: CGSize(width: 400, height: 700)) {
+                let params = PdfSignaturePickerViewModel.Params(confirmationCallback: {
+                    self.viewModel.onSignatureSelected(signatureImage: $0.image)
+                }, createNewSignatureCallback: {
+                    self.viewModel.onCreateNewSignature()
+                })
+                PdfSignaturePickerView(viewModel: Container.shared.pdfSignaturePickerViewModel(params))
+                .background(ColorPalette.primaryText)
             }
             .alert("Are you sure?",
                    isPresented: self.$showCancelWarningDialog,
@@ -125,8 +133,8 @@ struct PdfSignatureView: View {
         if let page = annotation.page {
             GeometryReader { geometryReader in
                 let annotationBounds = self.viewModel.convertRect(annotation.bounds,
-                                                                        viewSize: geometryReader.size,
-                                                                        fromPage: page)
+                                                                  viewSize: geometryReader.size,
+                                                                  fromPage: page)
                 let position = CGPoint(x: annotationBounds.origin.x + annotationBounds.size.width / 2,
                                        y: annotationBounds.origin.y + annotationBounds.size.height / 2)
                 Image(uiImage: annotation.image)

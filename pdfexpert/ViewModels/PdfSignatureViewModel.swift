@@ -32,7 +32,8 @@ class PdfSignatureViewModel: ObservableObject {
     @Published var pageIndex: Int
     @Published var editedPageIndex: Int? = nil
     @Published var annotations: [PDFAnnotation]
-    @Published var isCreatingSignature: Bool = false
+    @Published var showSignatureCreation: Bool = false
+    @Published var showSignaturePicker: Bool = false
     @Published var signatureRect: CGRect = .zero
     @Published var signatureImage: UIImage? = nil
     
@@ -46,6 +47,7 @@ class PdfSignatureViewModel: ObservableObject {
     // This way we achieve correctness but at the cost of an increased memory consumption.
     private let pdfViews: [PDFView]
     
+    @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
     
     private var onConfirm: PdfSignatureCallback
@@ -147,7 +149,11 @@ class PdfSignatureViewModel: ObservableObject {
         } else {
             // Tapping in empty area -> start the signature creation flow
             self.editedPageIndex = pageIndex
-            self.isCreatingSignature = true
+            if (try? self.repository.getDoSignatureExist()) ?? false {
+                self.showSignaturePicker = true
+            } else {
+                self.showSignatureCreation = true
+            }
         }
     }
     
@@ -207,7 +213,7 @@ class PdfSignatureViewModel: ObservableObject {
         self.editedPageIndex = pageIndex
     }
     
-    func onSignatureCreated(signatureImage: UIImage) {
+    func onSignatureSelected(signatureImage: UIImage) {
         guard let page = self.pdfDocument.page(at: self.pageIndex) else {
             assertionFailure("Missing page with given page index")
             return
@@ -216,15 +222,24 @@ class PdfSignatureViewModel: ObservableObject {
             assertionFailure("Missing page view with given page")
             return
         }
-        self.analyticsManager.track(event: .signatureCreated)
         self.signatureImage = signatureImage
         self.signatureRect = CGRect(origin: CGPoint(x: pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
                                                     y: pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
                                     size: signatureImage.size)
-        self.isCreatingSignature = false
+        self.showSignaturePicker = false
+        self.showSignatureCreation = false
         // The newly created image resizable view will be added as a signature annotation upon confirmation
         // thus the dirty flag must be set
         self.unsavedChangesExist = true
+    }
+    
+    @MainActor
+    func onCreateNewSignature() {
+        self.showSignaturePicker = false
+        Task {
+            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+            self.showSignatureCreation = true
+        }
     }
     
     func convertPoint(_ point: CGPoint, viewSize: CGSize, toPage: PDFPage) -> CGPoint {

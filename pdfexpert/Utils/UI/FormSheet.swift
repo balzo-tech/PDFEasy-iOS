@@ -64,7 +64,7 @@ struct FormSheet<Content: View> : UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: FormSheetWrapper<Content>,
                                 context: UIViewControllerRepresentableContext<FormSheet<Content>>) {
-        if show {
+        if self.show {
             uiViewController.show()
         }
         else {

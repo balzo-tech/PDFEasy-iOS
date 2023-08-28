@@ -11,20 +11,20 @@ import UIKit
 import PencilKit
 
 extension Container {
-    var pdfSignatureCanvasViewModel: ParameterFactory<ConfirmationCallback, PdfSignatureCanvasViewModel> {
+    var pdfSignatureCanvasViewModel: ParameterFactory<PdfSignatureCanvasViewModel.ConfirmationCallback, PdfSignatureCanvasViewModel> {
         self { PdfSignatureCanvasViewModel(onConfirm: $0) }
     }
 }
 
-typealias ConfirmationCallback = ((UIImage) -> ())
-
 class PdfSignatureCanvasViewModel: ObservableObject {
     
-    typealias ConfirmationCallback = ((UIImage) -> ())
+    typealias ConfirmationCallback = ((Signature) -> ())
     
     @Published var canvasView = PKCanvasView()
+    @Published var shouldSaveSignature: Bool = false
+    @Published var pdfSaveError: SharedUnderlyingError? = nil
     
-    @Injected(\.cacheManager) var cacheManager
+    @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
     
     private var confirmAllowed: Bool { self.canvasView.drawing.strokes.count > 0 }
@@ -33,17 +33,26 @@ class PdfSignatureCanvasViewModel: ObservableObject {
     
     init(onConfirm: @escaping ConfirmationCallback) {
         self.onConfirm = onConfirm
-        if let signatureData = self.cacheManager.signatureData, let drawing = try? PKDrawing(data: signatureData) {
-            self.canvasView.drawing = drawing
-        }
     }
     
     func onClearButtonPressed() {
         self.canvasView.drawing = PKDrawing()
     }
     
+    func toggleShouldSave() {
+        self.shouldSaveSignature = !self.shouldSaveSignature
+    }
+    
     func onConfirmButtonPressed() {
-        self.cacheManager.signatureData = self.canvasView.drawing.dataRepresentation()
-        self.onConfirm(self.canvasView.drawing.image(from: self.canvasView.bounds, scale: 3.0, userInterfaceStyle: .light))
+        var signature = Signature(drawing: self.canvasView.drawing)
+        if self.shouldSaveSignature {
+            do {
+                signature = try self.repository.saveSignature(signature: signature)
+            } catch {
+                self.pdfSaveError = .convertError(fromError: error)
+            }
+        }
+        self.analyticsManager.track(event: .signatureCreated)
+        self.onConfirm(signature)
     }
 }

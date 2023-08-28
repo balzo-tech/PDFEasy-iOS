@@ -67,6 +67,10 @@
 		893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D82A693013004EE67C /* MessageIndicatorView.swift */; };
 		8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8940FB902A710D8D00A00D8D /* AddPasswordView.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
+		89429F862A9C8ECC00465420 /* PdfSignaturePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */; };
+		89429F882A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */; };
+		89429F8A2A9C937300465420 /* Signature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F892A9C937300465420 /* Signature.swift */; };
+		89429F8C2A9C937C00465420 /* CDSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F8B2A9C937C00465420 /* CDSignature.swift */; };
 		89431FC62A9900740042A636 /* MathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89431FC52A9900740042A636 /* MathUtils.swift */; };
 		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
 		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
@@ -302,6 +306,10 @@
 		893ED9D72A693013004EE67C /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		893ED9D82A693013004EE67C /* MessageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageIndicatorView.swift; sourceTree = "<group>"; };
 		8940FB902A710D8D00A00D8D /* AddPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPasswordView.swift; sourceTree = "<group>"; };
+		89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerView.swift; sourceTree = "<group>"; };
+		89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerViewModel.swift; sourceTree = "<group>"; };
+		89429F892A9C937300465420 /* Signature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signature.swift; sourceTree = "<group>"; };
+		89429F8B2A9C937C00465420 /* CDSignature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDSignature.swift; sourceTree = "<group>"; };
 		89431FC52A9900740042A636 /* MathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathUtils.swift; sourceTree = "<group>"; };
 		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
 		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
@@ -571,12 +579,35 @@
 			path = Camera;
 			sourceTree = "<group>";
 		};
+		89429F8D2A9C94A300465420 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				89429F8E2A9C94BD00465420 /* CoreData */,
+				89AAFE9F29DB2672002D348E /* CacheManager.swift */,
+				89AAFEA029DB2672002D348E /* CacheManagerImpl.swift */,
+				893C8FD129DED2E9000E35BD /* Repository.swift */,
+				893C8FD229DED2E9000E35BD /* RepositoryImpl.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		89429F8E2A9C94BD00465420 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				89C2500E2A72B2BC00184C45 /* CDPdf.swift */,
+				89429F8B2A9C937C00465420 /* CDSignature.swift */,
+				893C8FCF29DED278000E35BD /* Persistence.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		89436AB929E5578300060605 /* Pdf */ = {
 			isa = PBXGroup;
 			children = (
 				89436ABA29E557D500060605 /* PdfFlowView.swift */,
 				89436ABC29E5586600060605 /* PdfEditView.swift */,
 				892201DB2A0BA70300832CF2 /* PdfSignatureView.swift */,
+				89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */,
 				89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */,
 				8932ECE42A20DC7700CBCD7A /* PdfFillFormView.swift */,
 				89504A452A448252000BCACD /* PdfFillWidgetView.swift */,
@@ -888,15 +919,11 @@
 			children = (
 				89CD7AEF29D329B1003F1C3A /* Entities */,
 				89E55BE029DC66170073F268 /* Analytics */,
-				893C8FCF29DED278000E35BD /* Persistence.swift */,
-				89AAFE9F29DB2672002D348E /* CacheManager.swift */,
-				89AAFEA029DB2672002D348E /* CacheManagerImpl.swift */,
+				89429F8D2A9C94A300465420 /* Persistence */,
 				89CD7AEB29D329B1003F1C3A /* Store.swift */,
 				89CD7AE529D329B1003F1C3A /* StoreImpl.swift */,
 				89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */,
 				89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */,
-				893C8FD129DED2E9000E35BD /* Repository.swift */,
-				893C8FD229DED2E9000E35BD /* RepositoryImpl.swift */,
 				8991485029E851B500DD01F2 /* ConfigService.swift */,
 				8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */,
 				893BE5312A6A96BE004B05B9 /* Network */,
@@ -907,8 +934,8 @@
 		89CD7AEF29D329B1003F1C3A /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				89C2500E2A72B2BC00184C45 /* CDPdf.swift */,
 				89436ABE29E55EA000060605 /* Pdf.swift */,
+				89429F892A9C937300465420 /* Signature.swift */,
 				8928F3D02A30BAFB001C1853 /* PickedImage.swift */,
 				8936AA322A6828C9005F6C73 /* ProjectInfo.swift */,
 				893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */,
@@ -956,6 +983,7 @@
 				892201DD2A0BA72D00832CF2 /* PdfSignatureViewModel.swift */,
 				8932ECE62A20DCB900CBCD7A /* PdfFillFormViewModel.swift */,
 				89127AA42A17A3600059005F /* PdfSignatureCanvasViewModel.swift */,
+				89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */,
 				89504A472A44829C000BCACD /* PdfFillWidgetViewModel.swift */,
 				89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */,
 				89BB2DBA2A7A7DD7009E6738 /* PdfUnlockViewModel.swift */,
@@ -1244,6 +1272,7 @@
 				89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */,
 				89CD7B5529D329B1003F1C3A /* Enum+Extensions.swift in Sources */,
 				8932ECE72A20DCB900CBCD7A /* PdfFillFormViewModel.swift in Sources */,
+				89429F8C2A9C937C00465420 /* CDSignature.swift in Sources */,
 				89436ABF29E55EA000060605 /* Pdf.swift in Sources */,
 				8955ED962A1F73DC009985EE /* OnboardingViewModel.swift in Sources */,
 				8936AA422A6840D1005F6C73 /* ChatPdfView.swift in Sources */,
@@ -1350,6 +1379,7 @@
 				896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */,
 				89D1FE802A84D76B009AC57C /* FullScreenClearBackground.swift in Sources */,
 				8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */,
+				89429F882A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
@@ -1374,6 +1404,7 @@
 				89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */,
 				89ABAA592A97B29C00721045 /* PdfDocument+Extensions.swift in Sources */,
 				89BB2DC12A7AB4A8009E6738 /* PdfSortView.swift in Sources */,
+				89429F862A9C8ECC00465420 /* PdfSignaturePickerView.swift in Sources */,
 				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
 				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
@@ -1394,6 +1425,7 @@
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
 				8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */,
 				893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */,
+				89429F8A2A9C937300465420 /* Signature.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
 				894CB0A02A8520AD0008008A /* ChatPdfSetupData+Decodable.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,

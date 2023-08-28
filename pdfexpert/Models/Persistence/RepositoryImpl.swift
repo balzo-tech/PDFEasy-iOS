@@ -10,6 +10,7 @@ import CoreData
 import Factory
 import CloudKit
 import PDFKit
+import PencilKit
 
 private let DiskFullErrorDomain: String = NSSQLiteErrorDomain
 private let DiskFullErrorCode: Int = 13
@@ -25,13 +26,15 @@ class RepositoryImpl: Repository {
     @Injected(\.persistence) var persistence
     @Injected(\.analyticsManager) var analyticsMananger
     
-    private var pdfManagedContext: NSManagedObjectContext {
+    private var sharedManagedContext: NSManagedObjectContext {
         return self.persistence.container.viewContext
     }
     
+    // MARK: - PDF
+    
     func savePdf(pdf: Pdf) throws -> Pdf {
         
-        guard let savedOrNewPdf = pdf.getSavedOrNewPdf(context: self.pdfManagedContext) else {
+        guard let savedOrNewPdf = pdf.getSavedOrNewPdf(context: self.sharedManagedContext) else {
             throw SaveError.unknownError
         }
         
@@ -55,7 +58,7 @@ class RepositoryImpl: Repository {
             result = try self.persistence.container
                 .viewContext.fetch(request).count > 0
         } catch {
-            debugPrint(for: self, message: "Error while fetching stories")
+            debugPrint(for: self, message: "Error while fetching pdfs")
             throw SharedUnderlyingError.convertError(fromError: error)
         }
         return result
@@ -74,17 +77,78 @@ class RepositoryImpl: Repository {
                     return pdf
             }
         } catch {
-            debugPrint(for: self, message: "Error while fetching stories")
+            debugPrint(for: self, message: "Error while fetching pdfs")
             throw SharedUnderlyingError.convertError(fromError: error)
         }
     }
     
     func delete(pdf: Pdf) throws {
-        guard let storedPdf = pdf.getSavedPdf(context: self.pdfManagedContext) else {
+        guard let storedPdf = pdf.getSavedPdf(context: self.sharedManagedContext) else {
             debugPrint(for: self, message: "Current Pdf instance doesn't exist in the persistent storage")
             return
         }
         self.persistence.container.viewContext.delete(storedPdf)
+        try self.saveChanges()
+    }
+    
+    // MARK: - Signature
+    
+    func saveSignature(signature: Signature) throws -> Signature {
+        
+        guard let savedOrNewSignature = signature.getSavedOrNewSignature(context: self.sharedManagedContext) else {
+            throw SaveError.unknownError
+        }
+        
+        try self.saveChanges()
+        
+        // Must get the Signature entity after having saved, because its ObjectId changes after having saved the object.
+        guard let updatedSignature = Signature.create(withCoreDataSignature: savedOrNewSignature) else {
+            throw SaveError.unknownError
+        }
+        
+        self.analyticsMananger.track(event: .signatureFileSaved)
+        
+        return updatedSignature
+    }
+    
+    func getDoSignatureExist() throws -> Bool {
+        var result = false
+        let request = CDSignature.fetchRequest()
+        request.includesSubentities = false
+        do {
+            result = try self.persistence.container
+                .viewContext.fetch(request).count > 0
+        } catch {
+            debugPrint(for: self, message: "Error while fetching signatures")
+            throw SharedUnderlyingError.convertError(fromError: error)
+        }
+        return result
+    }
+    
+    func loadSignatures() throws -> [Signature] {
+        let fetchRequest = CDSignature.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+        do {
+            return try self.persistence.container.viewContext
+                .fetch(fetchRequest)
+                .map { signature in
+                    guard let signature = Signature.create(withCoreDataSignature: signature) else {
+                        throw SharedUnderlyingError.unknownError
+                    }
+                    return signature
+            }
+        } catch {
+            debugPrint(for: self, message: "Error while fetching signatures")
+            throw SharedUnderlyingError.convertError(fromError: error)
+        }
+    }
+    
+    func delete(signature: Signature) throws {
+        guard let storedSignature = signature.getSavedSignature(context: self.sharedManagedContext) else {
+            debugPrint(for: self, message: "Current Signature instance doesn't exist in the persistent storage")
+            return
+        }
+        self.persistence.container.viewContext.delete(storedSignature)
         try self.saveChanges()
     }
     
@@ -166,5 +230,56 @@ fileprivate extension Pdf {
                            fileName: pdf.filename,
                            compression: CompressionOption(rawValue: pdf.compression) ?? K.Misc.PdfDefaultCompression,
                            margins: MarginsOption(rawValue: pdf.margins) ?? K.Misc.PdfDefaultMarginsOption)
+    }
+}
+
+fileprivate extension Signature {
+    
+    func getSavedOrNewSignature(context: NSManagedObjectContext) -> CDSignature? {
+        
+        guard let signatureData = self.rawData else {
+            debugPrint(for: self, message: "Cannot get signature raw data for given Signature instance")
+            return nil
+        }
+        
+        var result: CDSignature? = nil
+        
+        if let objectId = self.storeId {
+            guard let savedSignature = (try? context.existingObject(with: objectId)) as? CDSignature else {
+                debugPrint(for: self, message: "Cannot found expected CDSignature instance for given object id")
+                return nil
+            }
+            result = savedSignature
+        } else {
+            result = CDSignature(context: context)
+        }
+        
+        result?.update(withSignature: self, imageData: signatureData)
+        
+        return result
+    }
+    
+    func getSavedSignature(context: NSManagedObjectContext) -> CDSignature? {
+        if let objectId = self.storeId {
+            return (try? context.existingObject(with: objectId)) as? CDSignature
+        } else {
+            return nil
+        }
+    }
+    
+    static func create(withCoreDataSignature coreDataSignature: CDSignature) -> Self? {
+        guard let signatureData = coreDataSignature.data else {
+            debugPrint(for: self, message: "Cannot get signature data for given CDSignature instance")
+            return nil
+        }
+        let signature = try? Signature(storeId: coreDataSignature.objectID,
+                                       creationDate: coreDataSignature.creationDate,
+                                       data: signatureData
+        )
+        guard let signature else {
+            debugPrint(for: self, message: "Cannot get signature drawing for given signature data")
+            return nil
+        }
+        return signature
     }
 }
