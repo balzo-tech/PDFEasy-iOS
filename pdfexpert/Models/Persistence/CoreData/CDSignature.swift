@@ -18,11 +18,6 @@ public class CDSignature: NSManagedObject {
 }
 
 extension CDSignature {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<CDSignature> {
-        return NSFetchRequest<CDSignature>(entityName: "Signature")
-    }
-
     @NSManaged public var data: Data?
     @NSManaged public var creationDate: Date?
 }

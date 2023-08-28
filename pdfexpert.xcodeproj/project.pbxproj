@@ -71,6 +71,9 @@
 		89429F882A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */; };
 		89429F8A2A9C937300465420 /* Signature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F892A9C937300465420 /* Signature.swift */; };
 		89429F8C2A9C937C00465420 /* CDSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F8B2A9C937C00465420 /* CDSignature.swift */; };
+		89429F912A9CFFDC00465420 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F902A9CFFDC00465420 /* Persistable.swift */; };
+		89429F932A9CFFF100465420 /* Pdf+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F922A9CFFF100465420 /* Pdf+Persistable.swift */; };
+		89429F952A9D001A00465420 /* Signature+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F942A9D001A00465420 /* Signature+Persistable.swift */; };
 		89431FC62A9900740042A636 /* MathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89431FC52A9900740042A636 /* MathUtils.swift */; };
 		89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436AB729E5556600060605 /* PdfCoordinator.swift */; };
 		89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436ABA29E557D500060605 /* PdfFlowView.swift */; };
@@ -310,6 +313,9 @@
 		89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerViewModel.swift; sourceTree = "<group>"; };
 		89429F892A9C937300465420 /* Signature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signature.swift; sourceTree = "<group>"; };
 		89429F8B2A9C937C00465420 /* CDSignature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDSignature.swift; sourceTree = "<group>"; };
+		89429F902A9CFFDC00465420 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
+		89429F922A9CFFF100465420 /* Pdf+Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pdf+Persistable.swift"; sourceTree = "<group>"; };
+		89429F942A9D001A00465420 /* Signature+Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Signature+Persistable.swift"; sourceTree = "<group>"; };
 		89431FC52A9900740042A636 /* MathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathUtils.swift; sourceTree = "<group>"; };
 		89436AB729E5556600060605 /* PdfCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfCoordinator.swift; sourceTree = "<group>"; };
 		89436ABA29E557D500060605 /* PdfFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFlowView.swift; sourceTree = "<group>"; };
@@ -594,11 +600,22 @@
 		89429F8E2A9C94BD00465420 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				89429F8F2A9CFFC500465420 /* Persistable */,
 				89C2500E2A72B2BC00184C45 /* CDPdf.swift */,
 				89429F8B2A9C937C00465420 /* CDSignature.swift */,
 				893C8FCF29DED278000E35BD /* Persistence.swift */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		89429F8F2A9CFFC500465420 /* Persistable */ = {
+			isa = PBXGroup;
+			children = (
+				89429F902A9CFFDC00465420 /* Persistable.swift */,
+				89429F922A9CFFF100465420 /* Pdf+Persistable.swift */,
+				89429F942A9D001A00465420 /* Signature+Persistable.swift */,
+			);
+			path = Persistable;
 			sourceTree = "<group>";
 		};
 		89436AB929E5578300060605 /* Pdf */ = {
@@ -1289,9 +1306,12 @@
 				8928F3D12A30BAFB001C1853 /* PickedImage.swift in Sources */,
 				894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */,
 				891AE58B2A03E80300DBC246 /* ObservableObject+Extensions.swift in Sources */,
+				89429F952A9D001A00465420 /* Signature+Persistable.swift in Sources */,
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				8968761E2A7CEE320014A320 /* PdfImportView.swift in Sources */,
+				89429F932A9CFFF100465420 /* Pdf+Persistable.swift in Sources */,
 				8936AA402A683FB5005F6C73 /* ImportOption.swift in Sources */,
+				89429F912A9CFFDC00465420 /* Persistable.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
 				892E404F2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,

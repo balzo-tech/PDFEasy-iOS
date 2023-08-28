@@ -48,7 +48,6 @@ class PdfSignaturePickerViewModel: ObservableObject {
         do {
             try self.repository.delete(signature: item)
             self.asyncItemDelete = AsyncOperation(status: .empty)
-            self.analyticsManager.track(event: .signatureFileDeleted)
         } catch {
             debugPrint(for: self, message: "Deletion failed. Error: \(error)")
             self.asyncItemDelete = AsyncOperation(status: .error(.unknownError))

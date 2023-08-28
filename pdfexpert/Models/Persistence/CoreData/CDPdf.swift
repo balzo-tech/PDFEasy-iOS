@@ -23,11 +23,6 @@ public class CDPdf: NSManagedObject {
 }
 
 extension CDPdf {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<CDPdf> {
-        return NSFetchRequest<CDPdf>(entityName: "Pdf")
-    }
-
     @NSManaged public var data: Data?
     @NSManaged public var creationDate: Date?
     @NSManaged public var password: String?

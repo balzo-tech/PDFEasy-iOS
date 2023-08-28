@@ -70,7 +70,6 @@ class ArchiveViewModel: ObservableObject {
         do {
             try self.repository.delete(pdf: item)
             self.asyncItemDelete = AsyncOperation(status: .empty)
-            self.analyticsManager.track(event: .existingPdfRemoved)
         } catch {
             debugPrint(for: self, message: "Deletion failed. Error: \(error)")
             self.asyncItemDelete = AsyncOperation(status: .error(.unknownError))
