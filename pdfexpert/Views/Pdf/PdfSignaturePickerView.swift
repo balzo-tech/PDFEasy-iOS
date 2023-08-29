@@ -59,25 +59,23 @@ struct PdfSignaturePickerView: View {
                             self.viewModel.pick(item: item)
                         }
                     }) {
-                        VStack(spacing: 0) {
+                        HStack(spacing: 0) {
+                            Spacer()
                             Image(uiImage: item.image)
                                 .resizable()
                                 .scaledToFit()
                                 .padding([.leading, .trailing], 16)
-                            Color.black.opacity(0.1)
-                                .frame(height: 1)
+                            Spacer()
                         }
                     }
+                    .padding([.top, .bottom], 16)
                     .frame(height: K.Misc.SignatureSize.height)
-                    .cornerRadius(10)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                    .listRowSeparator(.hidden)
                     .listRowBackground(Color(.clear))
                 }
                 .onDelete { indexSet in
                     self.viewModel.delete(indexSet: indexSet)
-                }
-                
+                }   
             }
             // Needed to use a custom background color in case of List with inset list style
             .scrollContentBackground(.hidden)

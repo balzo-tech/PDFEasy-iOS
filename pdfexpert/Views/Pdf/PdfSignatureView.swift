@@ -42,24 +42,8 @@ struct PdfSignatureView: View {
                     self.dismiss()
                 }
             })
-            .formSheet(isPresented: self.$viewModel.showSignatureCreation,
-                       size: CGSize(width: 400, height: 355)) {
-                PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({
-                    self.viewModel.onSignatureSelected(signatureImage: $0.image)
-                }))
-                .background(ColorPalette.primaryText)
-            }.formSheet(isPresented: self.$viewModel.showSignaturePicker,
-                        size: CGSize(width: 400, height: 700)) {
-                let params = PdfSignaturePickerViewModel.Params(confirmationCallback: {
-                    self.viewModel.onSignatureSelected(signatureImage: $0.image)
-                }, cancelCallback: {
-                    self.viewModel.showSignaturePicker = false
-                }, createNewSignatureCallback: {
-                    self.viewModel.onCreateNewSignature()
-                })
-                PdfSignaturePickerView(viewModel: Container.shared.pdfSignaturePickerViewModel(params))
-                    .background(ColorPalette.primaryText)
-            }.alert("Are you sure?",
+            .pdfSignatureProviderView(flow: self.viewModel.pdfSignaturePrioviderFlow)
+            .alert("Are you sure?",
                     isPresented: self.$showCancelWarningDialog,
                     actions: {
                 Button("No", role: .cancel, action: {})

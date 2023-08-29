@@ -37,7 +37,7 @@ extension View {
             HStack {
                 Spacer()
                 Button(action: {
-                    withAnimation(.spring()) {
+                    withAnimation {
                         if editMode.wrappedValue == .active {
                             editMode.wrappedValue = .inactive
                         } else {

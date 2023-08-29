@@ -32,8 +32,6 @@ class PdfSignatureViewModel: ObservableObject {
     @Published var pageIndex: Int
     @Published var editedPageIndex: Int? = nil
     @Published var annotations: [PDFAnnotation]
-    @Published var showSignatureCreation: Bool = false
-    @Published var showSignaturePicker: Bool = false
     @Published var signatureRect: CGRect = .zero
     @Published var signatureImage: UIImage? = nil
     
@@ -46,8 +44,8 @@ class PdfSignatureViewModel: ObservableObject {
     // This way we achieve correctness but at the cost of an increased memory consumption.
     private let pdfViews: [PDFView]
     
-    @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.pdfSignaturePrioviderFlow) var pdfSignaturePrioviderFlow
     
     private var onConfirm: PdfSignatureCallback
     private var pdf: Pdf
@@ -215,10 +213,8 @@ class PdfSignatureViewModel: ObservableObject {
     
     func startSignatureSelectionFlow(isReplacing: Bool) {
         self.isReplacing = isReplacing
-        if (try? self.repository.getDoSignatureExist()) ?? false {
-            self.showSignaturePicker = true
-        } else {
-            self.showSignatureCreation = true
+        self.pdfSignaturePrioviderFlow.startFlow { [weak self] signatureImage in
+            self?.onSignatureSelected(signatureImage: signatureImage)
         }
     }
     
@@ -237,20 +233,9 @@ class PdfSignatureViewModel: ObservableObject {
                                                         y: pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
                                         size: signatureImage.size)
         }
-        self.showSignaturePicker = false
-        self.showSignatureCreation = false
         // The newly created image resizable view will be added as a signature annotation upon confirmation
         // thus the dirty flag must be set
         self.unsavedChangesExist = true
-    }
-    
-    @MainActor
-    func onCreateNewSignature() {
-        self.showSignaturePicker = false
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            self.showSignatureCreation = true
-        }
     }
     
     func convertPoint(_ point: CGPoint, viewSize: CGSize, toPage: PDFPage) -> CGPoint {
