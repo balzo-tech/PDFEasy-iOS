@@ -66,7 +66,7 @@ struct PdfSignatureView: View {
                 Button("Yes", role: .destructive, action: {
                     self.dismiss()
                 })
-            }, message: { Text("If you quit, you will lose the signature you've just added.") })
+            }, message: { Text("If you quit, you will lose the signatures you've just added.") })
         }
         .onAppear(perform: self.viewModel.onAppear)
     }
@@ -124,9 +124,20 @@ struct PdfSignatureView: View {
                 handleColor: ColorPalette.buttonGradientStart,
                 handleSize: 10,
                 handleTapSize: 50,
-                keepAspectRatio: true,
-                deleteCallback: { self.viewModel.onDeleteAnnotationPressed() }
+                keepAspectRatio: true
             )
+            .contextMenu {
+                Button(role: .destructive) {
+                    self.viewModel.onDeleteAnnotationPressed()
+                } label: {
+                    Text("Delete")
+                }
+                Button {
+                    self.viewModel.onReplaceAnnotationPressed()
+                } label: {
+                    Text("Replace")
+                }
+            }
         }
     }
     

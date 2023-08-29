@@ -51,8 +51,8 @@ class PdfSignatureViewModel: ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     
     private var onConfirm: PdfSignatureCallback
-    
     private var pdf: Pdf
+    private var isReplacing: Bool = false
     
     private var cancelBag = Set<AnyCancellable>()
     
@@ -149,11 +149,7 @@ class PdfSignatureViewModel: ObservableObject {
         } else {
             // Tapping in empty area -> start the signature creation flow
             self.editedPageIndex = pageIndex
-            if (try? self.repository.getDoSignatureExist()) ?? false {
-                self.showSignaturePicker = true
-            } else {
-                self.showSignatureCreation = true
-            }
+            self.startSignatureSelectionFlow(isReplacing: false)
         }
     }
     
@@ -164,6 +160,10 @@ class PdfSignatureViewModel: ObservableObject {
         // A image resizable view has been removed. If that view was associated to an existing signature annotation
         // a change has been made to the original file. Just setting the dirty flag anyway to keep it simple.
         self.unsavedChangesExist = true
+    }
+    
+    func onReplaceAnnotationPressed() {
+        self.startSignatureSelectionFlow(isReplacing: true)
     }
     
     func onConfirmButtonPressed() {
@@ -207,10 +207,20 @@ class PdfSignatureViewModel: ObservableObject {
             assertionFailure("Missing page with given page index")
             return
         }
+        
         self.signatureRect = self.convertRect(annotation.bounds, viewSize: self.pageViewSize, fromPage: page)
         self.signatureImage = annotation.image
         self.annotations.removeAll(where: { $0 == annotation })
         self.editedPageIndex = pageIndex
+    }
+    
+    func startSignatureSelectionFlow(isReplacing: Bool) {
+        self.isReplacing = isReplacing
+        if (try? self.repository.getDoSignatureExist()) ?? false {
+            self.showSignaturePicker = true
+        } else {
+            self.showSignatureCreation = true
+        }
     }
     
     func onSignatureSelected(signatureImage: UIImage) {
@@ -223,9 +233,11 @@ class PdfSignatureViewModel: ObservableObject {
             return
         }
         self.signatureImage = signatureImage
-        self.signatureRect = CGRect(origin: CGPoint(x: pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
-                                                    y: pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
-                                    size: signatureImage.size)
+        if !self.isReplacing {
+            self.signatureRect = CGRect(origin: CGPoint(x: pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
+                                                        y: pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
+                                        size: signatureImage.size)
+        }
         self.showSignaturePicker = false
         self.showSignatureCreation = false
         // The newly created image resizable view will be added as a signature annotation upon confirmation

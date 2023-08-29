@@ -8,8 +8,6 @@
 import SwiftUI
 import UIKit
 
-typealias ImageResizableViewDeleteCallback = (() -> ())
-
 struct ImageResizableView: View {
     
     enum HandlePosition { case bottomLeft, bottomRight, topLeft, topRight }
@@ -22,7 +20,6 @@ struct ImageResizableView: View {
     let handleSize: CGFloat
     let handleTapSize: CGFloat
     let keepAspectRatio: Bool
-    let deleteCallback: ImageResizableViewDeleteCallback
     
     @State var tapImageOffset: CGPoint? = nil
     
@@ -62,8 +59,7 @@ struct ImageResizableView: View {
          handleColor: Color,
          handleSize: CGFloat,
          handleTapSize: CGFloat,
-         keepAspectRatio: Bool,
-         deleteCallback: @escaping ImageResizableViewDeleteCallback) {
+         keepAspectRatio: Bool) {
         self.uiImage = uiImage
         self._imageRect = imageRect
         self.borderColor = borderColor
@@ -72,7 +68,6 @@ struct ImageResizableView: View {
         self.handleSize = handleSize
         self.handleTapSize = handleTapSize
         self.keepAspectRatio = keepAspectRatio
-        self.deleteCallback = deleteCallback
     }
     
     var body: some View {
@@ -101,13 +96,6 @@ struct ImageResizableView: View {
                                parentViewSize: parentGeometryReader.size)
                 self.getHandle(handlePosition: .topRight,
                                parentViewSize: parentGeometryReader.size)
-            }
-        }
-        .contextMenu {
-            Button(role: .destructive) {
-                self.deleteCallback()
-            } label: {
-                Label("Delete", systemImage: "trash")
             }
         }
     }
@@ -308,8 +296,7 @@ struct ImageResizableView_Previews: PreviewProvider {
                     handleColor: .white,
                     handleSize: 10,
                     handleTapSize: 50,
-                    keepAspectRatio: true,
-                    deleteCallback: { print("Delete!") }
+                    keepAspectRatio: true
                 )
             }
         } else {
