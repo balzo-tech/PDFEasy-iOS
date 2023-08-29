@@ -12,8 +12,6 @@ struct PdfSignaturePickerView: View {
     
     @StateObject var viewModel: PdfSignaturePickerViewModel
     
-    @Environment(\.dismiss) var dismiss
-    
     @State private var showingDeleteAlert = false
     @State private var itemToDelete: Signature? = nil
     
@@ -33,7 +31,7 @@ struct PdfSignaturePickerView: View {
                 self.loadingView
             }
             self.getCloseButton(color: ColorPalette.primaryBG,
-                                onClose: { self.dismiss() })
+                                onClose: { self.viewModel.cancel() })
         }
         .background(ColorPalette.primaryText)
         .onAppear {
@@ -143,6 +141,7 @@ struct PdfSignaturePickerView_Previews: PreviewProvider {
     
     static let params = PdfSignaturePickerViewModel.Params(
         confirmationCallback: { _ in print("Signature confirmed!") },
+        cancelCallback: { print("Signature selection cancelled") },
         createNewSignatureCallback: { print("Create new signature!") }
     )
     

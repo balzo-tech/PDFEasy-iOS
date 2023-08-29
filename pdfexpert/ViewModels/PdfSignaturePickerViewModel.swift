@@ -17,10 +17,12 @@ extension Container {
 class PdfSignaturePickerViewModel: ObservableObject {
     
     typealias ConfirmationCallback = ((Signature) -> ())
+    typealias CancelCallback = (() -> ())
     typealias CreateNewSignatureCallback = (() -> ())
     
     struct Params {
         let confirmationCallback: ConfirmationCallback
+        let cancelCallback: CancelCallback
         let createNewSignatureCallback: CreateNewSignatureCallback
     }
     
@@ -32,10 +34,12 @@ class PdfSignaturePickerViewModel: ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     
     private let onConfirm: ConfirmationCallback
+    private let onCancel: CancelCallback
     private let onCreateNewSignature: CreateNewSignatureCallback
     
     init(params: Params) {
         self.onConfirm = params.confirmationCallback
+        self.onCancel = params.cancelCallback
         self.onCreateNewSignature = params.createNewSignatureCallback
     }
     
@@ -53,6 +57,10 @@ class PdfSignaturePickerViewModel: ObservableObject {
             self.asyncItemDelete = AsyncOperation(status: .error(.unknownError))
         }
         self.refresh()
+    }
+    
+    func cancel() {
+        self.onCancel()
     }
     
     func createNewSignature() {

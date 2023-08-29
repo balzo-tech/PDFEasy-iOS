@@ -52,15 +52,16 @@ struct PdfSignatureView: View {
                         size: CGSize(width: 400, height: 700)) {
                 let params = PdfSignaturePickerViewModel.Params(confirmationCallback: {
                     self.viewModel.onSignatureSelected(signatureImage: $0.image)
+                }, cancelCallback: {
+                    self.viewModel.showSignaturePicker = false
                 }, createNewSignatureCallback: {
                     self.viewModel.onCreateNewSignature()
                 })
                 PdfSignaturePickerView(viewModel: Container.shared.pdfSignaturePickerViewModel(params))
-                .background(ColorPalette.primaryText)
-            }
-            .alert("Are you sure?",
-                   isPresented: self.$showCancelWarningDialog,
-                   actions: {
+                    .background(ColorPalette.primaryText)
+            }.alert("Are you sure?",
+                    isPresented: self.$showCancelWarningDialog,
+                    actions: {
                 Button("No", role: .cancel, action: {})
                 Button("Yes", role: .destructive, action: {
                     self.dismiss()

@@ -22,12 +22,15 @@ struct PdfSignatureCanvasView: View {
             Spacer()
             HStack(spacing: 0) {
                 Spacer()
-                PencilKitView(canvasView: self.$viewModel.canvasView,
-                              backgroundColor: ColorPalette.primaryText,
-                              inkColor: .black,
-                              onSaved: {})
+                Spacer().frame(width: 24)
+                VStack(spacing: 0) {
+                    PencilKitView(canvasView: self.$viewModel.canvasView,
+                                  backgroundColor: ColorPalette.primaryText,
+                                  inkColor: .black,
+                                  onSaved: {})
+                    ColorPalette.thirdText.frame(height: 1)
+                }
                 .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
-                Spacer()
                 Button(action: { self.viewModel.onClearButtonPressed() }) {
                     Image(systemName: "xmark.circle.fill")
                         .resizable()
@@ -35,8 +38,8 @@ struct PdfSignatureCanvasView: View {
                         .frame(width: 24, height: 24)
                         .scaledToFit()
                 }
+                Spacer()
             }
-            ColorPalette.thirdText.frame(height: 1)
             VStack(spacing: 0) {
                 Spacer().frame(height: 6)
                 Text("Sign in here")
