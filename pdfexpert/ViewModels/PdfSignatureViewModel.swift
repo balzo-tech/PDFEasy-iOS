@@ -37,7 +37,6 @@ class PdfSignatureViewModel: ObservableObject {
     @Published var signatureRect: CGRect = .zero
     @Published var signatureImage: UIImage? = nil
     
-    var pageScrollingAllowed: Bool { nil == self.editedPageIndex }
     var pageViewSize: CGSize = .zero
     var unsavedChangesExist: Bool = false
     
@@ -123,12 +122,12 @@ class PdfSignatureViewModel: ObservableObject {
         let pointInPage = self.convertPoint(positionInView, viewSize: pageViewSize, toPage: page)
         let annotationsInPoint = self.annotations.filter { $0.page == page && $0.bounds.contains(pointInPage) }
         
-        if self.editedPageIndex != nil, self.signatureRect.contains(positionInView) {
+        if self.signatureImage != nil, self.signatureRect.contains(positionInView) {
             // Tapping inside the currently selected image resizable view -> Do nothing
             return
         }
         
-        if self.editedPageIndex != nil {
+        if self.signatureImage != nil {
             // Tapping outside the currently selected image resizable view -> convert that image resizable view to signature annotation
             self.applyCurrentEditedAnnotation()
 
@@ -195,9 +194,9 @@ class PdfSignatureViewModel: ObservableObject {
             annotation.page = page
             self.annotations.append(annotation)
             self.unsavedChangesExist = true
-            self.signatureImage = nil
             self.analyticsManager.track(event: .signatureAdded)
         }
+        self.signatureImage = nil
         self.editedPageIndex = nil
     }
     

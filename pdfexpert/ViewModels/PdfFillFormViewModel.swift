@@ -38,7 +38,6 @@ class PdfFillFormViewModel: ObservableObject {
     @Published var currentTextResizableViewData: TextResizableViewData = TextResizableViewData(text: "", rect: .zero)
     @Published var editedPageIndex: Int? = nil
     
-    var pageScrollingAllowed: Bool { nil == self.editedPageIndex }
     var pageViewSize: CGSize = .zero
     var unsavedChangesExist: Bool = false
     
