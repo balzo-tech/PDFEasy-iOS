@@ -89,6 +89,7 @@
 		89436D232A93C1CE000868B5 /* PdfPageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89436D222A93C1CE000868B5 /* PdfPageSelectionView.swift */; };
 		8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */; };
 		89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */; };
+		89467AD72A9E4C6B00FC01FC /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89467AD62A9E4C6B00FC01FC /* Deeplink.swift */; };
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
 		894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */; };
 		894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */; };
@@ -333,6 +334,7 @@
 		89436D222A93C1CE000868B5 /* PdfPageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageSelectionView.swift; sourceTree = "<group>"; };
 		8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfScanUtility.swift; sourceTree = "<group>"; };
 		89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionErrorView.swift; sourceTree = "<group>"; };
+		89467AD62A9E4C6B00FC01FC /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialView.swift; sourceTree = "<group>"; };
 		894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialPageView.swift; sourceTree = "<group>"; };
@@ -1063,6 +1065,7 @@
 				89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */,
 				89436AB729E5556600060605 /* PdfCoordinator.swift */,
 				8957FBA72A77C646008B31ED /* PdfShareCoordinator.swift */,
+				89467AD62A9E4C6B00FC01FC /* Deeplink.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -1426,6 +1429,7 @@
 				89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */,
 				893ED9D92A693013004EE67C /* MessageView.swift in Sources */,
 				893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */,
+				89467AD72A9E4C6B00FC01FC /* Deeplink.swift in Sources */,
 				89F9E4FD2A9635EC0001D48B /* ZoomImageModifier.swift in Sources */,
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
 				8955ED922A1F61A9009985EE /* OnboardingView.swift in Sources */,

@@ -70,6 +70,19 @@ class MainCoordinator: ObservableObject {
     func closePdfEditFlow() {
         self.pdfEditFlowData = nil
     }
+    
+    func handleOpenUrl(url: URL) {
+        if let deeplink = Deeplink(fromCustomUrl: url) {
+            self.handleDeeplink(deeplink: deeplink)
+        }
+    }
+    
+    private func handleDeeplink(deeplink: Deeplink) {
+        switch deeplink {
+        case .chatPdf:
+            self.tab = .chatPdf
+        }
+    }
 }
 
 extension Container {

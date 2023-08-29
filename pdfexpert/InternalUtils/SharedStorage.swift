@@ -18,6 +18,8 @@ class SharedStorage {
         case pdfDataShareExtension
     }
     
+    static let schema = "pdfpro://"
+    
     private static let appGroup = "group.eu.balzo.pdfexpert"
     private static let userDefaults = UserDefaults(suiteName: appGroup)
     

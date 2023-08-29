@@ -24,6 +24,9 @@ struct ContentView: View {
                 }
                 self.configService.onApplicationDidBecomeActive()
             }
+            .onOpenURL { url in
+                self.coordinator.handleOpenUrl(url: url)
+            }
     }
     
     var content: some View {

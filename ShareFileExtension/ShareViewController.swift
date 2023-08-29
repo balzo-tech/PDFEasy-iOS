@@ -163,7 +163,7 @@ class ShareViewController: UIViewController {
             return
         }
         
-        guard let url = URL(string: "pdfpro://") else {
+        guard let url = URL(string: SharedStorage.schema) else {
             assertionFailure("Cannot create url to app")
             return
         }
