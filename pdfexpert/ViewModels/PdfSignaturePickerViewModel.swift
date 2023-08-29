@@ -59,17 +59,35 @@ class PdfSignaturePickerViewModel: ObservableObject {
         self.refresh()
     }
     
+    func delete(indexSet: IndexSet) {
+        guard let allSignatures = asyncItems.data else {
+            return
+        }
+        
+        let signatures = indexSet.filteredIndexSet { $0 < allSignatures.count }.map { allSignatures[$0] }
+        
+        self.asyncItemDelete = AsyncOperation(status: .empty)
+        do {
+            try self.repository.delete(signatures: signatures)
+            self.asyncItemDelete = AsyncOperation(status: .empty)
+        } catch {
+            debugPrint(for: self, message: "Deletion failed. Error: \(error)")
+            self.asyncItemDelete = AsyncOperation(status: .error(.unknownError))
+        }
+        self.refresh()
+    }
+    
+    func onAppear() {
+        self.analyticsManager.track(event: .reportScreen(.signaturePicker))
+        self.refresh()
+    }
+    
     func cancel() {
         self.onCancel()
     }
     
     func createNewSignature() {
         self.onCreateNewSignature()
-    }
-    
-    func onAppear() {
-        self.analyticsManager.track(event: .reportScreen(.signaturePicker))
-        self.refresh()
     }
     
     func refresh() {

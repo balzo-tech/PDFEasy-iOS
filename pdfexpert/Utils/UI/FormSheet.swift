@@ -41,8 +41,8 @@ class FormSheetWrapper<Content: View>: UIViewController, UIPopoverPresentationCo
         dismiss(animated: true, completion: nil)
         hostVC = nil
     }
-
-    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         hostVC = nil
         self.onDismiss?()
     }
@@ -110,7 +110,7 @@ class FormSheetWrapperIdentifiable<Content: View, Item: FormSheetItem>: UIViewCo
         hostVC = nil
     }
 
-    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         hostVC = nil
         self.onDismiss?()
     }

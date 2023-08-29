@@ -17,4 +17,5 @@ protocol Repository {
     func getDoSignatureExist() throws -> Bool
     func loadSignatures() throws -> [Signature]
     func delete(signature: Signature) throws
+    func delete(signatures: [Signature]) throws
 }

@@ -70,6 +70,12 @@ class RepositoryImpl: Repository {
         self.analyticsMananger.track(event: .signatureFileDeleted)
     }
     
+    func delete(signatures: [Signature]) throws {
+        for signature in signatures {
+            try self.delete(signature: signature)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func save<T: Persistable>(_ persistable: T) throws -> T {

@@ -12,8 +12,7 @@ struct PdfSignaturePickerView: View {
     
     @StateObject var viewModel: PdfSignaturePickerViewModel
     
-    @State private var showingDeleteAlert = false
-    @State private var itemToDelete: Signature? = nil
+    @State private var editMode: EditMode = .inactive
     
     var body: some View {
         ZStack {
@@ -32,6 +31,9 @@ struct PdfSignaturePickerView: View {
             }
             self.getCloseButton(color: ColorPalette.primaryBG,
                                 onClose: { self.viewModel.cancel() })
+            self.getEditButton(color: ColorPalette.buttonGradientStart,
+                               font: FontPalette.fontRegular(withSize: 16),
+                               editMode: self.$editMode)
         }
         .background(ColorPalette.primaryText)
         .onAppear {
@@ -50,33 +52,37 @@ struct PdfSignaturePickerView: View {
     
     @ViewBuilder func getItemList(items: [Signature]) -> some View {
         if items.count > 0 {
-            List(items) { item in
-                Button(action: { self.viewModel.pick(item: item) }) {
-                    VStack(spacing: 0) {
-                        Image(uiImage: item.image)
-                            .resizable()
-                            .scaledToFit()
-                            .padding([.leading, .trailing], 16)
-                        Color.black.opacity(0.1)
-                            .frame(height: 1)
+            List {
+                ForEach(items) { item in
+                    Button(action: {
+                        if self.editMode == .inactive {
+                            self.viewModel.pick(item: item)
+                        }
+                    }) {
+                        VStack(spacing: 0) {
+                            Image(uiImage: item.image)
+                                .resizable()
+                                .scaledToFit()
+                                .padding([.leading, .trailing], 16)
+                            Color.black.opacity(0.1)
+                                .frame(height: 1)
+                        }
                     }
+                    .frame(height: K.Misc.SignatureSize.height)
+                    .cornerRadius(10)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color(.clear))
                 }
-                .frame(height: K.Misc.SignatureSize.height)
-                .cornerRadius(10)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color(.clear))
-                .swipeActions(allowsFullSwipe: true, content: {
-                    Button(role: .destructive, action: {
-                        self.viewModel.delete(item: item)
-                    }, label: {
-                        Image(systemName: "trash")
-                    })
-                })
+                .onDelete { indexSet in
+                    self.viewModel.delete(indexSet: indexSet)
+                }
+                
             }
             // Needed to use a custom background color in case of List with inset list style
             .scrollContentBackground(.hidden)
             .listStyle(.inset)
+            .environment(\.editMode, self.$editMode)
         } else {
             self.emptyView
         }

@@ -32,6 +32,30 @@ extension View {
         .padding(.top)
     }
     
+    func getEditButton(color: Color, font: Font, editMode: Binding<EditMode>) -> some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    withAnimation(.spring()) {
+                        if editMode.wrappedValue == .active {
+                            editMode.wrappedValue = .inactive
+                        } else {
+                            editMode.wrappedValue = .active
+                        }
+                    }
+                }) {
+                    Text(editMode.wrappedValue.text)
+                        .font(font)
+                        .foregroundColor(color)
+                }
+            }
+            .padding(.trailing)
+            Spacer()
+        }
+        .padding(.top)
+    }
+    
     @ViewBuilder func addCustomBackButton(color: Color, onPress: @escaping () -> ()) -> some View {
         self.navigationBarBackButtonHidden()
             .toolbar {
@@ -122,5 +146,16 @@ extension Binding where Value == String {
             }
         }
         return self
+    }
+}
+
+fileprivate extension EditMode {
+    var text: String {
+        switch self {
+        case .active: return "Done"
+        case .inactive: return "Edit"
+        case .transient: return ""
+        @unknown default: return ""
+        }
     }
 }
