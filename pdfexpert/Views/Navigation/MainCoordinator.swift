@@ -80,6 +80,8 @@ class MainCoordinator: ObservableObject {
     private func handleDeeplink(deeplink: Deeplink) {
         switch deeplink {
         case .chatPdf:
+            self.cacheManager.onboardingShown = true
+            self.rootView = .main
             self.tab = .chatPdf
         }
     }
