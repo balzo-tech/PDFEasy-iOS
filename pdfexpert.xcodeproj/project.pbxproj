@@ -223,6 +223,7 @@
 		89E601642A8295A2009492DA /* SubscriptionPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E601632A8295A2009492DA /* SubscriptionPickerViewModel.swift */; };
 		89EBC9052A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EBC9042A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift */; };
 		89EBC9072A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EBC9062A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift */; };
+		89ED72BB2A9F6B3A004F541F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89ED72B82A9F69E5004F541F /* AdSupport.framework */; };
 		89F9E4F92A95FEEE0001D48B /* PDFImageExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */; };
 		89F9E4FB2A9606ED0001D48B /* PdfImageViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */; };
 		89F9E4FD2A9635EC0001D48B /* ZoomImageModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */; };
@@ -469,6 +470,7 @@
 		89E601632A8295A2009492DA /* SubscriptionPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerViewModel.swift; sourceTree = "<group>"; };
 		89EBC9042A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFreeTrialToggleView.swift; sourceTree = "<group>"; };
 		89EBC9062A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerPlanView.swift; sourceTree = "<group>"; };
+		89ED72B82A9F69E5004F541F /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFImageExtractor.swift; sourceTree = "<group>"; };
 		89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfImageViewerView.swift; sourceTree = "<group>"; };
 		89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomImageModifier.swift; sourceTree = "<group>"; };
@@ -499,6 +501,7 @@
 				893BE52B2A6A7864004B05B9 /* CombineMoya in Frameworks */,
 				895FE2D029D7392F00A99D5B /* Collections in Frameworks */,
 				89CD7BA829D32C72003F1C3A /* Factory in Frameworks */,
+				89ED72BB2A9F6B3A004F541F /* AdSupport.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,6 +708,7 @@
 		89923E6529D437F500E246FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				89ED72B82A9F69E5004F541F /* AdSupport.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1602,6 +1606,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"STAGING\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1727,6 +1732,7 @@
 				MARKETING_VERSION = 1.23;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"STAGING\"";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1859,6 +1865,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"PRODUCTION\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1914,6 +1921,7 @@
 				MARKETING_VERSION = 1.23;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"PRODUCTION\"";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
