@@ -19,6 +19,7 @@ private enum FirebaseEventCustomParameters: String {
     case productId = "product_identifier"
     case productPrice = "product_price"
     case subscriptionPlanIsFreeTrial = "subscription_is_free_trial"
+    case reviewLowRateFeedbackContent = "review_low_rate_feedback_content"
 }
 
 class FirebaseAnalyticsPlatform: AnalyticsPlatform {
@@ -123,6 +124,7 @@ extension AnalyticsEvent {
         case .chatPdfSelectionFullActionCompleted: return "chat_pdf_selection_full_action_completed"
         case .chatPdfMessageSent: return "chat_pdf_message_sent"
         case .subscriptionShown: return "subscription_shown"
+        case .reviewLowRateFeedback: return "review_low_rate_feedback"
         case .reportScreen: return AnalyticsEventScreenView
         case .reportNonFatalError: return ""
         }
@@ -204,6 +206,8 @@ extension AnalyticsEvent {
             return parameters
         case .chatPdfMessageSent: return nil
         case .subscriptionShown: return nil
+        case .reviewLowRateFeedback(let feedback):
+            return [FirebaseEventCustomParameters.reviewLowRateFeedbackContent.rawValue: feedback]
         case .reportScreen(let screen): return [AnalyticsParameterScreenName: screen.name]
         case .reportNonFatalError: return nil
         }

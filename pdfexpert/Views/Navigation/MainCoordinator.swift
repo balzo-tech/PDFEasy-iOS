@@ -42,6 +42,7 @@ class MainCoordinator: ObservableObject {
     @Published var settingsShow: Bool = false
     
     @Injected(\.cacheManager) private var cacheManager
+    @Injected(\.reviewFlow) var reviewFlow
     
     init() {
         if self.cacheManager.onboardingShown {
@@ -75,6 +76,10 @@ class MainCoordinator: ObservableObject {
         if let deeplink = Deeplink(fromCustomUrl: url) {
             self.handleDeeplink(deeplink: deeplink)
         }
+    }
+    
+    func startReview() {
+        self.reviewFlow.startFlow()
     }
     
     private func handleDeeplink(deeplink: Deeplink) {

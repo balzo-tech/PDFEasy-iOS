@@ -18,6 +18,7 @@ struct ContentView: View {
     var body: some View {
         self.content
             .background(ColorPalette.primaryBG)
+            .reviewFlowView(flow: self.coordinator.reviewFlow)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 Task {
                     await self.appTrackingTransparency.requestPermissionIfNeeded()

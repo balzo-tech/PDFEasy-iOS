@@ -82,6 +82,11 @@ Make a summary and suggest three questions. Format your response as a json with 
 """
     }
     
+    struct Review {
+        static let MinimumRateForNativePopup: Int = 5
+        static let FeedbackMaxCharacters: Int = 100
+    }
+    
     struct Misc {
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"

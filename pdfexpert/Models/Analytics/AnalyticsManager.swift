@@ -80,6 +80,7 @@ enum AnalyticsEvent {
     case chatPdfSelectionFullActionCompleted(importOption: ImportOption?, fileExtension: String?)
     case chatPdfMessageSent
     case subscriptionShown
+    case reviewLowRateFeedback(feedback: String)
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

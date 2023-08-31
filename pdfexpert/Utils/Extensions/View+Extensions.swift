@@ -18,18 +18,22 @@ extension View {
 
 extension View {
     
-    func getCloseButton(color: Color, onClose: @escaping () -> ()) -> some View {
+    func getCloseButton(color: Color, leftSide: Bool = true, padding: CGFloat? = nil, onClose: @escaping () -> ()) -> some View {
         VStack {
             HStack {
+                if !leftSide {
+                    Spacer()
+                }
                 Button(action: { onClose() }) {
                     Self.getSystemClose(color: color)
                 }
-                Spacer()
+                if leftSide {
+                    Spacer()
+                }
             }
-            .padding(.leading)
             Spacer()
         }
-        .padding(.top)
+        .padding(.all, padding)
     }
     
     func getEditButton(color: Color, font: Font, editMode: Binding<EditMode>) -> some View {

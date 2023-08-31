@@ -93,6 +93,11 @@
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
 		894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */; };
 		894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */; };
+		894C4A692AA0C04B0001F51E /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A682AA0C04B0001F51E /* PopupView.swift */; };
+		894C4A6B2AA0C23F0001F51E /* PreReviewPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A6A2AA0C23F0001F51E /* PreReviewPopupView.swift */; };
+		894C4A6E2AA0CB470001F51E /* ReviewFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A6D2AA0CB470001F51E /* ReviewFlow.swift */; };
+		894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A6F2AA0CCFC0001F51E /* ReviewFlowView.swift */; };
+		894C4A722AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A712AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift */; };
 		894CB09E2A851FE50008008A /* ChatPdfSetupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CB09D2A851FE50008008A /* ChatPdfSetupData.swift */; };
 		894CB0A02A8520AD0008008A /* ChatPdfSetupData+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CB09F2A8520AD0008008A /* ChatPdfSetupData+Decodable.swift */; };
 		894D485829D42C9E002B0230 /* OptionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* OptionItemView.swift */; };
@@ -339,6 +344,11 @@
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialView.swift; sourceTree = "<group>"; };
 		894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialPageView.swift; sourceTree = "<group>"; };
+		894C4A682AA0C04B0001F51E /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
+		894C4A6A2AA0C23F0001F51E /* PreReviewPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreReviewPopupView.swift; sourceTree = "<group>"; };
+		894C4A6D2AA0CB470001F51E /* ReviewFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFlow.swift; sourceTree = "<group>"; };
+		894C4A6F2AA0CCFC0001F51E /* ReviewFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFlowView.swift; sourceTree = "<group>"; };
+		894C4A712AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreReviewPopupLowRateView.swift; sourceTree = "<group>"; };
 		894CB09D2A851FE50008008A /* ChatPdfSetupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfSetupData.swift; sourceTree = "<group>"; };
 		894CB09F2A8520AD0008008A /* ChatPdfSetupData+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfSetupData+Decodable.swift"; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* OptionItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionItemView.swift; sourceTree = "<group>"; };
@@ -652,6 +662,16 @@
 			path = ImportTutorial;
 			sourceTree = "<group>";
 		};
+		894C4A6C2AA0C2F40001F51E /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				894C4A6A2AA0C23F0001F51E /* PreReviewPopupView.swift */,
+				894C4A712AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift */,
+				894C4A6F2AA0CCFC0001F51E /* ReviewFlowView.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
 		895C1BAE2A04FA53005EA190 /* ShareFileExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -917,6 +937,7 @@
 				893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */,
 				89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */,
 				89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */,
+				894C4A682AA0C04B0001F51E /* PopupView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1023,6 +1044,7 @@
 				89436D1A2A939CBB000868B5 /* PdfReadViewModel.swift */,
 				89436D1E2A93AEB4000868B5 /* PdfReaderViewModel.swift */,
 				8962D6052A9E28FB008426A2 /* PdfSignaturePrioviderFlow.swift */,
+				894C4A6D2AA0CB470001F51E /* ReviewFlow.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1044,6 +1066,7 @@
 				895FE2C229D6D7D800A99D5B /* Scan */,
 				893E849229D5877800F6B99A /* Camera */,
 				894B019D2A0902A000FF6198 /* ImportTutorial */,
+				894C4A6C2AA0C2F40001F51E /* Review */,
 				89CD7B2629D329B1003F1C3A /* ContentView.swift */,
 			);
 			path = Views;
@@ -1341,6 +1364,7 @@
 				89436D1F2A93AEB4000868B5 /* PdfReaderViewModel.swift in Sources */,
 				895FE2CD29D724B900A99D5B /* SubscriptionPairsItemView.swift in Sources */,
 				892201D92A0BA64600832CF2 /* ImageAnnotationStamp.swift in Sources */,
+				894C4A6E2AA0CB470001F51E /* ReviewFlow.swift in Sources */,
 				896876262A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift in Sources */,
 				89EBC9072A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift in Sources */,
 				8962D6082A9E2A57008426A2 /* PdfSignatureProviderFlowView.swift in Sources */,
@@ -1370,6 +1394,7 @@
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
 				893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */,
 				895FE2CB29D6E9B800A99D5B /* SubscriptionPairsView.swift in Sources */,
+				894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */,
 				89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */,
 				893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */,
 				89E55BDE29DC64840073F268 /* FirebaseAnalyticsPlatform.swift in Sources */,
@@ -1404,6 +1429,7 @@
 				894CB09E2A851FE50008008A /* ChatPdfSetupData.swift in Sources */,
 				893DE8DA29E7F85C0043C02C /* SubscriptionPairsViewModel.swift in Sources */,
 				89436AC729E5B99100060605 /* PdfKitView.swift in Sources */,
+				894C4A722AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift in Sources */,
 				89CD7B5429D329B1003F1C3A /* Color+Extensions.swift in Sources */,
 				897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */,
 				8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */,
@@ -1419,6 +1445,7 @@
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
+				894C4A692AA0C04B0001F51E /* PopupView.swift in Sources */,
 				89F9E4FB2A9606ED0001D48B /* PdfImageViewerView.swift in Sources */,
 				894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */,
 				892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */,
@@ -1471,6 +1498,7 @@
 				89CD7A9A29D32855003F1C3A /* PdfExpertApp.swift in Sources */,
 				89CD7B7129D329B1003F1C3A /* ColorPalette.swift in Sources */,
 				89504A462A448252000BCACD /* PdfFillWidgetView.swift in Sources */,
+				894C4A6B2AA0C23F0001F51E /* PreReviewPopupView.swift in Sources */,
 				896876242A7D05040014A320 /* PdfSplitView.swift in Sources */,
 				8955ED942A1F61BD009985EE /* OnboardingPageView.swift in Sources */,
 			);
