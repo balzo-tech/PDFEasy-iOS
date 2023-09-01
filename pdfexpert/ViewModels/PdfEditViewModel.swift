@@ -96,6 +96,7 @@ class PdfEditViewModel: ObservableObject {
     
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
+    @Injected(\.pdfCoordinator) private var pdfCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
@@ -334,7 +335,9 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalShare() {
-        self.pdfShareCoordinator.share(pdf: self.pdf, applyPostProcess: true)
+        self.pdfShareCoordinator.share(pdf: self.pdf, applyPostProcess: true, onComplete: { [weak self] in
+            self?.pdfCoordinator.startReview()
+        })
     }
     
     private func onPdfChanged() {

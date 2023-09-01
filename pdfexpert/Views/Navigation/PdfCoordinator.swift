@@ -15,6 +15,12 @@ class PdfCoordinator: ObservableObject {
     }
     
     @Published var rootView: RootView = .edit
+    
+    @Injected(\.reviewFlow) var reviewFlow
+    
+    func startReview() {
+        self.reviewFlow.startFlowIfNeeded()
+    }
 }
 
 extension Container {

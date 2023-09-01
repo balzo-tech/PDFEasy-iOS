@@ -378,7 +378,9 @@ public class HomeViewModel : ObservableObject {
             assertionFailure("Missing expected pdfSaved entity")
             return
         }
-        self.pdfShareCoordinator.share(pdf: pdfSaved, applyPostProcess: false)
+        self.pdfShareCoordinator.share(pdf: pdfSaved, applyPostProcess: false, onComplete: { [weak self] in
+            self?.mainCoordinator.startReview()
+        })
         self.pdfSaved = nil
     }
     

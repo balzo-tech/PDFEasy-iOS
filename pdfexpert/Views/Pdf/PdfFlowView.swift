@@ -22,32 +22,31 @@ struct PdfFlowView: View {
         self.content
     }
     
-    var content: some View {
+    @ViewBuilder var content: some View {
         switch self.coordinator.rootView {
         case .edit:
-            return AnyView(
-                NavigationStack {
-                    let inputParameter = PdfEditViewModel.InputParameter(pdf: self.pdf,
-                                                                         startAction: self.startAction,
-                                                                         shouldShowCloseWarning: self.$shouldShowCloseWarning)
-                    PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter))
-                        .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                            if self.shouldShowCloseWarning {
-                                self.showCloseWarningDialog = true
-                            } else {
-                                self.dismiss()
-                            }
+            NavigationStack {
+                let inputParameter = PdfEditViewModel.InputParameter(pdf: self.pdf,
+                                                                     startAction: self.startAction,
+                                                                     shouldShowCloseWarning: self.$shouldShowCloseWarning)
+                PdfEditView(viewModel: Container.shared.pdfEditViewModel(inputParameter))
+                    .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                        if self.shouldShowCloseWarning {
+                            self.showCloseWarningDialog = true
+                        } else {
+                            self.dismiss()
+                        }
+                    })
+                    .alert("Are you sure?",
+                           isPresented: self.$showCloseWarningDialog,
+                           actions: {
+                        Button("No", role: .cancel, action: {})
+                        Button("Yes", role: .destructive, action: {
+                            self.dismiss()
                         })
-                        .alert("Are you sure?",
-                               isPresented: self.$showCloseWarningDialog,
-                               actions: {
-                            Button("No", role: .cancel, action: {})
-                            Button("Yes", role: .destructive, action: {
-                                self.dismiss()
-                            })
-                        }, message: { Text("If you quit, you will lose the changes to your current file.") })
-                }
-            )
+                    }, message: { Text("If you quit, you will lose the changes to your current file.") })
+            }
+            .reviewFlowView(flow: self.coordinator.reviewFlow)
         }
     }
 }

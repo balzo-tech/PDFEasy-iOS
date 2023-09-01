@@ -18,6 +18,7 @@ class CacheManagerImpl: CacheManager {
     
     enum CacheManagerKey: String {
         case onboardingShown
+        case preReviewShown
     }
     
     private let mainUserDefaults = UserDefaults.standard
@@ -25,6 +26,11 @@ class CacheManagerImpl: CacheManager {
     var onboardingShown: Bool {
         get { self.getBool(forKey: CacheManagerKey.onboardingShown.rawValue) ?? false }
         set { self.saveBool(newValue, forKey: CacheManagerKey.onboardingShown.rawValue) }
+    }
+    
+    var preReviewShown: Bool {
+        get { self.getBool(forKey: CacheManagerKey.preReviewShown.rawValue) ?? false }
+        set { self.saveBool(newValue, forKey: CacheManagerKey.preReviewShown.rawValue) }
     }
         
     // MARK: - Private methods

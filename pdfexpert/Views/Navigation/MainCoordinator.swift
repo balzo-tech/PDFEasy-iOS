@@ -79,7 +79,7 @@ class MainCoordinator: ObservableObject {
     }
     
     func startReview() {
-        self.reviewFlow.startFlow()
+        self.reviewFlow.startFlowIfNeeded()
     }
     
     private func handleDeeplink(deeplink: Deeplink) {

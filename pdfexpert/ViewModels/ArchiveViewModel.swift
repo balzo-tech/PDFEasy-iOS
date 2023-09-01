@@ -62,7 +62,9 @@ class ArchiveViewModel: ObservableObject {
     }
     
     func shareItem(item: Pdf) {
-        self.pdfShareCoordinator.share(pdf: item, applyPostProcess: true)
+        self.pdfShareCoordinator.share(pdf: item, applyPostProcess: true, onComplete: { [weak self] in
+            self?.mainCoordinator.startReview()
+        })
     }
     
     func delete(item: Pdf) {

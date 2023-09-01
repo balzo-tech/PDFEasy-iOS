@@ -22,9 +22,30 @@ class ReviewFlow: ObservableObject {
     @Published var showLowReviewView: Bool = false
     
     @Injected(\.analyticsManager) var analyticsManager
+    @Injected(\.cacheManager) var cacheManager
+    @Injected(\.store) var store
     
-    func startFlow() {
-        self.showPreReviewView = true
+    private var shouldShow: Bool {
+        return self.neverSeenBefore && self.store.isPremium.value
+    }
+    
+    private var neverSeenBefore: Bool {
+        #if DEBUG
+            if K.Test.Review.ShowAlways {
+                return true
+            } else {
+                return !self.cacheManager.preReviewShown
+            }
+        #else
+            !self.cacheManager.preReviewShown
+        #endif
+    }
+    
+    func startFlowIfNeeded() {
+        if self.shouldShow {
+            self.cacheManager.preReviewShown = true
+            self.showPreReviewView = true
+        }
     }
     
     @MainActor
@@ -43,6 +64,8 @@ class ReviewFlow: ObservableObject {
     
     func onPreReviewLowRateFeedbackSent(feedback: String) {
         self.showLowReviewView = false
-        self.analyticsManager.track(event: .reviewLowRateFeedback(feedback: feedback))
+        if !feedback.isEmpty {
+            self.analyticsManager.track(event: .reviewLowRateFeedback(feedback: feedback))
+        }
     }
 }

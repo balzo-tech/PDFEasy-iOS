@@ -16,7 +16,8 @@ struct PdfShareView: ViewModifier {
         content
             .showSubscriptionView(self.$coordinator.monetizationShow, onComplete: { self.coordinator.onMonetizationClose() })
             .sharePdf(self.$coordinator.pdfToBeShared,
-                      applyPostProcess: self.coordinator.applyPostProcess)
+                      applyPostProcess: self.coordinator.applyPostProcess,
+                      onDismiss: { self.coordinator.onShareDismiss() })
     }
 }
 

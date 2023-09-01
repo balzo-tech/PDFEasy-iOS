@@ -54,6 +54,12 @@ struct K {
             static let NetworkStubsDelay = 1.0
             static let NetworkLogVerbose = false
         }
+        
+        struct Review {
+            // If set to true, the review flow starts every time the current logic would trigger it,
+            // even if it has already been shown in the past.
+            static let ShowAlways = false
+        }
     }
     
     struct MonetizationK {
