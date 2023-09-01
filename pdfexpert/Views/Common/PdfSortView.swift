@@ -59,14 +59,14 @@ struct PdfSortView: View {
             VStack(spacing: 0) {
                 Spacer()
                 Text(item.filename)
-                    .font(FontPalette.fontMedium(withSize: 16))
+                    .font(forCategory: .body1)
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(1)
                 Spacer().frame(height: 16)
                 HStack(spacing: 16) {
                     Text(item.pageCountText)
-                        .font(FontPalette.fontMedium(withSize: 15))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.fourthText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }

@@ -113,7 +113,7 @@ struct PdfPageRangeEditorView: View {
                 Image(systemName: "plus.circle.fill")
                     .foregroundColor(ColorPalette.secondaryText)
                 Text("Add new range")
-                    .font(FontPalette.fontMedium(withSize: 16))
+                    .font(forCategory: .body1)
                     .foregroundColor(ColorPalette.secondaryText)
                     .lineLimit(1)
             }
@@ -123,7 +123,7 @@ struct PdfPageRangeEditorView: View {
     private func getRangeHeader(atIndex index: Int) -> some View {
         HStack {
             Text("Range \(index + 1)")
-                .font(FontPalette.fontMedium(withSize: 16))
+                .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.primaryText)
             Spacer()
             if index > 0 {
@@ -150,13 +150,13 @@ struct PdfPageRangeEditorView: View {
         ZStack {
             HStack {
                 Text(isLowerBound ? "From page number" : "To page number")
-                    .font(FontPalette.fontMedium(withSize: 12))
+                    .font(forCategory: .callout)
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(1)
                 TextField("", text: self.viewModel.getTextFieldText(index: index,
                                                                     isLowerBound: isLowerBound))
-                .font(FontPalette.fontMedium(withSize: 14))
+                .font(forCategory: .body2)
                 .foregroundColor(ColorPalette.primaryText)
                 .lineLimit(1)
                 .disableAutocorrection(true)

@@ -20,7 +20,7 @@ struct SubscriptionPairsItemView: View {
             VStack(spacing: 0) {
                 HStack(alignment: .top, spacing: 12) {
                     Text(self.subscriptionPlan.title)
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: 110, alignment: .leading)
                         .multilineTextAlignment(.leading)
@@ -29,13 +29,13 @@ struct SubscriptionPairsItemView: View {
                 }
                 Spacer().frame(height: 6)
                 Text("Maximum flexibility, you decide when to cancel")
-                    .font(FontPalette.fontRegular(withSize: 10))
+                    .font(forCategory: .caption2)
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                 Spacer(minLength: 12)
                 Text(self.subscriptionPlan.weeklyPriceAndPeriod)
-                    .font(FontPalette.fontLight(withSize: 10))
+                    .font(forCategory: .caption2)
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }

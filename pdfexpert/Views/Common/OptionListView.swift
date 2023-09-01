@@ -22,7 +22,7 @@ struct OptionListView: View {
         VStack {
             Text(self.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .font(FontPalette.fontMedium(withSize: 20))
+                .font(forCategory: .headline)
                 .foregroundColor(ColorPalette.primaryText)
             Spacer(minLength: 20)
             ForEach(self.items, id: \.title) { item in

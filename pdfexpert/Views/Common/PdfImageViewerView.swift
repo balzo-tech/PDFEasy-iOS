@@ -43,12 +43,12 @@ struct PdfImageViewerView: View {
                                 } else {
                                     Spacer()
                                     Text("Couldn't extract this image")
-                                        .font(FontPalette.fontMedium(withSize: 16))
+                                        .font(forCategory: .body1)
                                         .foregroundColor(ColorPalette.primaryText)
                                     Spacer()
                                 }
                                 Text(image.caption)
-                                    .font(FontPalette.fontMedium(withSize: 16))
+                                    .font(forCategory: .body1)
                                     .foregroundColor(ColorPalette.primaryText)
                                     .frame(height: 100)
                             }
@@ -61,7 +61,7 @@ struct PdfImageViewerView: View {
                 } else {
                     Spacer()
                     Text("There are no images on this page")
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity)
                     Spacer()

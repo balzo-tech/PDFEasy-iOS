@@ -32,7 +32,7 @@ struct PdfPageSelectionView: View {
                                 HStack {
                                     Text("\(index)")
                                         .foregroundColor(ColorPalette.primaryText)
-                                        .font(FontPalette.fontRegular(withSize: 14))
+                                        .font(forCategory: .body2)
                                         .minimumScaleFactor(0.5)
                                         .frame(width: 40, alignment: .leading)
                                     self.getPdfPageThumbnail(fromImage: pageThumbnail)

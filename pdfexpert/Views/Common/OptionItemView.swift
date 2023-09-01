@@ -21,7 +21,7 @@ struct OptionItemView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 20, height: 20)
                 Text(self.title)
-                    .font(FontPalette.fontRegular(withSize: 18))
+                    .font(forCategory: .headline)
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }

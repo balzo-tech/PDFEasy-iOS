@@ -16,7 +16,7 @@ struct ChatPdfSelectionView: View {
         VStack {
             Spacer()
             Text("Our PDF AI summarize and answer questions for free. Drop your PDF here.")
-                .font(FontPalette.fontRegular(withSize: 14))
+                .font(forCategory: .body2)
                 .foregroundColor(ColorPalette.primaryText)
                 .multilineTextAlignment(.center)
                 .padding([.leading, .trailing], 32)
@@ -91,7 +91,7 @@ struct ChatPdfSelectionView: View {
                 
                 .foregroundColor(ColorPalette.thirdText)
             Text("PDF are limited to 32MB per file\nand are limited to 2000 pages")
-                .font(FontPalette.fontRegular(withSize: 13))
+                .font(forCategory: .caption1)
                 .foregroundColor(ColorPalette.thirdText)
                 .minimumScaleFactor(0.5)
         }

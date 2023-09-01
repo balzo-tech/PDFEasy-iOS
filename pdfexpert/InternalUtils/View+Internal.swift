@@ -26,7 +26,7 @@ extension View {
         Button(action: onButtonPressed) {
             Text(text)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .font(FontPalette.fontMedium(withSize: 18))
+                .font(forCategory: .button)
                 .foregroundColor(ColorPalette.primaryText)
                 .contentShape(Capsule())
         }
@@ -44,7 +44,7 @@ extension View {
         attributedString += AttributedString(".")
         return Text(attributedString)
             .multilineTextAlignment(.center)
-            .font(FontPalette.fontRegular(withSize: 12))
+            .font(forCategory: .caption1)
             .foregroundColor(color)
             .tint(color)
     }
@@ -102,7 +102,7 @@ extension View {
     
     func pageCounter(currentPageIndex: Int, totalPages: Int) -> some View {
         Text("\(currentPageIndex + 1) of \(totalPages)")
-            .font(FontPalette.fontMedium(withSize: 16))
+            .font(forCategory: .body1)
             .foregroundColor(ColorPalette.primaryText)
     }
     

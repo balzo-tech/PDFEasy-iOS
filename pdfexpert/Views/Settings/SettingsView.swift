@@ -27,7 +27,7 @@ struct SettingsView: View {
             Link(destination: URL(string: disclamer.urlString)!) {
                 HStack {
                     Text(disclamer.text)
-                        .font(FontPalette.fontRegular(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                     Spacer()
                     Self.getSystemChevron(color: ColorPalette.primaryText,

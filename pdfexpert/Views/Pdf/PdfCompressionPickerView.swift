@@ -31,11 +31,11 @@ struct PdfCompressionPickerView: View {
                         HStack(spacing: 16) {
                             VStack(spacing: 6) {
                                 Text(option.titleText)
-                                    .font(FontPalette.fontMedium(withSize: 16))
+                                    .font(forCategory: .body1)
                                     .foregroundColor(ColorPalette.primaryText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 Text(option.descriptionText)
-                                    .font(FontPalette.fontMedium(withSize: 12))
+                                    .font(forCategory: .callout)
                                     .foregroundColor(ColorPalette.primaryText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }

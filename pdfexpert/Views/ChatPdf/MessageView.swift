@@ -23,7 +23,7 @@ struct MessageView: View {
                         Text(output)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(self.message.textColor)
-                            .font(FontPalette.fontRegular(withSize: 12))
+                            .font(forCategory: .caption1)
                     case .indicator:
                         MessageIndicatorView()
                     }
@@ -33,13 +33,13 @@ struct MessageView: View {
                     Text("Suggested questions:")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(self.message.textColor)
-                        .font(FontPalette.fontRegular(withSize: 12))
+                        .font(forCategory: .caption1)
                     Spacer().frame(height: 16)
                     ForEach(self.message.suggestedQuestions, id:\.self) { suggestedQuestion in
                         Text(suggestedQuestion)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(ColorPalette.secondaryText)
-                            .font(FontPalette.fontRegular(withSize: 12).bold())
+                            .font(FontCategory.caption1.font.bold())
                             .onTapGesture {
                                 self.onSuggestedQuestionTapped(suggestedQuestion)
                             }

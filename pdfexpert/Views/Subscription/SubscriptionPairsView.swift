@@ -58,13 +58,13 @@ struct SubscriptionPairsView: View {
                 Spacer()
             }
             VStack(spacing: 0) {
-                Text("PDF Easy")
-                    .font(FontPalette.fontMedium(withSize: 30))
+                Text(K.Misc.AppTitle)
+                    .font(forCategory: .largeTitle)
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer().frame(height: 16)
                 Text("Edit, convert PDFs and receive constant updates and advanced Premium features. ")
-                    .font(FontPalette.fontRegular(withSize: 15))
+                    .font(forCategory: .body1)
                     .foregroundColor(ColorPalette.primaryText)
                     .lineLimit(2)
                     .minimumScaleFactor(0.5)
@@ -89,7 +89,7 @@ struct SubscriptionPairsView: View {
             Text("Restore purchase")
                 .frame(maxHeight: .infinity)
                 .underline()
-                .font(FontPalette.fontLight(withSize: 15))
+                .font(forCategory: .linkText)
                 .foregroundColor(ColorPalette.primaryText)
         }
         .frame(maxWidth: .infinity)
@@ -109,7 +109,7 @@ struct SubscriptionPairsView: View {
     
     var currentSubscriptionPlanView: some View {
         Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-            .font(FontPalette.fontMedium(withSize: 18))
+            .font(forCategory: .headline)
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 40)

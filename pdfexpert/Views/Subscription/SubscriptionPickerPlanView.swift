@@ -17,7 +17,7 @@ struct SubscriptionPickerPlanView: View {
             VStack(spacing: 0) {
                 HStack(alignment: .top, spacing: 12) {
                     Text(self.subscriptionPlanPickerItem?.title ?? "")
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                         .multilineTextAlignment(.leading)
                     Spacer()
@@ -25,14 +25,14 @@ struct SubscriptionPickerPlanView: View {
                 }
                 Spacer()
                 Text("Maximum flexibility, you decide\nhow long to stay")
-                    .font(FontPalette.fontRegular(withSize: 10))
+                    .font(forCategory: .caption2)
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                 Spacer()
                 HStack {
                     Text(self.subscriptionPlanPickerItem?.weeklyPriceAndPeriod ?? "")
-                        .font(FontPalette.fontLight(withSize: 10))
+                        .font(forCategory: .caption2)
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     self.pickerView
@@ -62,7 +62,7 @@ struct SubscriptionPickerPlanView: View {
         Button(action: { self.pickerButtonPressed() }) {
             HStack(spacing: 12) {
                 Text(self.subscriptionPlanPickerItem?.period ?? "")
-                    .font(FontPalette.fontMedium(withSize: 12))
+                    .font(forCategory: .callout)
                     .foregroundColor(ColorPalette.primaryText)
                 Image(systemName: "chevron.down")
                     .foregroundColor(ColorPalette.primaryText)

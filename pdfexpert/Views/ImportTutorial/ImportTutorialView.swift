@@ -26,7 +26,7 @@ struct ImportTutorialView: View {
                            description: "Select the pdf and press the button \"Open in\" or menu"),
         ImportTutorialItem(title: "Convert PDF from\nyour app",
                            imageName: "import_tutorial_3",
-                           description: "Select the PDF Easy app to import the PDF"),
+                           description: "Select the \(K.Misc.AppTitle) app to import the PDF"),
     ]
     
     var pageCount: Int { Self.items.count }

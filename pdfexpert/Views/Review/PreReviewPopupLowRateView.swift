@@ -44,12 +44,12 @@ struct PreReviewPopupLowRateView: View {
                     .foregroundColor(ColorPalette.extra)
                 Spacer().frame(height: 30)
                 Text("Your opinion matter to us!")
-                    .font(FontPalette.fontMedium(withSize: 18))
+                    .font(forCategory: .headline)
                     .foregroundColor(ColorPalette.primaryText)
                     .frame(maxWidth: .infinity)
                 Spacer().frame(height: 8)
                 Text("Would you like to share your feedback with us to improve the app?")
-                    .font(FontPalette.fontRegular(withSize: 14))
+                    .font(forCategory: .body2)
                     .foregroundColor(ColorPalette.primaryText)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
@@ -57,7 +57,7 @@ struct PreReviewPopupLowRateView: View {
                 VStack(spacing: 0) {
                     ZStack {
                         TextEditor(text: self.$feedbackText)
-                            .font(FontPalette.fontRegular(withSize: 12))
+                            .font(forCategory: .caption1)
                             .foregroundColor(ColorPalette.primaryText)
                             .scrollContentBackground(.hidden)
                             .overlay(RoundedRectangle(cornerRadius: 10)
@@ -72,7 +72,7 @@ struct PreReviewPopupLowRateView: View {
                         if self.feedbackText.isEmpty {
                             VStack {
                                 Text("Write your feedback here")
-                                    .font(FontPalette.fontRegular(withSize: 12))
+                                    .font(forCategory: .caption1)
                                     .foregroundColor(ColorPalette.thirdText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 Spacer()
@@ -83,7 +83,7 @@ struct PreReviewPopupLowRateView: View {
                         VStack(spacing: 0) {
                             Spacer()
                             Text(self.remainingCharactersText)
-                                .font(FontPalette.fontRegular(withSize: 10))
+                                .font(forCategory: .caption2)
                                 .foregroundColor(ColorPalette.thirdText)
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.trailing, 6)

@@ -16,7 +16,7 @@ struct PdfSignatureCanvasView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text("Add Signature")
-                .font(FontPalette.fontRegular(withSize: 16))
+                .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.secondaryBG)
                 .frame(maxWidth: .infinity)
             Spacer()
@@ -43,7 +43,7 @@ struct PdfSignatureCanvasView: View {
             VStack(spacing: 0) {
                 Spacer().frame(height: 6)
                 Text("Sign in here")
-                    .font(FontPalette.fontRegular(withSize: 12))
+                    .font(forCategory: .caption1)
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity)
                 Spacer().frame(height: 40)
@@ -72,7 +72,7 @@ struct PdfSignatureCanvasView: View {
                 .scaledToFit()
                 .padding([.top, .bottom, .leading], 6)
             }
-            .font(FontPalette.fontMedium(withSize: 12))
+            .font(forCategory: .callout)
             .foregroundColor(
                 self.viewModel.shouldSaveSignature
                 ? ColorPalette.buttonGradientStart

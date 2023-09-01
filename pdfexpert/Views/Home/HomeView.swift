@@ -208,7 +208,7 @@ struct HomeView: View {
             }
         } header: {
             Text(sectionTitle)
-                .font(FontPalette.fontMedium(withSize: 18))
+                .font(forCategory: .headline)
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }

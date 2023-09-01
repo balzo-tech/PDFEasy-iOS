@@ -158,7 +158,7 @@ struct PdfEditView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 80)
             Text("You have no pages")
-                .font(FontPalette.fontRegular(withSize: 16))
+                .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
@@ -299,7 +299,7 @@ struct PdfEditView: View {
                 .frame(width: 32, height: 32)
                 .foregroundColor(ColorPalette.primaryText)
             Text(text)
-                .font(FontPalette.fontLight(withSize: 12))
+                .font(forCategory: .callout)
                 .foregroundColor(ColorPalette.primaryText)
             Spacer()
         }

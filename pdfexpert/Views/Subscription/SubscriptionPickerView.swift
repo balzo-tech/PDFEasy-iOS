@@ -78,7 +78,7 @@ struct SubscriptionPickerView: View {
                 VStack(spacing: 0) {
                     Spacer().frame(height: 26)
                     Text("Choose a plan")
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Spacer().frame(height: 26)
@@ -91,7 +91,7 @@ struct SubscriptionPickerView: View {
                 }
                 VStack(spacing: 0) {
                     Text("What you get")
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Spacer().frame(height: 16)
@@ -121,7 +121,7 @@ struct SubscriptionPickerView: View {
             Text("Restore purchase")
                 .frame(maxHeight: .infinity)
                 .underline()
-                .font(FontPalette.fontLight(withSize: 14))
+                .font(forCategory: .linkText)
                 .foregroundColor(ColorPalette.primaryText)
         }
         .frame(maxWidth: .infinity)
@@ -135,7 +135,7 @@ struct SubscriptionPickerView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 20, height: 20)
             Text(feature.text)
-                .font(FontPalette.fontRegular(withSize: 12))
+                .font(forCategory: .caption1)
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Image(systemName: "checkmark.circle")
@@ -158,7 +158,7 @@ struct SubscriptionPickerView: View {
     
     private var currentSubscriptionPlanView: some View {
         Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-            .font(FontPalette.fontMedium(withSize: 18))
+            .font(forCategory: .headline)
             .foregroundColor(ColorPalette.primaryText)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 40)

@@ -19,7 +19,7 @@ struct PdfSignaturePickerView: View {
             VStack(spacing: 0) {
                 Spacer().frame(height: 16)
                 Text("Your Signatures")
-                    .font(FontPalette.fontRegular(withSize: 16))
+                    .font(forCategory: .body1)
                     .foregroundColor(ColorPalette.primaryBG)
                 Spacer().frame(height: 16)
                 self.content
@@ -32,7 +32,7 @@ struct PdfSignaturePickerView: View {
             self.getCloseButton(color: ColorPalette.primaryBG,
                                 onClose: { self.viewModel.cancel() })
             self.getEditButton(color: ColorPalette.buttonGradientStart,
-                               font: FontPalette.fontRegular(withSize: 16),
+                               font: FontCategory.body1.font,
                                editMode: self.$editMode)
         }
         .background(ColorPalette.primaryText)
@@ -90,7 +90,7 @@ struct PdfSignaturePickerView: View {
         VStack(spacing: 16) {
             Spacer()
             Text("No signature added")
-                .font(FontPalette.fontRegular(withSize: 16))
+                .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.thirdText)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
@@ -111,11 +111,11 @@ struct PdfSignaturePickerView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 80)
             Text("Oh nou")
-                .font(FontPalette.fontMedium(withSize: 32))
+                .font(forCategory: .largeTitle)
                 .foregroundColor(ColorPalette.primaryBG)
                 .frame(maxWidth: .infinity, alignment: .center)
             Text("Something went wrong,\nmind trying again?")
-                .font(FontPalette.fontRegular(withSize: 15))
+                .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.primaryBG)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -131,7 +131,7 @@ struct PdfSignaturePickerView: View {
             Spacer()
             Button(action: { self.viewModel.createNewSignature() }) {
                 Label("Add new signature", systemImage: "plus.circle.fill")
-                    .font(FontPalette.fontRegular(withSize: 16))
+                    .font(forCategory: .body1)
                     .foregroundColor(ColorPalette.buttonGradientStart)
             }
         }

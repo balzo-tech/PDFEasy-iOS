@@ -68,7 +68,7 @@ struct PdfReaderView: View {
                     }
                 } else {
                     Text("No text available on this page")
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                 }
             }

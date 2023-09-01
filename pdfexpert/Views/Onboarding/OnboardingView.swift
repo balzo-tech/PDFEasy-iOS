@@ -51,7 +51,7 @@ struct OnboardingView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { self.viewModel.skipButtonPressed() }) {
                     Text("Skip")
-                        .font(FontPalette.fontMedium(withSize: 16))
+                        .font(forCategory: .body1)
                         .foregroundColor(ColorPalette.primaryText)
                 }
             }

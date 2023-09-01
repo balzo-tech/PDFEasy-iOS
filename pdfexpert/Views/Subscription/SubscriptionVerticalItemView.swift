@@ -23,19 +23,19 @@ struct SubscriptionVerticalItemView: View {
                     VStack(spacing: 4) {
                         if let freeTrialText = self.subscriptionPlan.freeTrialText {
                             Text(freeTrialText)
-                                .font(FontPalette.fontMedium(withSize: 14))
+                                .font(forCategory: .body1)
                                 .foregroundColor(ColorPalette.extra)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .lineLimit(1)
                         }
                         Text(self.subscriptionPlan.titleShort)
-                            .font(FontPalette.fontMedium(withSize: 14))
+                            .font(forCategory: .body2)
                             .foregroundColor(ColorPalette.primaryText)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(1)
                         if let discountText = self.subscriptionPlan.discountText {
                             Text(discountText)
-                                .font(FontPalette.fontRegular(withSize: 10))
+                                .font(forCategory: .caption2)
                                 .foregroundColor(ColorPalette.thirdText)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .lineLimit(1)
@@ -56,7 +56,7 @@ struct SubscriptionVerticalItemView: View {
                             HStack {
                                 Spacer()
                                 Text(bestDiscountText)
-                                    .font(FontPalette.fontMedium(withSize: 12))
+                                    .font(forCategory: .callout)
                                     .foregroundColor(.black)
                                     .frame(alignment: .trailing)
                                     .padding([.leading, .trailing], 6)

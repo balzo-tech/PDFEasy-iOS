@@ -17,7 +17,7 @@ struct ImportTutorialPageView: View {
         VStack(spacing: 0) {
             Spacer()
             Text(self.title)
-                .font(FontPalette.fontMedium(withSize: 22))
+                .font(forCategory: .title2)
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity)
                 .frame(height: 80, alignment: .top)
@@ -30,7 +30,7 @@ struct ImportTutorialPageView: View {
                 .frame(maxHeight: 600)
             Spacer().frame(height: 40)
             Text(self.description)
-                .font(FontPalette.fontMedium(withSize: 16))
+                .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity)
                 .frame(height: 80, alignment: .top)
@@ -52,6 +52,6 @@ struct ImportTutorialPageView_Previews: PreviewProvider {
                                description: "Select the pdf and press the button \"Open in\" or menu")
         ImportTutorialPageView(title: "Convert PDF from\nyour app",
                                imageName: "import_tutorial_3",
-                               description: "Select the PDF Easy app to import the PDF")
+                               description: "Select the \(K.Misc.AppTitle) app to import the PDF")
     }
 }

@@ -50,9 +50,9 @@ struct ChatPdfView: View {
                 } else {
                     VStack{
                         Image(systemName: "ellipses.bubble")
-                            .font(.largeTitle)
+                            .font(forCategory: .largeTitle)
                         Text("Write your first message!")
-                            .font(FontPalette.fontRegular(withSize: 14))
+                            .font(forCategory: .body2)
                             .foregroundColor(ColorPalette.primaryText)
                             .padding(10)
                     }
@@ -62,7 +62,7 @@ struct ChatPdfView: View {
                 HStack(alignment: .center){
                     TextField("Type your Message...", text: self.$typingMessage, axis: .vertical)
                         .padding()
-                        .font(FontPalette.fontMedium(withSize: 14))
+                        .font(forCategory: .body2)
                         .foregroundColor(ColorPalette.primaryText)
                         .lineLimit(3)
                         .disableAutocorrection(true)

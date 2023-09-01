@@ -122,3 +122,41 @@ class FontPalette {
         return UIFont(name: "\(Self.fontFamily)-ThinItalic", size: size) ?? UIFont.italicSystemFont(ofSize: size)
     }
 }
+
+enum FontCategory {
+    case largeTitle
+    case title1
+    case title2
+    case button
+    case headline
+    case body1
+    case body2
+    case body3
+    case linkText
+    case callout
+    case caption1
+    case caption2
+    
+    var font: Font {
+        switch self {
+        case .largeTitle: return FontPalette.fontMedium(withSize: 32)
+        case .title1: return FontPalette.fontMedium(withSize: 24)
+        case .title2: return FontPalette.fontMedium(withSize: 22)
+        case .button: return FontPalette.fontMedium(withSize: 18)
+        case .headline: return FontPalette.fontMedium(withSize: 18)
+        case .body1: return FontPalette.fontRegular(withSize: 16)
+        case .body2: return FontPalette.fontRegular(withSize: 14)
+        case .body3: return FontPalette.fontMedium(withSize: 16)
+        case .linkText: return FontPalette.fontRegular(withSize: 14)
+        case .callout: return FontPalette.fontMedium(withSize: 12)
+        case .caption1: return FontPalette.fontRegular(withSize: 12)
+        case .caption2: return FontPalette.fontRegular(withSize: 10)
+        }
+    }
+}
+
+extension View {
+    func font(forCategory category: FontCategory) -> some View {
+        self.font(category.font)
+    }
+}

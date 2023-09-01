@@ -16,7 +16,7 @@ struct SubscriptionPickerPlanListView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text("Choose period")
-                .font(FontPalette.fontMedium(withSize: 20))
+                .font(forCategory: .button)
                 .foregroundColor(ColorPalette.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Spacer().frame(height: 20)
@@ -40,15 +40,15 @@ struct SubscriptionPickerPlanListView: View {
             }) {
                 HStack(spacing: 0) {
                     Text(subscriptionPlan.period + " |")
-                        .font(FontPalette.fontRegular(withSize: 18))
+                        .font(forCategory: .button)
                         .foregroundColor(ColorPalette.primaryText)
                     Spacer().frame(width: 6)
                     Text(subscriptionPlan.priceText)
-                        .font(FontPalette.fontRegular(withSize: 18))
+                        .font(forCategory: .button)
                         .foregroundColor(ColorPalette.thirdText)
                     Spacer()
                     Text(subscriptionPlan.weeklyPriceAndPeriod)
-                        .font(FontPalette.fontRegular(withSize: 12))
+                        .font(forCategory: .caption1)
                         .foregroundColor(ColorPalette.thirdText)
                 }
                 .padding(16)
@@ -67,7 +67,7 @@ struct SubscriptionPickerPlanListView: View {
                         HStack {
                             Spacer()
                             Text(bestDiscountText)
-                                .font(FontPalette.fontMedium(withSize: 12))
+                                .font(forCategory: .callout)
                                 .foregroundColor(.black)
                                 .frame(alignment: .trailing)
                                 .padding([.leading, .trailing], 6)

@@ -1653,7 +1653,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
-				DISPLAY_NAME = "PDF Easy Staging";
+				DISPLAY_NAME = "PDF Pro Staging";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
@@ -1780,7 +1780,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
-				DISPLAY_NAME = "PDF Easy Staging";
+				DISPLAY_NAME = "PDF Pro Staging";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
@@ -1969,7 +1969,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
-				DISPLAY_NAME = "PDF Easy";
+				DISPLAY_NAME = "PDF Pro";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
@@ -2012,7 +2012,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
-				DISPLAY_NAME = "PDF Easy";
+				DISPLAY_NAME = "PDF Pro";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;

@@ -94,6 +94,8 @@ Make a summary and suggest three questions. Format your response as a json with 
     }
     
     struct Misc {
+        static let AppTitle = "PDF Pro"
+        
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
         static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
         
