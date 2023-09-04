@@ -90,6 +90,9 @@
 		8945D2BC2A03C41000AFF51A /* PdfScanUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */; };
 		89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */; };
 		89467AD72A9E4C6B00FC01FC /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89467AD62A9E4C6B00FC01FC /* Deeplink.swift */; };
+		894827B02AA5D65600030C4E /* BranchSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 894827AF2AA5D65600030C4E /* BranchSDK */; };
+		894827B22AA5D68D00030C4E /* AttributionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894827B12AA5D68D00030C4E /* AttributionManager.swift */; };
+		894827B42AA5D6FF00030C4E /* AttibutionManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894827B32AA5D6FF00030C4E /* AttibutionManagerImpl.swift */; };
 		894AC3642A02952A00BA5553 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */; };
 		894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */; };
 		894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */; };
@@ -341,6 +344,9 @@
 		8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfScanUtility.swift; sourceTree = "<group>"; };
 		89460C5F29DAC36600E39BAC /* SubscriptionErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionErrorView.swift; sourceTree = "<group>"; };
 		89467AD62A9E4C6B00FC01FC /* Deeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
+		894827B12AA5D68D00030C4E /* AttributionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributionManager.swift; sourceTree = "<group>"; };
+		894827B32AA5D6FF00030C4E /* AttibutionManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttibutionManagerImpl.swift; sourceTree = "<group>"; };
+		894827B82AA5DCE400030C4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		894B019E2A0902BC00FF6198 /* ImportTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialView.swift; sourceTree = "<group>"; };
 		894B01A02A09030000FF6198 /* ImportTutorialPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTutorialPageView.swift; sourceTree = "<group>"; };
@@ -498,6 +504,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				894827B02AA5D65600030C4E /* BranchSDK in Frameworks */,
 				8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */,
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
@@ -653,6 +660,31 @@
 			path = Pdf;
 			sourceTree = "<group>";
 		};
+		894827B52AA5DCA900030C4E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				894827B72AA5DCB800030C4E /* Production */,
+				894827B62AA5DCB200030C4E /* Staging */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		894827B62AA5DCB200030C4E /* Staging */ = {
+			isa = PBXGroup;
+			children = (
+				894827B82AA5DCE400030C4E /* Info.plist */,
+			);
+			path = Staging;
+			sourceTree = "<group>";
+		};
+		894827B72AA5DCB800030C4E /* Production */ = {
+			isa = PBXGroup;
+			children = (
+				895C1BB42A04FA53005EA190 /* Info.plist */,
+			);
+			path = Production;
+			sourceTree = "<group>";
+		};
 		894B019D2A0902A000FF6198 /* ImportTutorial */ = {
 			isa = PBXGroup;
 			children = (
@@ -678,7 +710,7 @@
 				895C1BBC2A04FD67005EA190 /* ShareFileExtension.entitlements */,
 				895C1BAF2A04FA53005EA190 /* ShareViewController.swift */,
 				895C1BB12A04FA53005EA190 /* MainInterface.storyboard */,
-				895C1BB42A04FA53005EA190 /* Info.plist */,
+				894827B52AA5DCA900030C4E /* Resources */,
 			);
 			path = ShareFileExtension;
 			sourceTree = "<group>";
@@ -973,6 +1005,8 @@
 				89CD7AE529D329B1003F1C3A /* StoreImpl.swift */,
 				89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */,
 				89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */,
+				894827B12AA5D68D00030C4E /* AttributionManager.swift */,
+				894827B32AA5D6FF00030C4E /* AttibutionManagerImpl.swift */,
 				8991485029E851B500DD01F2 /* ConfigService.swift */,
 				8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */,
 				893BE5312A6A96BE004B05B9 /* Network */,
@@ -1168,6 +1202,7 @@
 				891A07E829E028EE0002FA3A /* CloudKitSyncMonitor */,
 				8991485529E85DE500DD01F2 /* CombineExt */,
 				893BE52A2A6A7864004B05B9 /* CombineMoya */,
+				894827AF2AA5D65600030C4E /* BranchSDK */,
 			);
 			productName = PdfExpert;
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
@@ -1211,6 +1246,7 @@
 				891A07E729E028EE0002FA3A /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
 				8991485429E85DE500DD01F2 /* XCRemoteSwiftPackageReference "CombineExt" */,
 				893BE5292A6A7864004B05B9 /* XCRemoteSwiftPackageReference "Moya" */,
+				894827AE2AA5D65600030C4E /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
 			projectDirPath = "";
@@ -1417,6 +1453,7 @@
 				89BB2DBD2A7A80A8009E6738 /* PdfUnlockView.swift in Sources */,
 				896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */,
 				89127AA12A177E370059005F /* PencilKitView.swift in Sources */,
+				894827B42AA5D6FF00030C4E /* AttibutionManagerImpl.swift in Sources */,
 				89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */,
 				8968761A2A7CE87A0014A320 /* PdfSplitViewModel.swift in Sources */,
 				893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */,
@@ -1501,6 +1538,7 @@
 				894C4A6B2AA0C23F0001F51E /* PreReviewPopupView.swift in Sources */,
 				896876242A7D05040014A320 /* PdfSplitView.swift in Sources */,
 				8955ED942A1F61BD009985EE /* OnboardingPageView.swift in Sources */,
+				894827B22AA5D68D00030C4E /* AttributionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1535,7 +1573,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareFileExtension/Info.plist;
+				INFOPLIST_FILE = ShareFileExtension/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -1561,7 +1599,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareFileExtension/Info.plist;
+				INFOPLIST_FILE = ShareFileExtension/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -1694,7 +1732,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareFileExtension/Info.plist;
+				INFOPLIST_FILE = ShareFileExtension/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -1820,7 +1858,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareFileExtension/Info.plist;
+				INFOPLIST_FILE = ShareFileExtension/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -2115,6 +2153,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		894827AE2AA5D65600030C4E /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BranchMetrics/ios-branch-sdk-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -2185,6 +2231,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */;
 			productName = PagerTabStripView;
+		};
+		894827AF2AA5D65600030C4E /* BranchSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 894827AE2AA5D65600030C4E /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */;
+			productName = BranchSDK;
 		};
 		895FE2CF29D7392F00A99D5B /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;

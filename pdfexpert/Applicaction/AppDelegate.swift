@@ -8,14 +8,19 @@
 import UIKit
 import FirebaseCore
 import FacebookCore
+import Factory
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    @Injected(\.attibutionManager) var attibutionManager
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Firebase init
         FirebaseApp.configure()
         // Facebook init
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        self.attibutionManager.onAppDidFinishLaunching(withLaunchOptions: launchOptions)
         
         // ProjectInfo Validation
         ProjectInfo.validate()

@@ -56,8 +56,8 @@ playground.xcworkspace
 Carthage/Build
 
 # Firebase
-GoogleService-Info.plist
+PdfExpert/**/GoogleService-Info.plist
 # Info Plist
-Info.plist
+PdfExpert/**/Info.plist
 # ProjectInfo Plist
-ProjectInfo.plist
+PdfExpert/**/ProjectInfo.plist

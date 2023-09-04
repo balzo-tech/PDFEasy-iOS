@@ -18,7 +18,11 @@ class SharedStorage {
         case pdfDataShareExtension
     }
     
+    #if STAGING
+    static let schema = "pdfprostaging://"
+    #else
     static let schema = "pdfpro://"
+    #endif
     
     private static let appGroup = "group.eu.balzo.pdfexpert"
     private static let userDefaults = UserDefaults(suiteName: appGroup)

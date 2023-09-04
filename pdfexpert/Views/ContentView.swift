@@ -14,6 +14,7 @@ struct ContentView: View {
     @InjectedObject(\.mainCoordinator) var coordinator
     @Injected(\.store) var store
     @Injected(\.configService) var configService
+    @Injected(\.attibutionManager) var attibutionManager
     
     var body: some View {
         self.content
@@ -27,6 +28,7 @@ struct ContentView: View {
             }
             .onOpenURL { url in
                 self.coordinator.handleOpenUrl(url: url)
+                self.attibutionManager.onOpenUrl(url: url)
             }
     }
     
