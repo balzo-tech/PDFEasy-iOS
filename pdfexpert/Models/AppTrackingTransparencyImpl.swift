@@ -32,6 +32,7 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
     }
     
     @Injected(\.analyticsManager) var analyticsManager
+    @Injected(\.attibutionManager) var attibutionManager
     
     init() {
         self.updateFacebookAdvertiseTrackingSettings()
@@ -65,6 +66,7 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
     }
     
     private func trackAuthorizationEvent(authorizationStatus: ATTrackingManager.AuthorizationStatus) {
+        self.attibutionManager.onHandleATTAuthorizationStatus(authorizationStatus: authorizationStatus)
         switch authorizationStatus {
           case .authorized:
             debugPrint(for: self, message: "Authorization Granted")

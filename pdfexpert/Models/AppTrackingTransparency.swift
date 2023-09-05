@@ -8,6 +8,7 @@
 
 import Foundation
 import Factory
+import AppTrackingTransparency
 
 protocol AppTrackingTransparency : AnyObject {
     var serviceSupported: Bool { get }

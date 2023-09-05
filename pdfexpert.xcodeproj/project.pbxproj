@@ -60,6 +60,10 @@
 		893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */; };
 		893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */ = {isa = PBXBuildFile; productRef = 893E84A329D5BFBB00F6B99A /* PSPDFKit */; };
 		893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E84A529D5C5E200F6B99A /* ActivityViewController.swift */; };
+		893EB5012AA717B80066914E /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 893EB5002AA717B80066914E /* FacebookCore */; };
+		893EB5032AA71FFD0066914E /* BranchAnalyticsPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB5022AA71FFD0066914E /* BranchAnalyticsPlatform.swift */; };
+		893EB5052AA722EF0066914E /* StoreKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB5042AA722EF0066914E /* StoreKit+Extensions.swift */; };
+		893EB5072AA723C80066914E /* AnalyticsDefaultParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB5062AA723C80066914E /* AnalyticsDefaultParameters.swift */; };
 		893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */; };
 		893ED9D22A6926E8004EE67C /* ChatPdfMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */; };
 		893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D32A692805004EE67C /* CombineUtils.swift */; };
@@ -157,7 +161,6 @@
 		89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFEA029DB2672002D348E /* CacheManagerImpl.swift */; };
 		89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFEA629DB2AC4002D348E /* WelcomeView.swift */; };
 		89ABAA592A97B29C00721045 /* PdfDocument+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ABAA582A97B29C00721045 /* PdfDocument+Extensions.swift */; };
-		89B72A3029DAD4990076884F /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 89B72A2F29DAD4990076884F /* FacebookCore */; };
 		89B72A3329DADC790076884F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B72A3229DADC790076884F /* SettingsView.swift */; };
 		89BB2DB72A7A5EFC009E6738 /* PdfMergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */; };
 		89BB2DB92A7A6050009E6738 /* PdfMergeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BB2DB82A7A6050009E6738 /* PdfMergeViewModel.swift */; };
@@ -315,6 +318,9 @@
 		893E849A29D5944E00F6B99A /* CameraService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Extensions.swift"; sourceTree = "<group>"; };
 		893E84A529D5C5E200F6B99A /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
+		893EB5022AA71FFD0066914E /* BranchAnalyticsPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchAnalyticsPlatform.swift; sourceTree = "<group>"; };
+		893EB5042AA722EF0066914E /* StoreKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreKit+Extensions.swift"; sourceTree = "<group>"; };
+		893EB5062AA723C80066914E /* AnalyticsDefaultParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsDefaultParameters.swift; sourceTree = "<group>"; };
 		893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfRef.swift; sourceTree = "<group>"; };
 		893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfMessage.swift; sourceTree = "<group>"; };
 		893ED9D32A692805004EE67C /* CombineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineUtils.swift; sourceTree = "<group>"; };
@@ -505,13 +511,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				894827B02AA5D65600030C4E /* BranchSDK in Frameworks */,
+				893EB5012AA717B80066914E /* FacebookCore in Frameworks */,
 				8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */,
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
 				893E84A429D5BFBB00F6B99A /* PSPDFKit in Frameworks */,
 				8991485629E85DE500DD01F2 /* CombineExt in Frameworks */,
 				89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */,
-				89B72A3029DAD4990076884F /* FacebookCore in Frameworks */,
 				891A07E929E028EE0002FA3A /* CloudKitSyncMonitor in Frameworks */,
 				89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */,
 				89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */,
@@ -991,6 +997,7 @@
 				897967852A73E59B00E91F8E /* URL+Extensions.swift */,
 				89436D202A93B97E000868B5 /* NSAttributedString+Extensions.swift */,
 				89ABAA582A97B29C00721045 /* PdfDocument+Extensions.swift */,
+				893EB5042AA722EF0066914E /* StoreKit+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1146,7 +1153,9 @@
 				89E55BDB29DC64840073F268 /* AnalyticsManagerImpl.swift */,
 				89E55BD829DC64840073F268 /* AnalyticsManager.swift */,
 				89E55BDA29DC64840073F268 /* FirebaseAnalyticsPlatform.swift */,
+				893EB5022AA71FFD0066914E /* BranchAnalyticsPlatform.swift */,
 				89E55BE129DC66240073F268 /* AnalyticsPlatform.swift */,
+				893EB5062AA723C80066914E /* AnalyticsDefaultParameters.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -1197,12 +1206,12 @@
 				893E84A329D5BFBB00F6B99A /* PSPDFKit */,
 				895FE2CF29D7392F00A99D5B /* Collections */,
 				895FE2D129D7392F00A99D5B /* OrderedCollections */,
-				89B72A2F29DAD4990076884F /* FacebookCore */,
 				8942034429DC12BC004D610B /* PagerTabStripView */,
 				891A07E829E028EE0002FA3A /* CloudKitSyncMonitor */,
 				8991485529E85DE500DD01F2 /* CombineExt */,
 				893BE52A2A6A7864004B05B9 /* CombineMoya */,
 				894827AF2AA5D65600030C4E /* BranchSDK */,
+				893EB5002AA717B80066914E /* FacebookCore */,
 			);
 			productName = PdfExpert;
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
@@ -1241,12 +1250,12 @@
 				89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */,
 				895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */,
-				89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */,
 				891A07E729E028EE0002FA3A /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
 				8991485429E85DE500DD01F2 /* XCRemoteSwiftPackageReference "CombineExt" */,
 				893BE5292A6A7864004B05B9 /* XCRemoteSwiftPackageReference "Moya" */,
 				894827AE2AA5D65600030C4E /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */,
+				893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
 			projectDirPath = "";
@@ -1357,6 +1366,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				893EB5072AA723C80066914E /* AnalyticsDefaultParameters.swift in Sources */,
 				8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */,
 				89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */,
 				89CD7B5529D329B1003F1C3A /* Enum+Extensions.swift in Sources */,
@@ -1479,6 +1489,7 @@
 				89429F882A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift in Sources */,
 				89CD7B6E29D329B1003F1C3A /* Constants.swift in Sources */,
 				8962D6062A9E28FB008426A2 /* PdfSignaturePrioviderFlow.swift in Sources */,
+				893EB5032AA71FFD0066914E /* BranchAnalyticsPlatform.swift in Sources */,
 				89436ABB29E557D500060605 /* PdfFlowView.swift in Sources */,
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
@@ -1536,6 +1547,7 @@
 				89CD7B7129D329B1003F1C3A /* ColorPalette.swift in Sources */,
 				89504A462A448252000BCACD /* PdfFillWidgetView.swift in Sources */,
 				894C4A6B2AA0C23F0001F51E /* PreReviewPopupView.swift in Sources */,
+				893EB5052AA722EF0066914E /* StoreKit+Extensions.swift in Sources */,
 				896876242A7D05040014A320 /* PdfSplitView.swift in Sources */,
 				8955ED942A1F61BD009985EE /* OnboardingPageView.swift in Sources */,
 				894827B22AA5D68D00030C4E /* AttributionManager.swift in Sources */,
@@ -2145,6 +2157,14 @@
 				kind = branch;
 			};
 		};
+		893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 16.0.0;
+			};
+		};
 		8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/xmartlabs/PagerTabStripView";
@@ -2175,14 +2195,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
-			};
-		};
-		89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.0.0;
 			};
 		};
 		89CD7BA329D32C52003F1C3A /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
@@ -2227,6 +2239,11 @@
 			package = 893E84A229D5BFBB00F6B99A /* XCRemoteSwiftPackageReference "PSPDFKit-SP" */;
 			productName = PSPDFKit;
 		};
+		893EB5002AA717B80066914E /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
 		8942034429DC12BC004D610B /* PagerTabStripView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */;
@@ -2256,11 +2273,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebasePerformance;
-		};
-		89B72A2F29DAD4990076884F /* FacebookCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 89B72A2E29DAD4990076884F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookCore;
 		};
 		89CD7BA429D32C52003F1C3A /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -19,7 +19,7 @@ class AnalyticsManagerImpl: AnalyticsManager {
     private let platforms: [AnalyticsPlatform]
     
     init() {
-        self.platforms = [FirebaseAnalyticsPlatform()]
+        self.platforms = [FirebaseAnalyticsPlatform(), BranchAnalyticsPlatform()]
     }
     
     func track(event: AnalyticsEvent) {

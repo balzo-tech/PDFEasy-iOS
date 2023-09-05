@@ -7,8 +7,10 @@
 
 import Foundation
 import UIKit
+import AppTrackingTransparency
 
 protocol AttributionManager : AnyObject {
     func onAppDidFinishLaunching(withLaunchOptions launchOptions:  [UIApplication.LaunchOptionsKey: Any]?)
     func onOpenUrl(url: URL)
+    func onHandleATTAuthorizationStatus(authorizationStatus: ATTrackingManager.AuthorizationStatus)
 }

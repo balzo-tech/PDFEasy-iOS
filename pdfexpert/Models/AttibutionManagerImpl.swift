@@ -9,6 +9,7 @@ import Foundation
 import Factory
 import BranchSDK
 import UIKit
+import AppTrackingTransparency
 
 extension Container {
     var attibutionManager: Factory<AttributionManager> {
@@ -22,7 +23,7 @@ class AttributionManagerImpl: AttributionManager {
         #if STAGING
         Branch.setUseTestBranchKey(true)
         #endif
-        Branch.getInstance().enableLogging()
+//        Branch.getInstance().enableLogging()
 //        Branch.getInstance().validateSDKIntegration()
         Branch.getInstance().initSession(launchOptions: launchOptions) { (params, error) in
             print("AttributionManagerImpl - Deeplink detected. Parameters: \((params as? [String: AnyObject]) ?? [:])")
@@ -32,5 +33,9 @@ class AttributionManagerImpl: AttributionManager {
     
     func onOpenUrl(url: URL) {
         Branch.getInstance().handleDeepLink(url)
+    }
+    
+    func onHandleATTAuthorizationStatus(authorizationStatus: ATTrackingManager.AuthorizationStatus) {
+        Branch.getInstance().handleATTAuthorizationStatus(authorizationStatus.rawValue)
     }
 }
