@@ -16,6 +16,12 @@ extension Container {
     }
 }
 
+enum SignatureSource: CaseIterable, Hashable {
+    case drawing
+    case image
+    case camera
+}
+
 class PdfSignatureCanvasViewModel: ObservableObject {
     
     typealias ConfirmationCallback = ((Signature) -> ())
@@ -23,6 +29,7 @@ class PdfSignatureCanvasViewModel: ObservableObject {
     @Published var canvasView = PKCanvasView()
     @Published var shouldSaveSignature: Bool = false
     @Published var pdfSaveError: SharedUnderlyingError? = nil
+    @Published var mode: SignatureSource = .drawing
     
     @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager

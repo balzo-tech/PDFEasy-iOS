@@ -15,7 +15,7 @@ struct PdfSignatureProviderFlowView: ViewModifier {
     func body(content: Content) -> some View {
         content
             .formSheet(isPresented: self.$flow.showSignatureCreation,
-                       size: CGSize(width: 400, height: 355)) {
+                       size: CGSize(width: 400, height: 385)) {
                 PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({
                     self.flow.onSignatureSelected(signature: $0)
                 }))

@@ -20,6 +20,8 @@ struct PdfSignatureCanvasView: View {
                 .foregroundColor(ColorPalette.secondaryBG)
                 .frame(maxWidth: .infinity)
             Spacer()
+            self.tabsView
+            Spacer().frame(height: 10)
             HStack(spacing: 0) {
                 Spacer()
                 Spacer().frame(width: 24)
@@ -57,6 +59,35 @@ struct PdfSignatureCanvasView: View {
         .background(ColorPalette.primaryText)
     }
     
+    var tabsView: some View {
+        HStack(spacing: 16) {
+            ForEach(SignatureSource.allCases, id:\.self) { mode in
+                Button(action: { self.viewModel.mode = mode }) {
+                    Label(title: {
+                        Text(mode.text)
+                            .lineLimit(1)
+                            .font(forCategory: .caption1)
+                            .foregroundColor(
+                                self.viewModel.mode == mode
+                                ? ColorPalette.secondaryText
+                                : ColorPalette.primaryBG
+                            )
+                    }, icon: {
+                        mode.icon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(
+                                self.viewModel.mode == mode
+                                ? ColorPalette.secondaryText
+                                : ColorPalette.primaryBG
+                            )
+                    })
+                }
+            }
+        }
+    }
+    
     var saveButton: some View {
         Button(action: { self.viewModel.toggleShouldSave() }) {
             Label {
@@ -87,6 +118,24 @@ struct PdfSignatureCanvasView: View {
             : ColorPalette.thirdText,
             lineWidth: 1
         ))
+    }
+}
+
+fileprivate extension SignatureSource {
+    var text: String {
+        switch self {
+        case .drawing: return "Drawing"
+        case .image: return "From Image"
+        case .camera: return "From Camera"
+        }
+    }
+    
+    var icon: Image {
+        switch self {
+        case .drawing: return Image("sign_drawing")
+        case .image: return Image(systemName: "photo")
+        case .camera: return Image(systemName: "camera")
+        }
     }
 }
 
