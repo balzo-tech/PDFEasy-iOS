@@ -40,6 +40,7 @@ class PdfSignatureCanvasViewModel: NSObject, ObservableObject {
     @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.galleryImageProviderFlow) var galleryImageProviderFlow
+    @Injected(\.cameraImageProviderFlow) var cameraImageProviderFlow
     
     var confirmAllowed: Bool {
         switch self.source {
@@ -124,36 +125,8 @@ class PdfSignatureCanvasViewModel: NSObject, ObservableObject {
     }
     
     private func startTakePictureFlow() {
-        debugPrint(for: self, message: "Start Take Picture Flow")
-        self.signatureCameraImage = Self.getTestImage()
-    }
-    
-    private static func getTestImage() -> UIImage {
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = 1.0
-        let renderer = UIGraphicsImageRenderer(size: K.Misc.SignatureSize, format: format)
-        return renderer.image { context in
-            let firstColor = UIColor(ColorPalette.primaryBG)
-            let secondColor = UIColor(ColorPalette.secondaryText)
-            let thirdColor = UIColor(ColorPalette.extra.opacity(0.6))
-            UIColor.gray.setStroke()
-            context.stroke(renderer.format.bounds)
-            firstColor.setFill()
-            context.fill(CGRect(x: renderer.format.bounds.width / 2 - renderer.format.bounds.height,
-                                y: 1,
-                                width: renderer.format.bounds.height - 2,
-                                height: renderer.format.bounds.height - 2))
-            secondColor.setFill()
-            context.fill(CGRect(x: renderer.format.bounds.width / 2,
-                                y: 1,
-                                width: renderer.format.bounds.height - 2,
-                                height: renderer.format.bounds.height - 2), blendMode: .multiply)
-            
-            thirdColor.setFill()
-            context.cgContext.fillEllipse(in: CGRect(x: renderer.format.bounds.width / 2 - renderer.format.bounds.height / 2,
-                                                     y: 1,
-                                                     width: renderer.format.bounds.height - 2,
-                                                     height: renderer.format.bounds.height - 2))
+        self.cameraImageProviderFlow.startFlow { [weak self] in
+            self?.signatureCameraImage = $0
         }
     }
 }
@@ -162,6 +135,7 @@ extension PdfSignatureCanvasViewModel: PKCanvasViewDelegate {
     
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         if self.canvasView == canvasView {
+            // This is needed mainly to refresh the confirm button availability
             self.objectWillChange.send()
         }
     }

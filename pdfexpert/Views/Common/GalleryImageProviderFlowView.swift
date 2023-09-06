@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Factory
 import PhotosUI
 
 struct GalleryImageProviderFlowView: ViewModifier {
