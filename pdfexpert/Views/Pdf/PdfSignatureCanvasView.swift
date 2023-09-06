@@ -33,6 +33,7 @@ struct PdfSignatureCanvasView: View {
         }
         .padding(16)
         .background(ColorPalette.primaryText)
+        .galleryImageProviderView(flow: self.viewModel.galleryImageProviderFlow)
     }
     
     var tabsView: some View {

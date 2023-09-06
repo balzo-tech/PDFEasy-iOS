@@ -69,6 +69,8 @@
 		893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D32A692805004EE67C /* CombineUtils.swift */; };
 		893ED9D92A693013004EE67C /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D72A693013004EE67C /* MessageView.swift */; };
 		893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9D82A693013004EE67C /* MessageIndicatorView.swift */; };
+		89407EF12AA8ADD200169801 /* GalleryImageProviderFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EF02AA8ADD200169801 /* GalleryImageProviderFlow.swift */; };
+		89407EF32AA8B0C800169801 /* GalleryImageProviderFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EF22AA8B0C800169801 /* GalleryImageProviderFlowView.swift */; };
 		8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8940FB902A710D8D00A00D8D /* AddPasswordView.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
 		89429F862A9C8ECC00465420 /* PdfSignaturePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */; };
@@ -326,6 +328,8 @@
 		893ED9D32A692805004EE67C /* CombineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineUtils.swift; sourceTree = "<group>"; };
 		893ED9D72A693013004EE67C /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		893ED9D82A693013004EE67C /* MessageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageIndicatorView.swift; sourceTree = "<group>"; };
+		89407EF02AA8ADD200169801 /* GalleryImageProviderFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImageProviderFlow.swift; sourceTree = "<group>"; };
+		89407EF22AA8B0C800169801 /* GalleryImageProviderFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImageProviderFlowView.swift; sourceTree = "<group>"; };
 		8940FB902A710D8D00A00D8D /* AddPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPasswordView.swift; sourceTree = "<group>"; };
 		89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerView.swift; sourceTree = "<group>"; };
 		89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerViewModel.swift; sourceTree = "<group>"; };
@@ -790,6 +794,7 @@
 				89436D1C2A93AE76000868B5 /* PdfReaderView.swift */,
 				89436D222A93C1CE000868B5 /* PdfPageSelectionView.swift */,
 				89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */,
+				89407EF22AA8B0C800169801 /* GalleryImageProviderFlowView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1085,6 +1090,7 @@
 				89436D1A2A939CBB000868B5 /* PdfReadViewModel.swift */,
 				89436D1E2A93AEB4000868B5 /* PdfReaderViewModel.swift */,
 				8962D6052A9E28FB008426A2 /* PdfSignaturePrioviderFlow.swift */,
+				89407EF02AA8ADD200169801 /* GalleryImageProviderFlow.swift */,
 				894C4A6D2AA0CB470001F51E /* ReviewFlow.swift */,
 			);
 			path = ViewModels;
@@ -1379,6 +1385,7 @@
 				89AAFEA229DB2672002D348E /* CacheManagerImpl.swift in Sources */,
 				89431FC62A9900740042A636 /* MathUtils.swift in Sources */,
 				89436AC329E59C0E00060605 /* PdfEditViewModel.swift in Sources */,
+				89407EF32AA8B0C800169801 /* GalleryImageProviderFlowView.swift in Sources */,
 				893ED9D42A692805004EE67C /* CombineUtils.swift in Sources */,
 				89CD7B9A29D329B1003F1C3A /* View+Internal.swift in Sources */,
 				89BB2DB72A7A5EFC009E6738 /* PdfMergeView.swift in Sources */,
@@ -1433,6 +1440,7 @@
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
 				8991485129E851B500DD01F2 /* ConfigService.swift in Sources */,
 				89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */,
+				89407EF12AA8ADD200169801 /* GalleryImageProviderFlow.swift in Sources */,
 				896876222A7CF3220014A320 /* PdfImportMultipleView.swift in Sources */,
 				895FE2C629D6E17600A99D5B /* AnimationPalette.swift in Sources */,
 				8957FBAA2A77E6F7008B31ED /* PdfShareView.swift in Sources */,

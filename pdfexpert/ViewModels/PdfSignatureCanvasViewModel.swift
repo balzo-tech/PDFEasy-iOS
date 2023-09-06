@@ -39,6 +39,7 @@ class PdfSignatureCanvasViewModel: NSObject, ObservableObject {
     
     @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.galleryImageProviderFlow) var galleryImageProviderFlow
     
     var confirmAllowed: Bool {
         switch self.source {
@@ -105,16 +106,21 @@ class PdfSignatureCanvasViewModel: NSObject, ObservableObject {
             case .drawing:
                 break
             case .image:
-                self.startGetImageFlow()
+                if self.signatureGalleryImage == nil {
+                    self.startGetImageFlow()
+                }
             case .camera:
-                self.startTakePictureFlow()
+                if self.signatureCameraImage == nil {
+                    self.startTakePictureFlow()
+                }
             }
         }
     }
     
     private func startGetImageFlow() {
-        debugPrint(for: self, message: "Start Get Image Flow")
-        self.signatureGalleryImage = Self.getTestImage()
+        self.galleryImageProviderFlow.startFlow { [weak self] in
+            self?.signatureGalleryImage = $0
+        }
     }
     
     private func startTakePictureFlow() {
