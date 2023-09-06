@@ -94,17 +94,7 @@ class RepositoryImpl: Repository {
     }
     
     private func getDoExist<T: Persistable>(forPersistableType type: T.Type) throws -> Bool {
-        var result = false
-        let request = T.fetchRequest()
-        request.includesSubentities = false
-        do {
-            result = try self.persistence.container
-                .viewContext.fetch(request).count > 0
-        } catch {
-            debugPrint(for: self, message: "Error while fetching items")
-            throw SharedUnderlyingError.convertError(fromError: error)
-        }
-        return result
+        return try (self.loadItems() as [T]).count > 0
     }
     
     private func loadItems<T: Persistable>() throws -> [T] {
@@ -113,9 +103,9 @@ class RepositoryImpl: Repository {
         do {
             return try self.persistence.container.viewContext
                 .fetch(fetchRequest)
-                .map { coreDataEntity in
+                .compactMap { coreDataEntity in
                     guard let item = T.create(withCoreDataEntity: coreDataEntity) else {
-                        throw SharedUnderlyingError.unknownError
+                        return nil
                     }
                     return item
                 }

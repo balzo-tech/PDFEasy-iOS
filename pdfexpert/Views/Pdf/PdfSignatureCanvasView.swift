@@ -19,41 +19,17 @@ struct PdfSignatureCanvasView: View {
                 .font(forCategory: .body1)
                 .foregroundColor(ColorPalette.secondaryBG)
                 .frame(maxWidth: .infinity)
-            Spacer()
+            Spacer().frame(height: 10)
             self.tabsView
             Spacer().frame(height: 10)
-            HStack(spacing: 0) {
-                Spacer()
-                Spacer().frame(width: 24)
-                VStack(spacing: 0) {
-                    PencilKitView(canvasView: self.$viewModel.canvasView,
-                                  backgroundColor: ColorPalette.primaryText,
-                                  inkColor: .black,
-                                  onSaved: {})
-                    ColorPalette.thirdText.frame(height: 1)
-                }
-                .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
-                Button(action: { self.viewModel.onClearButtonPressed() }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .resizable()
-                        .foregroundColor(ColorPalette.thirdText)
-                        .frame(width: 24, height: 24)
-                        .scaledToFit()
-                }
-                Spacer()
-            }
-            VStack(spacing: 0) {
-                Spacer().frame(height: 6)
-                Text("Sign in here")
-                    .font(forCategory: .caption1)
-                    .foregroundColor(ColorPalette.thirdText)
-                    .frame(maxWidth: .infinity)
-                Spacer().frame(height: 40)
-                self.saveButton
-                Spacer().frame(height: 20)
-                self.getDefaultButton(text: "Confirm",
-                                      onButtonPressed: { self.viewModel.onConfirmButtonPressed() })
-            }
+            Spacer()
+            self.contentView
+            Spacer().frame(height: 40)
+            self.saveButton
+            Spacer().frame(height: 20)
+            self.getDefaultButton(text: "Confirm",
+                                  enabled: self.viewModel.confirmAllowed,
+                                  onButtonPressed: { self.viewModel.onConfirmButtonPressed() })
         }
         .padding(16)
         .background(ColorPalette.primaryText)
@@ -61,30 +37,111 @@ struct PdfSignatureCanvasView: View {
     
     var tabsView: some View {
         HStack(spacing: 16) {
-            ForEach(SignatureSource.allCases, id:\.self) { mode in
-                Button(action: { self.viewModel.mode = mode }) {
+            ForEach(SignatureSource.allCases, id:\.self) { source in
+                Button(action: { self.viewModel.source = source }) {
                     Label(title: {
-                        Text(mode.text)
+                        Text(source.text)
                             .lineLimit(1)
                             .font(forCategory: .caption1)
                             .foregroundColor(
-                                self.viewModel.mode == mode
+                                self.viewModel.source == source
                                 ? ColorPalette.secondaryText
                                 : ColorPalette.primaryBG
                             )
                     }, icon: {
-                        mode.icon
+                        source.icon
                             .resizable()
                             .scaledToFit()
                             .frame(width: 16, height: 16)
                             .foregroundColor(
-                                self.viewModel.mode == mode
+                                self.viewModel.source == source
                                 ? ColorPalette.secondaryText
                                 : ColorPalette.primaryBG
                             )
                     })
                 }
             }
+        }
+    }
+    
+    @ViewBuilder var contentView: some View {
+        switch self.viewModel.source {
+        case .drawing: self.drawContentView
+        case .image: self.imageContentView
+        case .camera: self.cameraContentView
+        }
+    }
+    
+    var drawContentView: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                Spacer().frame(width: 24)
+                VStack(spacing: 0) {
+                    PencilKitView(canvasView: self.$viewModel.canvasView,
+                                  backgroundColor: ColorPalette.primaryText,
+                                  inkColor: .black,
+                                  onSaved: {})
+                    .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
+                    ColorPalette.thirdText.frame(height: 1)
+                }
+                Button(action: { self.viewModel.onClearButtonPressed() }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .resizable()
+                        .foregroundColor(ColorPalette.thirdText)
+                        .frame(width: 24, height: 24)
+                        .scaledToFit()
+                }
+            }
+            Spacer().frame(height: 6)
+            Text("Sign in here")
+                .font(forCategory: .body2)
+                .foregroundColor(ColorPalette.thirdText)
+        }
+    }
+    
+    var imageContentView: some View {
+        HStack {
+            Spacer()
+            VStack(spacing: 0) {
+                Button(action: { self.viewModel.onSelectImageButtonPressed() }) {
+                    if let uiImage = self.viewModel.signatureGalleryImage {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        Color.clear
+                    }
+                }
+                .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
+                Spacer().frame(height: 6)
+                Text("Select Image")
+                    .font(forCategory: .body2)
+                    .foregroundColor(ColorPalette.thirdText)
+            }
+            Spacer()
+        }
+    }
+    
+    var cameraContentView: some View {
+        HStack {
+            Spacer()
+            VStack(spacing: 0) {
+                Button(action: { self.viewModel.onTakePictureButtonPressed() }) {
+                    if let uiImage = self.viewModel.signatureCameraImage {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        Color.clear
+                    }
+                }
+                .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
+                Spacer().frame(height: 6)
+                Text("Take a Picture")
+                    .font(forCategory: .body2)
+                    .foregroundColor(ColorPalette.thirdText)
+            }
+            Spacer()
         }
     }
     

@@ -30,9 +30,9 @@ extension Signature: Persistable {
             debugPrint(for: self, message: "Cannot get signature data for given CDSignature instance")
             return nil
         }
-        let signature = try? Signature(storeId: coreDataEntity.objectID,
-                                       creationDate: coreDataEntity.creationDate,
-                                       data: signatureData
+        let signature = Signature(storeId: coreDataEntity.objectID,
+                                  creationDate: coreDataEntity.creationDate,
+                                  data: signatureData
         )
         guard let signature else {
             debugPrint(for: self, message: "Cannot get signature drawing for given signature data")

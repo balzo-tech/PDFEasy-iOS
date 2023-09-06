@@ -22,7 +22,7 @@ extension View {
                        startPoint: UnitPoint(x: 0.25, y: 0.5), endPoint: UnitPoint(x: 0.75, y: 0.5))
     }
     
-    @ViewBuilder func getDefaultButton(text: String, onButtonPressed: @escaping () -> ()) -> some View {
+    @ViewBuilder func getDefaultButton(text: String, enabled: Bool = true, onButtonPressed: @escaping () -> ()) -> some View {
         Button(action: onButtonPressed) {
             Text(text)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -32,8 +32,17 @@ extension View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 48)
-        .background(self.defaultGradientBackground)
+        .background(self.getDefaultButtonBackground(enabled: enabled))
         .cornerRadius(10)
+        .disabled(!enabled)
+    }
+    
+    @ViewBuilder private func getDefaultButtonBackground(enabled: Bool) -> some View {
+        if enabled {
+            self.defaultGradientBackground
+        } else {
+            ColorPalette.thirdText
+        }
     }
     
     func getDisclamer(color: Color, onSelection: @escaping (DisclamerType) -> ()) -> some View {

@@ -12,27 +12,28 @@ import PencilKit
 struct Signature {
     let id: UUID = UUID()
     private(set) var storeId: NSManagedObjectID? = nil
-    let drawing: PKDrawing
+    let image: UIImage
     let creationDate: Date
     
     var rawData: Data? {
-        return self.drawing.dataRepresentation()
+        return self.image.pngData()
     }
     
-    var image: UIImage {
-        self.drawing.signatureImage
-    }
-    
-    init(storeId: NSManagedObjectID,
+    init?(storeId: NSManagedObjectID,
          creationDate: Date?,
-         data: Data) throws {
+         data: Data) {
+        guard let image = UIImage(data: data) else {
+            return nil
+        }
+        print("Signature - On Load Image Size: \(image.size). Scale: \(image.scale)")
         self.storeId = storeId
-        self.drawing = try PKDrawing(data: data)
+        self.image = image
         self.creationDate = creationDate ?? Date()
     }
     
-    init(drawing: PKDrawing) {
-        self.drawing = drawing
+    init(image: UIImage) {
+        print("Signature - On Save Image Size: \(image.size). Scale: \(image.scale)")
+        self.image = image
         self.creationDate = Date()
     }
     
