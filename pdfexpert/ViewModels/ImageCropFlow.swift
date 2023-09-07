@@ -18,7 +18,7 @@ extension Container {
 
 class ImageCropFlow: ObservableObject {
     
-    typealias ImageCroppedCallback = ((UIImage?) -> ())
+    typealias ImageCroppedCallback = ((UIImage) -> ())
     
     @Published var cropperShow: Bool = false
     @Published var image: UIImage? = nil {
@@ -52,7 +52,9 @@ class ImageCropFlow: ObservableObject {
     }
     
     private func onCropCompleted(image: UIImage?) {
-        self.onImageCropped?(image)
+        if let image {
+            self.onImageCropped?(image)
+        }
         self.onImageCropped = nil
     }
 }
