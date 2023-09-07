@@ -261,9 +261,3 @@ extension CGPoint {
         return CGPoint(x: self.x, y: parentHeight-self.y)
     }
 }
-
-extension CGSize {
-    var aspectRatio: CGFloat {
-        return self.width / self.height
-    }
-}

@@ -69,7 +69,7 @@ struct PdfSignaturePickerView: View {
                         }
                     }
                     .padding([.top, .bottom], 16)
-                    .frame(height: K.Misc.SignatureSize.height)
+                    .frame(height: 100)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     .listRowBackground(Color(.clear))
                 }

@@ -229,9 +229,22 @@ class PdfSignatureViewModel: ObservableObject {
         }
         self.signatureImage = signatureImage
         if !self.isReplacing {
-            self.signatureRect = CGRect(origin: CGPoint(x: pdfView.bounds.size.width * 0.5 - signatureImage.size.width / 2,
-                                                        y: pdfView.bounds.size.height * 0.5 - signatureImage.size.height / 2) ,
-                                        size: signatureImage.size)
+            let startingSignatureWidthOverPdfViewWidth = 0.7
+            let margin: CGFloat = 40.0
+            
+            let signatureDefaultViewWidth: CGFloat = pdfView.bounds.size.width * startingSignatureWidthOverPdfViewWidth
+            let signatureDefaultViewHeight: CGFloat = signatureDefaultViewWidth / signatureImage.size.aspectRatio
+            
+            var signatureDefaultViewSize = CGSize(width: signatureDefaultViewWidth,
+                                                  height: signatureDefaultViewHeight)
+            signatureDefaultViewSize = signatureDefaultViewSize.clipToSize(pdfView.bounds.size,
+                                                                           horizontalMargin: margin,
+                                                                           verticalMargin: margin,
+                                                                           keepAspectRatio: true)
+            
+            self.signatureRect = CGRect(origin: CGPoint(x: pdfView.bounds.size.width * 0.5 - signatureDefaultViewSize.width / 2,
+                                                        y: pdfView.bounds.size.height * 0.5 - signatureDefaultViewSize.height / 2) ,
+                                        size: signatureDefaultViewSize)
         }
         // The newly created image resizable view will be added as a signature annotation upon confirmation
         // thus the dirty flag must be set

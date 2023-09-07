@@ -35,6 +35,7 @@
 		8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */; };
 		893875012A7BDD3B00267AFD /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893875002A7BDD3B00267AFD /* LoadingView.swift */; };
 		893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */; };
+		893B04BD2AA9C2C100F86813 /* CoreGraphics+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */; };
 		893BE52B2A6A7864004B05B9 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 893BE52A2A6A7864004B05B9 /* CombineMoya */; };
 		893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */; };
 		893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */; };
@@ -73,6 +74,10 @@
 		89407EF32AA8B0C800169801 /* GalleryImageProviderFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EF22AA8B0C800169801 /* GalleryImageProviderFlowView.swift */; };
 		89407EF52AA8BDE600169801 /* CameraImageProviderFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EF42AA8BDE600169801 /* CameraImageProviderFlow.swift */; };
 		89407EF72AA8BEC200169801 /* CameraImageProviderFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EF62AA8BEC200169801 /* CameraImageProviderFlowView.swift */; };
+		89407EFA2AA8C4C400169801 /* Mantis in Frameworks */ = {isa = PBXBuildFile; productRef = 89407EF92AA8C4C400169801 /* Mantis */; };
+		89407EFC2AA8D22D00169801 /* ImageCropFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EFB2AA8D22D00169801 /* ImageCropFlow.swift */; };
+		89407EFE2AA8D23B00169801 /* ImageCropFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EFD2AA8D23B00169801 /* ImageCropFlowView.swift */; };
+		89407F002AA8D54800169801 /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89407EFF2AA8D54800169801 /* ImageCropper.swift */; };
 		8940FB912A710D8D00A00D8D /* AddPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8940FB902A710D8D00A00D8D /* AddPasswordView.swift */; };
 		8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */ = {isa = PBXBuildFile; productRef = 8942034429DC12BC004D610B /* PagerTabStripView */; };
 		89429F862A9C8ECC00465420 /* PdfSignaturePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */; };
@@ -297,6 +302,7 @@
 		8936AA432A684128005F6C73 /* ChatPdfViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfViewModel.swift; sourceTree = "<group>"; };
 		893875002A7BDD3B00267AFD /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
+		893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreGraphics+Extensions.swift"; sourceTree = "<group>"; };
 		893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerImpl.swift; sourceTree = "<group>"; };
 		893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtility.swift; sourceTree = "<group>"; };
 		893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfRef+Decodable.swift"; sourceTree = "<group>"; };
@@ -334,6 +340,9 @@
 		89407EF22AA8B0C800169801 /* GalleryImageProviderFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImageProviderFlowView.swift; sourceTree = "<group>"; };
 		89407EF42AA8BDE600169801 /* CameraImageProviderFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraImageProviderFlow.swift; sourceTree = "<group>"; };
 		89407EF62AA8BEC200169801 /* CameraImageProviderFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraImageProviderFlowView.swift; sourceTree = "<group>"; };
+		89407EFB2AA8D22D00169801 /* ImageCropFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropFlow.swift; sourceTree = "<group>"; };
+		89407EFD2AA8D23B00169801 /* ImageCropFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropFlowView.swift; sourceTree = "<group>"; };
+		89407EFF2AA8D54800169801 /* ImageCropper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		8940FB902A710D8D00A00D8D /* AddPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPasswordView.swift; sourceTree = "<group>"; };
 		89429F852A9C8ECC00465420 /* PdfSignaturePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerView.swift; sourceTree = "<group>"; };
 		89429F872A9C8EFC00465420 /* PdfSignaturePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignaturePickerViewModel.swift; sourceTree = "<group>"; };
@@ -520,6 +529,7 @@
 			files = (
 				894827B02AA5D65600030C4E /* BranchSDK in Frameworks */,
 				893EB5012AA717B80066914E /* FacebookCore in Frameworks */,
+				89407EFA2AA8C4C400169801 /* Mantis in Frameworks */,
 				8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */,
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
@@ -800,6 +810,7 @@
 				89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */,
 				89407EF22AA8B0C800169801 /* GalleryImageProviderFlowView.swift */,
 				89407EF62AA8BEC200169801 /* CameraImageProviderFlowView.swift */,
+				89407EFD2AA8D23B00169801 /* ImageCropFlowView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1000,6 +1011,7 @@
 				89CD7AD929D329B1003F1C3A /* Color+Extensions.swift */,
 				89CD7ADA29D329B1003F1C3A /* Enum+Extensions.swift */,
 				894AC3632A02952A00BA5553 /* Foundation+Extensions.swift */,
+				893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */,
 				891AE58A2A03E80300DBC246 /* ObservableObject+Extensions.swift */,
 				89127AA62A17C1980059005F /* PencilKit+Extensions.swift */,
 				896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */,
@@ -1097,6 +1109,7 @@
 				8962D6052A9E28FB008426A2 /* PdfSignaturePrioviderFlow.swift */,
 				89407EF02AA8ADD200169801 /* GalleryImageProviderFlow.swift */,
 				89407EF42AA8BDE600169801 /* CameraImageProviderFlow.swift */,
+				89407EFB2AA8D22D00169801 /* ImageCropFlow.swift */,
 				894C4A6D2AA0CB470001F51E /* ReviewFlow.swift */,
 			);
 			path = ViewModels;
@@ -1135,6 +1148,7 @@
 				893C8FDD29DED7F4000E35BD /* PdfUtility.swift */,
 				8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */,
 				895C1BBF2A051261005EA190 /* SharedStorage.swift */,
+				89407EFF2AA8D54800169801 /* ImageCropper.swift */,
 			);
 			path = InternalUtils;
 			sourceTree = "<group>";
@@ -1224,6 +1238,7 @@
 				893BE52A2A6A7864004B05B9 /* CombineMoya */,
 				894827AF2AA5D65600030C4E /* BranchSDK */,
 				893EB5002AA717B80066914E /* FacebookCore */,
+				89407EF92AA8C4C400169801 /* Mantis */,
 			);
 			productName = PdfExpert;
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
@@ -1268,6 +1283,7 @@
 				893BE5292A6A7864004B05B9 /* XCRemoteSwiftPackageReference "Moya" */,
 				894827AE2AA5D65600030C4E /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */,
 				893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				89407EF82AA8C4C400169801 /* XCRemoteSwiftPackageReference "Mantis" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
 			projectDirPath = "";
@@ -1406,6 +1422,7 @@
 				89CD7B5029D329B1003F1C3A /* String+Extensions.swift in Sources */,
 				8968761E2A7CEE320014A320 /* PdfImportView.swift in Sources */,
 				89429F932A9CFFF100465420 /* Pdf+Persistable.swift in Sources */,
+				893B04BD2AA9C2C100F86813 /* CoreGraphics+Extensions.swift in Sources */,
 				8936AA402A683FB5005F6C73 /* ImportOption.swift in Sources */,
 				89429F912A9CFFDC00465420 /* Persistable.swift in Sources */,
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
@@ -1445,6 +1462,7 @@
 				896876202A7CF1E10014A320 /* PdfImportMultipleViewModel.swift in Sources */,
 				8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */,
 				89CD7B4B29D329B1003F1C3A /* AsyncView.swift in Sources */,
+				89407EFC2AA8D22D00169801 /* ImageCropFlow.swift in Sources */,
 				8991485129E851B500DD01F2 /* ConfigService.swift in Sources */,
 				89E55BDF29DC64840073F268 /* AnalyticsManagerImpl.swift in Sources */,
 				89407EF12AA8ADD200169801 /* GalleryImageProviderFlow.swift in Sources */,
@@ -1484,6 +1502,7 @@
 				8968761A2A7CE87A0014A320 /* PdfSplitViewModel.swift in Sources */,
 				893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */,
 				89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */,
+				89407F002AA8D54800169801 /* ImageCropper.swift in Sources */,
 				899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */,
 				894D485A29D42CC5002B0230 /* OptionListView.swift in Sources */,
 				89923E6029D4350F00E246FC /* AppTrackingTransparency.swift in Sources */,
@@ -1510,6 +1529,7 @@
 				89CD7B6529D329B1003F1C3A /* Store.swift in Sources */,
 				893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */,
 				894C4A692AA0C04B0001F51E /* PopupView.swift in Sources */,
+				89407EFE2AA8D23B00169801 /* ImageCropFlowView.swift in Sources */,
 				89F9E4FB2A9606ED0001D48B /* PdfImageViewerView.swift in Sources */,
 				894B01A12A09030000FF6198 /* ImportTutorialPageView.swift in Sources */,
 				892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */,
@@ -2181,6 +2201,14 @@
 				minimumVersion = 16.0.0;
 			};
 		};
+		89407EF82AA8C4C400169801 /* XCRemoteSwiftPackageReference "Mantis" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/guoyingtao/Mantis.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		8942034329DC12BC004D610B /* XCRemoteSwiftPackageReference "PagerTabStripView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/xmartlabs/PagerTabStripView";
@@ -2259,6 +2287,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookCore;
+		};
+		89407EF92AA8C4C400169801 /* Mantis */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89407EF82AA8C4C400169801 /* XCRemoteSwiftPackageReference "Mantis" */;
+			productName = Mantis;
 		};
 		8942034429DC12BC004D610B /* PagerTabStripView */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -136,6 +136,15 @@
       }
     },
     {
+      "identity" : "mantis",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/guoyingtao/Mantis.git",
+      "state" : {
+        "revision" : "29783a4a73625acb42e58438fb1f9451fdcb0094",
+        "version" : "2.14.1"
+      }
+    },
+    {
       "identity" : "moya",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Moya/Moya",

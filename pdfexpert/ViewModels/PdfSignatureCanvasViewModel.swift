@@ -41,6 +41,7 @@ class PdfSignatureCanvasViewModel: NSObject, ObservableObject {
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.galleryImageProviderFlow) var galleryImageProviderFlow
     @Injected(\.cameraImageProviderFlow) var cameraImageProviderFlow
+    @Injected(\.imageCropFlow) var imageCropFlow
     
     var confirmAllowed: Bool {
         switch self.source {
@@ -120,13 +121,17 @@ class PdfSignatureCanvasViewModel: NSObject, ObservableObject {
     
     private func startGetImageFlow() {
         self.galleryImageProviderFlow.startFlow { [weak self] in
-            self?.signatureGalleryImage = $0
+            self?.imageCropFlow.startFlow(image: $0, onImageCropped: { [weak self]  in
+                self?.signatureGalleryImage = $0
+            })
         }
     }
     
     private func startTakePictureFlow() {
         self.cameraImageProviderFlow.startFlow { [weak self] in
-            self?.signatureCameraImage = $0
+            self?.imageCropFlow.startFlow(image: $0, onImageCropped: { [weak self]  in
+                self?.signatureCameraImage = $0
+            })
         }
     }
 }

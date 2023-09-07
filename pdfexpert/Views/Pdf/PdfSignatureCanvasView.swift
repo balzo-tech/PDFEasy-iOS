@@ -23,7 +23,7 @@ struct PdfSignatureCanvasView: View {
             self.tabsView
             Spacer().frame(height: 10)
             Spacer()
-            self.contentView
+            self.contentView.frame(height: 120)
             Spacer().frame(height: 40)
             self.saveButton
             Spacer().frame(height: 20)
@@ -35,6 +35,7 @@ struct PdfSignatureCanvasView: View {
         .background(ColorPalette.primaryText)
         .galleryImageProviderView(flow: self.viewModel.galleryImageProviderFlow)
         .cameraImageProviderView(flow: self.viewModel.cameraImageProviderFlow)
+        .imageCropView(flow: self.viewModel.imageCropFlow)
     }
     
     var tabsView: some View {
@@ -76,14 +77,14 @@ struct PdfSignatureCanvasView: View {
     
     var drawContentView: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
+            HStack(spacing: 6) {
                 Spacer().frame(width: 24)
                 VStack(spacing: 0) {
                     PencilKitView(canvasView: self.$viewModel.canvasView,
                                   backgroundColor: ColorPalette.primaryText,
                                   inkColor: .black,
                                   onSaved: {})
-                    .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     ColorPalette.thirdText.frame(height: 1)
                 }
                 Button(action: { self.viewModel.onClearButtonPressed() }) {
@@ -102,48 +103,40 @@ struct PdfSignatureCanvasView: View {
     }
     
     var imageContentView: some View {
-        HStack {
-            Spacer()
-            VStack(spacing: 0) {
-                Button(action: { self.viewModel.onSelectImageButtonPressed() }) {
-                    if let uiImage = self.viewModel.signatureGalleryImage {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                    } else {
-                        Color.clear
-                    }
+        VStack(spacing: 0) {
+            Button(action: { self.viewModel.onSelectImageButtonPressed() }) {
+                if let uiImage = self.viewModel.signatureGalleryImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                } else {
+                    Color.clear
                 }
-                .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
-                Spacer().frame(height: 6)
-                Text("Select Image")
-                    .font(forCategory: .body2)
-                    .foregroundColor(ColorPalette.thirdText)
             }
-            Spacer()
+            .frame(maxHeight: .infinity)
+            Spacer().frame(height: 6)
+            Text("Select Image")
+                .font(forCategory: .body2)
+                .foregroundColor(ColorPalette.thirdText)
         }
     }
     
     var cameraContentView: some View {
-        HStack {
-            Spacer()
-            VStack(spacing: 0) {
-                Button(action: { self.viewModel.onTakePictureButtonPressed() }) {
-                    if let uiImage = self.viewModel.signatureCameraImage {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                    } else {
-                        Color.clear
-                    }
+        VStack(spacing: 0) {
+            Button(action: { self.viewModel.onTakePictureButtonPressed() }) {
+                if let uiImage = self.viewModel.signatureCameraImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                } else {
+                    Color.clear
                 }
-                .frame(width: K.Misc.SignatureSize.width, height: K.Misc.SignatureSize.height)
-                Spacer().frame(height: 6)
-                Text("Take a Picture")
-                    .font(forCategory: .body2)
-                    .foregroundColor(ColorPalette.thirdText)
             }
-            Spacer()
+            .frame(maxHeight: .infinity)
+            Spacer().frame(height: 6)
+            Text("Take a Picture")
+                .font(forCategory: .body2)
+                .foregroundColor(ColorPalette.thirdText)
         }
     }
     

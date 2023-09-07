@@ -46,6 +46,6 @@ extension Signature: Identifiable {}
 
 extension PKDrawing {
     var signatureImage: UIImage {
-        self.image(from: CGRect(origin: .zero, size: K.Misc.SignatureSize), scale: 1.0, userInterfaceStyle: .light)
+        self.image(from: self.bounds, scale: K.Misc.SignatureDrawScaleFactor, userInterfaceStyle: .light)
     }
 }
