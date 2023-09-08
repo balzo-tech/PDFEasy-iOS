@@ -25,6 +25,23 @@ struct SuggestedFieldsFormView: View {
                     self.getTextField(name: "Last Name",
                                       text: self.$viewModel.lastName,
                                       textContentType: .familyName)
+                    self.getTextField(name: "Address",
+                                      text: self.$viewModel.address,
+                                      textContentType: .streetAddressLine1)
+                    self.getTextField(name: "City",
+                                      text: self.$viewModel.city,
+                                      textContentType: .addressCity)
+                    self.getTextField(name: "Country",
+                                      text: self.$viewModel.country,
+                                      textContentType: .countryName)
+                    self.getTextField(name: "Email",
+                                      text: self.$viewModel.email,
+                                      textContentType: .emailAddress,
+                                      keyboardType: .emailAddress)
+                    self.getTextField(name: "Phone",
+                                      text: self.$viewModel.phone,
+                                      textContentType: .telephoneNumber,
+                                      keyboardType: .numberPad)
                 }
                 VStack {
                     Spacer()

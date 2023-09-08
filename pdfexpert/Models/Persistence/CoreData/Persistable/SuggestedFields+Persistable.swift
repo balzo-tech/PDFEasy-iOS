@@ -23,7 +23,12 @@ extension SuggestedFields: Persistable {
         return SuggestedFields(
             storeId: coreDataEntity.objectID,
             firstName: coreDataEntity.firstName,
-            lastName: coreDataEntity.lastName
+            lastName: coreDataEntity.lastName,
+            address: coreDataEntity.address,
+            city: coreDataEntity.city,
+            country: coreDataEntity.country,
+            email: coreDataEntity.email,
+            phone: coreDataEntity.phone
         )
     }
     

@@ -13,7 +13,12 @@
         <attribute name="data" optional="YES" attributeType="Binary"/>
     </entity>
     <entity name="SuggestedFields" representedClassName="CDSuggestedFields" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String"/>
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="country" optional="YES" attributeType="String"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="firstName" optional="YES" attributeType="String"/>
         <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="phone" optional="YES" attributeType="String"/>
     </entity>
 </model>
