@@ -16,42 +16,12 @@ struct SuggestedFieldsFormView: View {
     
     var body: some View {
         NavigationStack {
+            // The ZStack is needed to disable keyboard avoiding for the footer
+            // while keeping it for the textfields in the content view
             ZStack {
-                Form {
-                    Section(header: self.headerView) {}
-                    self.getTextField(name: "First Name",
-                                      text: self.$viewModel.firstName,
-                                      textContentType: .givenName)
-                    self.getTextField(name: "Last Name",
-                                      text: self.$viewModel.lastName,
-                                      textContentType: .familyName)
-                    self.getTextField(name: "Address",
-                                      text: self.$viewModel.address,
-                                      textContentType: .streetAddressLine1)
-                    self.getTextField(name: "City",
-                                      text: self.$viewModel.city,
-                                      textContentType: .addressCity)
-                    self.getTextField(name: "Country",
-                                      text: self.$viewModel.country,
-                                      textContentType: .countryName)
-                    self.getTextField(name: "Email",
-                                      text: self.$viewModel.email,
-                                      textContentType: .emailAddress,
-                                      keyboardType: .emailAddress)
-                    self.getTextField(name: "Phone",
-                                      text: self.$viewModel.phone,
-                                      textContentType: .telephoneNumber,
-                                      keyboardType: .numberPad)
-                }
-                VStack {
-                    Spacer()
-                    self.getDefaultButton(text: "Finish", onButtonPressed: {
-                        self.viewModel.onConfirmButtonPressed()
-                        self.dismiss()
-                    })
-                }
-                .padding([.leading, .trailing], 16)
-                .padding(.bottom, 60)
+                self.contentView
+                self.footerView
+                    .ignoresSafeArea(.keyboard)
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Personal data")
@@ -61,7 +31,58 @@ struct SuggestedFieldsFormView: View {
                 self.dismiss()
             })
         }
+        .background(ColorPalette.primaryBG)
         .onAppear(perform: self.viewModel.onAppear)
+    }
+    
+    private var contentView: some View {
+        VStack(spacing: 0) {
+            Form {
+                Section(header: self.headerView) {}
+                self.getTextField(name: "First Name",
+                                  text: self.$viewModel.firstName,
+                                  textContentType: .givenName)
+                self.getTextField(name: "Last Name",
+                                  text: self.$viewModel.lastName,
+                                  textContentType: .familyName)
+                self.getTextField(name: "Address",
+                                  text: self.$viewModel.address,
+                                  textContentType: .streetAddressLine1)
+                self.getTextField(name: "City",
+                                  text: self.$viewModel.city,
+                                  textContentType: .addressCity)
+                self.getTextField(name: "Country",
+                                  text: self.$viewModel.country,
+                                  textContentType: .countryName)
+                self.getTextField(name: "Email",
+                                  text: self.$viewModel.email,
+                                  textContentType: .emailAddress,
+                                  keyboardType: .emailAddress)
+                self.getTextField(name: "Phone",
+                                  text: self.$viewModel.phone,
+                                  textContentType: .telephoneNumber,
+                                  keyboardType: .numberPad)
+                // This space is needed to create an inset equivalent to the footerView height
+                Spacer().frame(height: 90)
+                    .listRowBackground(ColorPalette.primaryBG)
+            }
+            .foregroundColor(ColorPalette.primaryText)
+            .background(ColorPalette.primaryBG)
+            .scrollContentBackground(.hidden)
+        }
+    }
+    
+    private var footerView: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            self.getDefaultButton(text: "Finish", onButtonPressed: {
+                self.viewModel.onConfirmButtonPressed()
+                self.dismiss()
+            })
+            .padding([.top, .leading, .trailing], 16)
+            .padding(.bottom, 80)
+            .background(ColorPalette.primaryBG)
+        }
     }
     
     private var headerView: some View {
@@ -90,6 +111,7 @@ struct SuggestedFieldsFormView: View {
                 .textContentType(textContentType)
                 .keyboardType(keyboardType)
         }
+        .listRowBackground(ColorPalette.secondaryBG)
     }
 }
 
