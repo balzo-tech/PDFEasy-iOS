@@ -76,6 +76,18 @@ class RepositoryImpl: Repository {
         }
     }
     
+    // MARK: - SuggestedFields
+    
+    func saveSuggestedFields(suggestedFields: SuggestedFields) throws -> SuggestedFields {
+        let suggestedFields = try self.save(suggestedFields)
+        self.analyticsMananger.track(event: .suggestedFieldsSaved)
+        return suggestedFields
+    }
+    
+    func loadSuggestedFields() throws -> SuggestedFields? {
+        return try self.loadItems(sortByCreationDate: false).first
+    }
+    
     // MARK: - Private Methods
     
     private func save<T: Persistable>(_ persistable: T) throws -> T {
@@ -97,9 +109,11 @@ class RepositoryImpl: Repository {
         return try (self.loadItems() as [T]).count > 0
     }
     
-    private func loadItems<T: Persistable>() throws -> [T] {
+    private func loadItems<T: Persistable>(sortByCreationDate: Bool = true) throws -> [T] {
         let fetchRequest = T.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+        if sortByCreationDate {
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+        }
         do {
             return try self.persistence.container.viewContext
                 .fetch(fetchRequest)

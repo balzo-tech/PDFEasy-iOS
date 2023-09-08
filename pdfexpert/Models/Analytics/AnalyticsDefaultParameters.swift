@@ -62,6 +62,7 @@ extension AnalyticsScreen {
         case .pageRangeEditor: return "PageRangeEditor"
         case .reader: return "Reader"
         case .pageSelection: return "PageSelection"
+        case .suggestedFields: return "SuggestedFields"
         }
     }
 }
@@ -106,6 +107,7 @@ extension AnalyticsEvent {
         case .chatPdfMessageSent: return "chat_pdf_message_sent"
         case .subscriptionShown: return "subscription_shown"
         case .reviewLowRateFeedback: return "review_low_rate_feedback"
+        case .suggestedFieldsSaved: return "suggested_fields_saved"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -189,6 +191,7 @@ extension AnalyticsEvent {
         case .subscriptionShown: return nil
         case .reviewLowRateFeedback(let feedback):
             return [AnalyticsEventCustomParameters.reviewLowRateFeedbackContent.rawValue: feedback]
+        case .suggestedFieldsSaved: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil

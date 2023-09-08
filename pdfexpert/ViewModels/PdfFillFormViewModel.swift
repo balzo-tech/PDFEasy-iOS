@@ -37,6 +37,14 @@ class PdfFillFormViewModel: ObservableObject {
     @Published var annotations: [PDFAnnotation]
     @Published var currentTextResizableViewData: TextResizableViewData = TextResizableViewData(text: "", rect: .zero)
     @Published var editedPageIndex: Int? = nil
+    @Published var showSuggestedFields: Bool = false {
+        didSet {
+            if !self.showSuggestedFields {
+                self.refreshSuggestedFields()
+            }
+        }
+    }
+    @Published var suggestedFields: SuggestedFields? = nil
     
     var pageViewSize: CGSize = .zero
     var unsavedChangesExist: Bool = false
@@ -48,6 +56,7 @@ class PdfFillFormViewModel: ObservableObject {
     private let pdfViews: [PDFView]
     
     @Injected(\.analyticsManager) private var analyticsManager
+    private let repository = resolve(\.repository)
     
     private var onConfirm: PdfFillFormViewCallback
     
@@ -91,6 +100,8 @@ class PdfFillFormViewModel: ObservableObject {
         self.pdfViews = pdfViews
         
         self.pageIndex = inputParameter.currentPageIndex
+        
+        self.refreshSuggestedFields()
     }
     
     func onAppear() {
@@ -188,6 +199,14 @@ class PdfFillFormViewModel: ObservableObject {
         }
         
         self.analyticsManager.track(event: .annotationsConfirmed)
+    }
+    
+    func onSuggestedFieldsButtonPressed() {
+        self.showSuggestedFields = true
+    }
+    
+    private func refreshSuggestedFields() {
+        self.suggestedFields = try? self.repository.loadSuggestedFields()
     }
     
     private func applyCurrentEditedTextAnnotation() {

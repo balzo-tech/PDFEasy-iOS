@@ -73,6 +73,14 @@ struct PdfFillFormView: View {
                     self.dismiss()
                 }
             })
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { self.viewModel.onSuggestedFieldsButtonPressed() }) {
+                        Image(systemName: "person.crop.circle")
+                            .foregroundColor(ColorPalette.primaryText)
+                    }
+                }
+            })
             .alert("Are you sure?",
                    isPresented: self.$showCancelWarningDialog,
                    actions: {
@@ -84,6 +92,9 @@ struct PdfFillFormView: View {
             .background(ColorPalette.primaryBG)
         }
         .onAppear(perform: self.viewModel.onAppear)
+        .fullScreenCover(isPresented: self.$viewModel.showSuggestedFields) {
+            SuggestedFieldsFormView()
+        }
     }
     
     @ViewBuilder func getAnnotationViews(forPageIndex pageIndex: Int) -> some View {
@@ -99,6 +110,7 @@ struct PdfFillFormView: View {
                               minSize: CGSize(width: 5, height: 5),
                               handleSize: 25,
                               handleTapSize: 50,
+                              suggestedWords: self.viewModel.suggestedFields?.fields ?? [],
                               deleteCallback: self.viewModel.onDeleteAnnotationPressed)
         }
     }

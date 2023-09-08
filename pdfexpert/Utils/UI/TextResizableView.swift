@@ -30,9 +30,11 @@ struct TextResizableView: View {
     let handleSize: CGFloat
     let handleTapSize: CGFloat
     let deleteCallback: TextResizableViewDeleteCallback
+    let suggestedWords: [String]
     
     @State private var tapOffset: CGPoint? = nil
     @FocusState private var focusedField: FocusField?
+    @State private var filteredSuggestedWords: [String] = []
     
     private var topLeft: CGPoint {
         self.data.rect.origin
@@ -69,6 +71,7 @@ struct TextResizableView: View {
          minSize: CGSize,
          handleSize: CGFloat,
          handleTapSize: CGFloat,
+         suggestedWords: [String],
          deleteCallback: @escaping TextResizableViewDeleteCallback) {
         self._data = data
         self.fontName = fontName
@@ -78,6 +81,7 @@ struct TextResizableView: View {
         self.minSize = minSize
         self.handleSize = handleSize
         self.handleTapSize = handleTapSize
+        self.suggestedWords = suggestedWords
         self.deleteCallback = deleteCallback
     }
     
@@ -119,11 +123,30 @@ struct TextResizableView: View {
                                     }
                                     .onEnded { _ in self.tapOffset = nil }
                             )
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    ForEach(self.filteredSuggestedWords, id: \.self) { suggestedWord in
+                                        Button(action: {
+                                            self.data.text = suggestedWord
+                                        }) {
+                                            Text(suggestedWord)
+                                                .foregroundColor(ColorPalette.primaryText)
+                                                .font(FontCategory.body2.font.bold())
+                                        }
+                                        .background(ColorPalette.secondaryText)
+                                        .clipShape(Capsule())
+                                        .padding([.trailing, .leading], 8)
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .onChange(of: self.data.text) { _ in
+                                self.updateFilteredSuggestedWords()
+                            }
                     }
                     self.getResizeHandle(parentViewSize: parentGeometryReader.size)
                     self.getDeleteButton(parentViewSize: parentGeometryReader.size)
                 }
-                
             }
         }
     }
@@ -218,6 +241,11 @@ struct TextResizableView: View {
                           height: bottomRight.y - topLeft.y)
         self.data = TextResizableViewData(text: self.data.text, rect: rect)
     }
+    
+    private func updateFilteredSuggestedWords() {
+        self.filteredSuggestedWords = self.suggestedWords
+            .filter { $0.hasPrefix(self.data.text) && !self.data.text.isEmpty && $0 != self.data.text }
+    }
 }
 
 fileprivate extension CGPoint {
@@ -244,6 +272,7 @@ struct TextResizableView_Previews: PreviewProvider {
                               minSize: CGSize(width: 5, height: 5),
                               handleSize: 25,
                               handleTapSize: 50,
+                              suggestedWords: ["Merlin", "Wizard", "North-West Tower"],
                               deleteCallback: { print("TextResizableView_Previews - Delete callback called!") })
             .position(x: geometryReader.size.width/2, y: geometryReader.size.height/2)
             .frame(width: geometryReader.size.width, height: geometryReader.size.height)

@@ -18,4 +18,7 @@ protocol Repository {
     func loadSignatures() throws -> [Signature]
     func delete(signature: Signature) throws
     func delete(signatures: [Signature]) throws
+    
+    func saveSuggestedFields(suggestedFields: SuggestedFields) throws -> SuggestedFields
+    func loadSuggestedFields() throws -> SuggestedFields?
 }

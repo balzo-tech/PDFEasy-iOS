@@ -41,6 +41,7 @@ enum AnalyticsScreen {
     case pageRangeEditor
     case reader
     case pageSelection
+    case suggestedFields
 }
 
 enum AnalyticsEvent {
@@ -81,6 +82,7 @@ enum AnalyticsEvent {
     case chatPdfMessageSent
     case subscriptionShown
     case reviewLowRateFeedback(feedback: String)
+    case suggestedFieldsSaved
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }
