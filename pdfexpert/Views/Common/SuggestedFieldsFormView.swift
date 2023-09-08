@@ -69,6 +69,9 @@ struct SuggestedFieldsFormView: View {
             .foregroundColor(ColorPalette.primaryText)
             .background(ColorPalette.primaryBG)
             .scrollContentBackground(.hidden)
+            .onTapGesture {
+                self.endTextEditing()
+            }
         }
     }
     
