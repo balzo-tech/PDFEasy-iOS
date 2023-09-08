@@ -124,20 +124,23 @@ struct TextResizableView: View {
                                     .onEnded { _ in self.tapOffset = nil }
                             )
                             .toolbar {
-                                ToolbarItemGroup(placement: .keyboard) {
-                                    ForEach(self.filteredSuggestedWords, id: \.self) { suggestedWord in
-                                        Button(action: {
-                                            self.data.text = suggestedWord
-                                        }) {
-                                            Text(suggestedWord)
-                                                .foregroundColor(ColorPalette.primaryText)
-                                                .font(FontCategory.body2.font.bold())
+                                ToolbarItem(placement: .keyboard) {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 8) {
+                                            ForEach(self.filteredSuggestedWords, id: \.self) { suggestedWord in
+                                                Button(action: {
+                                                    self.data.text = suggestedWord
+                                                }) {
+                                                    Text(suggestedWord)
+                                                        .foregroundColor(ColorPalette.primaryText)
+                                                        .font(FontCategory.body2.font.bold())
+                                                        .padding([.trailing, .leading], 8)
+                                                }
+                                                .background(ColorPalette.secondaryText)
+                                                .clipShape(Capsule())
+                                            }
                                         }
-                                        .background(ColorPalette.secondaryText)
-                                        .clipShape(Capsule())
-                                        .padding([.trailing, .leading], 8)
                                     }
-                                    Spacer()
                                 }
                             }
                             .onChange(of: self.data.text) { _ in
