@@ -61,7 +61,7 @@ struct SuggestedFieldsFormView: View {
                 self.getTextField(name: "Phone",
                                   text: self.$viewModel.phone,
                                   textContentType: .telephoneNumber,
-                                  keyboardType: .numberPad)
+                                  keyboardType: .phonePad)
                 // This space is needed to create an inset equivalent to the footerView height
                 Spacer().frame(height: 90)
                     .listRowBackground(ColorPalette.primaryBG)
