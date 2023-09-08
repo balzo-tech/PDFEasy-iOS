@@ -163,7 +163,7 @@ class PdfFillFormViewModel: ObservableObject {
             // Tapping in empty area -> create a new text resizable view
             let size = CGSize(width: 100, height: 15)
             let rect = CGRect(x: positionInView.x - (size.width / 2), y: positionInView.y - (size.height / 2), width: size.width, height: size.height)
-            self.currentTextResizableViewData = TextResizableViewData(text: "Text", rect: rect)
+            self.currentTextResizableViewData = TextResizableViewData(text: "", rect: rect)
             self.editedPageIndex = pageIndex
             // The newly created text resizable view will be added as an annotation upon confirmation
             // thus the dirty flag must be set
