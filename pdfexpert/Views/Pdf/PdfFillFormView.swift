@@ -76,7 +76,7 @@ struct PdfFillFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { self.viewModel.onSuggestedFieldsButtonPressed() }) {
-                        Image(systemName: "person.crop.circle")
+                        Image("suggested_fields")
                             .foregroundColor(ColorPalette.primaryText)
                     }
                 }
