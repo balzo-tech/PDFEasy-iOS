@@ -35,14 +35,19 @@ class SuggestedFieldsFormViewModel: ObservableObject {
     }
     
     func onConfirmButtonPressed() {
-        self.suggestedFields.firstName = self.firstName.isEmpty ? nil : self.firstName
-        self.suggestedFields.lastName = self.lastName.isEmpty ? nil : self.lastName
+        self.update(keyPath: \.firstName, value: self.firstName)
+        self.update(keyPath: \.lastName, value: self.lastName)
         
         do {
             _ = try self.repository.saveSuggestedFields(suggestedFields: self.suggestedFields)
         } catch {
             debugPrint(for: self, message: "Error: \(error)")
         }
+    }
+    
+    private func update(keyPath: WritableKeyPath<SuggestedFields, String?>, value: String) {
+        let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.suggestedFields[keyPath: keyPath] = trimmedValue.isEmpty ? nil : trimmedValue
     }
 }
 
