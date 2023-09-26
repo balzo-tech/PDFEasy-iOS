@@ -1229,8 +1229,8 @@
 				89CD7A9329D32855003F1C3A /* Frameworks */,
 				89AA36072A1BB0280077A70A /* Setup Firebase Environment GoogleService-Info.plist */,
 				89CD7A9429D32855003F1C3A /* Resources */,
-				89923E6429D437B400E246FC /* ShellScript */,
 				895C1BB82A04FA53005EA190 /* Embed Foundation Extensions */,
+				89923E6429D437B400E246FC /* ShellScript */,
 			);
 			buildRules = (
 			);
