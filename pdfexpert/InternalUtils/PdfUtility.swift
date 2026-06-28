@@ -72,8 +72,12 @@ class PDFUtility {
     
     static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, margins: MarginsOption, compression: CompressionOption) -> PDFDocument {
         
-        guard pdfDocument.pageCount > 0 else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
-        guard margins != .noMargins, compression != .noCompression else { return PDFDocument(data: pdfDocument.dataRepresentation()!)! }
+        guard pdfDocument.pageCount > 0 else {
+            return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
+        }
+        guard margins != .noMargins, compression != .noCompression else {
+            return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
+        }
         
         let newPdfDocument = PDFDocument()
         for pageIndex in 0..<pdfDocument.pageCount {
@@ -167,7 +171,8 @@ class PDFUtility {
     }
     
     static func unlock(data: Data, password: String) -> CGPDFDocument? {
-        if let pdf = CGPDFDocument(CGDataProvider(data: data as CFData)!) {
+        guard let dataProvider = CGDataProvider(data: data as CFData) else { return nil }
+        if let pdf = CGPDFDocument(dataProvider) {
             guard pdf.isEncrypted == true else { return pdf }
             guard pdf.unlockWithPassword("") == false else { return pdf }
             
@@ -182,36 +187,33 @@ class PDFUtility {
     
     static func removePassword(data: Data, existingPDFPassword: String) throws -> Data? {
         
-        if let pdf = unlock(data: data, password: existingPDFPassword) {
-            let data = NSMutableData()
-            
-            autoreleasepool {
-                let pageCount = pdf.numberOfPages
-                UIGraphicsBeginPDFContextToData(data, .zero, nil)
-                
-                for index in 1...pageCount {
-                    
-                    let page = pdf.page(at: index)
-                    let pageRect = page?.getBoxRect(CGPDFBox.mediaBox)
-                    
-                    
-                    UIGraphicsBeginPDFPageWithInfo(pageRect!, nil)
-                    let ctx = UIGraphicsGetCurrentContext()
-                    ctx?.interpolationQuality = .high
-                    // Draw existing page
-                    ctx!.saveGState()
-                    ctx!.scaleBy(x: 1, y: -1)
-                    ctx!.translateBy(x: 0, y: -(pageRect?.size.height)!)
-                    ctx!.drawPDFPage(page!)
-                    ctx!.restoreGState()
-                    
-                }
-                
-                UIGraphicsEndPDFContext()
+        guard let pdf = unlock(data: data, password: existingPDFPassword) else { return nil }
+
+        let pageCount = pdf.numberOfPages
+        guard pageCount > 0 else { return nil }
+
+        let outputData = NSMutableData()
+        autoreleasepool {
+            UIGraphicsBeginPDFContextToData(outputData, .zero, nil)
+
+            for index in 1...pageCount {
+                guard let page = pdf.page(at: index) else { continue }
+                let pageRect = page.getBoxRect(CGPDFBox.mediaBox)
+
+                UIGraphicsBeginPDFPageWithInfo(pageRect, nil)
+                guard let ctx = UIGraphicsGetCurrentContext() else { continue }
+                ctx.interpolationQuality = .high
+                // Draw existing page
+                ctx.saveGState()
+                ctx.scaleBy(x: 1, y: -1)
+                ctx.translateBy(x: 0, y: -pageRect.size.height)
+                ctx.drawPDFPage(page)
+                ctx.restoreGState()
             }
-            return data as Data
+
+            UIGraphicsEndPDFContext()
         }
-        return nil
+        return outputData as Data
     }
     
     static func decryptFile(pdf: Pdf, password: String = "") -> AsyncOperation<Pdf, PdfError> {
