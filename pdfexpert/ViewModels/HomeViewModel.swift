@@ -149,8 +149,12 @@ public class HomeViewModel : ObservableObject {
     
     @Published var asyncImageLoading: AsyncOperation<(), SharedUnderlyingError> = AsyncOperation(status: .empty)
     
-    @Published var cameraShow: Bool = false
-    @Published var scannerShow: Bool = false
+    enum ActiveSheet: Identifiable {
+        case camera, scanner
+        var id: Self { self }
+    }
+
+    @Published var activeSheet: ActiveSheet?
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var addPasswordShow: Bool = false
     
@@ -275,9 +279,10 @@ public class HomeViewModel : ObservableObject {
     func openCamera() {
         self.importOptionGroup = nil
         self.trackFullActionChosen(importOption: .camera)
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            self.cameraShow = true
+        // Defer to the next runloop so the import sheet finishes dismissing first
+        // (replaces a fixed Task.sleep delay).
+        DispatchQueue.main.async {
+            self.activeSheet = .camera
         }
     }
     
@@ -285,8 +290,7 @@ public class HomeViewModel : ObservableObject {
     func openGallery() {
         self.importOptionGroup = nil
         self.trackFullActionChosen(importOption: .gallery)
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+        DispatchQueue.main.async {
             self.imagePickerShow = true
         }
     }
@@ -297,26 +301,23 @@ public class HomeViewModel : ObservableObject {
         // In this case ImportOption.scan is not actually been selected by the user,
         // but is provided for coherence
         self.trackFullActionChosen(importOption: .scan)
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+        DispatchQueue.main.async {
             self.showScanner()
         }
     }
     
     @MainActor
     func convertImage(uiImage: UIImage) {
-        self.cameraShow = false
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+        self.activeSheet = nil
+        DispatchQueue.main.async {
             self.convertUiImageToPdf(uiImage: uiImage, filename: nil)
         }
     }
     
     @MainActor
     func convertScan(scannerResult: ScannerResult) {
-        self.scannerShow = false
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
+        self.activeSheet = nil
+        DispatchQueue.main.async {
             PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
     }
@@ -456,7 +457,7 @@ public class HomeViewModel : ObservableObject {
     private func showScanner() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized, .notDetermined:
-            self.scannerShow = true
+            self.activeSheet = .scanner
         default:
             self.cameraPermissionDeniedShow = true
         }
