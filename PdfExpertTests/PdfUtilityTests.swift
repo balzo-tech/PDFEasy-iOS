@@ -55,4 +55,41 @@ final class PdfUtilityTests: XCTestCase {
                                                  compression: .noCompression)
         XCTAssertLessThanOrEqual(result.pageCount, 1)
     }
+
+    /// Builds a PDF page containing real, selectable text.
+    private func makeTextPdf(text: String) -> PDFDocument {
+        let bounds = CGRect(x: 0, y: 0, width: 400, height: 600)
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+            (text as NSString).draw(at: CGPoint(x: 50, y: 50),
+                                    withAttributes: [.font: UIFont.systemFont(ofSize: 24)])
+        }
+        return PDFDocument(data: data) ?? PDFDocument()
+    }
+
+    /// Margins must be drawn into a PDF context so the text stays selectable (A2):
+    /// with the old rasterizing implementation the result page carried no text.
+    func testApplyPostProcessKeepsTextSelectableWithMargins() {
+        let document = makeTextPdf(text: "Hello selectable world")
+        XCTAssertTrue((document.page(at: 0)?.string ?? "").contains("selectable"),
+                      "fixture should have extractable text")
+        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
+                                                 margins: .mediumMargins,
+                                                 compression: .noCompression)
+        let resultText = result.page(at: 0)?.string ?? ""
+        XCTAssertTrue(resultText.contains("selectable"),
+                      "text must survive margins, got: \(resultText)")
+    }
+
+    /// A text page must stay vector even when compression is requested (A2b):
+    /// only image-only / image-heavy pages get rasterized.
+    func testApplyPostProcessKeepsTextPageVectorUnderCompression() {
+        let document = makeTextPdf(text: "Keep me vector")
+        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
+                                                 margins: .noMargins,
+                                                 compression: .high)
+        let resultText = result.page(at: 0)?.string ?? ""
+        XCTAssertTrue(resultText.contains("vector"),
+                      "a text page must stay vector under compression, got: \(resultText)")
+    }
 }

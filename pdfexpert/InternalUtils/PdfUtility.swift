@@ -71,61 +71,117 @@ class PDFUtility {
     }
     
     static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, margins: MarginsOption, compression: CompressionOption) -> PDFDocument {
-        
+
+        let horizontalMargin = margins.horizontalMargin
+        let quality = compression.quality
+
+        // If neither margins nor compression are requested, return the document untouched.
+        // Rasterizing every page is lossy (it discards selectable/vector text) and pointless here.
+        guard horizontalMargin > 0 || quality < 1.0 else {
+            return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
+        }
+
         guard pdfDocument.pageCount > 0 else {
             return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
         }
-        guard margins != .noMargins, compression != .noCompression else {
-            return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
-        }
-        
+
         let newPdfDocument = PDFDocument()
+        let applyCompression = quality < 1.0
         for pageIndex in 0..<pdfDocument.pageCount {
             guard let page = pdfDocument.page(at: pageIndex) else {
                 continue
             }
-            
+
             // Fetch the page rect for the page we want to render.
             let pageRect = page.bounds(for: .mediaBox)
-            
             let originalSize = pageRect.size
-            
-            let newWidth = originalSize.width - margins.horizontalMargin * 2
-            let newHeight = (originalSize.height / originalSize.width) * newWidth
-            
-            let renderer = UIGraphicsImageRenderer(size: originalSize)
-            var newImage = renderer.image { ctx in
-                
-                // Set and fill the background color.
-                K.Misc.PdfMarginsColor.set()
-                ctx.fill(pageRect)
-                
-                // Translate the context so that we only draw the `cropRect`.
-                ctx.cgContext.translateBy(x: -pageRect.origin.x + margins.horizontalMargin,
-                                          y: originalSize.height - pageRect.origin.y - (originalSize.height - newHeight)/2)
 
-                // Flip the context vertically because the Core Graphics coordinate system starts from the bottom.
-                ctx.cgContext.scaleBy(x: newWidth / originalSize.width, y: -newHeight / originalSize.height)
-                
-                // Draw the PDF page.
-                page.draw(with: .mediaBox, to: ctx.cgContext)
+            let newWidth = originalSize.width - horizontalMargin * 2
+            let newHeight = (originalSize.height / originalSize.width) * newWidth
+
+            // Draws the page inset by the margins and vertically centered. Identical math for a
+            // bitmap or a PDF context; only the destination (raster vs vector) differs below.
+            let drawPage: (CGContext) -> Void = { cg in
+                // Fill the background (the margin area) with the margins color.
+                cg.setFillColor(K.Misc.PdfMarginsColor.cgColor)
+                cg.fill(CGRect(origin: .zero, size: originalSize))
+                // Inset by the horizontal margin and center vertically.
+                cg.translateBy(x: -pageRect.origin.x + horizontalMargin,
+                               y: originalSize.height - pageRect.origin.y - (originalSize.height - newHeight) / 2)
+                // Flip vertically because Core Graphics' origin is at the bottom.
+                cg.scaleBy(x: newWidth / originalSize.width, y: -newHeight / originalSize.height)
+                page.draw(with: .mediaBox, to: cg)
             }
-            
-            if compression.quality < 1.0, let jpegData = newImage.jpegData(compressionQuality: compression.quality) {
-                let nsJpegData = NSData(data: jpegData)
-                let unsafePointer = UnsafePointer<UInt8>(nsJpegData.bytes.bindMemory(to: UInt8.self, capacity: nsJpegData.length))
-                if let dataPtr = CFDataCreate(kCFAllocatorDefault, unsafePointer, nsJpegData.length),
-                   let dataProvider = CGDataProvider(data: dataPtr),
-                   let cgImage = CGImage(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) {
-                    newImage = UIImage(cgImage: cgImage)
+
+            // Compress a page when compression is requested AND the page is effectively an
+            // image: either it has no extractable text (a scan), or it is dominated by a
+            // high-resolution image (e.g. a photo with a caption). A pure text page stays vector
+            // so the text remains selectable — re-encoding it as JPEG would wreck quality for
+            // little size gain. Apple's APIs can't recompress a single embedded image while
+            // keeping the rest of the page vector, so an image-heavy page is flattened whole.
+            let pageHasText = !(page.string ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+
+            if applyCompression && (!pageHasText || Self.pageIsImageHeavy(page)) {
+                // Image-only page: rasterize and re-encode as JPEG to actually shrink it.
+                let renderer = UIGraphicsImageRenderer(size: originalSize)
+                var newImage = renderer.image { ctx in drawPage(ctx.cgContext) }
+                if let jpegData = newImage.jpegData(compressionQuality: quality),
+                   let compressed = UIImage(data: jpegData) {
+                    newImage = compressed
                 }
-            }
-            
-            if let pdfPage = PDFPage(image: newImage) {
-                newPdfDocument.insert(pdfPage, at: newPdfDocument.pageCount)
+                if let pdfPage = PDFPage(image: newImage) {
+                    newPdfDocument.insert(pdfPage, at: newPdfDocument.pageCount)
+                }
+            } else {
+                // Text/vector page (or margins-only): draw into a PDF context so the content
+                // stays selectable and crisp instead of being flattened into an image.
+                let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: originalSize))
+                let pageData = pdfRenderer.pdfData { ctx in
+                    ctx.beginPage()
+                    drawPage(ctx.cgContext)
+                }
+                if let pageDocument = PDFDocument(data: pageData), let newPage = pageDocument.page(at: 0) {
+                    newPdfDocument.insert(newPage, at: newPdfDocument.pageCount)
+                }
             }
         }
         return newPdfDocument
+    }
+
+    /// Returns true when a page is dominated by a high-resolution embedded image
+    /// (e.g. a photo with a caption), by inspecting the CGPDF XObject dictionary.
+    static func pageIsImageHeavy(_ page: PDFPage, pixelThreshold: Int = 1_000_000) -> Bool {
+        guard let cgPage = page.pageRef,
+              let pageDict = cgPage.dictionary else { return false }
+
+        var resources: CGPDFDictionaryRef?
+        guard CGPDFDictionaryGetDictionary(pageDict, "Resources", &resources),
+              let resources = resources else { return false }
+
+        var xObjects: CGPDFDictionaryRef?
+        guard CGPDFDictionaryGetDictionary(resources, "XObject", &xObjects),
+              let xObjects = xObjects else { return false }
+
+        var maxPixels = 0
+        CGPDFDictionaryApplyBlock(xObjects, { _, object, _ in
+            var stream: CGPDFStreamRef?
+            guard CGPDFObjectGetValue(object, .stream, &stream),
+                  let stream = stream,
+                  let streamDict = CGPDFStreamGetDictionary(stream) else { return true }
+
+            var subtype: UnsafePointer<CChar>?
+            guard CGPDFDictionaryGetName(streamDict, "Subtype", &subtype),
+                  let subtype = subtype, String(cString: subtype) == "Image" else { return true }
+
+            var width: CGPDFInteger = 0
+            var height: CGPDFInteger = 0
+            CGPDFDictionaryGetInteger(streamDict, "Width", &width)
+            CGPDFDictionaryGetInteger(streamDict, "Height", &height)
+            maxPixels = max(maxPixels, Int(width) * Int(height))
+            return true
+        }, nil)
+
+        return maxPixels >= pixelThreshold
     }
     
     static func getSharePdfUrl(pdf: Pdf) -> URL {
