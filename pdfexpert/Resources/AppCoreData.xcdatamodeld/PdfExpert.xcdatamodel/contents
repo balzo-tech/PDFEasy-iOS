@@ -7,6 +7,7 @@
         <attribute name="filename" optional="YES" attributeType="String"/>
         <attribute name="margins" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="searchableText" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Signature" representedClassName="CDSignature" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

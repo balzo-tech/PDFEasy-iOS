@@ -25,18 +25,22 @@ struct Pdf {
     private(set) var filename: String
     private(set) var compression: CompressionOption = K.Misc.PdfDefaultCompression
     private(set) var margins: MarginsOption = K.Misc.PdfDefaultMarginsOption
-    
+    // Indexed page text loaded from Core Data; used for the archive's full-text
+    // search. nil for documents saved before indexing or never re-saved.
+    private(set) var searchableText: String? = nil
+
     var rawData: Data? {
         return self.pdfDocument.dataRepresentation()
     }
-    
+
     init(storeId: NSManagedObjectID,
          pdfDocument: PDFDocument,
          password: String?,
          creationDate: Date?,
          fileName: String?,
          compression: CompressionOption,
-         margins: MarginsOption) {
+         margins: MarginsOption,
+         searchableText: String? = nil) {
         self.storeId = storeId
         self.pdfDocument = pdfDocument
         self.password = password
@@ -44,6 +48,7 @@ struct Pdf {
         self.filename = fileName ?? self.creationDate.creationDateText
         self.compression = compression
         self.margins = margins
+        self.searchableText = searchableText
     }
     
     init?(data: Data) {

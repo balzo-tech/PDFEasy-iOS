@@ -24,6 +24,7 @@ struct ArchiveView: View {
             }
         }
         .background(ColorPalette.primaryBG)
+        .searchable(text: self.$viewModel.searchText, prompt: Text("Search PDFs"))
         .onAppear() {
             self.viewModel.onAppear()
         }
@@ -38,7 +39,7 @@ struct ArchiveView: View {
         switch self.viewModel.asyncItems.status {
         case .empty: return AnyView(Spacer())
         case .loading: return AnyView(self.getLoadingView())
-        case .data(let items): return AnyView(self.getItemList(items: items))
+        case .data(let items): return AnyView(self.getItemList(items: self.viewModel.filteredItems(items)))
         case .error: return AnyView(self.getErrorView())
         }
     }
@@ -132,11 +133,35 @@ struct ArchiveView: View {
                         .padding(EdgeInsets(top: 0, leading: 32, bottom: 32, trailing: 32))
                     }
             )
+        } else if !self.viewModel.searchText.isEmpty {
+            return AnyView(self.getNoResultsView)
         } else {
             return AnyView(self.getEmptyView)
         }
     }
-    
+
+    var getNoResultsView: some View {
+        VStack(spacing: 16) {
+            Spacer()
+            Image(systemName: "doc.text.magnifyingglass")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 60)
+                .foregroundColor(ColorPalette.fourthText)
+            Text("No results")
+                .font(forCategory: .largeTitle)
+                .foregroundColor(ColorPalette.primaryText)
+                .frame(maxWidth: .infinity, alignment: .center)
+            Text("No PDF matches your search")
+                .font(forCategory: .body1)
+                .foregroundColor(ColorPalette.primaryText)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, alignment: .center)
+            Spacer()
+        }
+        .padding([.leading, .trailing], 16)
+    }
+
     var getEmptyView: some View {
         VStack(spacing: 16) {
             Spacer()

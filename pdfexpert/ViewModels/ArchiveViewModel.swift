@@ -22,6 +22,7 @@ class ArchiveViewModel: ObservableObject {
     @Published var asyncItems: AsyncOperation<[Pdf], SharedLocalizedError> = AsyncOperation(status: .empty)
     @Published var asyncItemDelete: AsyncOperation<(), SharedLocalizedError> = AsyncOperation(status: .empty)
     @Published var isLoading: Bool = false
+    @Published var searchText: String = ""
     
     @Injected(\.repository) private var repository
     @Injected(\.store) private var store
@@ -96,5 +97,24 @@ class ArchiveViewModel: ObservableObject {
     
     func updateView(){
         self.objectWillChange.send()
+    }
+
+    /// Filters by filename and indexed page text (case- and diacritic-insensitive).
+    /// Returns all items when the query is empty. PDFs saved before text indexing
+    /// (or never re-saved/OCR'd) have no `searchableText`, so they match by filename
+    /// only.
+    func filteredItems(_ items: [Pdf]) -> [Pdf] {
+        let query = self.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return items }
+        return items.filter { pdf in
+            Self.matches(pdf.filename, query) || Self.matches(pdf.searchableText, query)
+        }
+    }
+
+    private static func matches(_ text: String?, _ query: String) -> Bool {
+        guard let text else { return false }
+        return text.range(of: query,
+                          options: [.caseInsensitive, .diacriticInsensitive],
+                          locale: .current) != nil
     }
 }

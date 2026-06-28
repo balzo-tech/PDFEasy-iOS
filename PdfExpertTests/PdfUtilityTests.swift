@@ -92,4 +92,19 @@ final class PdfUtilityTests: XCTestCase {
         XCTAssertTrue(resultText.contains("vector"),
                       "a text page must stay vector under compression, got: \(resultText)")
     }
+
+    /// Full-text indexing: a text PDF must yield its page text.
+    func testExtractTextReturnsPageText() {
+        let document = makeTextPdf(text: "Hello indexable world")
+        XCTAssertTrue(PDFUtility.extractText(from: document).contains("indexable"),
+                      "extractText should return the page text")
+    }
+
+    /// An image-only document (no extractable text) must yield an empty string.
+    func testExtractTextEmptyForImageOnlyDocument() {
+        let document = makePdf(pageCount: 1)
+        XCTAssertTrue(PDFUtility.extractText(from: document)
+            .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                      "extractText should be empty for an image-only document")
+    }
 }

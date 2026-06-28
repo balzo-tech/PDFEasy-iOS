@@ -63,6 +63,15 @@ In order:
     keys, an `isSystemImage` option on `OptionItem`/`OptionItemView` (SF Symbol
     `text.viewfinder`, no new asset), and a **placeholder** `home_ocr` imageset
     (a copy of `home_read` — swap for a dedicated illustration).
+12. **Full-text archive search (product feature)** — the archive now has a
+    `.searchable` bar filtering by **filename + page text** (case/diacritic-
+    insensitive, in-memory over the loaded list). New optional Core Data attribute
+    `CDPdf.searchableText` (lightweight auto-migration; the model is
+    `usedWithCloudKit`), populated on every save via `PDFUtility.extractText(from:)`
+    and mapped onto the `Pdf` struct. `ArchiveViewModel.filteredItems` + a "no
+    results" view + EN/IT keys. **No backfill** (chosen): PDFs saved before this
+    match by filename only until re-saved or OCR'd. Covered by 2 `extractText`
+    unit tests (filter logic needs a real `NSManagedObjectID`, so it's on-device).
 
 ## Remaining
 
@@ -82,6 +91,11 @@ In order:
   purchase; progress bar; resulting text is selectable/searchable; a PDF that is
   already all-text comes back unchanged (no user feedback yet — see deferred).
   Watch big/many-page scans for time + memory (pages render at 2x, capped 4000px).
+- **Full-text search** — type in the archive search bar: matches by filename and
+  by page text (OCR'd or born-digital); old PDFs match by filename only (no
+  backfill). **CloudKit:** the new `searchableText` attribute must be **deployed
+  to the Production CloudKit schema** (CloudKit Dashboard) before release — dev
+  creates it automatically, production does not. Verify iCloud sync still works.
 
 ### Intentionally deferred
 - **A5 page-model unification** — `pageImages` + `pdfThumbnails` →
@@ -120,7 +134,7 @@ In order:
 ~~OCR / searchable PDF~~ ✅ done (see "What landed" #11; refinements above) ·
 merge/split/extract pages (M) · rich annotations (M/L) · smart compression
 presets (S/M) · App Intents / Shortcuts / Widget (M) · archive organization with
-folders/search/tags (M).
+folders/~~search~~/tags (M — search ✅ done, see #12).
 
 ## Build / project notes (still true — save time)
 

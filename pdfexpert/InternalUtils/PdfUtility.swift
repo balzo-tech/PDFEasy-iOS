@@ -311,6 +311,20 @@ class PDFUtility {
         }
         return false
     }
+
+    /// Concatenates the extractable text of every page (newline-separated). Empty
+    /// for image-only documents that haven't been OCR'd. Used to index PDFs for the
+    /// archive's full-text search.
+    static func extractText(from pdfDocument: PDFDocument) -> String {
+        var text = ""
+        for pageIndex in 0..<pdfDocument.pageCount {
+            guard let pageText = pdfDocument.page(at: pageIndex)?.string,
+                  !pageText.isEmpty else { continue }
+            if !text.isEmpty { text += "\n" }
+            text += pageText
+        }
+        return text
+    }
 }
 
 extension UIImage {

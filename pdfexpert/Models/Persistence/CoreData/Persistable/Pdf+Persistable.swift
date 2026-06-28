@@ -37,7 +37,8 @@ extension Pdf: Persistable {
                    creationDate: coreDataEntity.creationDate,
                    fileName: coreDataEntity.filename,
                    compression: CompressionOption(rawValue: coreDataEntity.compression) ?? K.Misc.PdfDefaultCompression,
-                   margins: MarginsOption(rawValue: coreDataEntity.margins) ?? K.Misc.PdfDefaultMarginsOption)
+                   margins: MarginsOption(rawValue: coreDataEntity.margins) ?? K.Misc.PdfDefaultMarginsOption,
+                   searchableText: coreDataEntity.searchableText)
     }
     
     static func fetchRequest() -> NSFetchRequest<CDPdf> {
