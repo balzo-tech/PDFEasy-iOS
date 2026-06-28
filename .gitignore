@@ -61,3 +61,10 @@ PdfExpert/**/GoogleService-Info.plist
 PdfExpert/**/Info.plist
 # ProjectInfo Plist
 PdfExpert/**/ProjectInfo.plist
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+fastlane/README.md

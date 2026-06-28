@@ -301,7 +301,7 @@ public class CameraService {
     public func focus(at focusPoint: CGPoint){
 //        let focusPoint = self.videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: point)
 
-        let device = self.videoDeviceInput.device
+        guard let device = self.videoDeviceInput?.device else { return }
         do {
             try device.lockForConfiguration()
             if device.isFocusPointOfInterestSupported {
@@ -380,7 +380,7 @@ public class CameraService {
     
     public func set(zoom: CGFloat){
         let factor = zoom < 1 ? 1 : zoom
-        let device = self.videoDeviceInput.device
+        guard let device = self.videoDeviceInput?.device else { return }
         
         do {
             try device.lockForConfiguration()

@@ -62,44 +62,43 @@ struct PdfEditView: View {
             self.viewModel.urlToFileToConvert = $0.first
             self.viewModel.convert()
         })
-        // Camera for image capture
-        .fullScreenCover(isPresented: self.$viewModel.cameraShow) {
-            CameraView(model: Container.shared.cameraViewModel({ uiImage in
-                self.viewModel.cameraShow = false
-                self.viewModel.imageToConvert = uiImage
-            })).onDisappear { self.viewModel.convert() }
-        }
         // Photo gallery picker
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
                       selection: self.$viewModel.imageSelection,
                       matching: .images)
-        // Scanner
-        .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
-            ScannerView(onScannerResult: {
-                self.viewModel.scannerShow = false
-                self.viewModel.scannerResult = $0
-            }).onDisappear { self.viewModel.convert() }
-        }
-        .fullScreenCover(isPresented: self.$viewModel.signatureAddViewShow) {
-            let inputParameter = PdfSignatureViewModel
-                .InputParameter(pdf: self.viewModel.pdf,
-                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-            PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
-        }
-        .fullScreenCover(isPresented: self.$viewModel.fillFormViewShow) {
-            let inputParameter = PdfFillFormViewModel
-                .InputParameter(pdf: self.viewModel.pdf,
-                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-            PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
-        }
-        .fullScreenCover(isPresented: self.$viewModel.fillWidgetViewShow) {
-            let inputParameter = PdfFillWidgetViewModel
-                .InputParameter(pdf: self.viewModel.pdf,
-                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-            PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
+        // Camera / scanner / signature / fill-form / fill-widget modal flows,
+        // driven by a single activeSheet state machine.
+        .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in
+            switch sheet {
+            case .camera:
+                CameraView(model: Container.shared.cameraViewModel({ uiImage in
+                    self.viewModel.activeSheet = nil
+                    self.viewModel.imageToConvert = uiImage
+                })).onDisappear { self.viewModel.convert() }
+            case .scanner:
+                ScannerView(onScannerResult: {
+                    self.viewModel.activeSheet = nil
+                    self.viewModel.scannerResult = $0
+                }).onDisappear { self.viewModel.convert() }
+            case .signature:
+                let inputParameter = PdfSignatureViewModel
+                    .InputParameter(pdf: self.viewModel.pdf,
+                                    currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+                PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
+            case .fillForm:
+                let inputParameter = PdfFillFormViewModel
+                    .InputParameter(pdf: self.viewModel.pdf,
+                                    currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+                PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
+            case .fillWidget:
+                let inputParameter = PdfFillWidgetViewModel
+                    .InputParameter(pdf: self.viewModel.pdf,
+                                    currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+                PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
+            }
         }
         .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
             PdfCompressionPickerView(compressionOption: self.$viewModel.compression)

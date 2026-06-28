@@ -1,0 +1,89 @@
+default_platform(:ios)
+
+# --- Project-wide constants -------------------------------------------------
+XCODEPROJ           = "pdfexpert.xcodeproj"
+PRODUCTION_SCHEME   = "PdfExpert"
+STAGING_SCHEME      = "PdfExpert Staging"
+PRODUCTION_CONFIG   = "Production Release"
+STAGING_CONFIG      = "Staging Debug"
+PRODUCTION_BUNDLE_ID = "eu.balzo.pdfexpert"
+
+# Build configurations are non-standard in this project: Staging/Production × Debug/Release.
+# There is no plain "Debug"/"Release" — passing one makes xcodebuild silently fall back to
+# "Production Release", so always pass an explicit configuration above.
+
+platform :ios do
+
+  # --- CI -------------------------------------------------------------------
+  desc "Compile the Staging app for the simulator (no signing). Fast CI sanity check."
+  lane :ci_build do
+    build_app(
+      project: XCODEPROJ,
+      scheme: STAGING_SCHEME,
+      configuration: STAGING_CONFIG,
+      destination: "generic/platform=iOS Simulator",
+      skip_archive: true,
+      skip_codesigning: true,
+      skip_package_ipa: true,
+      derived_data_path: "DerivedData",
+      xcargs: "CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES"
+    )
+  end
+
+  desc "Run the unit test suite (PdfExpertTests) on a simulator"
+  lane :test do
+    run_tests(
+      project: XCODEPROJ,
+      scheme: STAGING_SCHEME,
+      configuration: STAGING_CONFIG,
+      devices: ["iPhone 17 Pro"], # adjust to a simulator available on your machine / CI
+      code_coverage: true,
+      xcargs: "CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES"
+    )
+  end
+
+  # --- Distribution ---------------------------------------------------------
+  desc "Build a signed Production archive and upload it to TestFlight"
+  lane :beta do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_filepath: ENV["ASC_KEY_FILEPATH"]
+    )
+    increment_build_number(xcodeproj: XCODEPROJ)
+    build_app(
+      project: XCODEPROJ,
+      scheme: PRODUCTION_SCHEME,
+      configuration: PRODUCTION_CONFIG,
+      export_method: "app-store"
+    )
+    upload_to_testflight(
+      api_key: api_key,
+      app_identifier: PRODUCTION_BUNDLE_ID,
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Build a signed Production archive and upload it to App Store Connect (no auto-submit)"
+  lane :release do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_filepath: ENV["ASC_KEY_FILEPATH"]
+    )
+    build_app(
+      project: XCODEPROJ,
+      scheme: PRODUCTION_SCHEME,
+      configuration: PRODUCTION_CONFIG,
+      export_method: "app-store"
+    )
+    upload_to_app_store(
+      api_key: api_key,
+      app_identifier: PRODUCTION_BUNDLE_ID,
+      submit_for_review: false,
+      automatic_release: false,
+      precheck_include_in_app_purchases: false,
+      force: true
+    )
+  end
+end

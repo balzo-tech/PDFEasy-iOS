@@ -44,9 +44,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var pdfThumbnails: [UIImage] = []
     @Published var pdfSaveError: PdfEditSaveError? = nil
     @Published var filePickerShow: Bool = false
-    @Published var cameraShow: Bool = false
     @Published var imagePickerShow: Bool = false
-    @Published var scannerShow: Bool = false
     @Published var cameraPermissionDeniedShow: Bool = false
     @Published var missingWidgetWarningShow: Bool = false
     
@@ -84,9 +82,12 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
-    @Published var signatureAddViewShow: Bool = false
-    @Published var fillFormViewShow: Bool = false
-    @Published var fillWidgetViewShow: Bool = false
+    enum ActiveSheet: Identifiable {
+        case camera, scanner, signature, fillForm, fillWidget
+        var id: Self { self }
+    }
+
+    @Published var activeSheet: ActiveSheet?
     
     @Published var editOptionListShow: Bool = false
     @Published var passwordTextFieldShow: Bool = false
@@ -128,21 +129,21 @@ class PdfEditViewModel: ObservableObject {
     
     @MainActor
     func onAppear() {
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            
+        // Defer to the next runloop so the edit view is fully presented before the
+        // start-action sheet is driven (replaces a fixed Task.sleep delay).
+        DispatchQueue.main.async {
             if let startAction = self.startAction {
                 switch startAction {
                 case .openFillWidget:
                     if PDFUtility.hasPdfWidget(pdf: self.pdf) {
-                        self.fillWidgetViewShow = true
+                        self.activeSheet = .fillWidget
                     } else {
                         self.missingWidgetWarningShow = true
                     }
                 case .openFillForm:
-                    self.fillFormViewShow = true
+                    self.activeSheet = .fillForm
                 case .openSignature:
-                    self.signatureAddViewShow = true
+                    self.activeSheet = .signature
                 }
             }
             self.startAction = nil
@@ -185,7 +186,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func openCamera() {
-        self.cameraShow = true
+        self.activeSheet = .camera
         self.currentAnalyticsPdfInputType = .camera
     }
     
@@ -229,16 +230,16 @@ class PdfEditViewModel: ObservableObject {
     }
     
     func showAddSignature() {
-        self.signatureAddViewShow = true
+        self.activeSheet = .signature
     }
-    
+
     func showFillForm() {
-        self.fillFormViewShow = true
+        self.activeSheet = .fillForm
     }
-    
+
     func showFillWidget() {
         if PDFUtility.hasPdfWidget(pdf: self.pdf) {
-            self.fillWidgetViewShow = true
+            self.activeSheet = .fillWidget
         } else {
             self.missingWidgetWarningShow = true
         }
@@ -248,10 +249,10 @@ class PdfEditViewModel: ObservableObject {
     func handleEditAction(_ action: EditAction) {
         
         self.editOptionListShow = false
-        
-        Task {
-            try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            
+
+        // Defer to the next runloop so the edit-options sheet finishes dismissing
+        // before the follow-up modal/alert is presented (replaces a fixed Task.sleep).
+        DispatchQueue.main.async {
             switch action {
             case .password:
                 if self.pdf.password != nil {
@@ -271,7 +272,7 @@ class PdfEditViewModel: ObservableObject {
     
     func setPassword(_ password: String) {
         self.internalSetPassword(password)
-        debugPrint(for: self, message: "New password: \(password)")
+        debugPrint(for: self, message: "New password set")
         self.analyticsManager.track(event: .passwordAdded)
     }
     
@@ -453,7 +454,7 @@ class PdfEditViewModel: ObservableObject {
     private func showScanner() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized, .notDetermined:
-            self.scannerShow = true
+            self.activeSheet = .scanner
         default:
             self.cameraPermissionDeniedShow = true
         }

@@ -38,7 +38,7 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
     private var cancelBag = Set<AnyCancellable>()
     
     init() {
-        self.store.isPremium.sink { self.onPremiumStateChanged(isPremium: $0) }.store(in: &self.cancelBag)
+        self.store.isPremium.sink { [weak self] in self?.onPremiumStateChanged(isPremium: $0) }.store(in: &self.cancelBag)
     }
     
     @MainActor

@@ -48,8 +48,8 @@ final class CameraViewModel: ObservableObject {
         self.onImageCaptured = onImageCaptured
         
         self.cameraService.$photo.sink { [weak self] (photo) in
-            if let photo = photo {
-                self?.onImageCaptured(photo.image!)
+            if let photo = photo, let image = photo.image {
+                self?.onImageCaptured(image)
             }
         }
         .store(in: &self.subscriptions)

@@ -9,19 +9,20 @@ import Foundation
 import StoreKit
 import Combine
 
+@MainActor
 protocol Store {
     var subscriptions: [Product] { get }
     var consumables: [Product] { get }
     var purchasedSubscriptions: [Product] { get }
     var subscriptionGroupStatus: RenewalState? { get }
-    var isPremium: CurrentValueSubject<Bool, Never> { get }
-    
+    nonisolated var isPremium: CurrentValueSubject<Bool, Never> { get }
+
     func refreshAll() async throws
     func requestProducts() async throws
     func purchase(_ product: Product) async throws -> Transaction?
     func isPurchased(_ product: Product) async throws -> Bool
-    func checkVerified<T>(_ result: VerificationResult<T>) throws -> T
+    nonisolated func checkVerified<T>(_ result: VerificationResult<T>) throws -> T
     func updateCustomerProductStatus() async
-    func getProductData(forProductId productId: String) -> Any?
-    func sortByPrice(_ products: [Product]) -> [Product]
+    nonisolated func getProductData(forProductId productId: String) -> Any?
+    nonisolated func sortByPrice(_ products: [Product]) -> [Product]
 }

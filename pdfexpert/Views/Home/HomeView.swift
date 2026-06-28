@@ -151,17 +151,18 @@ struct HomeView: View {
         .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
             self.viewModel.processPickedFileUrl($0.first)
         })
-        .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
-            // Scanner
-            ScannerView(onScannerResult: {
-                self.viewModel.convertScan(scannerResult: $0)
-            })
-        }
-        .fullScreenCover(isPresented: self.$viewModel.cameraShow) {
-            // Camera for image capture
-            CameraView(model: Container.shared.cameraViewModel({ uiImage in
-                self.viewModel.convertImage(uiImage: uiImage)
-            }))
+        // Camera / scanner modal flows, driven by a single activeSheet state machine.
+        .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in
+            switch sheet {
+            case .scanner:
+                ScannerView(onScannerResult: {
+                    self.viewModel.convertScan(scannerResult: $0)
+                })
+            case .camera:
+                CameraView(model: Container.shared.cameraViewModel({ uiImage in
+                    self.viewModel.convertImage(uiImage: uiImage)
+                }))
+            }
         }
         // Photo gallery picker
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,

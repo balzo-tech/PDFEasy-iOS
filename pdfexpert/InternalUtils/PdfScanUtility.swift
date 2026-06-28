@@ -26,7 +26,7 @@ class PdfScanUtility {
                 }
                 
                 DispatchQueue.main.async {
-                    progress.completedUnitCount = Int64(pageIndex)
+                    progress.completedUnitCount = Int64(pageIndex + 1)
                     asyncOperation.wrappedValue = AsyncOperation(status: .loading(progress))
                 }
             }
