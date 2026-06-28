@@ -150,35 +150,47 @@ protocol DefaultInitializer {
 extension Int: DefaultInitializer {}
 extension CGFloat: DefaultInitializer {}
 
-extension CGPDFObjectRef {
-	func getName<K>(_ key: K, _ getter: (OpaquePointer, K, UnsafeMutablePointer<UnsafePointer<Int8>?>)->Bool) -> String? {
+// In iOS 26 the CGPDF*Ref types are imported as distinct opaque types instead of
+// plain `OpaquePointer` typealiases. The shared generic accessors are therefore
+// hung off a marker protocol and use `Self` rather than hard-coding OpaquePointer,
+// while the type-specific helpers live on their concrete CGPDF type.
+protocol CGPDFContainerRef {}
+
+extension CGPDFObjectRef: CGPDFContainerRef {}
+extension CGPDFDictionaryRef: CGPDFContainerRef {}
+extension CGPDFArrayRef: CGPDFContainerRef {}
+
+extension CGPDFContainerRef {
+	func getName<K>(_ key: K, _ getter: (Self, K, UnsafeMutablePointer<UnsafePointer<Int8>?>)->Bool) -> String? {
 		guard let pointer = self[getter, key] else { return nil }
 		return String(cString: pointer)
 	}
 
-	func getName<K>(_ key: K, _ getter: (OpaquePointer, K, UnsafeMutableRawPointer?)->Bool) -> String? {
+	func getName<K>(_ key: K, _ getter: (Self, K, UnsafeMutableRawPointer?)->Bool) -> String? {
 		guard let pointer: UnsafePointer<UInt8> = self[getter, key] else { return nil }
 		return String(cString: pointer)
 	}
 
-	subscript<R, K>(_ getter: (OpaquePointer, K, UnsafeMutablePointer<R?>)->Bool, _ key: K) -> R? {
+	subscript<R, K>(_ getter: (Self, K, UnsafeMutablePointer<R?>)->Bool, _ key: K) -> R? {
 		var result: R!
 		guard getter(self, key, &result) else { return nil }
 		return result
 	}
 
-	subscript<R: DefaultInitializer, K>(_ getter: (OpaquePointer, K, UnsafeMutablePointer<R>)->Bool, _ key: K) -> R? {
+	subscript<R: DefaultInitializer, K>(_ getter: (Self, K, UnsafeMutablePointer<R>)->Bool, _ key: K) -> R? {
 		var result = R()
 		guard getter(self, key, &result) else { return nil }
 		return result
 	}
 
-	subscript<R, K>(_ getter: (OpaquePointer, K, UnsafeMutableRawPointer?)->Bool, _ key: K) -> R? {
+	subscript<R, K>(_ getter: (Self, K, UnsafeMutableRawPointer?)->Bool, _ key: K) -> R? {
 		var result: R!
 		guard getter(self, key, &result) else { return nil }
 		return result
 	}
+}
 
+extension CGPDFDictionaryRef {
 	func getNameArray(for key: String) -> [String]? {
 		var object: CGPDFObjectRef!
 		guard CGPDFDictionaryGetObject(self, key, &object) else { return nil }
@@ -196,7 +208,9 @@ extension CGPDFObjectRef {
 			return names
 		}
 	}
+}
 
+extension CGPDFObjectRef {
 	func getColorSpace() throws -> CGColorSpace {
 		if let name = getName(.name, CGPDFObjectGetValue) {
 			switch name {
@@ -284,7 +298,9 @@ extension CGPDFObjectRef {
 			}
 		}
 	}
+}
 
+extension CGPDFArrayRef {
 	func asFloatArray() -> [CGFloat] {
 		return (0..<CGPDFArrayGetCount(self)).map {
 			self[CGPDFArrayGetNumber, $0]!
