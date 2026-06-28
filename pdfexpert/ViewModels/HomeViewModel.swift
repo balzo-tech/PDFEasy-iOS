@@ -364,7 +364,7 @@ public class HomeViewModel : ObservableObject {
     
     func setPassword(_ password: String) {
         self.internalSetPassword(password)
-        debugPrint(for: self, message: "New password: \(password)")
+        debugPrint(for: self, message: "New password set")
         self.analyticsManager.track(event: .passwordAdded)
     }
     
