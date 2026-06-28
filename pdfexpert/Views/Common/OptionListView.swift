@@ -10,6 +10,7 @@ import SwiftUI
 struct OptionItem {
     let title: String
     let imageName: String
+    var isSystemImage: Bool = false
     let callBack: () -> ()
 }
 
@@ -26,7 +27,7 @@ struct OptionListView: View {
                 .foregroundColor(ColorPalette.primaryText)
             Spacer(minLength: 20)
             ForEach(self.items, id: \.title) { item in
-                OptionItemView(title: item.title, imageName: item.imageName, onPressed: item.callBack)
+                OptionItemView(title: item.title, imageName: item.imageName, isSystemImage: item.isSystemImage, onPressed: item.callBack)
                 Spacer().frame(height: 10)
             }
         }

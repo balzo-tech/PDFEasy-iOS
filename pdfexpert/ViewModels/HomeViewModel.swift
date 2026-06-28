@@ -36,7 +36,8 @@ enum HomeAction: Hashable, Identifiable {
     case formFill
     case addText
     case createPdf
-    
+    case ocr
+
     case importPdf
     
     case readPdf
@@ -58,13 +59,14 @@ enum HomeAction: Hashable, Identifiable {
         case .formFill: return .pdf
         case .addText: return .allDocs
         case .createPdf: return nil
+        case .ocr: return .pdf
         case .importPdf: return .pdf
         case .readPdf: return .pdf
         case .removePassword: return .pdf
         case .addPassword: return .pdf
         }
     }
-    
+
     var editStartAction: PdfEditStartAction? {
         switch self {
         case .appExtension: return nil
@@ -79,13 +81,14 @@ enum HomeAction: Hashable, Identifiable {
         case .formFill: return .openFillWidget
         case .addText: return .openFillForm
         case .createPdf: return nil
+        case .ocr: return .openOcr
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return nil
         case .addPassword: return nil
         }
     }
-    
+
     var homePostImportAction: HomePostImportAction? {
         switch self {
         case .appExtension: return nil
@@ -100,6 +103,7 @@ enum HomeAction: Hashable, Identifiable {
         case .formFill: return nil
         case .addText: return nil
         case .createPdf: return nil
+        case .ocr: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
@@ -226,7 +230,7 @@ public class HomeViewModel : ObservableObject {
             self.importOptionGroup = .image
         case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword:
             self.openFilePicker(fileSource: .files)
-        case .sign, .addText:
+        case .sign, .addText, .ocr:
             self.importOptionGroup = .fileAndScan
         case .createPdf:
             self.createPdf()
@@ -338,7 +342,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
-            case .importPdf, .removePassword, .addPassword:
+            case .importPdf, .removePassword, .addPassword, .ocr:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .readPdf:
                 assertionFailure("Selected file url is not handled for the current action")

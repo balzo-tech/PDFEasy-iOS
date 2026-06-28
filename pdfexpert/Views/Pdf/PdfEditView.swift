@@ -105,6 +105,8 @@ struct PdfEditView: View {
         }
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
+        .asyncView(asyncOperation: self.$viewModel.asyncOcr,
+                   loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
@@ -115,7 +117,7 @@ struct PdfEditView: View {
         })
         .showError(self.$viewModel.pdfSaveError)
         .formSheet(isPresented: self.$viewModel.editOptionListShow,
-                   size: CGSize(width: 400.0, height: 250.0)) {
+                   size: CGSize(width: 400.0, height: 320.0)) {
             self.editListView
         }
         .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
@@ -130,6 +132,8 @@ struct PdfEditView: View {
         .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
         .splitSuccessfulAlert(show: self.$viewModel.splitSuccessAlertShow,
                               goToArchiveCallback: { self.viewModel.goToArchive() })
+        .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
+                              onComplete: { self.viewModel.onOcrMonetizationClose() })
     }
     
     @ViewBuilder var pdfView: some View {
@@ -325,6 +329,11 @@ struct PdfEditView: View {
             case .split:
                 return OptionItem(title: "Split",
                                   imageName: "edit_option_split",
+                                  callBack: callback)
+            case .ocr:
+                return OptionItem(title: String(localized: "Make Searchable (OCR)"),
+                                  imageName: "text.viewfinder",
+                                  isSystemImage: true,
                                   callBack: callback)
             }
         })

@@ -42,6 +42,7 @@ enum AnalyticsScreen {
     case reader
     case pageSelection
     case suggestedFields
+    case ocr
 }
 
 enum AnalyticsEvent {
@@ -83,6 +84,8 @@ enum AnalyticsEvent {
     case subscriptionShown
     case reviewLowRateFeedback(feedback: String)
     case suggestedFieldsSaved
+    case ocrStarted
+    case ocrCompleted
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

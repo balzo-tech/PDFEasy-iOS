@@ -78,7 +78,11 @@ struct HomeView: View {
         HomeItem(title: "Create PDF",
                  description: "Create a pdf from scratch and edit it",
                  imageName: "home_create_pdf",
-                 homeAction: .createPdf)
+                 homeAction: .createPdf),
+        HomeItem(title: String(localized: "Make Searchable (OCR)"),
+                 description: String(localized: "Recognize text in scanned pages and make your PDF searchable"),
+                 imageName: "home_ocr",
+                 homeAction: .ocr)
     ]
     
     let importItems: [HomeItem] = [

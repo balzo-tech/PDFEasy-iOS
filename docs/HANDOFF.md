@@ -48,6 +48,21 @@ In order:
     booleans collapse into one `activeSheet` + a single `.fullScreenCover(item:)`
     in `PdfEditView` and `HomeView`; the fixed `Task.sleep(0.25s)` delays became a
     next-runloop defer.
+11. **OCR / searchable PDF (product feature)** — `OcrUtility` (new,
+    `InternalUtils/`) runs on-device Vision text recognition (`VNRecognizeTextRequest`,
+    `it-IT`+`en-US`) over a PDF's *image-only* pages and rebuilds each as the page
+    bitmap + an **invisible** Core Text layer (`setTextDrawingMode(.invisible)`)
+    positioned on Vision's boxes → selectable/searchable. Pages that already carry
+    vector text are left untouched. Covered by 4 unit tests (`OcrUtilityTests`).
+    Exposed two ways, both gated premium *before* running (paywall, then runs on
+    successful purchase): (a) editor `…` menu → `EditAction.ocr` (own `asyncOcr`
+    channel that **replaces** the document, vs `asyncPdf` which appends); (b) Home
+    tool → `HomeAction.ocr` (import a PDF or scan → editor opens with the new
+    `PdfEditStartAction.openOcr`, which runs the same gated flow). Added analytics
+    (`AnalyticsScreen.ocr`, events `ocr_started`/`ocr_completed`), EN/IT catalog
+    keys, an `isSystemImage` option on `OptionItem`/`OptionItemView` (SF Symbol
+    `text.viewfinder`, no new asset), and a **placeholder** `home_ocr` imageset
+    (a copy of `home_read` — swap for a dedicated illustration).
 
 ## Remaining
 
@@ -62,6 +77,11 @@ In order:
 - **A2** — apply margins/compression to real PDFs: text must stay selectable;
   mixed text+image PDFs must shrink while text pages stay vector (a caption on an
   image-heavy page is flattened — known tradeoff).
+- **OCR** — run on a real scanned PDF (editor `…` → Make Searchable, and Home →
+  Make Searchable via file/scan): paywall shows for non-premium and OCR runs after
+  purchase; progress bar; resulting text is selectable/searchable; a PDF that is
+  already all-text comes back unchanged (no user feedback yet — see deferred).
+  Watch big/many-page scans for time + memory (pages render at 2x, capped 4000px).
 
 ### Intentionally deferred
 - **A5 page-model unification** — `pageImages` + `pdfThumbnails` →
@@ -82,10 +102,25 @@ In order:
   `Application/`; async/await modernization (large, module by module).
 - A localization lint to flag raw string literals in new views.
 
+### OCR follow-ups
+- ✅ **Word-level text layer** — done. The invisible layer is now placed per word
+  via `candidate.boundingBox(for: range)` (line-level fallback), for tight
+  selection. (`OcrUtility.drawInvisibleText`/`drawText`.)
+- ✅ **Output size** — done. OCR'd pages re-embed the bitmap JPEG-compressed
+  (`OcrUtility.defaultJpegQuality = 0.7`, param threaded through `makeSearchable`).
+  Unit test asserts the compressed output is smaller.
+- **"Already searchable" feedback** (deferred) — when no page needs OCR the
+  document is returned unchanged silently; consider an alert/toast.
+- **`home_ocr` illustration** (deferred) — currently a placeholder copy of
+  `home_read`; swap for a dedicated asset.
+- **Per-page `jpegQuality` from the user's `CompressionOption`** (deferred) —
+  currently a fixed 0.7; could honor `pdf.compression` when set.
+
 ### Product features (roadmap)
-OCR / searchable PDF (L, strong premium hook) · merge/split/extract pages (M) ·
-rich annotations (M/L) · smart compression presets (S/M) · App Intents /
-Shortcuts / Widget (M) · archive organization with folders/search/tags (M).
+~~OCR / searchable PDF~~ ✅ done (see "What landed" #11; refinements above) ·
+merge/split/extract pages (M) · rich annotations (M/L) · smart compression
+presets (S/M) · App Intents / Shortcuts / Widget (M) · archive organization with
+folders/search/tags (M).
 
 ## Build / project notes (still true — save time)
 

@@ -63,6 +63,7 @@ extension AnalyticsScreen {
         case .reader: return "Reader"
         case .pageSelection: return "PageSelection"
         case .suggestedFields: return "SuggestedFields"
+        case .ocr: return "Ocr"
         }
     }
 }
@@ -108,6 +109,8 @@ extension AnalyticsEvent {
         case .subscriptionShown: return "subscription_shown"
         case .reviewLowRateFeedback: return "review_low_rate_feedback"
         case .suggestedFieldsSaved: return "suggested_fields_saved"
+        case .ocrStarted: return "ocr_started"
+        case .ocrCompleted: return "ocr_completed"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -192,6 +195,8 @@ extension AnalyticsEvent {
         case .reviewLowRateFeedback(let feedback):
             return [AnalyticsEventCustomParameters.reviewLowRateFeedbackContent.rawValue: feedback]
         case .suggestedFieldsSaved: return nil
+        case .ocrStarted: return nil
+        case .ocrCompleted: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil
@@ -259,6 +264,7 @@ fileprivate extension HomeAction {
         case .formFill: return "form_fill"
         case .addText: return "add_text"
         case .createPdf: return "create_pdf"
+        case .ocr: return "ocr"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"

@@ -1,6 +1,38 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Recognize text in scanned pages and make your PDF searchable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognize text in scanned pages and make your PDF searchable"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riconosce il testo nelle pagine scansionate e rende il PDF ricercabile"
+          }
+        }
+      }
+    },
+    "Make Searchable (OCR)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make Searchable (OCR)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rendi ricercabile (OCR)"
+          }
+        }
+      }
+    },
     "Action": {
       "localizations": {
         "en": {

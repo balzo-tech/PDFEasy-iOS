@@ -22,12 +22,14 @@ enum PdfEditStartAction {
     case openFillWidget
     case openFillForm
     case openSignature
+    case openOcr
 }
 
 enum EditAction: CaseIterable {
     case password
     case compression
     case split
+    case ocr
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -68,6 +70,18 @@ class PdfEditViewModel: ObservableObject {
             }
         }
     }
+
+    // OCR replaces the current document with its searchable version (unlike
+    // asyncPdf, which appends), so it has its own async channel.
+    @Published var asyncOcr: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
+        didSet {
+            if let pdf = self.asyncOcr.data {
+                self.updatePdf(pdf: pdf)
+                self.asyncOcr = AsyncOperation(status: .empty)
+                self.analyticsManager.track(event: .ocrCompleted)
+            }
+        }
+    }
     
     @Published var saveSuccessfulAlertShow: Bool = false
     
@@ -94,11 +108,13 @@ class PdfEditViewModel: ObservableObject {
     @Published var removePasswordAlertShow: Bool = false
     @Published var splitSuccessAlertShow: Bool = false
     @Published var compressionShow: Bool = false
-    
+    @Published var ocrMonetizationShow: Bool = false
+
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfCoordinator) private var pdfCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.store) private var store
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     
@@ -116,6 +132,8 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
+    // Set when OCR is gated behind the paywall, so it runs after a successful purchase.
+    private var ocrPending: Bool = false
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
@@ -144,6 +162,8 @@ class PdfEditViewModel: ObservableObject {
                     self.activeSheet = .fillForm
                 case .openSignature:
                     self.activeSheet = .signature
+                case .openOcr:
+                    self.startOcr()
                 }
             }
             self.startAction = nil
@@ -266,8 +286,38 @@ class PdfEditViewModel: ObservableObject {
                 self.pdfSplitViewModel.split(pdf: self.pdf, onSplitCompleted: { [weak self] in
                     self?.splitSuccessAlertShow = true
                 })
+            case .ocr:
+                self.startOcr()
             }
         }
+    }
+
+    /// Entry point for the OCR / searchable-PDF tool. OCR is a premium feature:
+    /// non-subscribers see the paywall first and the OCR runs after a successful
+    /// purchase (see `onOcrMonetizationClose`).
+    @MainActor
+    func startOcr() {
+        if self.store.isPremium.value {
+            self.performOcr()
+        } else {
+            self.ocrPending = true
+            self.ocrMonetizationShow = true
+        }
+    }
+
+    @MainActor
+    func onOcrMonetizationClose() {
+        let shouldRun = self.ocrPending && self.store.isPremium.value
+        self.ocrPending = false
+        if shouldRun {
+            self.performOcr()
+        }
+    }
+
+    @MainActor
+    private func performOcr() {
+        self.analyticsManager.track(event: .ocrStarted)
+        OcrUtility.makeSearchable(pdf: self.pdf, asyncOperation: self.asyncSubject(\.asyncOcr))
     }
     
     func setPassword(_ password: String) {
