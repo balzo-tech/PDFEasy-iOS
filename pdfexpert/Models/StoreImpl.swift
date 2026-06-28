@@ -34,23 +34,25 @@ extension Container {
     }
 }
 
-class StoreImpl: Store {
+@MainActor
+final class StoreImpl: Store {
 
     private(set) var subscriptions: [Product]
     private(set) var consumables: [Product]
-    
+
     private(set) var purchasedSubscriptions: [Product] = []
     private(set) var subscriptionGroupStatus: RenewalState?
-    
-    var isPremium: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
-    
-    var updateListenerTask: Task<Void, Error>? = nil
+
+    nonisolated let isPremium: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
+
+    // Touched only from the nonisolated init / deinit, never on the main actor.
+    nonisolated(unsafe) var updateListenerTask: Task<Void, Error>? = nil
 
     private let productIdToProduct: [String: Any]
-    
+
     @Injected(\.analyticsManager) var analyticsManager
 
-    init() {
+    nonisolated init() {
         self.productIdToProduct = Self.loadProductIdToProductData().reduce([:], {
             var result = $0
             result[(Bundle.main.bundleIdentifier ?? "") + "." + $1.key] = $1.value
@@ -78,7 +80,7 @@ class StoreImpl: Store {
         self.updateListenerTask?.cancel()
     }
     
-    static func loadProductIdToProductData() -> [String: Any] {
+    nonisolated static func loadProductIdToProductData() -> [String: Any] {
         guard let path = Bundle.main.path(forResource: "Products", ofType: "plist"),
               let plist = FileManager.default.contents(atPath: path),
               let data = try? PropertyListSerialization.propertyList(from: plist, format: nil) as? [String: Any] else {
@@ -87,7 +89,7 @@ class StoreImpl: Store {
         return data
     }
 
-    func listenForTransactions() -> Task<Void, Error> {
+    nonisolated func listenForTransactions() -> Task<Void, Error> {
         return Task.detached {
             //Iterate through any transactions that don't come from a direct call to `purchase()`.
             for await result in Transaction.updates {
@@ -196,7 +198,7 @@ class StoreImpl: Store {
         }
     }
 
-    func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+    nonisolated func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
         //Check whether the JWS passes StoreKit verification.
         switch result {
         case .unverified:
@@ -255,15 +257,15 @@ class StoreImpl: Store {
         self.isPremium.send(Self.subscriptionStatusToIsPremium(subscriptionStatus: self.subscriptionGroupStatus))
     }
 
-    func getProductData(forProductId productId: String) -> Any? {
+    nonisolated func getProductData(forProductId productId: String) -> Any? {
         return self.productIdToProduct[productId]
     }
 
-    func sortByPrice(_ products: [Product]) -> [Product] {
+    nonisolated func sortByPrice(_ products: [Product]) -> [Product] {
         products.sorted(by: { return $0.price < $1.price })
     }
-    
-    private static func subscriptionStatusToIsPremium(subscriptionStatus: RenewalState?) -> Bool {
+
+    nonisolated private static func subscriptionStatusToIsPremium(subscriptionStatus: RenewalState?) -> Bool {
         guard let state = subscriptionStatus else {
             return false
         }
