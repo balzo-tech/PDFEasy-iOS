@@ -1,406 +1,6 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "Are you sure?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Are you sure?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sei sicuro?"
-          }
-        }
-      }
-    },
-    "Delete": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elimina"
-          }
-        }
-      }
-    },
-    "Convert from any file": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Convert from any file"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Converti da qualsiasi file"
-          }
-        }
-      }
-    },
-    "You haven’t converted any files yet": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You haven’t converted any files yet"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Non hai ancora convertito nessun file"
-          }
-        }
-      }
-    },
-    "Oh nou": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oh nou"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oh no"
-          }
-        }
-      }
-    },
-    "Something went wrong,\nmind trying again?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Something went wrong,\nmind trying again?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Qualcosa è andato storto,\nvuoi riprovare?"
-          }
-        }
-      }
-    },
-    "File": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File"
-          }
-        }
-      }
-    },
-    "Import from": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import from"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importa da"
-          }
-        }
-      }
-    },
-    "Your pdf is protected": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your pdf is protected"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Il tuo PDF è protetto"
-          }
-        }
-      }
-    },
-    "Enter Password": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter Password"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inserisci la password"
-          }
-        }
-      }
-    },
-    "Confirm": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirm"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conferma"
-          }
-        }
-      }
-    },
-    "Cancel": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Annulla"
-          }
-        }
-      }
-    },
-    "Enter the password of your pdf in order to import it.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter the password of your pdf in order to import it."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inserisci la password del tuo PDF per importarlo."
-          }
-        }
-      }
-    },
-    "Home": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Home"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Home"
-          }
-        }
-      }
-    },
-    "Settings": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Impostazioni"
-          }
-        }
-      }
-    },
-    "Next": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Avanti"
-          }
-        }
-      }
-    },
-    "Skip": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skip"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salta"
-          }
-        }
-      }
-    },
-    "Info": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Info"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Info"
-          }
-        }
-      }
-    },
-    "Ok": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ok"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ok"
-          }
-        }
-      }
-    },
-    "Your pdf has no editable fields that you can fill in.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your pdf has no editable fields that you can fill in."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Il tuo PDF non ha campi compilabili."
-          }
-        }
-      }
-    },
-    "You have no pages": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You have no pages"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Non hai pagine"
-          }
-        }
-      }
-    },
-    "Choose your source": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose your source"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scegli la sorgente"
-          }
-        }
-      }
-    },
-    "Photo Gallery": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Photo Gallery"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Galleria foto"
-          }
-        }
-      }
-    },
-    "Camera": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Camera"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotocamera"
-          }
-        }
-      }
-    },
-    "Scan": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scan"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scansiona"
-          }
-        }
-      }
-    },
     "Action": {
       "localizations": {
         "en": {
@@ -417,498 +17,66 @@
         }
       }
     },
-    "Error": {
+    "Add Signature": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Error"
+            "value": "Add Signature"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Errore"
+            "value": "Aggiungi firma"
           }
         }
       }
     },
-    "OK": {
+    "Add new range": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "OK"
+            "value": "Add new range"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "OK"
+            "value": "Aggiungi nuovo intervallo"
           }
         }
       }
     },
-    "Tap where you wish to add text": {
+    "Add new signature": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap where you wish to add text"
+            "value": "Add new signature"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tocca dove vuoi aggiungere il testo"
+            "value": "Aggiungi nuova firma"
           }
         }
       }
     },
-    "No": {
+    "Are you sure?": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No"
+            "value": "Are you sure?"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "No"
-          }
-        }
-      }
-    },
-    "Yes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yes"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sì"
-          }
-        }
-      }
-    },
-    "If you quit, you will lose the changes you have just made.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If you quit, you will lose the changes you have just made."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se esci, perderai le modifiche appena apportate."
-          }
-        }
-      }
-    },
-    "Tap to fill in": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap to fill in"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tocca per compilare"
-          }
-        }
-      }
-    },
-    "If you quit, you will lose the changes to your current file.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If you quit, you will lose the changes to your current file."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se esci, perderai le modifiche al file corrente."
-          }
-        }
-      }
-    },
-    "Signature": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Signature"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Firma"
-          }
-        }
-      }
-    },
-    "Sign in here": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sign in here"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Firma qui"
-          }
-        }
-      }
-    },
-    "Tap where you wish to sign": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap where you wish to sign"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tocca dove vuoi firmare"
-          }
-        }
-      }
-    },
-    "If you quit, you will lose the signature you’ve just added.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If you quit, you will lose the signature you’ve just added."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se esci, perderai la firma appena aggiunta."
-          }
-        }
-      }
-    },
-    "Would you like to remove your password?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Would you like to remove your password?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vuoi rimuovere la password?"
-          }
-        }
-      }
-    },
-    "If you decide to remove the password, your PDF will no longer be protected.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If you decide to remove the password, your PDF will no longer be protected."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se rimuovi la password, il tuo PDF non sarà più protetto."
-          }
-        }
-      }
-    },
-    "Protect PDF using password": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Protect PDF using password"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Proteggi il PDF con una password"
-          }
-        }
-      }
-    },
-    "Enter a password to protect your PDF file.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter a password to protect your PDF file."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inserisci una password per proteggere il tuo file PDF."
-          }
-        }
-      }
-    },
-    "Maximum flexibility, you decide when to cancel": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Maximum flexibility, you decide when to cancel"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Massima flessibilità, decidi tu quando annullare"
-          }
-        }
-      }
-    },
-    "Not sure yet?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not sure yet?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Non sei ancora sicuro?"
-          }
-        }
-      }
-    },
-    "Enable free trial": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable free trial"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Attiva la prova gratuita"
-          }
-        }
-      }
-    },
-    "PDF Easy": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PDF Easy"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PDF Easy"
-          }
-        }
-      }
-    },
-    "Edit, convert PDFs and receive constant updates and advanced Premium features. ": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit, convert PDFs and receive constant updates and advanced Premium features. "
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modifica, converti PDF e ricevi aggiornamenti costanti e funzioni Premium avanzate. "
-          }
-        }
-      }
-    },
-    "Restore purchase": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore purchase"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ripristina acquisto"
-          }
-        }
-      }
-    },
-    "No obligation, you can cancel whenever you want.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No obligation, you can cancel whenever you want."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nessun obbligo, puoi annullare quando vuoi."
-          }
-        }
-      }
-    },
-    "Welcome in PDF Easy:\nConvert & Edit": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Welcome in PDF Easy:\nConvert & Edit"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Benvenuto in PDF Easy:\nConverti e Modifica"
-          }
-        }
-      }
-    },
-    "The PDF editor for iPhone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The PDF editor for iPhone"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L’editor PDF per iPhone"
-          }
-        }
-      }
-    },
-    "Start": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inizia"
-          }
-        }
-      }
-    },
-    "Privacy policy": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Privacy policy"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Informativa sulla privacy"
-          }
-        }
-      }
-    },
-    "Terms and conditions": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Terms and conditions"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Termini e condizioni"
-          }
-        }
-      }
-    },
-    "Education": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Education"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Istruzione"
-          }
-        }
-      }
-    },
-    "Designer or Project Manager": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Designer or Project Manager"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Designer o Project Manager"
-          }
-        }
-      }
-    },
-    "Legal": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Legal"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Legale"
+            "value": "Sei sicuro?"
           }
         }
       }
@@ -929,418 +97,130 @@
         }
       }
     },
-    "IT Specialist": {
+    "Camera": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "IT Specialist"
+            "value": "Camera"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Specialista IT"
+            "value": "Fotocamera"
           }
         }
       }
     },
-    "Student": {
+    "Cancel": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Student"
+            "value": "Cancel"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Studente"
+            "value": "Annulla"
           }
         }
       }
     },
-    "Healthcare": {
+    "Chat": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Healthcare"
+            "value": "Chat"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sanità"
+            "value": "Chat"
           }
         }
       }
     },
-    "Other...": {
+    "Choose a compression for your pdf": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Other..."
+            "value": "Choose a compression for your pdf"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Altro..."
+            "value": "Scegli una compressione per il tuo PDF"
           }
         }
       }
     },
-    "Edit text": {
+    "Choose a plan": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Edit text"
+            "value": "Choose a plan"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Modifica testo"
+            "value": "Scegli un piano"
           }
         }
       }
     },
-    "Mark and Notes": {
+    "Choose period": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mark and Notes"
+            "value": "Choose period"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Evidenzia e note"
+            "value": "Scegli il periodo"
           }
         }
       }
     },
-    "Reduce file size": {
+    "Choose your source": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Reduce file size"
+            "value": "Choose your source"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Riduci la dimensione del file"
+            "value": "Scegli la sorgente"
           }
         }
       }
     },
-    "Merge PDF": {
+    "Confirm": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Merge PDF"
+            "value": "Confirm"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unisci PDF"
-          }
-        }
-      }
-    },
-    "OCR": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR"
-          }
-        }
-      }
-    },
-    "Fill and Sign": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fill and Sign"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compila e firma"
-          }
-        }
-      }
-    },
-    "Manage pages": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manage pages"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gestisci le pagine"
-          }
-        }
-      }
-    },
-    "Convert PDF in Word, Excel, PPT": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Convert PDF in Word, Excel, PPT"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Converti PDF in Word, Excel, PPT"
-          }
-        }
-      }
-    },
-    "What describes you best?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What describes you best?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cosa ti descrive meglio?"
-          }
-        }
-      }
-    },
-    "What tools will you use?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What tools will you use?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quali strumenti userai?"
-          }
-        }
-      }
-    },
-    "Do you have a Mac?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Do you have a Mac?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hai un Mac?"
-          }
-        }
-      }
-    },
-    "The tools that make you brilliant in what you do": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The tools that make you brilliant in what you do"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gli strumenti che ti rendono brillante in ciò che fai"
-          }
-        }
-      }
-    },
-    "Select what you love most ": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select what you love most "
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seleziona ciò che ami di più "
-          }
-        }
-      }
-    },
-    "Please select yes or not": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Please select yes or not"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seleziona sì o no"
-          }
-        }
-      }
-    },
-    "Convert files\nto PDF": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Convert files\nto PDF"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Converti file\nin PDF"
-          }
-        }
-      }
-    },
-    "You can convert to pdf a lot of file types from the programs you prefer.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can convert to pdf a lot of file types from the programs you prefer."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Puoi convertire in PDF molti tipi di file dai programmi che preferisci."
-          }
-        }
-      }
-    },
-    "Enter and edit your\nsignature": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter and edit your\nsignature"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inserisci e modifica la tua\nfirma"
-          }
-        }
-      }
-    },
-    "Insert your signature in the pdf you created with a single tap.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insert your signature in the pdf you created with a single tap."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inserisci la tua firma nel PDF che hai creato con un solo tocco."
-          }
-        }
-      }
-    },
-    "Edit, share and save your\nPDF": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit, share and save your\nPDF"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modifica, condividi e salva il tuo\nPDF"
-          }
-        }
-      }
-    },
-    "You can add new pages, edit your pdf, save it and share it with anyone.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can add new pages, edit your pdf, save it and share it with anyone."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Puoi aggiungere nuove pagine, modificare il PDF, salvarlo e condividerlo con chiunque."
-          }
-        }
-      }
-    },
-    "Protect your files with\npassword": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Protect your files with\npassword"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Proteggi i tuoi file con\npassword"
-          }
-        }
-      }
-    },
-    "Enter a password to protect your pdf, you can delete it and change it whenever you want.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter a password to protect your pdf, you can delete it and change it whenever you want."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inserisci una password per proteggere il PDF, puoi rimuoverla e cambiarla quando vuoi."
+            "value": "Conferma"
           }
         }
       }
@@ -1361,34 +241,642 @@
         }
       }
     },
-    "Ooops!": {
+    "Continue edit": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ooops!"
+            "value": "Continue edit"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ops!"
+            "value": "Continua a modificare"
           }
         }
       }
     },
-    "Something went wrong! Please try again later.": {
+    "Convert PDF in Word, Excel, PPT": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Something went wrong! Please try again later."
+            "value": "Convert PDF in Word, Excel, PPT"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Qualcosa è andato storto! Riprova più tardi."
+            "value": "Converti PDF in Word, Excel, PPT"
+          }
+        }
+      }
+    },
+    "Convert files\nto PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convert files\nto PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Converti file\nin PDF"
+          }
+        }
+      }
+    },
+    "Convert from any file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convert from any file"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Converti da qualsiasi file"
+          }
+        }
+      }
+    },
+    "Couldn't extract this image": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't extract this image"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile estrarre questa immagine"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elimina"
+          }
+        }
+      }
+    },
+    "Delete this page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elimina questa pagina"
+          }
+        }
+      }
+    },
+    "Designer or Project Manager": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Designer or Project Manager"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Designer o Project Manager"
+          }
+        }
+      }
+    },
+    "Do you have a Mac?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do you have a Mac?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai un Mac?"
+          }
+        }
+      }
+    },
+    "Do you like our app?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do you like our app?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ti piace la nostra app?"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fatto"
+          }
+        }
+      }
+    },
+    "Drag and drop to sort your documents": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag and drop to sort your documents"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trascina per ordinare i tuoi documenti"
+          }
+        }
+      }
+    },
+    "Edit text": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit text"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifica testo"
+          }
+        }
+      }
+    },
+    "Edit, convert PDFs and receive constant updates and advanced Premium features. ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit, convert PDFs and receive constant updates and advanced Premium features. "
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifica, converti PDF e ricevi aggiornamenti costanti e funzioni Premium avanzate. "
+          }
+        }
+      }
+    },
+    "Edit, share and save your\nPDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit, share and save your\nPDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifica, condividi e salva il tuo\nPDF"
+          }
+        }
+      }
+    },
+    "Education": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Education"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Istruzione"
+          }
+        }
+      }
+    },
+    "Enable free trial": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable free trial"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva la prova gratuita"
+          }
+        }
+      }
+    },
+    "Enable the free trial": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable the free trial"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva la prova gratuita"
+          }
+        }
+      }
+    },
+    "Enter Password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter Password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci la password"
+          }
+        }
+      }
+    },
+    "Enter a password to protect your PDF file.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a password to protect your PDF file."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci una password per proteggere il tuo file PDF."
+          }
+        }
+      }
+    },
+    "Enter a password to protect your pdf, you can delete it and change it whenever you want.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a password to protect your pdf, you can delete it and change it whenever you want."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci una password per proteggere il PDF, puoi rimuoverla e cambiarla quando vuoi."
+          }
+        }
+      }
+    },
+    "Enter and edit your\nsignature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter and edit your\nsignature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci e modifica la tua\nfirma"
+          }
+        }
+      }
+    },
+    "Enter the password of your pdf in order to import it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the password of your pdf in order to import it."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci la password del tuo PDF per importarlo."
+          }
+        }
+      }
+    },
+    "Enter your data to allow us to help you fill in the forms faster": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter your data to allow us to help you fill in the forms faster"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci i tuoi dati per aiutarci a compilare i moduli più velocemente"
+          }
+        }
+      }
+    },
+    "Error": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Errore"
+          }
+        }
+      }
+    },
+    "File": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        }
+      }
+    },
+    "Fill and Sign": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill and Sign"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compila e firma"
+          }
+        }
+      }
+    },
+    "Give us a quick rating so we\nknow how you like it": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Give us a quick rating so we\nknow how you like it"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lasciaci una valutazione veloce così\nsappiamo quanto ti piace"
+          }
+        }
+      }
+    },
+    "Go to files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go to files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vai ai file"
+          }
+        }
+      }
+    },
+    "Healthcare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Healthcare"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sanità"
+          }
+        }
+      }
+    },
+    "Home": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home"
+          }
+        }
+      }
+    },
+    "IT Specialist": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IT Specialist"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Specialista IT"
+          }
+        }
+      }
+    },
+    "If you decide to remove the password, your PDF will no longer be protected.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you decide to remove the password, your PDF will no longer be protected."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se rimuovi la password, il tuo PDF non sarà più protetto."
+          }
+        }
+      }
+    },
+    "If you quit, you will lose the changes to your current file.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you quit, you will lose the changes to your current file."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se esci, perderai le modifiche al file corrente."
+          }
+        }
+      }
+    },
+    "If you quit, you will lose the changes you have just made.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you quit, you will lose the changes you have just made."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se esci, perderai le modifiche appena apportate."
+          }
+        }
+      }
+    },
+    "If you quit, you will lose the signature you’ve just added.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you quit, you will lose the signature you’ve just added."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se esci, perderai la firma appena aggiunta."
+          }
+        }
+      }
+    },
+    "If you quit, you will lose the signatures you've just added.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you quit, you will lose the signatures you've just added."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se esci, perderai le firme che hai appena aggiunto."
+          }
+        }
+      }
+    },
+    "Import from": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import from"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importa da"
+          }
+        }
+      }
+    },
+    "Info": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        }
+      }
+    },
+    "Insert your signature in the pdf you created with a single tap.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert your signature in the pdf you created with a single tap."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci la tua firma nel PDF che hai creato con un solo tocco."
           }
         }
       }
@@ -1425,6 +913,886 @@
         }
       }
     },
+    "Legal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legal"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legale"
+          }
+        }
+      }
+    },
+    "Manage pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestisci le pagine"
+          }
+        }
+      }
+    },
+    "Mark and Notes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark and Notes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evidenzia e note"
+          }
+        }
+      }
+    },
+    "Maximum flexibility, you decide\nhow long to stay": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum flexibility, you decide\nhow long to stay"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Massima flessibilità, decidi tu\nper quanto restare"
+          }
+        }
+      }
+    },
+    "Maximum flexibility, you decide when to cancel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum flexibility, you decide when to cancel"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Massima flessibilità, decidi tu quando annullare"
+          }
+        }
+      }
+    },
+    "Memorize signature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memorize signature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memorizza la firma"
+          }
+        }
+      }
+    },
+    "Merge PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merge PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unisci PDF"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avanti"
+          }
+        }
+      }
+    },
+    "No": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
+          }
+        }
+      }
+    },
+    "No obligation, you can cancel whenever you want.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No obligation, you can cancel whenever you want."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun obbligo, puoi annullare quando vuoi."
+          }
+        }
+      }
+    },
+    "No signature added": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No signature added"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna firma aggiunta"
+          }
+        }
+      }
+    },
+    "No text available on this page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No text available on this page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun testo disponibile in questa pagina"
+          }
+        }
+      }
+    },
+    "Not sure yet?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not sure yet?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non sei ancora sicuro?"
+          }
+        }
+      }
+    },
+    "OCR": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Oh nou": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oh nou"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oh no"
+          }
+        }
+      }
+    },
+    "Ok": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ok"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ok"
+          }
+        }
+      }
+    },
+    "Ooops!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ooops!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ops!"
+          }
+        }
+      }
+    },
+    "Other...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other..."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Altro..."
+          }
+        }
+      }
+    },
+    "Our PDF AI summarize and answer questions for free. Drop your PDF here.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Our PDF AI summarize and answer questions for free. Drop your PDF here."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La nostra AI per PDF riassume e risponde alle domande gratis. Trascina qui il tuo PDF."
+          }
+        }
+      }
+    },
+    "PDF Easy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF Easy"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF Easy"
+          }
+        }
+      }
+    },
+    "PDF Protected!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF Protected!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF protetto!"
+          }
+        }
+      }
+    },
+    "PDF Unlocked!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF Unlocked!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF sbloccato!"
+          }
+        }
+      }
+    },
+    "PDF are limited to 32MB per file\nand are limited to 2000 pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF are limited to 32MB per file\nand are limited to 2000 pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I PDF sono limitati a 32MB per file\ne a 2000 pagine"
+          }
+        }
+      }
+    },
+    "PDF saved!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF saved!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF salvato!"
+          }
+        }
+      }
+    },
+    "PDF split!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF split!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF diviso!"
+          }
+        }
+      }
+    },
+    "Personal data": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personal data"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dati personali"
+          }
+        }
+      }
+    },
+    "Photo Gallery": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo Gallery"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Galleria foto"
+          }
+        }
+      }
+    },
+    "Please select yes or not": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please select yes or not"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seleziona sì o no"
+          }
+        }
+      }
+    },
+    "Privacy policy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy policy"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informativa sulla privacy"
+          }
+        }
+      }
+    },
+    "Protect PDF using password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protect PDF using password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proteggi il PDF con una password"
+          }
+        }
+      }
+    },
+    "Protect your files with\npassword": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protect your files with\npassword"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proteggi i tuoi file con\npassword"
+          }
+        }
+      }
+    },
+    "Reduce file size": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reduce file size"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riduci la dimensione del file"
+          }
+        }
+      }
+    },
+    "Replace": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sostituisci"
+          }
+        }
+      }
+    },
+    "Restore purchase": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore purchase"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripristina acquisto"
+          }
+        }
+      }
+    },
+    "Scan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scansiona"
+          }
+        }
+      }
+    },
+    "Select Image": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select Image"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seleziona immagine"
+          }
+        }
+      }
+    },
+    "Select what you love most ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select what you love most "
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seleziona ciò che ami di più "
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni"
+          }
+        }
+      }
+    },
+    "Share pdf": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share pdf"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Condividi PDF"
+          }
+        }
+      }
+    },
+    "Sign in here": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in here"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma qui"
+          }
+        }
+      }
+    },
+    "Signature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salta"
+          }
+        }
+      }
+    },
+    "Something went wrong! Please try again later.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something went wrong! Please try again later."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qualcosa è andato storto! Riprova più tardi."
+          }
+        }
+      }
+    },
+    "Something went wrong,\nmind trying again?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something went wrong,\nmind trying again?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qualcosa è andato storto,\nvuoi riprovare?"
+          }
+        }
+      }
+    },
+    "Split pages into ranges": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Split pages into ranges"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dividi le pagine in intervalli"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inizia"
+          }
+        }
+      }
+    },
+    "Student": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Student"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Studente"
+          }
+        }
+      }
+    },
+    "Suggested questions:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suggested questions:"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Domande suggerite:"
+          }
+        }
+      }
+    },
+    "Take a Picture": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take a Picture"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scatta una foto"
+          }
+        }
+      }
+    },
+    "Tap to fill in": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to fill in"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tocca per compilare"
+          }
+        }
+      }
+    },
+    "Tap where you wish to add text": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap where you wish to add text"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tocca dove vuoi aggiungere il testo"
+          }
+        }
+      }
+    },
+    "Tap where you wish to sign": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap where you wish to sign"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tocca dove vuoi firmare"
+          }
+        }
+      }
+    },
+    "Terms and conditions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms and conditions"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termini e condizioni"
+          }
+        }
+      }
+    },
+    "The PDF editor for iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The PDF editor for iPhone"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’editor PDF per iPhone"
+          }
+        }
+      }
+    },
     "The pdf file couldn't be saved on your device. You can still view it and share it.": {
       "localizations": {
         "en": {
@@ -1437,6 +1805,342 @@
           "stringUnit": {
             "state": "translated",
             "value": "Impossibile salvare il file PDF sul dispositivo. Puoi comunque visualizzarlo e condividerlo."
+          }
+        }
+      }
+    },
+    "The tools that make you brilliant in what you do": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The tools that make you brilliant in what you do"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gli strumenti che ti rendono brillante in ciò che fai"
+          }
+        }
+      }
+    },
+    "There are no images on this page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There are no images on this page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non ci sono immagini in questa pagina"
+          }
+        }
+      }
+    },
+    "Type your Message...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type your Message..."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrivi il tuo messaggio..."
+          }
+        }
+      }
+    },
+    "Unable to access camera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to access camera"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile accedere alla fotocamera"
+          }
+        }
+      }
+    },
+    "Welcome in PDF Easy:\nConvert & Edit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome in PDF Easy:\nConvert & Edit"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benvenuto in PDF Easy:\nConverti e Modifica"
+          }
+        }
+      }
+    },
+    "What describes you best?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What describes you best?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cosa ti descrive meglio?"
+          }
+        }
+      }
+    },
+    "What tools will you use?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What tools will you use?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quali strumenti userai?"
+          }
+        }
+      }
+    },
+    "What you get": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What you get"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cosa ottieni"
+          }
+        }
+      }
+    },
+    "Would you like to remove your password?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Would you like to remove your password?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuoi rimuovere la password?"
+          }
+        }
+      }
+    },
+    "Would you like to share your feedback with us to improve the app?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Would you like to share your feedback with us to improve the app?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuoi condividere il tuo feedback con noi per migliorare l'app?"
+          }
+        }
+      }
+    },
+    "Write your feedback here": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write your feedback here"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrivi qui il tuo feedback"
+          }
+        }
+      }
+    },
+    "Write your first message!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write your first message!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrivi il tuo primo messaggio!"
+          }
+        }
+      }
+    },
+    "Wrong Password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wrong Password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password errata"
+          }
+        }
+      }
+    },
+    "Yes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sì"
+          }
+        }
+      }
+    },
+    "You can add new pages, edit your pdf, save it and share it with anyone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can add new pages, edit your pdf, save it and share it with anyone."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puoi aggiungere nuove pagine, modificare il PDF, salvarlo e condividerlo con chiunque."
+          }
+        }
+      }
+    },
+    "You can convert to pdf a lot of file types from the programs you prefer.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can convert to pdf a lot of file types from the programs you prefer."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puoi convertire in PDF molti tipi di file dai programmi che preferisci."
+          }
+        }
+      }
+    },
+    "You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai negato il permesso di accedere alla fotocamera del tuo dispositivo. Vai nelle Impostazioni del telefono per modificare il permesso della fotocamera e poter scansionare e convertire i tuoi documenti."
+          }
+        }
+      }
+    },
+    "You have no pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have no pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non hai pagine"
+          }
+        }
+      }
+    },
+    "You haven’t converted any files yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You haven’t converted any files yet"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non hai ancora convertito nessun file"
+          }
+        }
+      }
+    },
+    "Your Signatures": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Signatures"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le tue firme"
+          }
+        }
+      }
+    },
+    "Your opinion matter to us!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your opinion matter to us!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tua opinione è importante per noi!"
           }
         }
       }
@@ -1457,18 +2161,114 @@
         }
       }
     },
-    "Wrong Password": {
+    "Your pdf has been successfully protected": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wrong Password"
+            "value": "Your pdf has been successfully protected"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Password errata"
+            "value": "Il tuo PDF è stato protetto con successo"
+          }
+        }
+      }
+    },
+    "Your pdf has been successfully saved": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has been successfully saved"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è stato salvato con successo"
+          }
+        }
+      }
+    },
+    "Your pdf has been successfully split and saved!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has been successfully split and saved!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è stato diviso e salvato con successo!"
+          }
+        }
+      }
+    },
+    "Your pdf has been successfully unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has been successfully unlocked"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è stato sbloccato con successo"
+          }
+        }
+      }
+    },
+    "Your pdf has no  fields that you can fill in.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has no  fields that you can fill in."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF non ha campi che puoi compilare."
+          }
+        }
+      }
+    },
+    "Your pdf has no editable fields that you can fill in.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has no editable fields that you can fill in."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF non ha campi compilabili."
+          }
+        }
+      }
+    },
+    "Your pdf is protected": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf is protected"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è protetto"
           }
         }
       }
