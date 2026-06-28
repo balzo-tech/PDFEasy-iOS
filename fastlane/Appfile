@@ -1,0 +1,7 @@
+# Production app identifier. The staging build uses "eu.balzo.pdfexpert.staging".
+app_identifier("eu.balzo.pdfexpert")
+
+# Apple ID used for App Store Connect. Provided via env var so it is not committed.
+apple_id(ENV["FASTLANE_APPLE_ID"])
+
+team_id("G6RAKRKZPR") # Developer Portal team
