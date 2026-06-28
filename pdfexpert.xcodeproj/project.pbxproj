@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		370051A46812F757756F2CDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E063C045C32C627710F557 /* Foundation.framework */; };
+		406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */; };
 		8902898D29DC1F10007E6372 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8902898C29DC1F10007E6372 /* PageControl.swift */; };
 		89127AA12A177E370059005F /* PencilKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89127AA02A177E370059005F /* PencilKitView.swift */; };
 		89127AA32A177F170059005F /* PdfSignatureCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */; };
@@ -252,9 +254,17 @@
 		89F9E4F92A95FEEE0001D48B /* PDFImageExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */; };
 		89F9E4FB2A9606ED0001D48B /* PdfImageViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */; };
 		89F9E4FD2A9635EC0001D48B /* ZoomImageModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */; };
+		D803CF2A0EEE999C06EAEF60 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A56A520C1AA285C2FEA012 /* SmokeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		23E1784904C36FBDF78A80D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 89CD7A8E29D32855003F1C3A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89CD7A9529D32855003F1C3A;
+			remoteInfo = PdfExpert;
+		};
 		895C1BB52A04FA53005EA190 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 89CD7A8E29D32855003F1C3A /* Project object */;
@@ -279,6 +289,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		01E063C045C32C627710F557 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		31A56A520C1AA285C2FEA012 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		8902898C29DC1F10007E6372 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		89127AA02A177E370059005F /* PencilKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilKitView.swift; sourceTree = "<group>"; };
 		89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureCanvasView.swift; sourceTree = "<group>"; };
@@ -523,9 +535,19 @@
 		89F9E4F82A95FEED0001D48B /* PDFImageExtractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFImageExtractor.swift; sourceTree = "<group>"; };
 		89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfImageViewerView.swift; sourceTree = "<group>"; };
 		89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomImageModifier.swift; sourceTree = "<group>"; };
+		C6F6ADAE49FFA46E46905627 /* PdfExpertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PdfExpertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfUtilityTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2447318871E48DD1AA43271A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				370051A46812F757756F2CDE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		895C1BAA2A04FA53005EA190 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -559,6 +581,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00699AD47B130E482A73A1BB /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				01E063C045C32C627710F557 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		8936AA292A67F922005F6C73 /* ci_scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -797,6 +827,7 @@
 			isa = PBXGroup;
 			children = (
 				89ED72B82A9F69E5004F541F /* AdSupport.framework */,
+				00699AD47B130E482A73A1BB /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -869,6 +900,7 @@
 				895C1BAE2A04FA53005EA190 /* ShareFileExtension */,
 				89CD7A9729D32855003F1C3A /* Products */,
 				89923E6529D437F500E246FC /* Frameworks */,
+				E2533D9EA3D170E78EBB925E /* PdfExpertTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -877,6 +909,7 @@
 			children = (
 				89CD7A9629D32855003F1C3A /* PdfExpert.app */,
 				895C1BAD2A04FA53005EA190 /* ShareFileExtension.appex */,
+				C6F6ADAE49FFA46E46905627 /* PdfExpertTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1201,6 +1234,16 @@
 			path = Analytics;
 			sourceTree = "<group>";
 		};
+		E2533D9EA3D170E78EBB925E /* PdfExpertTests */ = {
+			isa = PBXGroup;
+			children = (
+				FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */,
+				31A56A520C1AA285C2FEA012 /* SmokeTests.swift */,
+			);
+			name = PdfExpertTests;
+			path = PdfExpertTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1259,6 +1302,24 @@
 			productReference = 89CD7A9629D32855003F1C3A /* PdfExpert.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E2C26E373D09DED0F4168EF5 /* PdfExpertTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB62FDC08C0C219213DD6266 /* Build configuration list for PBXNativeTarget "PdfExpertTests" */;
+			buildPhases = (
+				F3A7D0BB6E5921F27F4C7642 /* Sources */,
+				2447318871E48DD1AA43271A /* Frameworks */,
+				8625C49268B6085E6D7C9C60 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6F4F134ED4523A1E5539FCF3 /* PBXTargetDependency */,
+			);
+			name = PdfExpertTests;
+			productName = PdfExpertTests;
+			productReference = C6F6ADAE49FFA46E46905627 /* PdfExpertTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1277,7 +1338,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 89CD7A9129D32855003F1C3A /* Build configuration list for PBXProject "PdfExpert" */;
+			buildConfigurationList = 89CD7A9129D32855003F1C3A /* Build configuration list for PBXProject "pdfexpert" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1306,11 +1367,19 @@
 			targets = (
 				89CD7A9529D32855003F1C3A /* PdfExpert */,
 				895C1BAC2A04FA53005EA190 /* ShareFileExtension */,
+				E2C26E373D09DED0F4168EF5 /* PdfExpertTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8625C49268B6085E6D7C9C60 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		895C1BAB2A04FA53005EA190 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1610,9 +1679,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F3A7D0BB6E5921F27F4C7642 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */,
+				D803CF2A0EEE999C06EAEF60 /* SmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6F4F134ED4523A1E5539FCF3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PdfExpert;
+			target = 89CD7A9529D32855003F1C3A /* PdfExpert */;
+			targetProxy = 23E1784904C36FBDF78A80D7 /* PBXContainerItemProxy */;
+		};
 		895C1BB62A04FA53005EA190 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 895C1BAC2A04FA53005EA190 /* ShareFileExtension */;
@@ -1632,6 +1716,52 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		407F9C3BACADD9680FC49221 /* Production Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.PdfExpertTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PdfExpert.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PdfExpert";
+			};
+			name = "Production Release";
+		};
+		876C1C7AF05C83956F2BA240 /* Production Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.PdfExpertTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PdfExpert.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PdfExpert";
+			};
+			name = "Production Debug";
+		};
 		895C1BB92A04FA53005EA190 /* Production Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2150,6 +2280,52 @@
 			};
 			name = "Production Release";
 		};
+		ECA07903CD61B24CA06C0206 /* Staging Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.PdfExpertTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PdfExpert.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PdfExpert";
+			};
+			name = "Staging Release";
+		};
+		F2AF36206D845D8C7BDF3374 /* Staging Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.PdfExpertTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PdfExpert.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PdfExpert";
+			};
+			name = "Staging Debug";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2164,7 +2340,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Production Release";
 		};
-		89CD7A9129D32855003F1C3A /* Build configuration list for PBXProject "PdfExpert" */ = {
+		89CD7A9129D32855003F1C3A /* Build configuration list for PBXProject "pdfexpert" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				89CD7AA829D32856003F1C3A /* Production Debug */,
@@ -2185,6 +2361,17 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Production Release";
+		};
+		AB62FDC08C0C219213DD6266 /* Build configuration list for PBXNativeTarget "PdfExpertTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				876C1C7AF05C83956F2BA240 /* Production Debug */,
+				F2AF36206D845D8C7BDF3374 /* Staging Debug */,
+				407F9C3BACADD9680FC49221 /* Production Release */,
+				ECA07903CD61B24CA06C0206 /* Staging Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Staging Debug";
 		};
 /* End XCConfigurationList section */
 
