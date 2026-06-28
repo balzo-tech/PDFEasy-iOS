@@ -243,8 +243,15 @@ class StoreImpl: Store {
         //is new (never subscribed), active, or inactive (expired subscription). This app has only one subscription
         //group, so products in the subscriptions array all belong to the same group. The statuses that
         //`product.subscription.status` returns apply to the entire subscription group.
-        self.subscriptionGroupStatus = try? await self.subscriptions.first?.subscription?.status.first?.state
-        
+        //With Family Sharing (or otherwise multiple statuses) the group can report
+        //several statuses and `.first` may be a non-entitling one, so prefer the status
+        //that actually grants access and fall back to the first one.
+        let groupStatuses = try? await self.subscriptions.first?.subscription?.status
+        let entitlingStatus = groupStatuses?.first(where: {
+            Self.subscriptionStatusToIsPremium(subscriptionStatus: $0.state)
+        })
+        self.subscriptionGroupStatus = (entitlingStatus ?? groupStatuses?.first)?.state
+
         self.isPremium.send(Self.subscriptionStatusToIsPremium(subscriptionStatus: self.subscriptionGroupStatus))
     }
 
