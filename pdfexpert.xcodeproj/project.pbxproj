@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		370051A46812F757756F2CDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E063C045C32C627710F557 /* Foundation.framework */; };
 		406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */; };
+		544D6E0E1EA7CA7A83868ECF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
+		702EFD3C7CCEAD86C6D04FB0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
 		8902898D29DC1F10007E6372 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8902898C29DC1F10007E6372 /* PageControl.swift */; };
 		89127AA12A177E370059005F /* PencilKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89127AA02A177E370059005F /* PencilKitView.swift */; };
 		89127AA32A177F170059005F /* PdfSignatureCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */; };
@@ -290,6 +292,7 @@
 
 /* Begin PBXFileReference section */
 		01E063C045C32C627710F557 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		31A56A520C1AA285C2FEA012 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		8902898C29DC1F10007E6372 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		89127AA02A177E370059005F /* PencilKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilKitView.swift; sourceTree = "<group>"; };
@@ -953,6 +956,7 @@
 				89CD7AB329D329B1003F1C3A /* IAP */,
 				89CD7AB729D329B1003F1C3A /* Fonts */,
 				89CD7ACB29D329B1003F1C3A /* Animations */,
+				29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1345,6 +1349,7 @@
 			knownRegions = (
 				en,
 				Base,
+				it,
 			);
 			mainGroup = 89CD7A8D29D32855003F1C3A;
 			packageReferences = (
@@ -1385,6 +1390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				895C1BB32A04FA53005EA190 /* MainInterface.storyboard in Resources */,
+				544D6E0E1EA7CA7A83868ECF /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1419,6 +1425,7 @@
 				89883B022A45CB9800E684B6 /* InfoTemplate.plist in Resources */,
 				89D79E062A654DC80086A8E5 /* Poppins-MediumItalic.ttf in Resources */,
 				89CD7B3329D329B1003F1C3A /* Assets.xcassets in Resources */,
+				702EFD3C7CCEAD86C6D04FB0 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
