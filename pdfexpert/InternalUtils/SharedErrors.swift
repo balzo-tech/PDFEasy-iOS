@@ -126,3 +126,20 @@ enum PdfExtractError: LocalizedError, UnderlyingError {
         }
     }
 }
+
+enum PdfExportError: LocalizedError, Equatable {
+    case noTextFound
+    case noImagesFound
+    case unknownError
+
+    var errorDescription: String? {
+        switch self {
+        case .noTextFound:
+            return String(localized: "This PDF has no extractable text. Try \"Make Searchable (OCR)\" first, then export again.")
+        case .noImagesFound:
+            return String(localized: "This PDF contains no embedded images to export.")
+        case .unknownError:
+            return String(localized: "Internal Error. Please try again later")
+        }
+    }
+}

@@ -32,6 +32,7 @@ enum HomeAction: Hashable, Identifiable {
     case merge
     case split
     case extractPages
+    case exportPdf
 
     case sign
     case formFill
@@ -60,6 +61,7 @@ enum HomeAction: Hashable, Identifiable {
         case .merge: return .pdf
         case .split: return .pdf
         case .extractPages: return nil
+        case .exportPdf: return nil
         case .sign: return .allDocs
         case .formFill: return .pdf
         case .addText: return .allDocs
@@ -86,6 +88,7 @@ enum HomeAction: Hashable, Identifiable {
         case .merge: return nil
         case .split: return nil
         case .extractPages: return nil
+        case .exportPdf: return nil
         case .sign: return .openSignature
         case .formFill: return .openFillWidget
         case .addText: return .openFillForm
@@ -112,6 +115,7 @@ enum HomeAction: Hashable, Identifiable {
         case .merge: return nil
         case .split: return nil
         case .extractPages: return nil
+        case .exportPdf: return nil
         case .sign: return nil
         case .formFill: return nil
         case .addText: return nil
@@ -204,6 +208,7 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
+    @Injected(\.pdfExportViewModel) var pdfExportViewModel
     @Injected(\.pdfReadViewModel) var pdfReadViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
@@ -269,6 +274,8 @@ public class HomeViewModel : ObservableObject {
                 self?.trackFullActionCompleted()
                 self?.mainCoordinator.goToArchive()
             })
+        case .exportPdf:
+            self.pdfExportViewModel.export(pdf: nil)
         }
     }
     
@@ -367,7 +374,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark:
                 self.importPdf(pdfUrl: fileUrl)
-            case .scan, .appExtension, .none, .merge, .split, .extractPages, .readPdf:
+            case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }

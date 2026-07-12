@@ -33,6 +33,7 @@ enum EditAction: CaseIterable {
     case compression
     case split
     case extract
+    case export
     case ocr
     case pageNumbers
     case watermark
@@ -128,6 +129,7 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
+    @Injected(\.pdfExportViewModel) var pdfExportViewModel
 
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -358,6 +360,8 @@ class PdfEditViewModel: ObservableObject {
                 self.pdfExtractViewModel.extract(pdf: self.pdf, onExtractCompleted: { [weak self] in
                     self?.extractSuccessAlertShow = true
                 })
+            case .export:
+                self.pdfExportViewModel.export(pdf: self.pdf)
             case .ocr:
                 self.startOcr()
             case .pageNumbers:

@@ -23,6 +23,7 @@ enum AnalyticsEventCustomParameters: String {
     case pageNumberPosition = "page_number_position"
     case pageNumberFormat = "page_number_format"
     case watermarkLayout = "watermark_layout"
+    case exportFormat = "export_format"
 }
 
 extension MarginsOption {
@@ -70,6 +71,7 @@ extension AnalyticsScreen {
         case .ocr: return "Ocr"
         case .pageNumbers: return "PageNumbers"
         case .watermark: return "Watermark"
+        case .export: return "Export"
         }
     }
 }
@@ -123,6 +125,8 @@ extension AnalyticsEvent {
         case .pageNumbersCompleted: return "page_numbers_completed"
         case .watermarkStarted: return "watermark_started"
         case .watermarkCompleted: return "watermark_completed"
+        case .exportStarted: return "export_started"
+        case .exportCompleted: return "export_completed"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -221,6 +225,8 @@ extension AnalyticsEvent {
         case .watermarkStarted: return nil
         case .watermarkCompleted(let layout):
             return [AnalyticsEventCustomParameters.watermarkLayout.rawValue: layout.trackingParameterValue]
+        case .exportStarted(let format), .exportCompleted(let format):
+            return [AnalyticsEventCustomParameters.exportFormat.rawValue: format.trackingParameterValue]
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil
@@ -316,6 +322,18 @@ fileprivate extension WatermarkLayout {
     }
 }
 
+fileprivate extension PdfExportFormat {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .imagesPng: return "images_png"
+        case .imagesJpeg: return "images_jpeg"
+        case .text: return "text"
+        case .embeddedImages: return "embedded_images"
+        }
+    }
+}
+
 fileprivate extension HomeAction {
 
     var trackingParameterValue: String {
@@ -329,6 +347,7 @@ fileprivate extension HomeAction {
         case .merge: return "merge"
         case .split: return "split"
         case .extractPages: return "extract_pages"
+        case .exportPdf: return "export_pdf"
         case .sign: return "sign"
         case .formFill: return "form_fill"
         case .addText: return "add_text"

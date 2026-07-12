@@ -110,7 +110,12 @@ struct HomeView: View {
         HomeItem(title: "Import PDF",
                  description: "Import pdf from your files",
                  imageName: "home_import_pdf",
-                 homeAction: .importPdf)
+                 homeAction: .importPdf),
+        HomeItem(title: String(localized: "Export PDF as…"),
+                 description: String(localized: "Export your PDF as images, text, or its embedded images"),
+                 imageName: "square.and.arrow.up.on.square",
+                 isSystemImage: true,
+                 homeAction: .exportPdf)
     ]
     
     let protectItems: [HomeItem] = [
@@ -212,6 +217,7 @@ struct HomeView: View {
         .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
         .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
         .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
+        .showExportView(viewModel: self.viewModel.pdfExportViewModel)
         .showReadView(viewModel: self.viewModel.pdfReadViewModel)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

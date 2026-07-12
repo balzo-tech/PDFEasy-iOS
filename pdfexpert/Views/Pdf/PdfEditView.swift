@@ -151,6 +151,7 @@ struct PdfEditView: View {
         .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
         .extractSuccessfulAlert(show: self.$viewModel.extractSuccessAlertShow,
                                 goToArchiveCallback: { self.viewModel.goToArchive() })
+        .showExportView(viewModel: self.viewModel.pdfExportViewModel)
         .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
                               onComplete: { self.viewModel.onOcrMonetizationClose() })
         .showSubscriptionView(self.$viewModel.pageNumbersMonetizationShow,
@@ -372,6 +373,11 @@ struct PdfEditView: View {
             case .extract:
                 return OptionItem(title: String(localized: "Extract"),
                                   imageName: "doc.on.doc",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .export:
+                return OptionItem(title: String(localized: "Export as…"),
+                                  imageName: "square.and.arrow.up.on.square",
                                   isSystemImage: true,
                                   callBack: callback)
             case .ocr:

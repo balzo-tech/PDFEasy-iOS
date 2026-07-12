@@ -49,6 +49,7 @@ enum AnalyticsScreen {
     case ocr
     case pageNumbers
     case watermark
+    case export
 }
 
 enum AnalyticsEvent {
@@ -98,6 +99,8 @@ enum AnalyticsEvent {
     case pageNumbersCompleted(position: PageNumberPosition, format: PageNumberFormat)
     case watermarkStarted
     case watermarkCompleted(layout: WatermarkLayout)
+    case exportStarted(format: PdfExportFormat)
+    case exportCompleted(format: PdfExportFormat)
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

@@ -159,6 +159,10 @@
 		896876242A7D05040014A320 /* PdfSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896876232A7D05040014A320 /* PdfSplitView.swift */; };
 		CD81BEFD471AD97FD6526894 /* PdfExtractViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */; };
 		CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEC26104F59A1229C145C29 /* PdfExtractView.swift */; };
+		E0F0A1B2C3D4E5F600000004 /* PdfExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0A1B2C3D4E5F600000003 /* PdfExportViewModel.swift */; };
+		E0F0A1B2C3D4E5F600000006 /* PdfExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0A1B2C3D4E5F600000005 /* PdfExportView.swift */; };
+		E0F0A1B2C3D4E5F600000002 /* PdfExportUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0A1B2C3D4E5F600000001 /* PdfExportUtility.swift */; };
+		E0F0A1B2C3D4E5F600000008 /* PdfExportUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */; };
 		896876262A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896876252A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift */; };
 		896876282A7D2EC20014A320 /* PdfPageRangeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896876272A7D2EC20014A320 /* PdfPageRangeEditorView.swift */; };
 		E5FBC6A7C2D9471BA5D4A426 /* PdfPageNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */; };
@@ -447,6 +451,10 @@
 		896876232A7D05040014A320 /* PdfSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSplitView.swift; sourceTree = "<group>"; };
 		0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExtractViewModel.swift; sourceTree = "<group>"; };
 		3AEC26104F59A1229C145C29 /* PdfExtractView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExtractView.swift; sourceTree = "<group>"; };
+		E0F0A1B2C3D4E5F600000003 /* PdfExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportViewModel.swift; sourceTree = "<group>"; };
+		E0F0A1B2C3D4E5F600000005 /* PdfExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportView.swift; sourceTree = "<group>"; };
+		E0F0A1B2C3D4E5F600000001 /* PdfExportUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportUtility.swift; sourceTree = "<group>"; };
+		E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportUtilityTests.swift; sourceTree = "<group>"; };
 		896876252A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageRangeEditorViewModel.swift; sourceTree = "<group>"; };
 		896876272A7D2EC20014A320 /* PdfPageRangeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageRangeEditorView.swift; sourceTree = "<group>"; };
 		3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageNumberViewModel.swift; sourceTree = "<group>"; };
@@ -867,6 +875,7 @@
 				89BB2DB62A7A5EFC009E6738 /* PdfMergeView.swift */,
 				896876232A7D05040014A320 /* PdfSplitView.swift */,
 				3AEC26104F59A1229C145C29 /* PdfExtractView.swift */,
+				E0F0A1B2C3D4E5F600000005 /* PdfExportView.swift */,
 				89BB2DC02A7AB4A8009E6738 /* PdfSortView.swift */,
 				8968761D2A7CEE320014A320 /* PdfImportView.swift */,
 				896876212A7CF3220014A320 /* PdfImportMultipleView.swift */,
@@ -1176,6 +1185,7 @@
 				89BB2DBE2A7AB0CE009E6738 /* PdfSortViewModel.swift */,
 				896876192A7CE87A0014A320 /* PdfSplitViewModel.swift */,
 				0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */,
+				E0F0A1B2C3D4E5F600000003 /* PdfExportViewModel.swift */,
 				3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */,
 				5C950ACA41EA45A7A7C7B55E /* PdfWatermarkViewModel.swift */,
 				8968761B2A7CEB650014A320 /* PdfImportViewModel.swift */,
@@ -1224,6 +1234,7 @@
 				89CD7B2E29D329B1003F1C3A /* View+Preview.swift */,
 				89CD7B2F29D329B1003F1C3A /* View+Internal.swift */,
 				893C8FDD29DED7F4000E35BD /* PdfUtility.swift */,
+				E0F0A1B2C3D4E5F600000001 /* PdfExportUtility.swift */,
 				8945D2BB2A03C41000AFF51A /* PdfScanUtility.swift */,
 				895C1BBF2A051261005EA190 /* SharedStorage.swift */,
 				89407EFF2AA8D54800169801 /* ImageCropper.swift */,
@@ -1273,6 +1284,7 @@
 				31A56A520C1AA285C2FEA012 /* SmokeTests.swift */,
 				D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */,
 				479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */,
+				E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */,
 			);
 			name = PdfExpertTests;
 			path = PdfExpertTests;
@@ -1717,6 +1729,9 @@
 				893EB5052AA722EF0066914E /* StoreKit+Extensions.swift in Sources */,
 				896876242A7D05040014A320 /* PdfSplitView.swift in Sources */,
 				CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */,
+				E0F0A1B2C3D4E5F600000006 /* PdfExportView.swift in Sources */,
+				E0F0A1B2C3D4E5F600000004 /* PdfExportViewModel.swift in Sources */,
+				E0F0A1B2C3D4E5F600000002 /* PdfExportUtility.swift in Sources */,
 				8955ED942A1F61BD009985EE /* OnboardingPageView.swift in Sources */,
 				894827B22AA5D68D00030C4E /* AttributionManager.swift in Sources */,
 				C3B0B01EC4E52311A5B765D3 /* OcrUtility.swift in Sources */,
@@ -1732,6 +1747,7 @@
 				D803CF2A0EEE999C06EAEF60 /* SmokeTests.swift in Sources */,
 				49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */,
 				72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */,
+				E0F0A1B2C3D4E5F600000008 /* PdfExportUtilityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

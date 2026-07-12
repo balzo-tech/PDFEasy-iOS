@@ -599,6 +599,22 @@
         }
       }
     },
+    "Embedded images" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Embedded images"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Immagini incorporate"
+          }
+        }
+      }
+    },
     "Enable free trial" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -763,6 +779,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Errore"
+          }
+        }
+      }
+    },
+    "Export your PDF as images, text, or its embedded images" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export your PDF as images, text, or its embedded images"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esporta il tuo PDF come immagini, testo o le sue immagini incorporate"
+          }
+        }
+      }
+    },
+    "Export as…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export as…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esporta come…"
+          }
+        }
+      }
+    },
+    "Export PDF as…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export PDF as…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esporta PDF come…"
           }
         }
       }
@@ -1043,6 +1107,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se esci, perderai le firme che hai appena aggiunto."
+          }
+        }
+      }
+    },
+    "Images (PNG)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Images (PNG)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Immagini (PNG)"
+          }
+        }
+      }
+    },
+    "Images (JPEG)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Images (JPEG)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Immagini (JPEG)"
           }
         }
       }
@@ -2312,6 +2408,22 @@
         }
       }
     },
+    "Text file" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text file"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File di testo"
+          }
+        }
+      }
+    },
     "The PDF editor for iPhone" : {
       "localizations" : {
         "en" : {
@@ -2374,6 +2486,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non ci sono immagini in questa pagina"
+          }
+        }
+      }
+    },
+    "This PDF contains no embedded images to export." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This PDF contains no embedded images to export."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo PDF non contiene immagini incorporate da esportare."
+          }
+        }
+      }
+    },
+    "This PDF has no extractable text. Try \"Make Searchable (OCR)\" first, then export again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This PDF has no extractable text. Try \"Make Searchable (OCR)\" first, then export again."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo PDF non contiene testo estraibile. Prova prima \"Rendi ricercabile (OCR)\", poi esporta di nuovo."
           }
         }
       }
