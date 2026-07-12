@@ -24,6 +24,7 @@ enum AnalyticsEventCustomParameters: String {
     case pageNumberFormat = "page_number_format"
     case watermarkLayout = "watermark_layout"
     case exportFormat = "export_format"
+    case convertFormat = "convert_format"
 }
 
 extension MarginsOption {
@@ -73,6 +74,7 @@ extension AnalyticsScreen {
         case .watermark: return "Watermark"
         case .export: return "Export"
         case .metadata: return "Metadata"
+        case .convert: return "Convert"
         }
     }
 }
@@ -129,6 +131,8 @@ extension AnalyticsEvent {
         case .watermarkCompleted: return "watermark_completed"
         case .exportStarted: return "export_started"
         case .exportCompleted: return "export_completed"
+        case .convertStarted: return "convert_started"
+        case .convertCompleted: return "convert_completed"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -231,6 +235,8 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.watermarkLayout.rawValue: layout.trackingParameterValue]
         case .exportStarted(let format), .exportCompleted(let format):
             return [AnalyticsEventCustomParameters.exportFormat.rawValue: format.trackingParameterValue]
+        case .convertStarted(let format), .convertCompleted(let format):
+            return [AnalyticsEventCustomParameters.convertFormat.rawValue: format.trackingParameterValue]
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
@@ -339,6 +345,17 @@ fileprivate extension PdfExportFormat {
     }
 }
 
+fileprivate extension PdfConvertFormat {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .word: return "word"
+        case .powerpoint: return "powerpoint"
+        case .csv: return "csv"
+        }
+    }
+}
+
 fileprivate extension HomeAction {
 
     var trackingParameterValue: String {
@@ -353,6 +370,9 @@ fileprivate extension HomeAction {
         case .split: return "split"
         case .extractPages: return "extract_pages"
         case .exportPdf: return "export_pdf"
+        case .pdfToWord: return "pdf_to_word"
+        case .pdfToPowerpoint: return "pdf_to_powerpoint"
+        case .pdfToExcel: return "pdf_to_excel"
         case .sign: return "sign"
         case .formFill: return "form_fill"
         case .addText: return "add_text"

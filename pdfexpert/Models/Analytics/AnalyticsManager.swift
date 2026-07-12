@@ -51,6 +51,7 @@ enum AnalyticsScreen {
     case watermark
     case export
     case metadata
+    case convert
 }
 
 enum AnalyticsEvent {
@@ -103,6 +104,8 @@ enum AnalyticsEvent {
     case watermarkCompleted(layout: WatermarkLayout)
     case exportStarted(format: PdfExportFormat)
     case exportCompleted(format: PdfExportFormat)
+    case convertStarted(format: PdfConvertFormat)
+    case convertCompleted(format: PdfConvertFormat)
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)

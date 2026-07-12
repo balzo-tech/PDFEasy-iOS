@@ -19,6 +19,7 @@ class CacheManagerImpl: CacheManager {
     enum CacheManagerKey: String {
         case onboardingShown
         case preReviewShown
+        case pdfConvertPrivacyAccepted
     }
     
     private let mainUserDefaults = UserDefaults.standard
@@ -32,7 +33,12 @@ class CacheManagerImpl: CacheManager {
         get { self.getBool(forKey: CacheManagerKey.preReviewShown.rawValue) ?? false }
         set { self.saveBool(newValue, forKey: CacheManagerKey.preReviewShown.rawValue) }
     }
-        
+
+    var pdfConvertPrivacyAccepted: Bool {
+        get { self.getBool(forKey: CacheManagerKey.pdfConvertPrivacyAccepted.rawValue) ?? false }
+        set { self.saveBool(newValue, forKey: CacheManagerKey.pdfConvertPrivacyAccepted.rawValue) }
+    }
+
     // MARK: - Private methods
     
     private func save<T>(encodable: T?, forKey key: String) where T: Encodable {

@@ -106,17 +106,43 @@ struct HomeView: View {
                  homeAction: .watermark)
     ]
     
-    let importItems: [HomeItem] = [
-        HomeItem(title: "Import PDF",
-                 description: "Import pdf from your files",
-                 imageName: "home_import_pdf",
-                 homeAction: .importPdf),
-        HomeItem(title: String(localized: "Export PDF as…"),
-                 description: String(localized: "Export your PDF as images, text, or its embedded images"),
-                 imageName: "square.and.arrow.up.on.square",
-                 isSystemImage: true,
-                 homeAction: .exportPdf)
-    ]
+    // Built dynamically: the online-conversion tiles (PDF → Word / PowerPoint /
+    // Excel) upload the document to the Stirling service, so they are only offered
+    // when that service is available (remote-config kill switch + key). Reading
+    // availability here means a config change is reflected on the next Home render.
+    var importItems: [HomeItem] {
+        var items: [HomeItem] = [
+            HomeItem(title: "Import PDF",
+                     description: "Import pdf from your files",
+                     imageName: "home_import_pdf",
+                     homeAction: .importPdf),
+            HomeItem(title: String(localized: "Export PDF as…"),
+                     description: String(localized: "Export your PDF as images, text, or its embedded images"),
+                     imageName: "square.and.arrow.up.on.square",
+                     isSystemImage: true,
+                     homeAction: .exportPdf)
+        ]
+        if Container.shared.stirlingApiManager().isAvailable {
+            items.append(contentsOf: [
+                HomeItem(title: String(localized: "PDF to Word"),
+                         description: String(localized: "Convert your PDF into an editable Word document (.docx)"),
+                         imageName: "doc.text",
+                         isSystemImage: true,
+                         homeAction: .pdfToWord),
+                HomeItem(title: String(localized: "PDF to PowerPoint"),
+                         description: String(localized: "Turn your PDF into an editable PowerPoint presentation (.pptx)"),
+                         imageName: "rectangle.on.rectangle",
+                         isSystemImage: true,
+                         homeAction: .pdfToPowerpoint),
+                HomeItem(title: String(localized: "PDF to Excel"),
+                         description: String(localized: "Extract your PDF tables into a spreadsheet (.csv)"),
+                         imageName: "tablecells",
+                         isSystemImage: true,
+                         homeAction: .pdfToExcel)
+            ])
+        }
+        return items
+    }
     
     let protectItems: [HomeItem] = [
         HomeItem(title: "Unlock PDF",
@@ -218,6 +244,7 @@ struct HomeView: View {
         .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
         .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
         .showExportView(viewModel: self.viewModel.pdfExportViewModel)
+        .showConvertView(viewModel: self.viewModel.pdfConvertViewModel)
         .showReadView(viewModel: self.viewModel.pdfReadViewModel)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

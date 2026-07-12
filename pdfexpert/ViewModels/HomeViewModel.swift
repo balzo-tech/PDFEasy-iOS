@@ -33,6 +33,9 @@ enum HomeAction: Hashable, Identifiable {
     case split
     case extractPages
     case exportPdf
+    case pdfToWord
+    case pdfToPowerpoint
+    case pdfToExcel
 
     case sign
     case formFill
@@ -62,6 +65,9 @@ enum HomeAction: Hashable, Identifiable {
         case .split: return .pdf
         case .extractPages: return nil
         case .exportPdf: return nil
+        case .pdfToWord: return nil
+        case .pdfToPowerpoint: return nil
+        case .pdfToExcel: return nil
         case .sign: return .allDocs
         case .formFill: return .pdf
         case .addText: return .allDocs
@@ -89,6 +95,9 @@ enum HomeAction: Hashable, Identifiable {
         case .split: return nil
         case .extractPages: return nil
         case .exportPdf: return nil
+        case .pdfToWord: return nil
+        case .pdfToPowerpoint: return nil
+        case .pdfToExcel: return nil
         case .sign: return .openSignature
         case .formFill: return .openFillWidget
         case .addText: return .openFillForm
@@ -116,6 +125,9 @@ enum HomeAction: Hashable, Identifiable {
         case .split: return nil
         case .extractPages: return nil
         case .exportPdf: return nil
+        case .pdfToWord: return nil
+        case .pdfToPowerpoint: return nil
+        case .pdfToExcel: return nil
         case .sign: return nil
         case .formFill: return nil
         case .addText: return nil
@@ -209,6 +221,7 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
     @Injected(\.pdfExportViewModel) var pdfExportViewModel
+    @Injected(\.pdfConvertViewModel) var pdfConvertViewModel
     @Injected(\.pdfReadViewModel) var pdfReadViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
@@ -276,6 +289,12 @@ public class HomeViewModel : ObservableObject {
             })
         case .exportPdf:
             self.pdfExportViewModel.export(pdf: nil)
+        case .pdfToWord:
+            self.pdfConvertViewModel.convert(pdf: nil, format: .word)
+        case .pdfToPowerpoint:
+            self.pdfConvertViewModel.convert(pdf: nil, format: .powerpoint)
+        case .pdfToExcel:
+            self.pdfConvertViewModel.convert(pdf: nil, format: .csv)
         }
     }
     
@@ -374,7 +393,8 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark:
                 self.importPdf(pdfUrl: fileUrl)
-            case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf:
+            case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
+                    .pdfToWord, .pdfToPowerpoint, .pdfToExcel:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }
