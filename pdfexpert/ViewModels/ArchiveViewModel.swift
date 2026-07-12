@@ -67,6 +67,13 @@ class ArchiveViewModel: ObservableObject {
             self?.mainCoordinator.startReview()
         })
     }
+
+    /// Persists metadata edits made from the archive's "Document info" sheet, then
+    /// refreshes the list so the row reflects the saved document.
+    func updateItem(item: Pdf) {
+        try? self.repository.savePdf(pdf: item)
+        self.refresh()
+    }
     
     func delete(item: Pdf) {
         self.asyncItemDelete = AsyncOperation(status: .empty)

@@ -158,6 +158,22 @@
         }
       }
     },
+    "Author" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Author"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autore"
+          }
+        }
+      }
+    },
     "Business and Sales Manager" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -402,6 +418,38 @@
         }
       }
     },
+    "Created" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creato"
+          }
+        }
+      }
+    },
+    "Creator" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creator"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creatore"
+          }
+        }
+      }
+    },
     "Delete" : {
       "localizations" : {
         "en" : {
@@ -496,6 +544,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ti piace la nostra app?"
+          }
+        }
+      }
+    },
+    "Document info" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document info"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informazioni documento"
           }
         }
       }
@@ -895,6 +959,22 @@
         }
       }
     },
+    "File size" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File size"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dimensione file"
+          }
+        }
+      }
+    },
     "Fill and Sign" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1244,6 +1324,22 @@
         }
       }
     },
+    "Keywords" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keywords"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parole chiave"
+          }
+        }
+      }
+    },
     "Layout" : {
       "localizations" : {
         "en" : {
@@ -1388,6 +1484,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unisci PDF"
+          }
+        }
+      }
+    },
+    "Metadata" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metadata"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metadati"
+          }
+        }
+      }
+    },
+    "Modified" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modified"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modificato"
           }
         }
       }
@@ -1673,6 +1801,22 @@
         }
       }
     },
+    "Pages" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pagine"
+          }
+        }
+      }
+    },
     "Pages extracted!" : {
       "localizations" : {
         "en" : {
@@ -1782,6 +1926,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "PDF sbloccato!"
+          }
+        }
+      }
+    },
+    "PDF version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF version"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versione PDF"
           }
         }
       }
@@ -1897,6 +2057,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Proteggi i tuoi file con\npassword"
+          }
+        }
+      }
+    },
+    "Protected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protected"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protetto"
           }
         }
       }
@@ -2066,6 +2242,22 @@
         }
       }
     },
+    "Save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salva"
+          }
+        }
+      }
+    },
     "Scan" : {
       "localizations" : {
         "en" : {
@@ -2127,6 +2319,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleziona ciò che ami di più "
+          }
+        }
+      }
+    },
+    "Separate keywords with commas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separate keywords with commas"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separa le parole chiave con le virgole"
           }
         }
       }
@@ -2307,6 +2515,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Studente"
+          }
+        }
+      }
+    },
+    "Subject" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subject"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oggetto"
           }
         }
       }
@@ -2518,6 +2742,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questo PDF non contiene testo estraibile. Prova prima \"Rendi ricercabile (OCR)\", poi esporta di nuovo."
+          }
+        }
+      }
+    },
+    "Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titolo"
           }
         }
       }

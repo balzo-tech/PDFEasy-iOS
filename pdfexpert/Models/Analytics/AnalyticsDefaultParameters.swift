@@ -72,6 +72,7 @@ extension AnalyticsScreen {
         case .pageNumbers: return "PageNumbers"
         case .watermark: return "Watermark"
         case .export: return "Export"
+        case .metadata: return "Metadata"
         }
     }
 }
@@ -127,6 +128,7 @@ extension AnalyticsEvent {
         case .watermarkCompleted: return "watermark_completed"
         case .exportStarted: return "export_started"
         case .exportCompleted: return "export_completed"
+        case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -227,6 +229,7 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.watermarkLayout.rawValue: layout.trackingParameterValue]
         case .exportStarted(let format), .exportCompleted(let format):
             return [AnalyticsEventCustomParameters.exportFormat.rawValue: format.trackingParameterValue]
+        case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil

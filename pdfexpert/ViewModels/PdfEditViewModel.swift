@@ -37,6 +37,7 @@ enum EditAction: CaseIterable {
     case ocr
     case pageNumbers
     case watermark
+    case metadata
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -104,7 +105,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     enum ActiveSheet: Identifiable {
-        case camera, scanner, signature, fillForm, fillWidget, pageNumbers, watermark
+        case camera, scanner, signature, fillForm, fillWidget, pageNumbers, watermark, metadata
         var id: Self { self }
     }
 
@@ -368,8 +369,19 @@ class PdfEditViewModel: ObservableObject {
                 self.startPageNumbers()
             case .watermark:
                 self.startWatermark()
+            case .metadata:
+                self.activeSheet = .metadata
             }
         }
+    }
+
+    /// Applies edited metadata coming back from the metadata editor. Metadata never
+    /// affects rendering, so this deliberately avoids the heavy
+    /// `refreshImages()`/`refreshThumbnails()` full rebuild that `updatePdf(pdf:)`
+    /// does; it only swaps in the updated `Pdf` and marks the document dirty.
+    func applyMetadata(pdf: Pdf) {
+        self.pdf = pdf
+        self.shouldShowCloseWarning.wrappedValue = true
     }
 
     /// Entry point for the OCR / searchable-PDF tool. OCR is a premium feature:

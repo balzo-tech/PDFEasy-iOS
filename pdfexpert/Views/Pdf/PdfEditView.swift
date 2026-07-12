@@ -112,6 +112,11 @@ struct PdfEditView: View {
                     .InputParameter(pdf: self.viewModel.pdf,
                                     onConfirm: { self.viewModel.updatePdf(pdf: $0) })
                 PdfWatermarkView(viewModel: Container.shared.pdfWatermarkViewModel(inputParameter))
+            case .metadata:
+                let inputParameter = PdfMetadataViewModel
+                    .InputParameter(pdf: self.viewModel.pdf,
+                                    onConfirm: { self.viewModel.applyMetadata(pdf: $0) })
+                PdfMetadataView(viewModel: Container.shared.pdfMetadataViewModel(inputParameter))
             }
         }
         .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
@@ -393,6 +398,11 @@ struct PdfEditView: View {
             case .watermark:
                 return OptionItem(title: String(localized: "Watermark"),
                                   imageName: "drop.halffull",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .metadata:
+                return OptionItem(title: String(localized: "Document info"),
+                                  imageName: "info.circle",
                                   isSystemImage: true,
                                   callBack: callback)
             }

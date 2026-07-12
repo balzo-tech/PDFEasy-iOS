@@ -15,6 +15,7 @@ struct ArchiveView: View {
     @State private var showingDeleteAlert = false
     @State private var itemToDelete: Pdf? = nil
     @State private var importTutorialShow: Bool = false
+    @State private var pdfForInfo: Pdf? = nil
     
     var body: some View {
         ZStack {
@@ -31,6 +32,12 @@ struct ArchiveView: View {
         .asyncView(asyncOperation: self.$viewModel.asyncItemDelete)
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
+        }
+        .sheet(item: self.$pdfForInfo) { pdf in
+            let inputParameter = PdfMetadataViewModel
+                .InputParameter(pdf: pdf,
+                                onConfirm: { self.viewModel.updateItem(item: $0) })
+            PdfMetadataView(viewModel: Container.shared.pdfMetadataViewModel(inputParameter))
         }
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
     }
@@ -107,6 +114,11 @@ struct ArchiveView: View {
                                     self.viewModel.delete(item: itemToDelete)
                                 }
                             }
+                        }
+                    }
+                    .contextMenu {
+                        Button(action: { self.pdfForInfo = item }) {
+                            Label("Document info", systemImage: "info.circle")
                         }
                     }
                 }

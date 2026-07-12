@@ -248,4 +248,49 @@ final class PdfUtilityTests: XCTestCase {
         XCTAssertGreaterThan(size.width, size.height,
                              "a rotated portrait page must stay landscape after post-process")
     }
+
+    // MARK: - Document metadata
+
+    /// The standard PDF metadata attributes must survive a `dataRepresentation()`
+    /// round-trip. The metadata editor writes edits straight into
+    /// `documentAttributes`, so this is what lets it persist without any schema
+    /// change. Keywords are written as a `[String]` and may come back either as an
+    /// array or as a single joined string, so the assertion tolerates both shapes.
+    func testDocumentAttributesSurviveDataRoundTrip() {
+        let document = makePdf(pageCount: 1)
+        var attributes = document.documentAttributes ?? [:]
+        attributes[PDFDocumentAttribute.titleAttribute] = "Round Trip Title"
+        attributes[PDFDocumentAttribute.authorAttribute] = "Jane Author"
+        attributes[PDFDocumentAttribute.subjectAttribute] = "Test Subject"
+        attributes[PDFDocumentAttribute.creatorAttribute] = "PdfExpert Tests"
+        attributes[PDFDocumentAttribute.keywordsAttribute] = ["alpha", "beta", "gamma"]
+        document.documentAttributes = attributes
+
+        guard let data = document.dataRepresentation(),
+              let reloaded = PDFDocument(data: data) else {
+            return XCTFail("round-trip failed")
+        }
+        let reloadedAttributes = reloaded.documentAttributes ?? [:]
+        XCTAssertEqual(reloadedAttributes[PDFDocumentAttribute.titleAttribute] as? String,
+                       "Round Trip Title")
+        XCTAssertEqual(reloadedAttributes[PDFDocumentAttribute.authorAttribute] as? String,
+                       "Jane Author")
+        XCTAssertEqual(reloadedAttributes[PDFDocumentAttribute.subjectAttribute] as? String,
+                       "Test Subject")
+        XCTAssertEqual(reloadedAttributes[PDFDocumentAttribute.creatorAttribute] as? String,
+                       "PdfExpert Tests")
+
+        let keywordsValue = reloadedAttributes[PDFDocumentAttribute.keywordsAttribute]
+        let keywordsText: String
+        if let array = keywordsValue as? [String] {
+            keywordsText = array.joined(separator: " ")
+        } else if let string = keywordsValue as? String {
+            keywordsText = string
+        } else {
+            return XCTFail("keywords missing after round-trip")
+        }
+        XCTAssertTrue(keywordsText.contains("alpha"), "got: \(keywordsText)")
+        XCTAssertTrue(keywordsText.contains("beta"), "got: \(keywordsText)")
+        XCTAssertTrue(keywordsText.contains("gamma"), "got: \(keywordsText)")
+    }
 }
