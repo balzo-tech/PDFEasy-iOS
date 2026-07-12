@@ -17,7 +17,7 @@
                BlueprintIdentifier = "895C1BAC2A04FA53005EA190"
                BuildableName = "ShareFileExtension.appex"
                BlueprintName = "ShareFileExtension"
-               ReferencedContainer = "container:PdfExpert.xcodeproj">
+               ReferencedContainer = "container:pdfexpert.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +31,7 @@
                BlueprintIdentifier = "89847A382A1BA875000EC14B"
                BuildableName = "PdfExpert Staging.app"
                BlueprintName = "PdfExpert Staging"
-               ReferencedContainer = "container:PdfExpert.xcodeproj">
+               ReferencedContainer = "container:pdfexpert.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "89CD7A9529D32855003F1C3A"
                BuildableName = "PdfExpert.app"
                BlueprintName = "PdfExpert"
-               ReferencedContainer = "container:PdfExpert.xcodeproj">
+               ReferencedContainer = "container:pdfexpert.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -76,7 +76,7 @@
             BlueprintIdentifier = "89CD7A9529D32855003F1C3A"
             BuildableName = "PdfExpert.app"
             BlueprintName = "PdfExpert"
-            ReferencedContainer = "container:PdfExpert.xcodeproj">
+            ReferencedContainer = "container:pdfexpert.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -95,7 +95,7 @@
             BlueprintIdentifier = "89CD7A9529D32855003F1C3A"
             BuildableName = "PdfExpert.app"
             BlueprintName = "PdfExpert"
-            ReferencedContainer = "container:PdfExpert.xcodeproj">
+            ReferencedContainer = "container:pdfexpert.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

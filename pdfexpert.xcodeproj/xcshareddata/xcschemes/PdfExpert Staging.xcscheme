@@ -17,7 +17,7 @@
                BlueprintIdentifier = "89CD7A9529D32855003F1C3A"
                BuildableName = "PdfExpert.app"
                BlueprintName = "PdfExpert"
-               ReferencedContainer = "container:PdfExpert.xcodeproj">
+               ReferencedContainer = "container:pdfexpert.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "89CD7A9529D32855003F1C3A"
             BuildableName = "PdfExpert.app"
             BlueprintName = "PdfExpert"
-            ReferencedContainer = "container:PdfExpert.xcodeproj">
+            ReferencedContainer = "container:pdfexpert.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -88,7 +88,7 @@
             BlueprintIdentifier = "89CD7A9529D32855003F1C3A"
             BuildableName = "PdfExpert.app"
             BlueprintName = "PdfExpert"
-            ReferencedContainer = "container:PdfExpert.xcodeproj">
+            ReferencedContainer = "container:pdfexpert.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
