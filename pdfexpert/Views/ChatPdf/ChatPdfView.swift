@@ -16,7 +16,11 @@ struct ChatPdfView: View {
     @Namespace var bottomID
     
     @Environment(\.dismiss) var dismiss
-    
+
+    private var canSendMessage: Bool {
+        self.viewModel.remainingMessages > 0
+    }
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading){
@@ -59,6 +63,13 @@ struct ChatPdfView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 
+                Text(String(localized: "\(self.viewModel.remainingMessages) messages left this month"))
+                    .font(forCategory: .caption1)
+                    .foregroundColor(ColorPalette.thirdText)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding([.leading, .trailing], 10)
+                    .padding(.bottom, 2)
+
                 HStack(alignment: .center){
                     TextField("Type your Message...", text: self.$typingMessage, axis: .vertical)
                         .padding()
@@ -67,8 +78,9 @@ struct ChatPdfView: View {
                         .lineLimit(3)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
+                        .disabled(!self.canSendMessage)
                     Button {
-                        if self.typingMessage != "" {
+                        if self.canSendMessage && self.typingMessage != "" {
                             self.viewModel.getResponse(text: self.typingMessage)
                             self.typingMessage = ""
                         }
@@ -80,7 +92,9 @@ struct ChatPdfView: View {
                             .frame(width: 20, height: 20)
                             .padding()
                     }
+                    .disabled(!self.canSendMessage)
                 }
+                .opacity(self.canSendMessage ? 1.0 : 0.5)
                 .onDisappear {
                     UIApplication.dismissKeyboard()
                 }

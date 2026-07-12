@@ -3289,6 +3289,86 @@
           }
         }
       }
+    },
+    "%lld messages left this month" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld messages left this month"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld messaggi rimasti questo mese"
+          }
+        }
+      }
+    },
+    "You've reached your monthly limit of %lld messages." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've reached your monthly limit of %lld messages."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai raggiunto il limite mensile di %lld messaggi."
+          }
+        }
+      }
+    },
+    "This PDF has no extractable text. Try \"Make Searchable (OCR)\" first, then start the chat again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This PDF has no extractable text. Try \"Make Searchable (OCR)\" first, then start the chat again."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo PDF non contiene testo estraibile. Prova prima \"Rendi ricercabile (OCR)\", poi avvia di nuovo la chat."
+          }
+        }
+      }
+    },
+    "AI chat is currently unavailable. Please try again later." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI chat is currently unavailable. Please try again later."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La chat AI non è al momento disponibile. Riprova più tardi."
+          }
+        }
+      }
+    },
+    "Ask me something about your PDF!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask me something about your PDF!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiedimi qualcosa sul tuo PDF!"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

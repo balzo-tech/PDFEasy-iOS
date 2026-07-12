@@ -193,17 +193,10 @@ class ChatPdfSelectionViewModel: ObservableObject {
         }
         
         self.asyncChatPdfSetup = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-        
-        guard pdfData.count <= K.ChatPdf.MaxBytes else {
-            self.asyncChatPdfSetup = AsyncOperation(status: .error(.pdfTooLarge))
-            return
-        }
-        
-        guard pdf.pdfDocument.pageCount <= K.ChatPdf.MaxPages else {
-            self.asyncChatPdfSetup = AsyncOperation(status: .error(.pdfTooManyPages))
-            return
-        }
-        
+
+        // The PDF is no longer uploaded to a third party: `sendPdf` extracts the
+        // text on-device, so the old upload size / page-count limits no longer
+        // apply. Oversized text is truncated by the manager instead.
         self.chatPdfManager.sendPdf(pdf: pdfData)
             .flatMap { chatPdfRef in
                 self.chatPdfManager.getSetupData(ref: chatPdfRef)

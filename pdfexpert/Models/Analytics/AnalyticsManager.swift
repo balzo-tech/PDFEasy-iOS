@@ -91,6 +91,7 @@ enum AnalyticsEvent {
     case chatPdfSelectionFullActionChosen(importOption: ImportOption?)
     case chatPdfSelectionFullActionCompleted(importOption: ImportOption?, fileExtension: String?)
     case chatPdfMessageSent
+    case chatMessageLimitReached
     case subscriptionShown
     case reviewLowRateFeedback(feedback: String)
     case suggestedFieldsSaved

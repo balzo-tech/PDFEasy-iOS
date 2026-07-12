@@ -10,6 +10,7 @@
 		370051A46812F757756F2CDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E063C045C32C627710F557 /* Foundation.framework */; };
 		406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */; };
 		49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */; };
+		1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */; };
 		72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */; };
 		544D6E0E1EA7CA7A83868ECF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
 		702EFD3C7CCEAD86C6D04FB0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
@@ -38,6 +39,8 @@
 		8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA322A6828C9005F6C73 /* ProjectInfo.swift */; };
 		8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA352A68299B005F6C73 /* ChatPdfManager.swift */; };
 		8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */; };
+		879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */; };
+		E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */; };
 		8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */; };
 		8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3D2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift */; };
 		8936AA402A683FB5005F6C73 /* ImportOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3F2A683FB5005F6C73 /* ImportOption.swift */; };
@@ -47,10 +50,7 @@
 		893AAFCB2A39B2AF00EF9B00 /* FormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */; };
 		893B04BD2AA9C2C100F86813 /* CoreGraphics+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */; };
 		893BE52B2A6A7864004B05B9 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 893BE52A2A6A7864004B05B9 /* CombineMoya */; };
-		893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */; };
 		893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */; };
-		893BE5352A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */; };
-		893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE5362A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift */; };
 		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
@@ -125,7 +125,6 @@
 		894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A6F2AA0CCFC0001F51E /* ReviewFlowView.swift */; };
 		894C4A722AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C4A712AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift */; };
 		894CB09E2A851FE50008008A /* ChatPdfSetupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CB09D2A851FE50008008A /* ChatPdfSetupData.swift */; };
-		894CB0A02A8520AD0008008A /* ChatPdfSetupData+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CB09F2A8520AD0008008A /* ChatPdfSetupData+Decodable.swift */; };
 		894D485829D42C9E002B0230 /* OptionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485729D42C9D002B0230 /* OptionItemView.swift */; };
 		894D485A29D42CC5002B0230 /* OptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485929D42CC5002B0230 /* OptionListView.swift */; };
 		894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894D485B29D42FE1002B0230 /* RoundedCorner.swift */; };
@@ -343,10 +342,8 @@
 		893875002A7BDD3B00267AFD /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreGraphics+Extensions.swift"; sourceTree = "<group>"; };
-		893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerImpl.swift; sourceTree = "<group>"; };
 		893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtility.swift; sourceTree = "<group>"; };
-		893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfRef+Decodable.swift"; sourceTree = "<group>"; };
-		893BE5362A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfMessage+Decodable.swift"; sourceTree = "<group>"; };
+		1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAiChatPdfManagerImpl.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -419,7 +416,6 @@
 		894C4A6F2AA0CCFC0001F51E /* ReviewFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFlowView.swift; sourceTree = "<group>"; };
 		894C4A712AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreReviewPopupLowRateView.swift; sourceTree = "<group>"; };
 		894CB09D2A851FE50008008A /* ChatPdfSetupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfSetupData.swift; sourceTree = "<group>"; };
-		894CB09F2A8520AD0008008A /* ChatPdfSetupData+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatPdfSetupData+Decodable.swift"; sourceTree = "<group>"; };
 		894D485729D42C9D002B0230 /* OptionItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionItemView.swift; sourceTree = "<group>"; };
 		894D485929D42CC5002B0230 /* OptionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionListView.swift; sourceTree = "<group>"; };
 		894D485B29D42FE1002B0230 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -475,6 +471,7 @@
 		89883B012A45CB9800E684B6 /* InfoTemplate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoTemplate.plist; sourceTree = "<group>"; };
 		89883B032A45CBDA00E684B6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8991485029E851B500DD01F2 /* ConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigService.swift; sourceTree = "<group>"; };
+		BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUsageTracker.swift; sourceTree = "<group>"; };
 		8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
 		89923E5D29D4350F00E246FC /* AppTrackingTransparencyImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparencyImpl.swift; sourceTree = "<group>"; };
 		89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparency.swift; sourceTree = "<group>"; };
@@ -570,6 +567,7 @@
 		0F76D922605F497582E22531 /* PdfOverlayUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PdfOverlayUtility.swift; path = ../../pdfexpert/InternalUtils/PdfOverlayUtility.swift; sourceTree = "<group>"; };
 		C6F6ADAE49FFA46E46905627 /* PdfExpertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PdfExpertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OcrUtilityTests.swift; sourceTree = "<group>"; };
+		E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatUsageTrackerTests.swift; sourceTree = "<group>"; };
 		479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfOverlayUtilityTests.swift; sourceTree = "<group>"; };
 		FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfUtilityTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -655,22 +653,11 @@
 		893BE5322A6A96D0004B05B9 /* ChatPdf */ = {
 			isa = PBXGroup;
 			children = (
-				893BE5332A6A96E1004B05B9 /* Mapping */,
 				8936AA352A68299B005F6C73 /* ChatPdfManager.swift */,
 				8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */,
-				893BE52C2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift */,
+				1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */,
 			);
 			path = ChatPdf;
-			sourceTree = "<group>";
-		};
-		893BE5332A6A96E1004B05B9 /* Mapping */ = {
-			isa = PBXGroup;
-			children = (
-				893BE5342A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift */,
-				893BE5362A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift */,
-				894CB09F2A8520AD0008008A /* ChatPdfSetupData+Decodable.swift */,
-			);
-			path = Mapping;
 			sourceTree = "<group>";
 		};
 		893C8FC729DED15B000E35BD /* Archive */ = {
@@ -1125,6 +1112,7 @@
 				894827B32AA5D6FF00030C4E /* AttibutionManagerImpl.swift */,
 				8991485029E851B500DD01F2 /* ConfigService.swift */,
 				8991485229E851BD00DD01F2 /* RemoteConfigManager.swift */,
+				BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */,
 				893BE5312A6A96BE004B05B9 /* Network */,
 			);
 			path = Models;
@@ -1291,6 +1279,7 @@
 				D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */,
 				479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */,
 				E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */,
+				E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */,
 			);
 			name = PdfExpertTests;
 			path = PdfExpertTests;
@@ -1618,7 +1607,8 @@
 				8957FBAA2A77E6F7008B31ED /* PdfShareView.swift in Sources */,
 				89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */,
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
-				893BE52D2A6A78BB004B05B9 /* ChatPdfManagerImpl.swift in Sources */,
+				879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */,
+				E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */,
 				895FE2CB29D6E9B800A99D5B /* SubscriptionPairsView.swift in Sources */,
 				894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */,
 				89923E5F29D4350F00E246FC /* AppTrackingTransparencyImpl.swift in Sources */,
@@ -1704,7 +1694,6 @@
 				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
 				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
-				893BE5352A6A96F5004B05B9 /* ChatPdfRef+Decodable.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				89E601642A8295A2009492DA /* SubscriptionPickerViewModel.swift in Sources */,
 				893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */,
@@ -1721,11 +1710,9 @@
 				89CD7B5329D329B1003F1C3A /* View+Extensions.swift in Sources */,
 				892CC6962AAA2641000DEC21 /* SuggestedFieldsFormView.swift in Sources */,
 				8957FBAC2A7801BA008B31ED /* PdfCompressionPickerView.swift in Sources */,
-				893BE5372A6A9708004B05B9 /* ChatPdfMessage+Decodable.swift in Sources */,
 				89429F8A2A9C937300465420 /* Signature.swift in Sources */,
 				892CC6982AAA2660000DEC21 /* SuggestedFieldsFormViewModel.swift in Sources */,
 				8902898D29DC1F10007E6372 /* PageControl.swift in Sources */,
-				894CB0A02A8520AD0008008A /* ChatPdfSetupData+Decodable.swift in Sources */,
 				89E55BDC29DC64840073F268 /* AnalyticsManager.swift in Sources */,
 				89CD7B4F29D329B1003F1C3A /* ParentalCheck.swift in Sources */,
 				893ED9DA2A693013004EE67C /* MessageIndicatorView.swift in Sources */,
@@ -1756,6 +1743,7 @@
 				49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */,
 				72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */,
 				E0F0A1B2C3D4E5F600000008 /* PdfExportUtilityTests.swift in Sources */,
+				1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

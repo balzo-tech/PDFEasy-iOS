@@ -72,20 +72,19 @@ struct K {
     }
     
     struct ChatPdf {
-        static let MaxBytes: UInt64 = 32 * 1_048_576 // 32 MB
-        static let MaxPages: Int = 2000
-        static let SetupMessageFallbackResponse: String = "Ask me something about your pdf!"
-        static let SetupMessageRequest: String = """
-Make a summary and suggest three questions. Format your response as a json with the following structure:
-{
-    "\(ChatPdfSetupData.CodingKeys.summary.rawValue)": "content of the summary",
-    "\(ChatPdfSetupData.CodingKeys.suggestedQuestions.rawValue)": [
-        "suggested question number 1",
-        "suggested question number 2",
-        "suggested question number 3"
-    ]
-}
-"""
+        // Remote-config defaults for the OpenAI-backed chat.
+        static let DefaultChatGptModel: String = "gpt-4o-mini"
+        static let DefaultChatGptMaxTokens: Int = 1024
+        static let DefaultChatMaxMessagesPerMonth: Int = 20
+
+        // Maximum number of characters of extracted document text sent to the model.
+        // Roughly ~15k tokens for typical English text, leaving head-room for the
+        // conversation and the reply within the model context window.
+        static let DocumentCharacterBudget: Int = 60_000
+
+        // How many past messages (user + assistant) of context to keep in memory and
+        // replay on each request. 20 messages == the last ~10 exchanges.
+        static let ConversationHistoryMessageLimit: Int = 20
     }
     
     struct Review {

@@ -44,9 +44,9 @@ extension Container {
     var chatPdfManager: Factory<ChatPdfManager> {
         self {
             #if DEBUG
-            K.Test.ChatPdf.UseMock ? (ChatPdfManagerMock() as ChatPdfManager) : (ChatPdfManagerImpl() as ChatPdfManager)
+            K.Test.ChatPdf.UseMock ? (ChatPdfManagerMock() as ChatPdfManager) : (OpenAiChatPdfManagerImpl() as ChatPdfManager)
             #else
-            ChatPdfManagerImpl()
+            OpenAiChatPdfManagerImpl()
             #endif
         }.singleton
     }

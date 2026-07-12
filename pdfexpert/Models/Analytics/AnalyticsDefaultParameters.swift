@@ -117,6 +117,7 @@ extension AnalyticsEvent {
         case .chatPdfSelectionFullActionChosen: return "chat_pdf_selection_full_action_chosen"
         case .chatPdfSelectionFullActionCompleted: return "chat_pdf_selection_full_action_completed"
         case .chatPdfMessageSent: return "chat_pdf_message_sent"
+        case .chatMessageLimitReached: return "chat_message_limit_reached"
         case .subscriptionShown: return "subscription_shown"
         case .reviewLowRateFeedback: return "review_low_rate_feedback"
         case .suggestedFieldsSaved: return "suggested_fields_saved"
@@ -212,6 +213,7 @@ extension AnalyticsEvent {
             }
             return parameters
         case .chatPdfMessageSent: return nil
+        case .chatMessageLimitReached: return nil
         case .subscriptionShown: return nil
         case .reviewLowRateFeedback(let feedback):
             return [AnalyticsEventCustomParameters.reviewLowRateFeedbackContent.rawValue: feedback]
