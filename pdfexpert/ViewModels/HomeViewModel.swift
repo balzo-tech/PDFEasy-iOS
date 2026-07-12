@@ -37,6 +37,7 @@ enum HomeAction: Hashable, Identifiable {
     case addText
     case createPdf
     case ocr
+    case rotatePdf
 
     case importPdf
     
@@ -60,6 +61,7 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return .allDocs
         case .createPdf: return nil
         case .ocr: return .pdf
+        case .rotatePdf: return .pdf
         case .importPdf: return .pdf
         case .readPdf: return .pdf
         case .removePassword: return .pdf
@@ -82,6 +84,7 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return .openFillForm
         case .createPdf: return nil
         case .ocr: return .openOcr
+        case .rotatePdf: return .openRotate
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return nil
@@ -104,6 +107,7 @@ enum HomeAction: Hashable, Identifiable {
         case .addText: return nil
         case .createPdf: return nil
         case .ocr: return nil
+        case .rotatePdf: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
@@ -228,7 +232,7 @@ public class HomeViewModel : ObservableObject {
             break
         case .imageToPdf:
             self.importOptionGroup = .image
-        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword:
+        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword, .rotatePdf:
             self.openFilePicker(fileSource: .files)
         case .sign, .addText, .ocr:
             self.importOptionGroup = .fileAndScan
@@ -342,7 +346,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
-            case .importPdf, .removePassword, .addPassword, .ocr:
+            case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .readPdf:
                 assertionFailure("Selected file url is not handled for the current action")

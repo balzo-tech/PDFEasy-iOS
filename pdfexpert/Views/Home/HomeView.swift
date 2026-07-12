@@ -14,6 +14,7 @@ struct HomeItem: Identifiable {
     let title: String
     let description: String
     let imageName: String
+    var isSystemImage: Bool = false
     let homeAction: HomeAction
 }
 
@@ -60,6 +61,11 @@ struct HomeView: View {
                  description: "Separate a set of pages for easy conversion into PDF",
                  imageName: "home_split",
                  homeAction: .split),
+        HomeItem(title: String(localized: "Rotate PDF"),
+                 description: String(localized: "Rotate one or all pages of your PDF"),
+                 imageName: "rotate.right",
+                 isSystemImage: true,
+                 homeAction: .rotatePdf),
     ]
         
     let editItems: [HomeItem] = [
@@ -205,6 +211,7 @@ struct HomeView: View {
                 HomeItemView(title: item.title,
                              description: item.description,
                              imageName: item.imageName,
+                             isSystemImage: item.isSystemImage,
                              onButtonPressed: { self.viewModel.performHomeAction(item.homeAction) })
                 .aspectRatio(aspectRatio, contentMode: .fit)
                 .listRowSeparator(.hidden)

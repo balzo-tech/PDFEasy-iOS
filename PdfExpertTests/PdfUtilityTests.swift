@@ -107,4 +107,76 @@ final class PdfUtilityTests: XCTestCase {
             .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                       "extractText should be empty for an image-only document")
     }
+
+    // MARK: - Rotation
+
+    /// Clockwise rotation must cycle 0 → 90 → 180 → 270 → 0.
+    func testRotatePageCyclesClockwise() {
+        let document = makePdf(pageCount: 1)
+        guard let page = document.page(at: 0) else { return XCTFail("missing page") }
+        XCTAssertEqual(page.rotation, 0)
+        let expected = [90, 180, 270, 0]
+        for value in expected {
+            PDFUtility.rotatePage(page, clockwise: true)
+            XCTAssertEqual(page.rotation, value)
+        }
+    }
+
+    /// Counter-clockwise rotation must cycle 0 → 270 → 180 → 90 → 0 (always normalized
+    /// into the [0, 360) range, never negative).
+    func testRotatePageCyclesCounterClockwise() {
+        let document = makePdf(pageCount: 1)
+        guard let page = document.page(at: 0) else { return XCTFail("missing page") }
+        XCTAssertEqual(page.rotation, 0)
+        let expected = [270, 180, 90, 0]
+        for value in expected {
+            PDFUtility.rotatePage(page, clockwise: false)
+            XCTAssertEqual(page.rotation, value)
+        }
+    }
+
+    /// The rotation is stored in the page's /Rotate entry, so it must survive a
+    /// serialization round-trip.
+    func testRotationSurvivesDataRoundTrip() {
+        let document = makePdf(pageCount: 1)
+        guard let page = document.page(at: 0) else { return XCTFail("missing page") }
+        PDFUtility.rotatePage(page, clockwise: true) // 90
+        guard let data = document.dataRepresentation(),
+              let reloaded = PDFDocument(data: data),
+              let reloadedPage = reloaded.page(at: 0) else {
+            return XCTFail("round-trip failed")
+        }
+        XCTAssertEqual(reloadedPage.rotation, 90,
+                       "rotation must persist through dataRepresentation() round-trip")
+    }
+
+    /// A portrait page rotated 90° must render as a landscape thumbnail (the full
+    /// media-box branch swaps width/height for quarter-turn rotations).
+    func testGeneratePdfThumbnailRotatedPageIsLandscape() {
+        let document = makePdf(pageCount: 1) // portrait 200 x 300
+        guard let page = document.page(at: 0) else { return XCTFail("missing page") }
+        PDFUtility.rotatePage(page, clockwise: true) // 90
+        guard let image = PDFUtility.generatePdfThumbnail(pdfDocument: document,
+                                                          size: nil,
+                                                          forPageIndex: 0) else {
+            return XCTFail("expected a thumbnail")
+        }
+        XCTAssertGreaterThan(image.size.width, image.size.height,
+                             "a rotated portrait page should produce a landscape thumbnail")
+    }
+
+    /// applyPostProcess with margins + compression on a 90°-rotated portrait page must
+    /// keep the rotated aspect (a wider-than-tall output page).
+    func testApplyPostProcessRotatedPageKeepsRotatedAspect() {
+        let document = makePdf(pageCount: 1) // portrait 200 x 300
+        guard let page = document.page(at: 0) else { return XCTFail("missing page") }
+        PDFUtility.rotatePage(page, clockwise: true) // 90
+        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
+                                                 margins: .mediumMargins,
+                                                 compression: .high)
+        guard let resultPage = result.page(at: 0) else { return XCTFail("missing result page") }
+        let size = resultPage.bounds(for: .mediaBox).size
+        XCTAssertGreaterThan(size.width, size.height,
+                             "a rotated portrait page must stay landscape after post-process")
+    }
 }

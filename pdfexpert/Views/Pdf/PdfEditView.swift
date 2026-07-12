@@ -41,6 +41,10 @@ struct PdfEditView: View {
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 if self.viewModel.pageImages.count > 0 {
+                    Button(action: { self.viewModel.rotateOptionsShow = true }) {
+                        Image(systemName: "rotate.right")
+                            .foregroundColor(ColorPalette.primaryText)
+                    }
                     Button(action: { self.showingDeleteConfermation = true }) {
                         Image(systemName: "trash")
                             .foregroundColor(ColorPalette.primaryText)
@@ -134,6 +138,22 @@ struct PdfEditView: View {
                               goToArchiveCallback: { self.viewModel.goToArchive() })
         .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
                               onComplete: { self.viewModel.onOcrMonetizationClose() })
+        .actionDialog(
+            Text("Rotate"),
+            isPresented: self.$viewModel.rotateOptionsShow,
+            titleVisibility: .visible
+        ) {
+            Button("Rotate page right") {
+                self.viewModel.rotateCurrentPage(clockwise: true)
+            }
+            Button("Rotate page left") {
+                self.viewModel.rotateCurrentPage(clockwise: false)
+            }
+            Button("Rotate all pages") {
+                self.viewModel.rotateAllPages(clockwise: true)
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
     
     @ViewBuilder var pdfView: some View {

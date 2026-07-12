@@ -12,8 +12,9 @@ struct HomeItemView: View {
     let title: String
     let description: String
     let imageName: String
+    var isSystemImage: Bool = false
     let onButtonPressed: () -> ()
-    
+
     var body: some View {
         Button(action: {
             self.onButtonPressed()
@@ -21,9 +22,7 @@ struct HomeItemView: View {
             GeometryReader { geometryReader in
                 VStack(spacing: 0) {
                     Spacer().frame(height: 24)
-                    Image(self.imageName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                    self.icon
                         .frame(height: UIDevice.current.userInterfaceIdiom == .pad ? 54.0 : 32.0)
                     Spacer().frame(height: 16)
                     Text(self.title)
@@ -52,6 +51,21 @@ struct HomeItemView: View {
             self.defaultGradientBackground
             .cornerRadius(10)
         )
+    }
+
+    // System symbols are tinted with the primary text color; bundled asset icons
+    // keep their original rendering (unchanged from before).
+    @ViewBuilder private var icon: some View {
+        if self.isSystemImage {
+            Image(systemName: self.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .foregroundColor(ColorPalette.primaryText)
+        } else {
+            Image(self.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        }
     }
 }
 

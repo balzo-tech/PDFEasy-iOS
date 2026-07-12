@@ -23,6 +23,10 @@ enum AnalyticsPdfInputType {
     case camera, gallery, fileImage, file, scan, appExtension, scanPdf, filePdf, scanFillForm, fileFillForm, scanSign, fileSign, fileFillWidget
 }
 
+enum AnalyticsPageRotationType {
+    case single, all
+}
+
 enum AnalyticsScreen {
     case onboarding
     case home
@@ -55,6 +59,7 @@ enum AnalyticsEvent {
     case homeFullActionCompleted(homeAction: HomeAction, importOption: ImportOption?, fileExtension: String?)
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
     case pageRemoved
+    case pageRotated(rotationType: AnalyticsPageRotationType)
     case pdfRenamed
     case passwordAdded
     case passwordRemoved

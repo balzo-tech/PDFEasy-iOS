@@ -36,6 +36,12 @@ class PDFUtility {
         }
     }
     
+    /// Rotates a page by a quarter turn, normalizing the result into the [0, 360) range.
+    /// The rotation is stored in the page's /Rotate entry, so it survives serialization.
+    static func rotatePage(_ page: PDFPage, clockwise: Bool) {
+        page.rotation = (((page.rotation + (clockwise ? 90 : -90)) % 360) + 360) % 360
+    }
+
     static func generatePdfThumbnails(pdfDocument: PDFDocument, size: CGSize?) -> [UIImage?] {
         var thumbnails: [UIImage?] = []
         for index in 0..<pdfDocument.pageCount {
@@ -66,7 +72,15 @@ class PDFUtility {
             let nativeSize = CGSize(width: size.width * nativeScale, height: size.height * nativeScale)
             return pdfDocumentPage.thumbnail(of: nativeSize, for: PDFDisplayBox.trimBox)
         } else {
-            return pdfDocumentPage.thumbnail(of: pdfDocumentPage.bounds(for: .mediaBox).size, for: .mediaBox)
+            // A page rotated by a quarter turn (90°/270°) renders with its width and
+            // height swapped; size the target box to the rotation-adjusted bounds so the
+            // thumbnail keeps the correct aspect instead of being squeezed into the
+            // unrotated media box.
+            let mediaBoxSize = pdfDocumentPage.bounds(for: .mediaBox).size
+            let targetSize = (pdfDocumentPage.rotation % 180 != 0)
+                ? CGSize(width: mediaBoxSize.height, height: mediaBoxSize.width)
+                : mediaBoxSize
+            return pdfDocumentPage.thumbnail(of: targetSize, for: .mediaBox)
         }
     }
     
@@ -94,7 +108,13 @@ class PDFUtility {
 
             // Fetch the page rect for the page we want to render.
             let pageRect = page.bounds(for: .mediaBox)
-            let originalSize = pageRect.size
+            // A page rotated by a quarter turn (90°/270°) displays with its width and
+            // height swapped. `page.draw`/`PDFPage(image:)` honor that rotation, so the
+            // output page must be sized to the rotation-adjusted bounds — otherwise a
+            // rotated page shared with margins/compression comes out distorted.
+            let originalSize = (page.rotation % 180 != 0)
+                ? CGSize(width: pageRect.size.height, height: pageRect.size.width)
+                : pageRect.size
 
             let newWidth = originalSize.width - horizontalMargin * 2
             let newHeight = (originalSize.height / originalSize.width) * newWidth

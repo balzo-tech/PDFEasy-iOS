@@ -23,6 +23,7 @@ enum PdfEditStartAction {
     case openFillForm
     case openSignature
     case openOcr
+    case openRotate
 }
 
 enum EditAction: CaseIterable {
@@ -109,6 +110,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var splitSuccessAlertShow: Bool = false
     @Published var compressionShow: Bool = false
     @Published var ocrMonetizationShow: Bool = false
+    @Published var rotateOptionsShow: Bool = false
 
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
@@ -164,6 +166,8 @@ class PdfEditViewModel: ObservableObject {
                     self.activeSheet = .signature
                 case .openOcr:
                     self.startOcr()
+                case .openRotate:
+                    self.rotateOptionsShow = true
                 }
             }
             self.startAction = nil
@@ -196,10 +200,57 @@ class PdfEditViewModel: ObservableObject {
         }
         
         self.shouldShowCloseWarning.wrappedValue = true
-        
+
         self.analyticsManager.track(event: .pageRemoved)
     }
-    
+
+    /// Rotates only the currently displayed page. Regenerates just that page's image
+    /// and thumbnail (the full `refreshImages()`/`refreshThumbnails()` rebuilds every
+    /// page and is a known perf problem on large documents).
+    @MainActor
+    func rotateCurrentPage(clockwise: Bool) {
+        guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
+            return
+        }
+        PDFUtility.rotatePage(page, clockwise: clockwise)
+        self.regenerateThumbnailEntries(at: self.pdfCurrentPageIndex)
+        self.shouldShowCloseWarning.wrappedValue = true
+        self.analyticsManager.track(event: .pageRotated(rotationType: .single))
+    }
+
+    /// Rotates every page in the document, then does the full images+thumbnails refresh
+    /// (a per-page regeneration wouldn't be any cheaper here).
+    @MainActor
+    func rotateAllPages(clockwise: Bool) {
+        for index in 0..<self.pdf.pdfDocument.pageCount {
+            if let page = self.pdf.pdfDocument.page(at: index) {
+                PDFUtility.rotatePage(page, clockwise: clockwise)
+            }
+        }
+        self.refreshImages()
+        self.refreshThumbnails()
+        self.shouldShowCloseWarning.wrappedValue = true
+        self.analyticsManager.track(event: .pageRotated(rotationType: .all))
+    }
+
+    /// Regenerates the page image and thumbnail for a single page, replacing the
+    /// existing entries in place, using the shared single-page thumbnail helper.
+    private func regenerateThumbnailEntries(at index: Int) {
+        guard index >= 0, index < self.pdf.pdfDocument.pageCount else { return }
+        if index < self.pageImages.count,
+           let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
+                                                           size: nil,
+                                                           forPageIndex: index) {
+            self.pageImages[index] = pageImage
+        }
+        if index < self.pdfThumbnails.count,
+           let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
+                                                           size: K.Misc.ThumbnailEditSize,
+                                                           forPageIndex: index) {
+            self.pdfThumbnails[index] = thumbnail
+        }
+    }
+
     func openFilePicker() {
         self.filePickerShow = true
         self.currentAnalyticsPdfInputType = .file

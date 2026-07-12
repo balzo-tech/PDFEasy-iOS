@@ -19,6 +19,7 @@ enum AnalyticsEventCustomParameters: String {
     case subscriptionPlanIsFreeTrial = "subscription_is_free_trial"
     case reviewLowRateFeedbackContent = "review_low_rate_feedback_content"
     case screenName = "screen_name"
+    case rotationType = "rotation_type"
 }
 
 extension MarginsOption {
@@ -80,6 +81,7 @@ extension AnalyticsEvent {
         case .homeFullActionCompleted: return "home_full_action_completed"
         case .pageAdded: return "page_added"
         case .pageRemoved: return "page_remove"
+        case .pageRotated: return "page_rotated"
         case .pdfRenamed: return "pdf_renamed"
         case .passwordAdded: return "password_added"
         case .passwordRemoved: return "password_remove"
@@ -151,6 +153,8 @@ extension AnalyticsEvent {
         case .onboardingCompleted: return nil
         case .onboardingSkipped: return nil
         case .pageRemoved: return nil
+        case .pageRotated(let rotationType):
+            return [AnalyticsEventCustomParameters.rotationType.rawValue: rotationType.trackingParameterValue]
         case .pdfRenamed: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil
@@ -248,8 +252,18 @@ fileprivate extension AnalyticsPdfInputType {
     }
 }
 
+fileprivate extension AnalyticsPageRotationType {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .single: return "single"
+        case .all: return "all"
+        }
+    }
+}
+
 fileprivate extension HomeAction {
-    
+
     var trackingParameterValue: String {
         switch self {
         case .appExtension: return "app_extension"
@@ -265,6 +279,7 @@ fileprivate extension HomeAction {
         case .addText: return "add_text"
         case .createPdf: return "create_pdf"
         case .ocr: return "ocr"
+        case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
