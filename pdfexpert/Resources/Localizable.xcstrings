@@ -418,6 +418,22 @@
         }
       }
     },
+    "Convert your PDF to PDF/A for long-term archiving" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convert your PDF to PDF/A for long-term archiving"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Converti il tuo PDF in PDF/A per l'archiviazione a lungo termine"
+          }
+        }
+      }
+    },
     "Converting…" : {
       "localizations" : {
         "en" : {
@@ -1036,6 +1052,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compila e firma"
+          }
+        }
+      }
+    },
+    "Fix a corrupted or damaged PDF file" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix a corrupted or damaged PDF file"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ripara un file PDF corrotto o danneggiato"
           }
         }
       }
@@ -1946,6 +1978,22 @@
         }
       }
     },
+    "PDF saved" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF saved"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF salvato"
+          }
+        }
+      }
+    },
     "PDF saved!" : {
       "localizations" : {
         "en" : {
@@ -2058,6 +2106,22 @@
         }
       }
     },
+    "PDF/A" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF/A"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF/A"
+          }
+        }
+      }
+    },
     "Personal data" : {
       "localizations" : {
         "en" : {
@@ -2136,6 +2200,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Informativa sulla privacy"
+          }
+        }
+      }
+    },
+    "Processing…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processing…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elaborazione in corso…"
           }
         }
       }
@@ -2222,6 +2302,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Riduci la dimensione del file"
+          }
+        }
+      }
+    },
+    "Remove scripts and embedded content from your PDF" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove scripts and embedded content from your PDF"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimuovi script e contenuti incorporati dal tuo PDF"
+          }
+        }
+      }
+    },
+    "Repair PDF" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repair PDF"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ripara PDF"
           }
         }
       }
@@ -2350,6 +2462,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ruota PDF"
+          }
+        }
+      }
+    },
+    "Sanitize PDF" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanitize PDF"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanifica PDF"
           }
         }
       }
@@ -3510,6 +3638,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il tuo PDF è protetto"
+          }
+        }
+      }
+    },
+    "Your PDF/A file has been saved to your archive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your PDF/A file has been saved to your archive."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il file PDF/A è stato salvato nel tuo archivio."
+          }
+        }
+      }
+    },
+    "Your repaired file has been saved to your archive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your repaired file has been saved to your archive."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il file riparato è stato salvato nel tuo archivio."
+          }
+        }
+      }
+    },
+    "Your sanitized file has been saved to your archive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sanitized file has been saved to your archive."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il file sanificato è stato salvato nel tuo archivio."
           }
         }
       }

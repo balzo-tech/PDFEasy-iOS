@@ -36,6 +36,9 @@ enum HomeAction: Hashable, Identifiable {
     case pdfToWord
     case pdfToPowerpoint
     case pdfToExcel
+    case pdfToPdfa
+    case repairPdf
+    case sanitizePdf
 
     case sign
     case formFill
@@ -68,6 +71,9 @@ enum HomeAction: Hashable, Identifiable {
         case .pdfToWord: return nil
         case .pdfToPowerpoint: return nil
         case .pdfToExcel: return nil
+        case .pdfToPdfa: return nil
+        case .repairPdf: return nil
+        case .sanitizePdf: return nil
         case .sign: return .allDocs
         case .formFill: return .pdf
         case .addText: return .allDocs
@@ -98,6 +104,9 @@ enum HomeAction: Hashable, Identifiable {
         case .pdfToWord: return nil
         case .pdfToPowerpoint: return nil
         case .pdfToExcel: return nil
+        case .pdfToPdfa: return nil
+        case .repairPdf: return nil
+        case .sanitizePdf: return nil
         case .sign: return .openSignature
         case .formFill: return .openFillWidget
         case .addText: return .openFillForm
@@ -128,6 +137,9 @@ enum HomeAction: Hashable, Identifiable {
         case .pdfToWord: return nil
         case .pdfToPowerpoint: return nil
         case .pdfToExcel: return nil
+        case .pdfToPdfa: return nil
+        case .repairPdf: return nil
+        case .sanitizePdf: return nil
         case .sign: return nil
         case .formFill: return nil
         case .addText: return nil
@@ -222,6 +234,7 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
     @Injected(\.pdfExportViewModel) var pdfExportViewModel
     @Injected(\.pdfConvertViewModel) var pdfConvertViewModel
+    @Injected(\.pdfAdvancedToolViewModel) var pdfAdvancedToolViewModel
     @Injected(\.pdfReadViewModel) var pdfReadViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
@@ -295,6 +308,21 @@ public class HomeViewModel : ObservableObject {
             self.pdfConvertViewModel.convert(pdf: nil, format: .powerpoint)
         case .pdfToExcel:
             self.pdfConvertViewModel.convert(pdf: nil, format: .csv)
+        case .pdfToPdfa:
+            self.pdfAdvancedToolViewModel.run(pdf: nil, tool: .pdfa) { [weak self] in
+                self?.trackFullActionCompleted()
+                self?.mainCoordinator.goToArchive()
+            }
+        case .repairPdf:
+            self.pdfAdvancedToolViewModel.run(pdf: nil, tool: .repair) { [weak self] in
+                self?.trackFullActionCompleted()
+                self?.mainCoordinator.goToArchive()
+            }
+        case .sanitizePdf:
+            self.pdfAdvancedToolViewModel.run(pdf: nil, tool: .sanitize) { [weak self] in
+                self?.trackFullActionCompleted()
+                self?.mainCoordinator.goToArchive()
+            }
         }
     }
     
@@ -394,7 +422,7 @@ public class HomeViewModel : ObservableObject {
             case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
-                    .pdfToWord, .pdfToPowerpoint, .pdfToExcel:
+                    .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }

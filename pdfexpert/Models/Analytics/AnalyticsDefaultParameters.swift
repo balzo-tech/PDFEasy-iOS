@@ -25,6 +25,7 @@ enum AnalyticsEventCustomParameters: String {
     case watermarkLayout = "watermark_layout"
     case exportFormat = "export_format"
     case convertFormat = "convert_format"
+    case advancedTool = "advanced_tool"
 }
 
 extension MarginsOption {
@@ -75,6 +76,7 @@ extension AnalyticsScreen {
         case .export: return "Export"
         case .metadata: return "Metadata"
         case .convert: return "Convert"
+        case .advancedTool: return "AdvancedTool"
         }
     }
 }
@@ -133,6 +135,8 @@ extension AnalyticsEvent {
         case .exportCompleted: return "export_completed"
         case .convertStarted: return "convert_started"
         case .convertCompleted: return "convert_completed"
+        case .advancedToolStarted: return "advanced_tool_started"
+        case .advancedToolCompleted: return "advanced_tool_completed"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -237,6 +241,8 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.exportFormat.rawValue: format.trackingParameterValue]
         case .convertStarted(let format), .convertCompleted(let format):
             return [AnalyticsEventCustomParameters.convertFormat.rawValue: format.trackingParameterValue]
+        case .advancedToolStarted(let tool), .advancedToolCompleted(let tool):
+            return [AnalyticsEventCustomParameters.advancedTool.rawValue: tool.trackingParameterValue]
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
@@ -356,6 +362,17 @@ fileprivate extension PdfConvertFormat {
     }
 }
 
+fileprivate extension PdfAdvancedTool {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .pdfa: return "pdfa"
+        case .repair: return "repair"
+        case .sanitize: return "sanitize"
+        }
+    }
+}
+
 fileprivate extension HomeAction {
 
     var trackingParameterValue: String {
@@ -373,6 +390,9 @@ fileprivate extension HomeAction {
         case .pdfToWord: return "pdf_to_word"
         case .pdfToPowerpoint: return "pdf_to_powerpoint"
         case .pdfToExcel: return "pdf_to_excel"
+        case .pdfToPdfa: return "pdf_to_pdfa"
+        case .repairPdf: return "repair_pdf"
+        case .sanitizePdf: return "sanitize_pdf"
         case .sign: return "sign"
         case .formFill: return "form_fill"
         case .addText: return "add_text"

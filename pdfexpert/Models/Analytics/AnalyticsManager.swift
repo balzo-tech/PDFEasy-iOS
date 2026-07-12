@@ -52,6 +52,7 @@ enum AnalyticsScreen {
     case export
     case metadata
     case convert
+    case advancedTool
 }
 
 enum AnalyticsEvent {
@@ -106,6 +107,8 @@ enum AnalyticsEvent {
     case exportCompleted(format: PdfExportFormat)
     case convertStarted(format: PdfConvertFormat)
     case convertCompleted(format: PdfConvertFormat)
+    case advancedToolStarted(tool: PdfAdvancedTool)
+    case advancedToolCompleted(tool: PdfAdvancedTool)
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)

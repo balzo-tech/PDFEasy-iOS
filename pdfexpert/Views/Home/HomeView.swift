@@ -52,26 +52,40 @@ struct HomeView: View {
                  homeAction: .powerpointToPdf)
     ]
     
-    let organizeItems: [HomeItem] = [
-        HomeItem(title: "Merge PDF",
-                 description: "Combine pdf files in the order you want",
-                 imageName: "home_merge",
-                 homeAction: .merge),
-        HomeItem(title: "Split PDF",
-                 description: "Separate a set of pages for easy conversion into PDF",
-                 imageName: "home_split",
-                 homeAction: .split),
-        HomeItem(title: String(localized: "Rotate PDF"),
-                 description: String(localized: "Rotate one or all pages of your PDF"),
-                 imageName: "rotate.right",
-                 isSystemImage: true,
-                 homeAction: .rotatePdf),
-        HomeItem(title: String(localized: "Extract pages"),
-                 description: String(localized: "Extract selected pages into a single new PDF"),
-                 imageName: "doc.on.doc",
-                 isSystemImage: true,
-                 homeAction: .extractPages),
-    ]
+    // "Repair PDF" uploads the document to the Stirling service, so — like the other
+    // online tools — it is only offered when that service is available.
+    var organizeItems: [HomeItem] {
+        var items: [HomeItem] = [
+            HomeItem(title: "Merge PDF",
+                     description: "Combine pdf files in the order you want",
+                     imageName: "home_merge",
+                     homeAction: .merge),
+            HomeItem(title: "Split PDF",
+                     description: "Separate a set of pages for easy conversion into PDF",
+                     imageName: "home_split",
+                     homeAction: .split),
+            HomeItem(title: String(localized: "Rotate PDF"),
+                     description: String(localized: "Rotate one or all pages of your PDF"),
+                     imageName: "rotate.right",
+                     isSystemImage: true,
+                     homeAction: .rotatePdf),
+            HomeItem(title: String(localized: "Extract pages"),
+                     description: String(localized: "Extract selected pages into a single new PDF"),
+                     imageName: "doc.on.doc",
+                     isSystemImage: true,
+                     homeAction: .extractPages),
+        ]
+        if Container.shared.stirlingApiManager().isAvailable {
+            items.append(
+                HomeItem(title: String(localized: "Repair PDF"),
+                         description: String(localized: "Fix a corrupted or damaged PDF file"),
+                         imageName: "wrench.and.screwdriver",
+                         isSystemImage: true,
+                         homeAction: .repairPdf)
+            )
+        }
+        return items
+    }
         
     let editItems: [HomeItem] = [
         HomeItem(title: "Sign PDF",
@@ -138,22 +152,41 @@ struct HomeView: View {
                          description: String(localized: "Extract your PDF tables into a spreadsheet (.csv)"),
                          imageName: "tablecells",
                          isSystemImage: true,
-                         homeAction: .pdfToExcel)
+                         homeAction: .pdfToExcel),
+                HomeItem(title: String(localized: "PDF/A"),
+                         description: String(localized: "Convert your PDF to PDF/A for long-term archiving"),
+                         imageName: "checkmark.seal",
+                         isSystemImage: true,
+                         homeAction: .pdfToPdfa)
             ])
         }
         return items
     }
-    
-    let protectItems: [HomeItem] = [
-        HomeItem(title: "Unlock PDF",
-                 description: "Unlock a PDF",
-                 imageName: "home_remove_password",
-                 homeAction: .removePassword),
-        HomeItem(title: "PDF Protector",
-                 description: "Enter a password to protect your pdf",
-                 imageName: "home_add_password",
-                 homeAction: .addPassword)
-    ]
+
+    // "Sanitize PDF" uploads the document to the Stirling service, so — like the other
+    // online tools — it is only offered when that service is available.
+    var protectItems: [HomeItem] {
+        var items: [HomeItem] = [
+            HomeItem(title: "Unlock PDF",
+                     description: "Unlock a PDF",
+                     imageName: "home_remove_password",
+                     homeAction: .removePassword),
+            HomeItem(title: "PDF Protector",
+                     description: "Enter a password to protect your pdf",
+                     imageName: "home_add_password",
+                     homeAction: .addPassword)
+        ]
+        if Container.shared.stirlingApiManager().isAvailable {
+            items.append(
+                HomeItem(title: String(localized: "Sanitize PDF"),
+                         description: String(localized: "Remove scripts and embedded content from your PDF"),
+                         imageName: "shield.checkered",
+                         isSystemImage: true,
+                         homeAction: .sanitizePdf)
+            )
+        }
+        return items
+    }
     
     private static let standardGridItemLayout: [GridItem] = {
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -245,6 +278,7 @@ struct HomeView: View {
         .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
         .showExportView(viewModel: self.viewModel.pdfExportViewModel)
         .showConvertView(viewModel: self.viewModel.pdfConvertViewModel)
+        .showAdvancedToolView(viewModel: self.viewModel.pdfAdvancedToolViewModel)
         .showReadView(viewModel: self.viewModel.pdfReadViewModel)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
