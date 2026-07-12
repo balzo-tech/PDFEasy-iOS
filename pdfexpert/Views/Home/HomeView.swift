@@ -66,6 +66,11 @@ struct HomeView: View {
                  imageName: "rotate.right",
                  isSystemImage: true,
                  homeAction: .rotatePdf),
+        HomeItem(title: String(localized: "Extract pages"),
+                 description: String(localized: "Extract selected pages into a single new PDF"),
+                 imageName: "doc.on.doc",
+                 isSystemImage: true,
+                 homeAction: .extractPages),
     ]
         
     let editItems: [HomeItem] = [
@@ -196,6 +201,7 @@ struct HomeView: View {
         .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
         .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
         .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
+        .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
         .showReadView(viewModel: self.viewModel.pdfReadViewModel)
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

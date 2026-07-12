@@ -35,6 +35,54 @@ class PDFUtility {
             }
         }
     }
+
+    /// Builds ONE new document holding the pages covered by `pageRanges`, inserted in
+    /// the given range order. This is the "extract" counterpart to split's per-range
+    /// slicing: instead of one document per range, all ranges are concatenated into a
+    /// single output. Overlapping ranges duplicate the shared pages. Ranges are 0-based,
+    /// inclusive page indexes, the same convention `PdfSplitViewModel` uses.
+    static func extractPages(fromDocument document: PDFDocument, pageRanges: [ClosedRange<Int>]) -> PDFDocument {
+        let newDocument = PDFDocument()
+        let sourceData = document.dataRepresentation()
+
+        // A page object can live at only one index of one document, so overlapping ranges
+        // need distinct objects for the duplicated pages. `PDFPage.copy()` produces such
+        // objects but its text isn't extractable in isolation (the font/resource refs
+        // aren't self-contained). Instead we source each occurrence from an independent
+        // clone of the document reloaded from its serialized data — those page objects are
+        // self-contained. Clones are created lazily, one per duplication "generation", so a
+        // document with no overlaps only ever parses a single clone.
+        var sourceClones: [PDFDocument] = []
+        var occurrenceCount: [Int: Int] = [:]
+        func clone(_ generation: Int) -> PDFDocument {
+            while sourceClones.count <= generation {
+                sourceClones.append(sourceData.flatMap { PDFDocument(data: $0) } ?? document)
+            }
+            return sourceClones[generation]
+        }
+
+        for pageRange in pageRanges {
+            for pageIndex in pageRange {
+                guard pageIndex >= 0, pageIndex < document.pageCount else {
+                    assertionFailure("Missing expected page at index: \(pageIndex)")
+                    continue
+                }
+                let generation = occurrenceCount[pageIndex, default: 0]
+                occurrenceCount[pageIndex] = generation + 1
+                if let page = clone(generation).page(at: pageIndex) {
+                    newDocument.insert(page, at: newDocument.pageCount)
+                } else {
+                    assertionFailure("Missing expected page at index: \(pageIndex)")
+                }
+            }
+        }
+
+        // Round-trip so the result is fully self-contained: the inserted pages reference
+        // the source clones, which are released when this method returns. Serializing now
+        // (while they're alive) and reloading keeps text/rendering intact afterwards,
+        // mirroring `applyPostProcess`.
+        return newDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? newDocument
+    }
     
     /// Rotates a page by a quarter turn, normalizing the result into the [0, 360) range.
     /// The rotation is stored in the page's /Rotate entry, so it survives serialization.

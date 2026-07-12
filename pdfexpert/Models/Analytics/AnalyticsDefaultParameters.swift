@@ -88,6 +88,7 @@ extension AnalyticsEvent {
         case .compressionOptionChanged: return "compression_option_changed"
         case .pdfMerge: return "pdf_merge"
         case .pdfSplit: return "pdf_split"
+        case .pdfExtract: return "pdf_extract"
         case .existingPdfOpened: return "existing_pdf_opened"
         case .existingPdfRemoved: return "existing_pdf_removed"
         case .importTutorialCompleted: return "import_tutorial_completed"
@@ -162,6 +163,7 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.compressionOption.rawValue: compressionOption.trackingParameterValue]
         case .pdfMerge: return nil
         case .pdfSplit: return nil
+        case .pdfExtract: return nil
         case .existingPdfOpened: return nil
         case .existingPdfRemoved: return nil
         case .importTutorialCompleted: return nil
@@ -274,6 +276,7 @@ fileprivate extension HomeAction {
         case .scan: return "scan"
         case .merge: return "merge"
         case .split: return "split"
+        case .extractPages: return "extract_pages"
         case .sign: return "sign"
         case .formFill: return "form_fill"
         case .addText: return "add_text"

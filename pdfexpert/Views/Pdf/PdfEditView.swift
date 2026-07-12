@@ -120,8 +120,10 @@ struct PdfEditView: View {
             Text("Your pdf has no  fields that you can fill in.")
         })
         .showError(self.$viewModel.pdfSaveError)
+        // Height is derived from the option count so newly added rows stay visible
+        // (~96pt chrome + ~58pt per row, matching the layout used today).
         .formSheet(isPresented: self.$viewModel.editOptionListShow,
-                   size: CGSize(width: 400.0, height: 320.0)) {
+                   size: CGSize(width: 400.0, height: 96.0 + 58.0 * CGFloat(EditAction.allCases.count))) {
             self.editListView
         }
         .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
@@ -136,6 +138,9 @@ struct PdfEditView: View {
         .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
         .splitSuccessfulAlert(show: self.$viewModel.splitSuccessAlertShow,
                               goToArchiveCallback: { self.viewModel.goToArchive() })
+        .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
+        .extractSuccessfulAlert(show: self.$viewModel.extractSuccessAlertShow,
+                                goToArchiveCallback: { self.viewModel.goToArchive() })
         .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
                               onComplete: { self.viewModel.onOcrMonetizationClose() })
         .actionDialog(
@@ -350,6 +355,11 @@ struct PdfEditView: View {
                 return OptionItem(title: "Split",
                                   imageName: "edit_option_split",
                                   callBack: callback)
+            case .extract:
+                return OptionItem(title: String(localized: "Extract"),
+                                  imageName: "doc.on.doc",
+                                  isSystemImage: true,
+                                  callBack: callback)
             case .ocr:
                 return OptionItem(title: String(localized: "Make Searchable (OCR)"),
                                   imageName: "text.viewfinder",
@@ -393,6 +403,16 @@ fileprivate extension View {
             Button("Continue edit", action: {})
         }, message: {
             Text("Your pdf has been successfully split and saved!")
+        })
+    }
+
+    func extractSuccessfulAlert(show: Binding<Bool>,
+                                goToArchiveCallback: @escaping () -> ()) -> some View {
+        self.alert("Pages extracted!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Continue edit", action: {})
+        }, message: {
+            Text("Your pages have been successfully extracted and saved!")
         })
     }
 }

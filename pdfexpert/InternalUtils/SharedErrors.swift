@@ -103,3 +103,26 @@ enum PdfSplitError: LocalizedError, UnderlyingError {
         }
     }
 }
+
+enum PdfExtractError: LocalizedError, UnderlyingError {
+    case unknownError
+    case pdfNoPage
+    case pdfSinglePage
+    case incompatibleRange
+    case underlyingError(errorDescription: String)
+
+    static func getUnknownError() -> Self { Self.unknownError }
+
+    static func getUnderlyingError(errorDescription: String) -> Self {
+        return .underlyingError(errorDescription: errorDescription)
+    }
+
+    var errorDescription: String? {
+        switch self {
+        case .unknownError, .incompatibleRange: return "Internal Error. Please try again later"
+        case .pdfNoPage: return String(localized: "Your pdf has no pages.")
+        case .pdfSinglePage: return String(localized: "Your pdf has only one page, so you cannot extract pages from it.")
+        case .underlyingError(let errorMessage): return errorMessage
+        }
+    }
+}

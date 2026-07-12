@@ -108,6 +108,75 @@ final class PdfUtilityTests: XCTestCase {
                       "extractText should be empty for an image-only document")
     }
 
+    // MARK: - Extract pages
+
+    /// Builds a PDF where page i carries the text "PageContent-i" (0-based), so an
+    /// extracted document's pages can be traced back to their source via `page.string`.
+    private func makeMultiPageTextPdf(pageCount: Int) -> PDFDocument {
+        let document = PDFDocument()
+        let bounds = CGRect(x: 0, y: 0, width: 400, height: 600)
+        for index in 0..<pageCount {
+            let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+                context.beginPage()
+                ("PageContent-\(index)" as NSString).draw(at: CGPoint(x: 50, y: 50),
+                                                          withAttributes: [.font: UIFont.systemFont(ofSize: 24)])
+            }
+            if let pageDocument = PDFDocument(data: data), let page = pageDocument.page(at: 0) {
+                document.insert(page, at: document.pageCount)
+            }
+        }
+        return document
+    }
+
+    private func pageIdentifier(_ document: PDFDocument, _ index: Int) -> String {
+        (document.page(at: index)?.string ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// A single range yields exactly that slice, in order.
+    func testExtractPagesSingleRange() {
+        let document = makeMultiPageTextPdf(pageCount: 5)
+        let result = PDFUtility.extractPages(fromDocument: document, pageRanges: [1...3])
+        XCTAssertEqual(result.pageCount, 3)
+        XCTAssertTrue(pageIdentifier(result, 0).contains("PageContent-1"))
+        XCTAssertTrue(pageIdentifier(result, 1).contains("PageContent-2"))
+        XCTAssertTrue(pageIdentifier(result, 2).contains("PageContent-3"))
+    }
+
+    /// Multiple ranges are concatenated into one document, in range order.
+    func testExtractPagesMultipleRangesMergedInOrder() {
+        let document = makeMultiPageTextPdf(pageCount: 6)
+        let result = PDFUtility.extractPages(fromDocument: document, pageRanges: [0...1, 4...5])
+        XCTAssertEqual(result.pageCount, 4)
+        XCTAssertTrue(pageIdentifier(result, 0).contains("PageContent-0"))
+        XCTAssertTrue(pageIdentifier(result, 1).contains("PageContent-1"))
+        XCTAssertTrue(pageIdentifier(result, 2).contains("PageContent-4"))
+        XCTAssertTrue(pageIdentifier(result, 3).contains("PageContent-5"))
+    }
+
+    /// Overlapping ranges duplicate the shared pages (same per-range semantics as split).
+    func testExtractPagesOverlappingRangesDuplicatePages() {
+        let document = makeMultiPageTextPdf(pageCount: 4)
+        let result = PDFUtility.extractPages(fromDocument: document, pageRanges: [0...2, 1...3])
+        XCTAssertEqual(result.pageCount, 6)
+        XCTAssertTrue(pageIdentifier(result, 0).contains("PageContent-0"))
+        XCTAssertTrue(pageIdentifier(result, 1).contains("PageContent-1"))
+        XCTAssertTrue(pageIdentifier(result, 2).contains("PageContent-2"))
+        XCTAssertTrue(pageIdentifier(result, 3).contains("PageContent-1"))
+        XCTAssertTrue(pageIdentifier(result, 4).contains("PageContent-2"))
+        XCTAssertTrue(pageIdentifier(result, 5).contains("PageContent-3"))
+    }
+
+    /// Out-of-order ranges preserve the given order (not sorted by page index).
+    func testExtractPagesOutOfOrderRangesPreserveGivenOrder() {
+        let document = makeMultiPageTextPdf(pageCount: 5)
+        let result = PDFUtility.extractPages(fromDocument: document, pageRanges: [3...4, 0...1])
+        XCTAssertEqual(result.pageCount, 4)
+        XCTAssertTrue(pageIdentifier(result, 0).contains("PageContent-3"))
+        XCTAssertTrue(pageIdentifier(result, 1).contains("PageContent-4"))
+        XCTAssertTrue(pageIdentifier(result, 2).contains("PageContent-0"))
+        XCTAssertTrue(pageIdentifier(result, 3).contains("PageContent-1"))
+    }
+
     // MARK: - Rotation
 
     /// Clockwise rotation must cycle 0 → 90 → 180 → 270 → 0.

@@ -65,6 +65,7 @@ enum AnalyticsEvent {
     case passwordRemoved
     case pdfMerge
     case pdfSplit
+    case pdfExtract
     case compressionOptionChanged(compressionOption: CompressionOption)
     case existingPdfOpened
     case existingPdfRemoved

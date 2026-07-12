@@ -30,6 +30,7 @@ enum EditAction: CaseIterable {
     case password
     case compression
     case split
+    case extract
     case ocr
 }
 
@@ -108,6 +109,7 @@ class PdfEditViewModel: ObservableObject {
     @Published var passwordTextFieldShow: Bool = false
     @Published var removePasswordAlertShow: Bool = false
     @Published var splitSuccessAlertShow: Bool = false
+    @Published var extractSuccessAlertShow: Bool = false
     @Published var compressionShow: Bool = false
     @Published var ocrMonetizationShow: Bool = false
     @Published var rotateOptionsShow: Bool = false
@@ -119,7 +121,8 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.store) private var store
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
-    
+    @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
+
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
     }()
@@ -336,6 +339,10 @@ class PdfEditViewModel: ObservableObject {
             case .split:
                 self.pdfSplitViewModel.split(pdf: self.pdf, onSplitCompleted: { [weak self] in
                     self?.splitSuccessAlertShow = true
+                })
+            case .extract:
+                self.pdfExtractViewModel.extract(pdf: self.pdf, onExtractCompleted: { [weak self] in
+                    self?.extractSuccessAlertShow = true
                 })
             case .ocr:
                 self.startOcr()
