@@ -2648,6 +2648,70 @@
         }
       }
     },
+    "The conversion could not be completed. Please try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The conversion could not be completed. Please try again."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non è stato possibile completare la conversione. Riprova."
+          }
+        }
+      }
+    },
+    "The conversion service rejected the request. Please try again later." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The conversion service rejected the request. Please try again later."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il servizio di conversione ha rifiutato la richiesta. Riprova più tardi."
+          }
+        }
+      }
+    },
+    "The conversion service returned an unexpected response. Please try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The conversion service returned an unexpected response. Please try again."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il servizio di conversione ha restituito una risposta imprevista. Riprova."
+          }
+        }
+      }
+    },
+    "The conversion timed out. Please try again with a smaller document." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The conversion timed out. Please try again with a smaller document."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La conversione ha impiegato troppo tempo. Riprova con un documento più piccolo."
+          }
+        }
+      }
+    },
     "The PDF editor for iPhone" : {
       "localizations" : {
         "en" : {
@@ -2710,6 +2774,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non ci sono immagini in questa pagina"
+          }
+        }
+      }
+    },
+    "This conversion tool is currently unavailable. Please try again later." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This conversion tool is currently unavailable. Please try again later."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo strumento di conversione non è al momento disponibile. Riprova più tardi."
           }
         }
       }
@@ -2994,6 +3074,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sì"
+          }
+        }
+      }
+    },
+    "You appear to be offline. Please check your connection and try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You appear to be offline. Please check your connection and try again."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sembra che tu sia offline. Controlla la connessione e riprova."
           }
         }
       }

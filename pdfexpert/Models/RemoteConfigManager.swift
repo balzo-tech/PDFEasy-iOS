@@ -16,6 +16,8 @@ struct RemoteConfigData {
     let chatGptModel: String
     let chatGptMaxTokens: Int
     let chatMaxMessagesPerMonth: Int
+    let stirlingApiEnabled: Bool
+    let stirlingApiBaseUrl: String
 
     init(remoteConfig: RemoteConfig) {
         let subscriptionViewTypeValue = remoteConfig.configValue(forKey: RemoteConfigKey.subcriptionViewType.rawValue).stringValue
@@ -29,6 +31,11 @@ struct RemoteConfigData {
 
         let chatMaxMessagesPerMonthValue = remoteConfig.configValue(forKey: RemoteConfigKey.chatMaxMessagesPerMonth.rawValue).numberValue.intValue
         self.chatMaxMessagesPerMonth = chatMaxMessagesPerMonthValue > 0 ? chatMaxMessagesPerMonthValue : K.ChatPdf.DefaultChatMaxMessagesPerMonth
+
+        self.stirlingApiEnabled = remoteConfig.configValue(forKey: RemoteConfigKey.stirlingApiEnabled.rawValue).boolValue
+
+        let stirlingApiBaseUrlValue = remoteConfig.configValue(forKey: RemoteConfigKey.stirlingApiBaseUrl.rawValue).stringValue ?? ""
+        self.stirlingApiBaseUrl = stirlingApiBaseUrlValue.isEmpty ? K.Stirling.DefaultBaseUrl : stirlingApiBaseUrlValue
     }
 
     /// Memberwise initializer used by non-Firebase call sites (e.g. unit tests / previews)
@@ -36,11 +43,15 @@ struct RemoteConfigData {
     init(subcriptionViewType: SubscriptionViewType = K.MonetizationK.defaultSubscriptionViewType,
          chatGptModel: String = K.ChatPdf.DefaultChatGptModel,
          chatGptMaxTokens: Int = K.ChatPdf.DefaultChatGptMaxTokens,
-         chatMaxMessagesPerMonth: Int = K.ChatPdf.DefaultChatMaxMessagesPerMonth) {
+         chatMaxMessagesPerMonth: Int = K.ChatPdf.DefaultChatMaxMessagesPerMonth,
+         stirlingApiEnabled: Bool = K.Stirling.DefaultEnabled,
+         stirlingApiBaseUrl: String = K.Stirling.DefaultBaseUrl) {
         self.subcriptionViewType = subcriptionViewType
         self.chatGptModel = chatGptModel
         self.chatGptMaxTokens = chatGptMaxTokens
         self.chatMaxMessagesPerMonth = chatMaxMessagesPerMonth
+        self.stirlingApiEnabled = stirlingApiEnabled
+        self.stirlingApiBaseUrl = stirlingApiBaseUrl
     }
 }
 
@@ -143,6 +154,8 @@ fileprivate enum RemoteConfigKey : String, CaseIterable {
     case chatGptModel = "chat_gpt_model"
     case chatGptMaxTokens = "chat_gpt_max_tokens"
     case chatMaxMessagesPerMonth = "chat_max_messages_per_month"
+    case stirlingApiEnabled = "stirling_api_enabled"
+    case stirlingApiBaseUrl = "stirling_api_base_url"
 }
 
 fileprivate extension RemoteConfig {
@@ -159,6 +172,10 @@ fileprivate extension RemoteConfig {
                 result[key.rawValue] = NSNumber(value: K.ChatPdf.DefaultChatGptMaxTokens)
             case .chatMaxMessagesPerMonth:
                 result[key.rawValue] = NSNumber(value: K.ChatPdf.DefaultChatMaxMessagesPerMonth)
+            case .stirlingApiEnabled:
+                result[key.rawValue] = NSNumber(value: K.Stirling.DefaultEnabled)
+            case .stirlingApiBaseUrl:
+                result[key.rawValue] = NSString(string: K.Stirling.DefaultBaseUrl)
             }
         }
         return result

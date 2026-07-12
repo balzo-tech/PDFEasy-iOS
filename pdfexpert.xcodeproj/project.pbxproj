@@ -10,6 +10,7 @@
 		370051A46812F757756F2CDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E063C045C32C627710F557 /* Foundation.framework */; };
 		406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */; };
 		49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */; };
+		3CC5712E6C5B85CB8E55FC00 /* StirlingApiManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7849D91F2705FFE55B8408A /* StirlingApiManagerTests.swift */; };
 		1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */; };
 		72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */; };
 		544D6E0E1EA7CA7A83868ECF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
@@ -42,6 +43,9 @@
 		8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA352A68299B005F6C73 /* ChatPdfManager.swift */; };
 		8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */; };
 		879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */; };
+		437028E1F0DB00419857B9E8 /* StirlingApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */; };
+		D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */; };
+		9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */; };
 		E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */; };
 		8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */; };
 		8936AA3E2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA3D2A682F8E005F6C73 /* ChatPdfSelectionViewModel.swift */; };
@@ -349,6 +353,9 @@
 		893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreGraphics+Extensions.swift"; sourceTree = "<group>"; };
 		893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtility.swift; sourceTree = "<group>"; };
 		1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAiChatPdfManagerImpl.swift; sourceTree = "<group>"; };
+		A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManager.swift; sourceTree = "<group>"; };
+		C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerImpl.swift; sourceTree = "<group>"; };
+		E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerMock.swift; sourceTree = "<group>"; };
 		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
@@ -572,6 +579,7 @@
 		0F76D922605F497582E22531 /* PdfOverlayUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PdfOverlayUtility.swift; path = ../../pdfexpert/InternalUtils/PdfOverlayUtility.swift; sourceTree = "<group>"; };
 		C6F6ADAE49FFA46E46905627 /* PdfExpertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PdfExpertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OcrUtilityTests.swift; sourceTree = "<group>"; };
+		D7849D91F2705FFE55B8408A /* StirlingApiManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerTests.swift; sourceTree = "<group>"; };
 		E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatUsageTrackerTests.swift; sourceTree = "<group>"; };
 		479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfOverlayUtilityTests.swift; sourceTree = "<group>"; };
 		FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfUtilityTests.swift; sourceTree = "<group>"; };
@@ -650,6 +658,7 @@
 			isa = PBXGroup;
 			children = (
 				893BE5322A6A96D0004B05B9 /* ChatPdf */,
+				E9F8DEB7A9A83EBE9F913C5E /* Stirling */,
 				893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */,
 			);
 			path = Network;
@@ -663,6 +672,16 @@
 				1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */,
 			);
 			path = ChatPdf;
+			sourceTree = "<group>";
+		};
+		E9F8DEB7A9A83EBE9F913C5E /* Stirling */ = {
+			isa = PBXGroup;
+			children = (
+				A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */,
+				C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */,
+				E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */,
+			);
+			path = Stirling;
 			sourceTree = "<group>";
 		};
 		893C8FC729DED15B000E35BD /* Archive */ = {
@@ -1296,6 +1315,7 @@
 				E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */,
 				E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */,
 				A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */,
+				D7849D91F2705FFE55B8408A /* StirlingApiManagerTests.swift */,
 			);
 			name = PdfExpertTests;
 			path = PdfExpertTests;
@@ -1645,6 +1665,9 @@
 				89436AB829E5556600060605 /* PdfCoordinator.swift in Sources */,
 				89CD7B7029D329B1003F1C3A /* FontPalette.swift in Sources */,
 				879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */,
+				437028E1F0DB00419857B9E8 /* StirlingApiManager.swift in Sources */,
+				D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */,
+				9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */,
 				E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */,
 				895FE2CB29D6E9B800A99D5B /* SubscriptionPairsView.swift in Sources */,
 				894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */,
@@ -1784,6 +1807,7 @@
 				72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */,
 				E0F0A1B2C3D4E5F600000008 /* PdfExportUtilityTests.swift in Sources */,
 				1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */,
+				3CC5712E6C5B85CB8E55FC00 /* StirlingApiManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

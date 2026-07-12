@@ -54,7 +54,13 @@ struct K {
             static let NetworkStubsDelay = 1.0
             static let NetworkLogVerbose = false
         }
-        
+
+        struct Stirling {
+            static let UseMock = false
+            static let NetworkStubsDelay = 1.0
+            static let NetworkLogVerbose = false
+        }
+
         struct Review {
             // If set to true, the review flow starts every time the current logic would trigger it,
             // even if it has already been shown in the past.
@@ -86,7 +92,17 @@ struct K {
         // replay on each request. 20 messages == the last ~10 exchanges.
         static let ConversationHistoryMessageLimit: Int = 20
     }
-    
+
+    struct Stirling {
+        // In-app fallbacks for the Stirling-PDF remote-config values.
+        static let DefaultBaseUrl = "https://api.stirling.com"
+        static let DefaultEnabled = false
+
+        // Conversions can be long-running; give the request a generous timeout so it
+        // is not cut off by Alamofire's default 60s.
+        static let RequestTimeout: TimeInterval = 120.0
+    }
+
     struct Review {
         static let MinimumRateForNativePopup: Int = 5
         static let FeedbackMaxCharacters: Int = 100
