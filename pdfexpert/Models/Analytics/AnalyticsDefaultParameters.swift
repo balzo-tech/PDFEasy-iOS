@@ -20,6 +20,9 @@ enum AnalyticsEventCustomParameters: String {
     case reviewLowRateFeedbackContent = "review_low_rate_feedback_content"
     case screenName = "screen_name"
     case rotationType = "rotation_type"
+    case pageNumberPosition = "page_number_position"
+    case pageNumberFormat = "page_number_format"
+    case watermarkLayout = "watermark_layout"
 }
 
 extension MarginsOption {
@@ -65,6 +68,8 @@ extension AnalyticsScreen {
         case .pageSelection: return "PageSelection"
         case .suggestedFields: return "SuggestedFields"
         case .ocr: return "Ocr"
+        case .pageNumbers: return "PageNumbers"
+        case .watermark: return "Watermark"
         }
     }
 }
@@ -114,6 +119,10 @@ extension AnalyticsEvent {
         case .suggestedFieldsSaved: return "suggested_fields_saved"
         case .ocrStarted: return "ocr_started"
         case .ocrCompleted: return "ocr_completed"
+        case .pageNumbersStarted: return "page_numbers_started"
+        case .pageNumbersCompleted: return "page_numbers_completed"
+        case .watermarkStarted: return "watermark_started"
+        case .watermarkCompleted: return "watermark_completed"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -203,6 +212,15 @@ extension AnalyticsEvent {
         case .suggestedFieldsSaved: return nil
         case .ocrStarted: return nil
         case .ocrCompleted: return nil
+        case .pageNumbersStarted: return nil
+        case .pageNumbersCompleted(let position, let format):
+            return [
+                AnalyticsEventCustomParameters.pageNumberPosition.rawValue: position.trackingParameterValue,
+                AnalyticsEventCustomParameters.pageNumberFormat.rawValue: format.trackingParameterValue
+            ]
+        case .watermarkStarted: return nil
+        case .watermarkCompleted(let layout):
+            return [AnalyticsEventCustomParameters.watermarkLayout.rawValue: layout.trackingParameterValue]
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil
@@ -264,6 +282,40 @@ fileprivate extension AnalyticsPageRotationType {
     }
 }
 
+fileprivate extension PageNumberPosition {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .topLeft: return "top_left"
+        case .topCenter: return "top_center"
+        case .topRight: return "top_right"
+        case .bottomLeft: return "bottom_left"
+        case .bottomCenter: return "bottom_center"
+        case .bottomRight: return "bottom_right"
+        }
+    }
+}
+
+fileprivate extension PageNumberFormat {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .simple: return "simple"
+        case .ofTotal: return "of_total"
+        }
+    }
+}
+
+fileprivate extension WatermarkLayout {
+
+    var trackingParameterValue: String {
+        switch self {
+        case .diagonal: return "diagonal"
+        case .horizontal: return "horizontal"
+        }
+    }
+}
+
 fileprivate extension HomeAction {
 
     var trackingParameterValue: String {
@@ -282,6 +334,8 @@ fileprivate extension HomeAction {
         case .addText: return "add_text"
         case .createPdf: return "create_pdf"
         case .ocr: return "ocr"
+        case .pageNumbers: return "page_numbers"
+        case .watermark: return "watermark"
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"

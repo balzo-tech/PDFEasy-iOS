@@ -161,6 +161,10 @@
 		CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEC26104F59A1229C145C29 /* PdfExtractView.swift */; };
 		896876262A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896876252A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift */; };
 		896876282A7D2EC20014A320 /* PdfPageRangeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896876272A7D2EC20014A320 /* PdfPageRangeEditorView.swift */; };
+		E5FBC6A7C2D9471BA5D4A426 /* PdfPageNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */; };
+		DD7C84EFEA1340E8AECC1990 /* PdfPageNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1627687B824247268F137100 /* PdfPageNumberView.swift */; };
+		903B37DB56E74E3FA2A5B009 /* PdfWatermarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C950ACA41EA45A7A7C7B55E /* PdfWatermarkViewModel.swift */; };
+		6A5FBA082C264A6D815AB566 /* PdfWatermarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917D8256592E4DA8B7E10970 /* PdfWatermarkView.swift */; };
 		896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6C2A28910B008F268E /* SizePrinter.swift */; };
 		896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */; };
 		897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */; };
@@ -445,6 +449,10 @@
 		3AEC26104F59A1229C145C29 /* PdfExtractView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExtractView.swift; sourceTree = "<group>"; };
 		896876252A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageRangeEditorViewModel.swift; sourceTree = "<group>"; };
 		896876272A7D2EC20014A320 /* PdfPageRangeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageRangeEditorView.swift; sourceTree = "<group>"; };
+		3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageNumberViewModel.swift; sourceTree = "<group>"; };
+		1627687B824247268F137100 /* PdfPageNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageNumberView.swift; sourceTree = "<group>"; };
+		5C950ACA41EA45A7A7C7B55E /* PdfWatermarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfWatermarkViewModel.swift; sourceTree = "<group>"; };
+		917D8256592E4DA8B7E10970 /* PdfWatermarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfWatermarkView.swift; sourceTree = "<group>"; };
 		896CCF6C2A28910B008F268E /* SizePrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizePrinter.swift; sourceTree = "<group>"; };
 		896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalView.swift; sourceTree = "<group>"; };
@@ -863,6 +871,8 @@
 				8968761D2A7CEE320014A320 /* PdfImportView.swift */,
 				896876212A7CF3220014A320 /* PdfImportMultipleView.swift */,
 				896876272A7D2EC20014A320 /* PdfPageRangeEditorView.swift */,
+				1627687B824247268F137100 /* PdfPageNumberView.swift */,
+				917D8256592E4DA8B7E10970 /* PdfWatermarkView.swift */,
 				89436D182A936C9F000868B5 /* PdfReadView.swift */,
 				89436D1C2A93AE76000868B5 /* PdfReaderView.swift */,
 				89436D222A93C1CE000868B5 /* PdfPageSelectionView.swift */,
@@ -1166,6 +1176,8 @@
 				89BB2DBE2A7AB0CE009E6738 /* PdfSortViewModel.swift */,
 				896876192A7CE87A0014A320 /* PdfSplitViewModel.swift */,
 				0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */,
+				3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */,
+				5C950ACA41EA45A7A7C7B55E /* PdfWatermarkViewModel.swift */,
 				8968761B2A7CEB650014A320 /* PdfImportViewModel.swift */,
 				8968761F2A7CF1E00014A320 /* PdfImportMultipleViewModel.swift */,
 				896876252A7D2EB80014A320 /* PdfPageRangeEditorViewModel.swift */,
@@ -1557,6 +1569,10 @@
 				8962D6082A9E2A57008426A2 /* PdfSignatureProviderFlowView.swift in Sources */,
 				897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */,
 				896876282A7D2EC20014A320 /* PdfPageRangeEditorView.swift in Sources */,
+				E5FBC6A7C2D9471BA5D4A426 /* PdfPageNumberViewModel.swift in Sources */,
+				DD7C84EFEA1340E8AECC1990 /* PdfPageNumberView.swift in Sources */,
+				903B37DB56E74E3FA2A5B009 /* PdfWatermarkViewModel.swift in Sources */,
+				6A5FBA082C264A6D815AB566 /* PdfWatermarkView.swift in Sources */,
 				89CD7B5629D329B1003F1C3A /* Async.swift in Sources */,
 				89CD7B5129D329B1003F1C3A /* UIApplication+Extensions.swift in Sources */,
 				89BB2DBB2A7A7DD7009E6738 /* PdfUnlockViewModel.swift in Sources */,

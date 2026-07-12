@@ -102,6 +102,16 @@ struct PdfEditView: View {
                                     currentPageIndex: self.viewModel.pdfCurrentPageIndex,
                                     onConfirm: { self.viewModel.updatePdf(pdf: $0) })
                 PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
+            case .pageNumbers:
+                let inputParameter = PdfPageNumberViewModel
+                    .InputParameter(pdf: self.viewModel.pdf,
+                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+                PdfPageNumberView(viewModel: Container.shared.pdfPageNumberViewModel(inputParameter))
+            case .watermark:
+                let inputParameter = PdfWatermarkViewModel
+                    .InputParameter(pdf: self.viewModel.pdf,
+                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+                PdfWatermarkView(viewModel: Container.shared.pdfWatermarkViewModel(inputParameter))
             }
         }
         .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
@@ -143,6 +153,10 @@ struct PdfEditView: View {
                                 goToArchiveCallback: { self.viewModel.goToArchive() })
         .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
                               onComplete: { self.viewModel.onOcrMonetizationClose() })
+        .showSubscriptionView(self.$viewModel.pageNumbersMonetizationShow,
+                              onComplete: { self.viewModel.onPageNumbersMonetizationClose() })
+        .showSubscriptionView(self.$viewModel.watermarkMonetizationShow,
+                              onComplete: { self.viewModel.onWatermarkMonetizationClose() })
         .actionDialog(
             Text("Rotate"),
             isPresented: self.$viewModel.rotateOptionsShow,
@@ -363,6 +377,16 @@ struct PdfEditView: View {
             case .ocr:
                 return OptionItem(title: String(localized: "Make Searchable (OCR)"),
                                   imageName: "text.viewfinder",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .pageNumbers:
+                return OptionItem(title: String(localized: "Page numbers"),
+                                  imageName: "textformat.123",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .watermark:
+                return OptionItem(title: String(localized: "Watermark"),
+                                  imageName: "drop.halffull",
                                   isSystemImage: true,
                                   callBack: callback)
             }

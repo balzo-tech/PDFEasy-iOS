@@ -93,7 +93,17 @@ struct HomeView: View {
         HomeItem(title: String(localized: "Make Searchable (OCR)"),
                  description: String(localized: "Recognize text in scanned pages and make your PDF searchable"),
                  imageName: "home_ocr",
-                 homeAction: .ocr)
+                 homeAction: .ocr),
+        HomeItem(title: String(localized: "Page numbers"),
+                 description: String(localized: "Add page numbers to every page of your PDF"),
+                 imageName: "textformat.123",
+                 isSystemImage: true,
+                 homeAction: .pageNumbers),
+        HomeItem(title: String(localized: "Watermark"),
+                 description: String(localized: "Stamp a text watermark across every page"),
+                 imageName: "drop.halffull",
+                 isSystemImage: true,
+                 homeAction: .watermark)
     ]
     
     let importItems: [HomeItem] = [

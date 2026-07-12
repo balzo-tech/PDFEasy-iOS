@@ -24,6 +24,8 @@ enum PdfEditStartAction {
     case openSignature
     case openOcr
     case openRotate
+    case openPageNumbers
+    case openWatermark
 }
 
 enum EditAction: CaseIterable {
@@ -32,6 +34,8 @@ enum EditAction: CaseIterable {
     case split
     case extract
     case ocr
+    case pageNumbers
+    case watermark
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -99,7 +103,7 @@ class PdfEditViewModel: ObservableObject {
     }
     
     enum ActiveSheet: Identifiable {
-        case camera, scanner, signature, fillForm, fillWidget
+        case camera, scanner, signature, fillForm, fillWidget, pageNumbers, watermark
         var id: Self { self }
     }
 
@@ -112,6 +116,8 @@ class PdfEditViewModel: ObservableObject {
     @Published var extractSuccessAlertShow: Bool = false
     @Published var compressionShow: Bool = false
     @Published var ocrMonetizationShow: Bool = false
+    @Published var pageNumbersMonetizationShow: Bool = false
+    @Published var watermarkMonetizationShow: Bool = false
     @Published var rotateOptionsShow: Bool = false
 
     @Injected(\.repository) private var repository
@@ -139,6 +145,10 @@ class PdfEditViewModel: ObservableObject {
     var startAction: PdfEditStartAction? = nil
     // Set when OCR is gated behind the paywall, so it runs after a successful purchase.
     private var ocrPending: Bool = false
+    // Same per-feature paywall flags for the page-number and watermark tools: the
+    // tool opens after a successful purchase (see the respective monetization-close).
+    private var pageNumbersPending: Bool = false
+    private var watermarkPending: Bool = false
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
@@ -171,6 +181,10 @@ class PdfEditViewModel: ObservableObject {
                     self.startOcr()
                 case .openRotate:
                     self.rotateOptionsShow = true
+                case .openPageNumbers:
+                    self.startPageNumbers()
+                case .openWatermark:
+                    self.startWatermark()
                 }
             }
             self.startAction = nil
@@ -346,6 +360,10 @@ class PdfEditViewModel: ObservableObject {
                 })
             case .ocr:
                 self.startOcr()
+            case .pageNumbers:
+                self.startPageNumbers()
+            case .watermark:
+                self.startWatermark()
             }
         }
     }
@@ -376,6 +394,54 @@ class PdfEditViewModel: ObservableObject {
     private func performOcr() {
         self.analyticsManager.track(event: .ocrStarted)
         OcrUtility.makeSearchable(pdf: self.pdf, asyncOperation: self.asyncSubject(\.asyncOcr))
+    }
+
+    /// Entry point for the page-number tool. Premium-gated exactly like OCR: the
+    /// tool sheet opens immediately for subscribers, otherwise the paywall is shown
+    /// and the sheet opens after a successful purchase (see `onPageNumbersMonetizationClose`).
+    @MainActor
+    func startPageNumbers() {
+        if self.store.isPremium.value {
+            self.activeSheet = .pageNumbers
+        } else {
+            self.pageNumbersPending = true
+            self.pageNumbersMonetizationShow = true
+        }
+    }
+
+    @MainActor
+    func onPageNumbersMonetizationClose() {
+        let shouldOpen = self.pageNumbersPending && self.store.isPremium.value
+        self.pageNumbersPending = false
+        if shouldOpen {
+            // Defer so the paywall cover finishes dismissing before the tool cover
+            // is presented (two fullScreenCovers on the same hierarchy).
+            DispatchQueue.main.async {
+                self.activeSheet = .pageNumbers
+            }
+        }
+    }
+
+    /// Entry point for the watermark tool. Same premium gate as the page-number tool.
+    @MainActor
+    func startWatermark() {
+        if self.store.isPremium.value {
+            self.activeSheet = .watermark
+        } else {
+            self.watermarkPending = true
+            self.watermarkMonetizationShow = true
+        }
+    }
+
+    @MainActor
+    func onWatermarkMonetizationClose() {
+        let shouldOpen = self.watermarkPending && self.store.isPremium.value
+        self.watermarkPending = false
+        if shouldOpen {
+            DispatchQueue.main.async {
+                self.activeSheet = .watermark
+            }
+        }
     }
     
     func setPassword(_ password: String) {

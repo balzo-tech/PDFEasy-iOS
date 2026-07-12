@@ -39,6 +39,8 @@ enum HomeAction: Hashable, Identifiable {
     case createPdf
     case ocr
     case rotatePdf
+    case pageNumbers
+    case watermark
 
     case importPdf
     
@@ -64,6 +66,8 @@ enum HomeAction: Hashable, Identifiable {
         case .createPdf: return nil
         case .ocr: return .pdf
         case .rotatePdf: return .pdf
+        case .pageNumbers: return .pdf
+        case .watermark: return .pdf
         case .importPdf: return .pdf
         case .readPdf: return .pdf
         case .removePassword: return .pdf
@@ -88,6 +92,8 @@ enum HomeAction: Hashable, Identifiable {
         case .createPdf: return nil
         case .ocr: return .openOcr
         case .rotatePdf: return .openRotate
+        case .pageNumbers: return .openPageNumbers
+        case .watermark: return .openWatermark
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return nil
@@ -112,6 +118,8 @@ enum HomeAction: Hashable, Identifiable {
         case .createPdf: return nil
         case .ocr: return nil
         case .rotatePdf: return nil
+        case .pageNumbers: return nil
+        case .watermark: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
@@ -237,7 +245,7 @@ public class HomeViewModel : ObservableObject {
             break
         case .imageToPdf:
             self.importOptionGroup = .image
-        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword, .rotatePdf:
+        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword, .rotatePdf, .pageNumbers, .watermark:
             self.openFilePicker(fileSource: .files)
         case .sign, .addText, .ocr:
             self.importOptionGroup = .fileAndScan
@@ -357,7 +365,7 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
-            case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf:
+            case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .readPdf:
                 assertionFailure("Selected file url is not handled for the current action")

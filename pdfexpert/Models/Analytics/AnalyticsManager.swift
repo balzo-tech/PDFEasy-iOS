@@ -47,6 +47,8 @@ enum AnalyticsScreen {
     case pageSelection
     case suggestedFields
     case ocr
+    case pageNumbers
+    case watermark
 }
 
 enum AnalyticsEvent {
@@ -92,6 +94,10 @@ enum AnalyticsEvent {
     case suggestedFieldsSaved
     case ocrStarted
     case ocrCompleted
+    case pageNumbersStarted
+    case pageNumbersCompleted(position: PageNumberPosition, format: PageNumberFormat)
+    case watermarkStarted
+    case watermarkCompleted(layout: WatermarkLayout)
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }
