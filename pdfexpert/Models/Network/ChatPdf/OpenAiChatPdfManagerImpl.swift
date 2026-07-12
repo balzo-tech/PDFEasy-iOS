@@ -9,12 +9,12 @@
 //  of the prompt on every request. Conversation context is also kept in memory
 //  (chatpdf.com used to keep it server-side).
 //
-//  SECURITY NOTE: the OpenAI API key is embedded in the client (read from the
-//  git-ignored ProjectInfo.plist) and is therefore extractable by a determined
-//  attacker who inspects the binary or proxies the traffic. The accepted future
-//  mitigation is a thin server-side proxy that holds the real key and enforces
-//  quotas. For now the trade-off is accepted, the same way the previous
-//  CHAT_PDF_API_KEY was handled.
+//  SECURITY NOTE: the OpenAI API key is embedded in the client. It is compiled in
+//  XOR-obfuscated (from the git-ignored ProjectInfo.plist, via the "Generate Secrets"
+//  build phase), so it no longer ships as cleartext in the IPA and does not appear in
+//  `strings` on the binary. This only raises the bar: a determined attacker who hooks
+//  the running process or proxies the traffic can still recover it. The accepted future
+//  mitigation is a thin server-side proxy that holds the real key and enforces quotas.
 //
 
 import Foundation

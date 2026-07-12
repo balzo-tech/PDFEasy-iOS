@@ -143,8 +143,17 @@ folders/~~search~~/tags (M — search ✅ done, see #12).
   passing one makes xcodebuild silently fall back to `Production Release` and emit
   misleading `Unable to resolve module` errors. Always pass an explicit config.
 - **Local build needs `ProjectInfo.plist`**: `pdfexpert/Resources/ProjectInfo.plist`
-  is git-ignored (holds `CHAT_PDF_API_KEY`) and must exist locally. A placeholder
-  is enough to compile; use the real key to exercise ChatPDF.
+  is git-ignored (holds `OPENAI_API_KEY`, and now `STIRLING_API_KEY`) and must exist
+  locally. A placeholder is enough to compile; use the real key to exercise ChatPDF.
+  The plist is **no longer bundled** into the app. At build time the "Generate Secrets"
+  run-script phase (runs before Compile Sources; see `pdfexpert/Scripts/generate_secrets.sh`)
+  reads the plist and emits `pdfexpert/Generated/ObfuscatedSecrets.swift` (git-ignored)
+  with each key XOR-obfuscated against a fresh random pad. `ProjectInfo.openAiApiKey` /
+  `ProjectInfo.stirlingApiKey` deobfuscate it at runtime via `ObfuscatedSecret`. Result:
+  no cleartext key in the IPA and nothing recognizable in `strings` on the binary. To
+  set the real key, just edit the git-ignored plist and rebuild — nothing else. This
+  only raises the bar; a runtime attacker can still extract keys, so the eventual fix
+  is still a server-side proxy.
 - Per-env `Info.plist` / `GoogleService-Info.plist` live in
   `pdfexpert/Resources/{Staging,Production}` and are git-ignored too.
 - **Verify build/test from CLI (Apple Silicon)**:

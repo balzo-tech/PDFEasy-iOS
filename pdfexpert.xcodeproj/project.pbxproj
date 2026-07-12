@@ -35,8 +35,10 @@
 		8932ECE92A20F10500CBCD7A /* TextResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8932ECE82A20F10500CBCD7A /* TextResizableView.swift */; };
 		8933490C2A24AE880005D484 /* PdfKitViewBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933490B2A24AE880005D484 /* PdfKitViewBinder.swift */; };
 		8934ACC72A6AE96700F6CDA8 /* ChatPdfInitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8934ACC62A6AE96700F6CDA8 /* ChatPdfInitParams.swift */; };
-		8936AA312A682812005F6C73 /* ProjectInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8936AA302A682812005F6C73 /* ProjectInfo.plist */; };
 		8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA322A6828C9005F6C73 /* ProjectInfo.swift */; };
+		A1B2C3D4E5F600000000A002 /* ObfuscatedSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A001 /* ObfuscatedSecret.swift */; };
+		A1B2C3D4E5F600000000A004 /* ObfuscatedSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A003 /* ObfuscatedSecrets.swift */; };
+		A1B2C3D4E5F600000000A007 /* ObfuscatedSecretTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */; };
 		8936AA382A68299B005F6C73 /* ChatPdfManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA352A68299B005F6C73 /* ChatPdfManager.swift */; };
 		8936AA392A68299B005F6C73 /* ChatPdfManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */; };
 		879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */; };
@@ -332,6 +334,9 @@
 		8936AA2A2A67F975005F6C73 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		8936AA302A682812005F6C73 /* ProjectInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProjectInfo.plist; sourceTree = "<group>"; };
 		8936AA322A6828C9005F6C73 /* ProjectInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectInfo.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600000000A001 /* ObfuscatedSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObfuscatedSecret.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600000000A003 /* ObfuscatedSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObfuscatedSecrets.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObfuscatedSecretTests.swift; sourceTree = "<group>"; };
 		8936AA352A68299B005F6C73 /* ChatPdfManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPdfManager.swift; sourceTree = "<group>"; };
 		8936AA362A68299B005F6C73 /* ChatPdfManagerMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPdfManagerMock.swift; sourceTree = "<group>"; };
 		8936AA3B2A682CDA005F6C73 /* ChatPdfSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPdfSelectionView.swift; sourceTree = "<group>"; };
@@ -951,6 +956,7 @@
 				89CD7B0329D329B1003F1C3A /* Views */,
 				89CD7AF829D329B1003F1C3A /* Style */,
 				89CD7B2B29D329B1003F1C3A /* InternalUtils */,
+				A1B2C3D4E5F600000000A005 /* Generated */,
 				89CD7ACD29D329B1003F1C3A /* Utils */,
 				89CD7AAD29D329B1003F1C3A /* Resources */,
 				89CD7A9F29D32856003F1C3A /* Preview Content */,
@@ -1220,9 +1226,18 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		A1B2C3D4E5F600000000A005 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F600000000A003 /* ObfuscatedSecrets.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		89CD7B2B29D329B1003F1C3A /* InternalUtils */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D4E5F600000000A001 /* ObfuscatedSecret.swift */,
 				89CD7B2C29D329B1003F1C3A /* SharedErrors.swift */,
 				89CD7B2D29D329B1003F1C3A /* SubscriptionViewUtility.swift */,
 				89CD7B2E29D329B1003F1C3A /* View+Preview.swift */,
@@ -1280,6 +1295,7 @@
 				479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */,
 				E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */,
 				E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */,
+				A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */,
 			);
 			name = PdfExpertTests;
 			path = PdfExpertTests;
@@ -1309,6 +1325,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 89CD7AAA29D32856003F1C3A /* Build configuration list for PBXNativeTarget "PdfExpert" */;
 			buildPhases = (
+				A1B2C3D4E5F600000000A008 /* Generate Secrets */,
 				89CD7A9229D32855003F1C3A /* Sources */,
 				89CD7A9329D32855003F1C3A /* Frameworks */,
 				89AA36072A1BB0280077A70A /* Setup Firebase Environment GoogleService-Info.plist */,
@@ -1442,7 +1459,6 @@
 				89D79E012A654DC80086A8E5 /* Poppins-Thin.ttf in Resources */,
 				89D79E032A654DC80086A8E5 /* Poppins-ExtraBoldItalic.ttf in Resources */,
 				89CD7B3429D329B1003F1C3A /* Products.plist in Resources */,
-				8936AA312A682812005F6C73 /* ProjectInfo.plist in Resources */,
 				89D79DF82A654DC80086A8E5 /* Poppins-ExtraLightItalic.ttf in Resources */,
 				89D79E082A654DC80086A8E5 /* Poppins-Bold.ttf in Resources */,
 				89923E6B29D47B9E00E246FC /* pdf-scanning.json in Resources */,
@@ -1469,6 +1485,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A1B2C3D4E5F600000000A008 /* Generate Secrets */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/PdfExpert/Resources/ProjectInfo.plist",
+			);
+			name = "Generate Secrets";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/PdfExpert/Generated/ObfuscatedSecrets.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${SRCROOT}/pdfexpert/Scripts/generate_secrets.sh\"\n";
+		};
 		89923E6429D437B400E246FC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1693,6 +1730,8 @@
 				89429F862A9C8ECC00465420 /* PdfSignaturePickerView.swift in Sources */,
 				8936AA3C2A682CDA005F6C73 /* ChatPdfSelectionView.swift in Sources */,
 				8936AA332A6828C9005F6C73 /* ProjectInfo.swift in Sources */,
+				A1B2C3D4E5F600000000A002 /* ObfuscatedSecret.swift in Sources */,
+				A1B2C3D4E5F600000000A004 /* ObfuscatedSecrets.swift in Sources */,
 				893C8FD029DED278000E35BD /* Persistence.swift in Sources */,
 				89CD7B5229D329B1003F1C3A /* View+Alert.swift in Sources */,
 				89E601642A8295A2009492DA /* SubscriptionPickerViewModel.swift in Sources */,
@@ -1740,6 +1779,7 @@
 			files = (
 				406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */,
 				D803CF2A0EEE999C06EAEF60 /* SmokeTests.swift in Sources */,
+				A1B2C3D4E5F600000000A007 /* ObfuscatedSecretTests.swift in Sources */,
 				49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */,
 				72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */,
 				E0F0A1B2C3D4E5F600000008 /* PdfExportUtilityTests.swift in Sources */,

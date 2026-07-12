@@ -61,6 +61,8 @@ PdfExpert/**/GoogleService-Info.plist
 PdfExpert/**/Info.plist
 # ProjectInfo Plist
 PdfExpert/**/ProjectInfo.plist
+# Generated secrets (produced by the "Generate Secrets" build phase from the git-ignored ProjectInfo.plist)
+pdfexpert/Generated/ObfuscatedSecrets.swift
 
 # fastlane
 fastlane/report.xml
