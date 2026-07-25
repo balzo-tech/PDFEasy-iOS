@@ -49,7 +49,17 @@ struct HomeView: View {
         HomeItem(title: "Powerpoint to PDF",
                  description: "Make PPT file easy to view by converting them to PDF",
                  imageName: "home_power_to_pdf",
-                 homeAction: .powerpointToPdf)
+                 homeAction: .powerpointToPdf),
+        HomeItem(title: String(localized: "Web page to PDF"),
+                 description: String(localized: "Save any web page as a PDF document"),
+                 imageName: "globe",
+                 isSystemImage: true,
+                 homeAction: .webToPdf),
+        HomeItem(title: String(localized: "Markdown to PDF"),
+                 description: String(localized: "Turn Markdown text into a formatted PDF"),
+                 imageName: "chevron.left.forwardslash.chevron.right",
+                 isSystemImage: true,
+                 homeAction: .markdownToPdf)
     ]
     
     // "Repair PDF" uploads the document to the Stirling service, so — like the other
@@ -262,6 +272,8 @@ struct HomeView: View {
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
         .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
+        .showWebImportView(viewModel: self.viewModel.pdfWebImportViewModel)
+        .showMarkdownImportView(viewModel: self.viewModel.pdfMarkdownImportViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })

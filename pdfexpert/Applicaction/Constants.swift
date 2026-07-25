@@ -136,6 +136,11 @@ struct K {
         static let ImportFileTypesForSplit: [UTType] = { [UTType.pdf].compactMap { $0 } }()
         static let ImportFileTypesForExtract: [UTType] = { [UTType.pdf].compactMap { $0 } }()
         static let ImportFileTypesForRead: [UTType] = { [UTType.pdf].compactMap { $0 } }()
+        // Markdown has no universal system type on every OS version, so plain text is
+        // accepted alongside it (a .md file is plain text anyway).
+        static let ImportFileTypesForMarkdown: [UTType] = {
+            [UTType("net.daringfireball.markdown"), UTType.plainText].compactMap { $0 }
+        }()
         
         static let ThumbnailSize: CGSize = CGSize(width: 256, height: 256)
         static let ThumbnailEditSize: CGSize = CGSize(width: 80, height: 80)

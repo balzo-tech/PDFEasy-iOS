@@ -26,8 +26,10 @@ enum HomeAction: Hashable, Identifiable {
     case wordToPdf
     case excelToPdf
     case powerpointToPdf
+    case webToPdf
+    case markdownToPdf
     case scan
-    
+
     case merge
     case split
     case extractPages
@@ -62,6 +64,9 @@ enum HomeAction: Hashable, Identifiable {
         case .wordToPdf: return .word
         case .excelToPdf: return .excel
         case .powerpointToPdf: return .powerpoint
+        // Both tools present their own input UI instead of the file picker.
+        case .webToPdf: return nil
+        case .markdownToPdf: return nil
         case .scan: return nil
         case .merge: return .pdf
         case .split: return .pdf
@@ -95,6 +100,8 @@ enum HomeAction: Hashable, Identifiable {
         case .wordToPdf: return nil
         case .excelToPdf: return nil
         case .powerpointToPdf: return nil
+        case .webToPdf: return nil
+        case .markdownToPdf: return nil
         case .scan: return nil
         case .merge: return nil
         case .split: return nil
@@ -128,6 +135,8 @@ enum HomeAction: Hashable, Identifiable {
         case .wordToPdf: return nil
         case .excelToPdf: return nil
         case .powerpointToPdf: return nil
+        case .webToPdf: return nil
+        case .markdownToPdf: return nil
         case .scan: return nil
         case .merge: return nil
         case .split: return nil
@@ -245,6 +254,16 @@ public class HomeViewModel : ObservableObject {
     lazy var officeImportCoordinator: OfficeImportCoordinator = {
         Container.shared.officeImportCoordinator(OfficeImportCoordinator.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     }()
+
+    // Web page / Markdown → PDF. Both write their result into `asyncPdf`, so the editor
+    // opens through the same path as every other import.
+    lazy var pdfWebImportViewModel: PdfWebImportViewModel = {
+        Container.shared.pdfWebImportViewModel(PdfWebImportViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
+    }()
+
+    lazy var pdfMarkdownImportViewModel: PdfMarkdownImportViewModel = {
+        Container.shared.pdfMarkdownImportViewModel(PdfMarkdownImportViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
+    }()
     
     lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     
@@ -287,6 +306,10 @@ public class HomeViewModel : ObservableObject {
             self.importOptionGroup = .fileAndScan
         case .createPdf:
             self.createPdf()
+        case .webToPdf:
+            self.pdfWebImportViewModel.start()
+        case .markdownToPdf:
+            self.pdfMarkdownImportViewModel.start()
         case .scan:
             self.scanPdf()
         case .merge:
@@ -427,7 +450,8 @@ public class HomeViewModel : ObservableObject {
             case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
-                    .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf:
+                    .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf,
+                    .webToPdf, .markdownToPdf:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }

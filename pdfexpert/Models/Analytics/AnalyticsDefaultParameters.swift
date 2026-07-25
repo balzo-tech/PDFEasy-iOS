@@ -87,6 +87,8 @@ extension AnalyticsScreen {
         case .metadata: return "Metadata"
         case .convert: return "Convert"
         case .advancedTool: return "AdvancedTool"
+        case .webImport: return "WebImport"
+        case .markdownImport: return "MarkdownImport"
         }
     }
 }
@@ -150,6 +152,9 @@ extension AnalyticsEvent {
         case .officeConvertCompleted: return "office_convert_completed"
         case .officeConvertFailed: return "office_convert_failed"
         case .officeConvertFallbackOffered: return "office_convert_fallback_offered"
+        case .webToPdfStarted: return "web_to_pdf_started"
+        case .webToPdfCompleted: return "web_to_pdf_completed"
+        case .markdownToPdfCompleted: return "markdown_to_pdf_completed"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -259,6 +264,7 @@ extension AnalyticsEvent {
         case .officeConvertCompleted(let engine), .officeConvertFailed(let engine):
             return [AnalyticsEventCustomParameters.officeConvertEngine.rawValue: engine.trackingParameterValue]
         case .officeConvertFallbackOffered: return nil
+        case .webToPdfStarted, .webToPdfCompleted, .markdownToPdfCompleted: return nil
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
@@ -398,6 +404,8 @@ fileprivate extension HomeAction {
         case .wordToPdf: return "word_to_pdf"
         case .excelToPdf: return "excel_to_pdf"
         case .powerpointToPdf: return "powerpoint_to_pdf"
+        case .webToPdf: return "web_to_pdf"
+        case .markdownToPdf: return "markdown_to_pdf"
         case .scan: return "scan"
         case .merge: return "merge"
         case .split: return "split"

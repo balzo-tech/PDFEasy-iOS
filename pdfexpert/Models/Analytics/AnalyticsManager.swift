@@ -53,6 +53,8 @@ enum AnalyticsScreen {
     case metadata
     case convert
     case advancedTool
+    case webImport
+    case markdownImport
 }
 
 enum AnalyticsEvent {
@@ -112,6 +114,9 @@ enum AnalyticsEvent {
     case officeConvertCompleted(engine: OfficeConvertEngine)
     case officeConvertFailed(engine: OfficeConvertEngine)
     case officeConvertFallbackOffered
+    case webToPdfStarted
+    case webToPdfCompleted
+    case markdownToPdfCompleted
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
