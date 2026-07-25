@@ -14,10 +14,8 @@ enum ToolUsageTracker {
     private static let storageKey = "recentToolActions"
     private static let maxCount = 5
 
-    /// Stable string id for an action. `HomeAction` carries no payload, so its
-    /// case name is a safe key to persist.
     private static func identifier(for action: HomeAction) -> String {
-        String(describing: action)
+        action.identifier
     }
 
     static func registerUse(of action: HomeAction) {

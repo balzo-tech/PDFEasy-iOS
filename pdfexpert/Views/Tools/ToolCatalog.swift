@@ -69,6 +69,22 @@ enum ToolCategory: Int, CaseIterable, Identifiable {
     }
 }
 
+extension HomeAction {
+
+    /// Stable string id for the action. `HomeAction` carries no payload, so its
+    /// case name is safe to persist and to hand to App Intents.
+    var identifier: String { String(describing: self) }
+
+    /// Resolves an identifier back to an action, limited to what the catalog
+    /// currently offers (the online tools disappear when the service is off).
+    init?(identifier: String) {
+        guard let match = ToolCatalog.allTools.first(where: { $0.action.identifier == identifier }) else {
+            return nil
+        }
+        self = match.action
+    }
+}
+
 struct PdfTool: Identifiable, Hashable {
 
     let action: HomeAction

@@ -75,6 +75,7 @@ class MainCoordinator: ObservableObject {
     
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.reviewFlow) var reviewFlow
+    @Injected(\.repository) private var repository
     
     init() {
         if self.cacheManager.onboardingShown {
@@ -150,7 +151,28 @@ class MainCoordinator: ObservableObject {
             self.cacheManager.onboardingShown = true
             self.rootView = .main
             self.tab = tab
+        case .document(let id):
+            self.cacheManager.onboardingShown = true
+            self.rootView = .main
+            self.tab = .files
+            self.openDocument(withId: id)
+        case .tool(let identifier):
+            guard let action = HomeAction(identifier: identifier) else { return }
+            self.cacheManager.onboardingShown = true
+            self.rootView = .main
+            self.runTool(action)
         }
+    }
+
+    /// Opens a saved document by its Core Data object URI, as handed over by the
+    /// widget. Falls back to just showing the archive when the document is gone.
+    private func openDocument(withId id: String) {
+        guard let pdf = (try? self.repository.loadPdfs())?.first(where: {
+            $0.storeId?.uriRepresentation().absoluteString == id || $0.filename == id
+        }) else {
+            return
+        }
+        self.showPdfEditFlow(pdf: pdf, isNewPdf: false)
     }
 }
 

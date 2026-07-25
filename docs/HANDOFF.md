@@ -293,3 +293,63 @@ screen's presentation.
 - Still to check on a device: the three paywall variants and the signature flow
   in light appearance, and the tool sheets that were only re-tinted (they follow
   the tokens, but they were not redesigned).
+
+## Phase 5 (2026-07-25) — App Intents, Shortcuts and a widget
+
+The app now reaches outside itself: Siri, the Shortcuts app and the Home Screen.
+
+### App Intents (in the app target, `pdfexpert/Intents/`)
+
+- `PdfToolEntity` + `PdfToolQuery` expose the whole `ToolCatalog` to Shortcuts,
+  matching on the same fields the in-app search uses, keywords included. Adding
+  a tool to the catalog therefore adds it to Shortcuts too.
+- `OpenPdfToolIntent` / `OpenFilesIntent` / `ScanDocumentShortcutIntent` open the
+  app on a tool, on the archive, or on the scanner, going through
+  `MainCoordinator.runTool(_:)`.
+- File intents that run **without opening the app**: `MergePdfsIntent`,
+  `RotatePdfIntent`, `RemoveBlankPagesIntent` (free) and `ExtractPdfTextIntent`
+  (premium). They reuse `PDFUtility` / `PdfCleanupUtility` and run PDFKit off the
+  main thread. A paywall cannot be presented from a background intent, so a
+  gated intent throws `PdfIntentError.premiumRequired` instead.
+- `PdfExpertShortcuts` registers five zero-setup phrases. The build embeds
+  `Metadata.appintents` in the app bundle — check it there if an intent seems to
+  be missing.
+
+### Widget (`PdfProWidget`, new target)
+
+- `RecentDocumentsWidget` (small/medium/large) and `QuickActionsWidget`
+  (small/medium). Both open the app through the URL scheme, so the extension
+  stays out of the app's dependency graph (no Factory, no Core Data).
+- Data comes from `pdfexpert/Shared/SharedDocumentStore.swift`, shared between
+  app and widget: the app writes a JSON snapshot plus small PNG thumbnails into
+  `group.eu.balzo.pdfexpert` on every archive refresh, then calls
+  `WidgetCenter.reloadAllTimelines()`. **The widget deliberately does not open
+  the Core Data store** — it is CloudKit-backed and lives in the app container.
+- The widget has its own bundle, so its strings live in
+  `PdfProWidget/Localizable.xcstrings` (EN/IT), separate from the app catalog.
+
+### Deeplinks
+
+`Deeplink` now understands `document/<core-data-uri>` and `tool/<identifier>` on
+top of the tab hosts, and `HomeAction.identifier` is the shared id used by the
+widget, the intents and the usage tracker. Covered by `DeeplinkTests` (12 tests,
+suite is now 166).
+
+### Target notes (worth knowing before touching the project file)
+
+- The widget target was added with the `xcodeproj` gem. Two traps: `new_target`
+  also creates plain `Debug`/`Release` configurations that must be deleted (this
+  project only has the four custom ones), and `INFOPLIST_KEY_NSExtensionPointIdentifier`
+  **does not exist** — the widget needs a partial `Info.plist` carrying
+  `NSExtension`, merged with the generated one via `GENERATE_INFOPLIST_FILE = YES`
+  plus `INFOPLIST_FILE`.
+- The widget bundle id must stay prefixed with the app's, per configuration:
+  `eu.balzo.pdfexpert[.staging].widget`. It carries the app group entitlement and
+  `-D STAGING` on the staging configurations, so it picks the right URL scheme.
+- Verify the extension is registered with:
+  `xcrun simctl spawn booted pluginkit -m -v | grep pdfexpert`.
+
+### Still to try on device
+
+Siri phrases, the Shortcuts actions against real files, and both widget sizes on
+the Home Screen (a widget cannot be added from the command line).

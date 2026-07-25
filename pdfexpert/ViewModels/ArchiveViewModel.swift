@@ -7,6 +7,8 @@
 
 import Foundation
 import Factory
+import UIKit
+import WidgetKit
 import CoreData
 import Combine
 import CloudKitSyncMonitor
@@ -125,9 +127,47 @@ class ArchiveViewModel: ObservableObject {
         do {
             let items = try self.repository.loadPdfs()
             self.asyncItems = AsyncOperation(status: .data(items))
+            self.updateWidgetSnapshot(items: items)
         } catch {
             debugPrint(for: self, message: "Refresh failed. Error: \(error)")
             self.asyncItems = AsyncOperation(status: .error(SharedLocalizedError.unknownError))
+        }
+    }
+
+    /// Keeps the widget's copy of the recent documents in step with the archive.
+    /// Thumbnails are generated here (the grid needs them anyway) and written to
+    /// the shared container off the main thread.
+    private func updateWidgetSnapshot(items: [Pdf]) {
+        let recents = items
+            .sorted { $0.creationDate > $1.creationDate }
+            .prefix(SharedDocumentStore.maxDocuments)
+
+        var documents: [SharedDocument] = []
+        var thumbnails: [String: UIImage] = [:]
+
+        for (index, pdf) in recents.enumerated() {
+            let identifier = pdf.storeId?.uriRepresentation().absoluteString ?? pdf.filename
+            var thumbnailName: String? = nil
+            if let thumbnail = pdf.thumbnail {
+                // A widget never shows these bigger than a few hundred points.
+                let longestSide = max(thumbnail.size.width, thumbnail.size.height)
+                let scale = longestSide > 320 ? 320 / longestSide : 1
+                let name = "\(index).png"
+                thumbnails[name] = scale < 1 ? (thumbnail.scaledImage(scaleFactor: scale) ?? thumbnail) : thumbnail
+                thumbnailName = name
+            }
+            documents.append(SharedDocument(id: identifier,
+                                            filename: pdf.filename,
+                                            pageCount: pdf.pageCount,
+                                            creationDate: pdf.creationDate,
+                                            thumbnailName: thumbnailName))
+        }
+
+        let snapshot = documents
+        let images = thumbnails
+        DispatchQueue.global(qos: .utility).async {
+            SharedDocumentStore.save(snapshot, thumbnails: images)
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
     
