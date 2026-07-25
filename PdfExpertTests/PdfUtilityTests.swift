@@ -293,4 +293,60 @@ final class PdfUtilityTests: XCTestCase {
         XCTAssertTrue(keywordsText.contains("beta"), "got: \(keywordsText)")
         XCTAssertTrue(keywordsText.contains("gamma"), "got: \(keywordsText)")
     }
+
+    // MARK: - Blank-page detection
+
+    /// A page drawn through `UIGraphicsPDFRenderer` with an optional drawing block.
+    /// (Not `PDFPage(image:)` — that API renders black pages under `draw`.)
+    private func makeVectorPage(drawing: ((CGContext) -> Void)? = nil) -> PDFPage? {
+        let bounds = CGRect(x: 0, y: 0, width: 400, height: 600)
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+            drawing?(context.cgContext)
+        }
+        return PDFDocument(data: data)?.page(at: 0)
+    }
+
+    func testPageIsBlankDetectsEmptyPage() throws {
+        let page = try XCTUnwrap(self.makeVectorPage())
+        XCTAssertTrue(PDFUtility.pageIsBlank(page))
+    }
+
+    func testPageIsBlankRejectsPageWithText() throws {
+        let document = self.makeTextPdf(text: "Not blank at all")
+        let page = try XCTUnwrap(document.page(at: 0))
+        XCTAssertFalse(PDFUtility.pageIsBlank(page))
+    }
+
+    /// Text extraction alone would call an image-only page blank; the ink check is
+    /// what keeps a scanned page out of the blank bucket.
+    func testPageIsBlankRejectsGraphicsOnlyPage() throws {
+        let page = try XCTUnwrap(self.makeVectorPage { context in
+            UIColor.black.setFill()
+            context.fill(CGRect(x: 50, y: 50, width: 300, height: 400))
+        })
+        XCTAssertEqual(page.string?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", "",
+                       "fixture must carry no extractable text")
+        XCTAssertFalse(PDFUtility.pageIsBlank(page))
+    }
+
+    func testPageInkRatioGrowsWithCoverage() throws {
+        let empty = try XCTUnwrap(self.makeVectorPage())
+        let half = try XCTUnwrap(self.makeVectorPage { context in
+            UIColor.black.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 400, height: 300))
+        })
+        XCTAssertLessThan(PDFUtility.pageInkRatio(empty), PDFUtility.blankPageInkThreshold)
+        XCTAssertGreaterThan(PDFUtility.pageInkRatio(half), 0.4)
+    }
+
+    /// A few stray dark pixels (scanner speckle) must not save a page from being
+    /// classified as blank.
+    func testPageIsBlankToleratesSpeckle() throws {
+        let page = try XCTUnwrap(self.makeVectorPage { context in
+            UIColor.black.setFill()
+            context.fill(CGRect(x: 10, y: 10, width: 2, height: 2))
+        })
+        XCTAssertTrue(PDFUtility.pageIsBlank(page))
+    }
 }

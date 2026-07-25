@@ -27,10 +27,11 @@ final class StirlingApiManagerTests: XCTestCase {
 
     private func target(_ operation: StirlingOperation,
                         apiKey: String = "TEST-KEY",
-                        baseUrl: String = "https://api.stirling.com") -> StirlingService {
+                        baseUrl: String = "https://api.stirling.com",
+                        filename: String = "document") -> StirlingService {
         .process(operation: operation,
-                 pdfData: Data("%PDF-1.4".utf8),
-                 filename: "document",
+                 fileData: Data("%PDF-1.4".utf8),
+                 filename: filename,
                  apiKey: apiKey,
                  baseUrlString: baseUrl)
     }
@@ -76,7 +77,7 @@ final class StirlingApiManagerTests: XCTestCase {
                      operation: StirlingOperation = .pdfToWord) -> Result<StirlingResult, StirlingApiError> {
         let expectation = self.expectation(description: "process completes")
         var outcome: Result<StirlingResult, StirlingApiError>!
-        manager.process(pdfData: Data("%PDF".utf8), filename: "document", operation: operation)
+        manager.process(fileData: Data("%PDF".utf8), filename: "document", operation: operation)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
                     outcome = .failure(error)
@@ -100,7 +101,8 @@ final class StirlingApiManagerTests: XCTestCase {
             .pdfToCsv: "/api/v1/convert/pdf/csv",
             .pdfToPdfa: "/api/v1/convert/pdf/pdfa",
             .repair: "/api/v1/misc/repair",
-            .sanitize: "/api/v1/security/sanitize-pdf"
+            .sanitize: "/api/v1/security/sanitize-pdf",
+            .fileToPdf: "/api/v1/convert/file/pdf"
         ]
         for operation in StirlingOperation.allCases {
             XCTAssertEqual(self.target(operation).path, expected[operation])
@@ -132,10 +134,34 @@ final class StirlingApiManagerTests: XCTestCase {
     }
 
     func testUploadFilenameEnforcesPdfExtension() {
-        XCTAssertEqual(StirlingService.uploadFilename(from: "report"), "report.pdf")
-        XCTAssertEqual(StirlingService.uploadFilename(from: "report.pdf"), "report.pdf")
-        XCTAssertEqual(StirlingService.uploadFilename(from: "report.PDF"), "report.PDF")
-        XCTAssertEqual(StirlingService.uploadFilename(from: "   "), "document.pdf")
+        XCTAssertEqual(StirlingService.uploadFilename(from: "report", operation: .pdfToWord), "report.pdf")
+        XCTAssertEqual(StirlingService.uploadFilename(from: "report.pdf", operation: .pdfToWord), "report.pdf")
+        XCTAssertEqual(StirlingService.uploadFilename(from: "report.PDF", operation: .pdfToWord), "report.PDF")
+        XCTAssertEqual(StirlingService.uploadFilename(from: "   ", operation: .pdfToWord), "document.pdf")
+    }
+
+    /// The server picks its LibreOffice converter from the extension, so `.fileToPdf`
+    /// must upload the source name untouched.
+    func testUploadFilenameKeepsSourceExtensionForFileToPdf() {
+        XCTAssertEqual(StirlingService.uploadFilename(from: "report.docx", operation: .fileToPdf), "report.docx")
+        XCTAssertEqual(StirlingService.uploadFilename(from: "sheet.xlsx", operation: .fileToPdf), "sheet.xlsx")
+        XCTAssertEqual(StirlingService.uploadFilename(from: "   ", operation: .fileToPdf), "document")
+    }
+
+    func testMimeTypeFollowsFilenameExtension() {
+        XCTAssertEqual(StirlingService.mimeType(forFilename: "report.pdf"), "application/pdf")
+        XCTAssertEqual(StirlingService.mimeType(forFilename: "report.docx"),
+                       "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        XCTAssertEqual(StirlingService.mimeType(forFilename: "unknown"), "application/octet-stream")
+    }
+
+    func testMultipartForFileToPdfCarriesSourceNameAndMimeType() {
+        guard case .uploadMultipart(let parts) = self.target(.fileToPdf, filename: "report.docx").task else {
+            return XCTFail("expected an uploadMultipart task")
+        }
+        XCTAssertEqual(parts.first?.fileName, "report.docx")
+        XCTAssertEqual(parts.first?.mimeType,
+                       "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     }
 
     // MARK: - Extension derivation (pure)
@@ -179,6 +205,7 @@ final class StirlingApiManagerTests: XCTestCase {
         XCTAssertEqual(StirlingApiManagerImpl.suggestedExtension(contentDisposition: nil, contentType: nil, operation: .pdfToPdfa), "pdf")
         XCTAssertEqual(StirlingApiManagerImpl.suggestedExtension(contentDisposition: nil, contentType: nil, operation: .repair), "pdf")
         XCTAssertEqual(StirlingApiManagerImpl.suggestedExtension(contentDisposition: nil, contentType: nil, operation: .sanitize), "pdf")
+        XCTAssertEqual(StirlingApiManagerImpl.suggestedExtension(contentDisposition: nil, contentType: nil, operation: .fileToPdf), "pdf")
     }
 
     func testExtensionZipFromContentType() {

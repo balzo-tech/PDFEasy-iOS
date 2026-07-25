@@ -9,7 +9,6 @@ import Foundation
 import Factory
 import SwiftUI
 import PhotosUI
-import PSPDFKit
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {
@@ -239,6 +238,12 @@ public class HomeViewModel : ObservableObject {
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
+    }()
+
+    // Office / iWork documents are converted on-device, with an optional online
+    // fallback (see OfficeImportCoordinator). Replaces the former PSPDFKit call.
+    lazy var officeImportCoordinator: OfficeImportCoordinator = {
+        Container.shared.officeImportCoordinator(OfficeImportCoordinator.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     }()
     
     lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
@@ -489,19 +494,8 @@ public class HomeViewModel : ObservableObject {
         if fileUtType?.conforms(to: .pdf) ?? false {
             self.importPdf(pdfUrl: fileUrl)
         } else {
-            self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-            Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
-                if let error = error {
-                    debugPrint(for: self, message: "Error converting word file. Error: \(error)")
-                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, var pdf = Pdf(data: data) {
-                    self.currentAnalyticsFileExtension = fileUrl.pathExtension
-                    pdf.updateFilename(fileUrl.filename)
-                    self.asyncPdf = AsyncOperation(status: .data(pdf))
-                } else {
-                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                }
-            }
+            self.currentAnalyticsFileExtension = fileUrl.pathExtension
+            self.officeImportCoordinator.convert(fileUrl: fileUrl)
         }
     }
     

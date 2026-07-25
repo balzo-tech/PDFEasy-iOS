@@ -16,6 +16,7 @@ import CombineMoya
 import Combine
 import Alamofire
 import Factory
+import UniformTypeIdentifiers
 
 class StirlingApiManagerImpl: StirlingApiManager {
 
@@ -45,14 +46,14 @@ class StirlingApiManagerImpl: StirlingApiManager {
         self.isEnabledProvider() && !self.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
-    func process(pdfData: Data,
+    func process(fileData: Data,
                  filename: String,
                  operation: StirlingOperation) -> AnyPublisher<StirlingResult, StirlingApiError> {
         guard self.isAvailable else {
             return Fail(error: StirlingApiError.notConfigured).eraseToAnyPublisher()
         }
         let target = StirlingService.process(operation: operation,
-                                             pdfData: pdfData,
+                                             fileData: fileData,
                                              filename: filename,
                                              apiKey: self.apiKey,
                                              baseUrlString: self.baseUrlProvider())
@@ -205,7 +206,7 @@ class StirlingApiManagerImpl: StirlingApiManager {
         case .pdfToWord: return "docx"
         case .pdfToPresentation: return "pptx"
         case .pdfToCsv: return "csv"
-        case .pdfToPdfa, .repair, .sanitize: return "pdf"
+        case .pdfToPdfa, .repair, .sanitize, .fileToPdf: return "pdf"
         }
     }
 
@@ -260,7 +261,7 @@ enum StirlingService {
     /// self-describing (and unit-testable) without reaching into `ProjectInfo` or
     /// the config service.
     case process(operation: StirlingOperation,
-                 pdfData: Data,
+                 fileData: Data,
                  filename: String,
                  apiKey: String,
                  baseUrlString: String)
@@ -285,6 +286,7 @@ extension StirlingService: TargetType {
             case .pdfToPdfa: return "/api/v1/convert/pdf/pdfa"
             case .repair: return "/api/v1/misc/repair"
             case .sanitize: return "/api/v1/security/sanitize-pdf"
+            case .fileToPdf: return "/api/v1/convert/file/pdf"
             }
         }
     }
@@ -295,11 +297,12 @@ extension StirlingService: TargetType {
 
     var task: Task {
         switch self {
-        case let .process(_, pdfData, filename, _, _):
-            let formData = MultipartFormData(provider: .data(pdfData),
+        case let .process(operation, fileData, filename, _, _):
+            let uploadFilename = Self.uploadFilename(from: filename, operation: operation)
+            let formData = MultipartFormData(provider: .data(fileData),
                                              name: "fileInput",
-                                             fileName: Self.uploadFilename(from: filename),
-                                             mimeType: "application/pdf")
+                                             fileName: uploadFilename,
+                                             mimeType: Self.mimeType(forFilename: uploadFilename))
             return .uploadMultipart([formData])
         }
     }
@@ -311,11 +314,24 @@ extension StirlingService: TargetType {
         }
     }
 
-    /// Ensures the multipart part carries a `.pdf` filename regardless of what the
-    /// caller passed in.
-    static func uploadFilename(from filename: String) -> String {
+    /// Names the multipart part. PDF-in operations get a `.pdf` extension enforced;
+    /// `.fileToPdf` keeps whatever extension the source carried, because the server
+    /// selects its LibreOffice converter from it (a `.docx` renamed to `.pdf` fails).
+    static func uploadFilename(from filename: String, operation: StirlingOperation) -> String {
         let trimmed = filename.trimmingCharacters(in: .whitespacesAndNewlines)
         let base = trimmed.isEmpty ? "document" : trimmed
+        guard operation != .fileToPdf else { return base }
         return (base as NSString).pathExtension.lowercased() == "pdf" ? base : base + ".pdf"
+    }
+
+    /// MIME type derived from the upload filename's extension, so an uploaded `.docx`
+    /// is not announced as `application/pdf`.
+    static func mimeType(forFilename filename: String) -> String {
+        let ext = (filename as NSString).pathExtension
+        guard !ext.isEmpty,
+              let mimeType = UTType(filenameExtension: ext)?.preferredMIMEType else {
+            return "application/octet-stream"
+        }
+        return mimeType
     }
 }

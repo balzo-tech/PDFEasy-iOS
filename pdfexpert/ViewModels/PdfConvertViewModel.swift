@@ -206,7 +206,7 @@ class PdfConvertViewModel: ObservableObject {
         self.analyticsManager.track(event: .convertStarted(format: format))
         self.asyncConvert = AsyncOperation(status: .loading(Progress.undeterminedProgress))
 
-        self.stirlingApiManager.process(pdfData: pdfData,
+        self.stirlingApiManager.process(fileData: pdfData,
                                         filename: pdf.filename,
                                         operation: format.operation)
             .sink(receiveCompletion: { [weak self] completion in

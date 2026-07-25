@@ -251,7 +251,58 @@ class PDFUtility {
 
         return maxPixels >= pixelThreshold
     }
-    
+
+    /// Fraction (0…1) of "inked" pixels on a low-resolution render of the page.
+    ///
+    /// Used to tell a genuinely empty page from one that carries only graphics — text
+    /// extraction alone would call every image-only page blank. The render is tiny
+    /// (100pt on the long side by default) so this stays cheap enough to run per page.
+    static func pageInkRatio(_ page: PDFPage,
+                             sampleLongSide: CGFloat = 100,
+                             inkLevel: UInt8 = 250) -> CGFloat {
+        let mediaBoxSize = page.bounds(for: .mediaBox).size
+        // `thumbnail(of:for:)` applies /Rotate, so size the target box accordingly.
+        let pageSize = (page.rotation % 180 != 0)
+            ? CGSize(width: mediaBoxSize.height, height: mediaBoxSize.width)
+            : mediaBoxSize
+        guard pageSize.width > 0, pageSize.height > 0 else { return 0 }
+
+        let scale = sampleLongSide / max(pageSize.width, pageSize.height)
+        let width = max(1, Int((pageSize.width * scale).rounded()))
+        let height = max(1, Int((pageSize.height * scale).rounded()))
+
+        let thumbnail = page.thumbnail(of: CGSize(width: width, height: height), for: .mediaBox)
+        guard let cgImage = thumbnail.cgImage else { return 0 }
+
+        var pixels = [UInt8](repeating: 255, count: width * height)
+        guard let context = CGContext(data: &pixels,
+                                      width: width,
+                                      height: height,
+                                      bitsPerComponent: 8,
+                                      bytesPerRow: width,
+                                      space: CGColorSpaceCreateDeviceGray(),
+                                      bitmapInfo: CGImageAlphaInfo.none.rawValue) else { return 0 }
+        // Pre-fill white: a transparent thumbnail must read as an empty page, not a black one.
+        context.setFillColor(gray: 1, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        let inkedCount = pixels.reduce(0) { $1 < inkLevel ? $0 + 1 : $0 }
+        return CGFloat(inkedCount) / CGFloat(width * height)
+    }
+
+    /// Below this fraction of inked pixels a page counts as blank (0.1%: tolerates
+    /// scanner speckle and stray artifacts without swallowing a real line of text).
+    static let blankPageInkThreshold: CGFloat = 0.001
+
+    /// A page is blank when it carries no extractable text *and* renders essentially white.
+    static func pageIsBlank(_ page: PDFPage, inkThreshold: CGFloat = PDFUtility.blankPageInkThreshold) -> Bool {
+        if let text = page.string?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
+            return false
+        }
+        return self.pageInkRatio(page) < inkThreshold
+    }
+
     static func getSharePdfUrl(pdf: Pdf) -> URL {
         let documentDirectory = FileManager.default.temporaryDirectory
         return documentDirectory.appendingPathComponent(pdf.filename).appendingPathExtension(for: .pdf)

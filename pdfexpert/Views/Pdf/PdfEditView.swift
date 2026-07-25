@@ -128,6 +128,7 @@ struct PdfEditView: View {
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
+        .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .alert("Info", isPresented: self.$viewModel.missingWidgetWarningShow, actions: {
             Button("Ok", role: .cancel, action: {})

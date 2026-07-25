@@ -109,6 +109,9 @@ enum AnalyticsEvent {
     case convertCompleted(format: PdfConvertFormat)
     case advancedToolStarted(tool: PdfAdvancedTool)
     case advancedToolCompleted(tool: PdfAdvancedTool)
+    case officeConvertCompleted(engine: OfficeConvertEngine)
+    case officeConvertFailed(engine: OfficeConvertEngine)
+    case officeConvertFallbackOffered
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)

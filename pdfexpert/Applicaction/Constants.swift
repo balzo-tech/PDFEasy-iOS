@@ -107,6 +107,14 @@ struct K {
         static let MinimumRateForNativePopup: Int = 5
         static let FeedbackMaxCharacters: Int = 100
     }
+
+    struct DocumentRender {
+        // WebKit loads a local document quickly; a long timeout here would only make a
+        // hopeless conversion feel broken before the online fallback is offered.
+        static let FileTimeout: TimeInterval = 30.0
+        // Remote pages have to cross the network, so they get more room.
+        static let WebPageTimeout: TimeInterval = 45.0
+    }
     
     struct Misc {
         static let AppTitle = "PDF Pro"

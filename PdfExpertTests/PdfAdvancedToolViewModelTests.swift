@@ -303,7 +303,7 @@ private final class StirlingMock: StirlingApiManager {
 
     var isAvailable: Bool { self.available }
 
-    func process(pdfData: Data,
+    func process(fileData: Data,
                  filename: String,
                  operation: StirlingOperation) -> AnyPublisher<StirlingResult, StirlingApiError> {
         if let errorMode = self.errorMode {

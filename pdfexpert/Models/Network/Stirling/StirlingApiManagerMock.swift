@@ -24,7 +24,7 @@ class StirlingApiManagerMock: StirlingApiManager {
 
     var isAvailable: Bool { self.available }
 
-    func process(pdfData: Data,
+    func process(fileData: Data,
                  filename: String,
                  operation: StirlingOperation) -> AnyPublisher<StirlingResult, StirlingApiError> {
         guard self.isAvailable else {
@@ -34,7 +34,11 @@ class StirlingApiManagerMock: StirlingApiManager {
             return Fail(error: errorMode).eraseToAnyPublisher()
         }
         let ext = StirlingApiManagerImpl.defaultExtension(for: operation)
-        let data = "Mock \(operation.rawValue) output".data(using: .utf8) ?? Data()
+        // `.fileToPdf` must hand back something `PDFDocument(data:)` accepts, otherwise
+        // the mocked fallback path fails on parsing rather than exercising the flow.
+        let data: Data = (operation == .fileToPdf)
+            ? (K.Test.DebugPdfDocumentData ?? Data("Mock \(operation.rawValue) output".utf8))
+            : Data("Mock \(operation.rawValue) output".utf8)
         return self.stubbed(StirlingResult(data: data, suggestedFileExtension: ext))
     }
 

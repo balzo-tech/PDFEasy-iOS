@@ -10,7 +10,6 @@ import Factory
 import SwiftUI
 import UIKit
 import PhotosUI
-import PSPDFKit
 
 extension Container {
     var pdfEditViewModel: ParameterFactory<PdfEditViewModel.InputParameter, PdfEditViewModel> {
@@ -134,6 +133,12 @@ class PdfEditViewModel: ObservableObject {
 
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
+    }()
+
+    // Office / iWork documents added as pages are converted on-device, with an optional
+    // online fallback (see OfficeImportCoordinator). Replaces the former PSPDFKit call.
+    lazy var officeImportCoordinator: OfficeImportCoordinator = {
+        Container.shared.officeImportCoordinator(OfficeImportCoordinator.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     }()
     
     // This boolean is set to true every time a change is applied to the original pdf.
@@ -552,18 +557,8 @@ class PdfEditViewModel: ObservableObject {
         } else if fileUtType?.conforms(to: .image) ?? false {
             self.convertFileImageByURL(fileImageUrl: fileUrl)
         } else {
-            self.asyncPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-            Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
-                if let error = error {
-                    debugPrint(for: self, message: "Error converting word file. Error: \(error)")
-                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdf = Pdf(data: data) {
-                    self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
-                    self.asyncPdf = AsyncOperation(status: .data(pdf))
-                } else {
-                    self.asyncPdf = AsyncOperation(status: .error(.unknownError))
-                }
-            }
+            self.currentAnalyticsInputFileExtension = fileUrl.pathExtension
+            self.officeImportCoordinator.convert(fileUrl: fileUrl)
         }
     }
     

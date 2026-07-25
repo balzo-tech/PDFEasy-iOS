@@ -26,6 +26,16 @@ enum AnalyticsEventCustomParameters: String {
     case exportFormat = "export_format"
     case convertFormat = "convert_format"
     case advancedTool = "advanced_tool"
+    case officeConvertEngine = "office_convert_engine"
+}
+
+extension OfficeConvertEngine {
+    var trackingParameterValue: String {
+        switch self {
+        case .onDevice: return "on_device"
+        case .stirling: return "stirling"
+        }
+    }
 }
 
 extension MarginsOption {
@@ -137,6 +147,9 @@ extension AnalyticsEvent {
         case .convertCompleted: return "convert_completed"
         case .advancedToolStarted: return "advanced_tool_started"
         case .advancedToolCompleted: return "advanced_tool_completed"
+        case .officeConvertCompleted: return "office_convert_completed"
+        case .officeConvertFailed: return "office_convert_failed"
+        case .officeConvertFallbackOffered: return "office_convert_fallback_offered"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -243,6 +256,9 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.convertFormat.rawValue: format.trackingParameterValue]
         case .advancedToolStarted(let tool), .advancedToolCompleted(let tool):
             return [AnalyticsEventCustomParameters.advancedTool.rawValue: tool.trackingParameterValue]
+        case .officeConvertCompleted(let engine), .officeConvertFailed(let engine):
+            return [AnalyticsEventCustomParameters.officeConvertEngine.rawValue: engine.trackingParameterValue]
+        case .officeConvertFallbackOffered: return nil
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]

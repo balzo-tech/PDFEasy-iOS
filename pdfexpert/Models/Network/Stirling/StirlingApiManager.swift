@@ -27,6 +27,10 @@ enum StirlingOperation: String, CaseIterable {
     case pdfToPdfa
     case repair
     case sanitize
+    /// Office / iWork document → PDF (LibreOffice server-side). The only operation
+    /// whose *input* is not a PDF: it backs the high-fidelity fallback offered when
+    /// the on-device WebKit conversion cannot render a document.
+    case fileToPdf
 }
 
 /// A successful Stirling response: the raw processed document plus the file
@@ -80,9 +84,11 @@ enum StirlingApiError: LocalizedError, Equatable {
 protocol StirlingApiManager {
     /// Both the remote-config kill switch and a non-empty API key are required.
     var isAvailable: Bool { get }
-    /// Uploads `pdfData` and returns the processed document. `filename` is the base
-    /// name used for the multipart part (a `.pdf` extension is enforced).
-    func process(pdfData: Data,
+    /// Uploads `fileData` and returns the processed document. `filename` names the
+    /// multipart part: for PDF-in operations a `.pdf` extension is enforced, while
+    /// `.fileToPdf` keeps the source extension — LibreOffice picks its converter
+    /// from it, so stripping it would break the conversion.
+    func process(fileData: Data,
                  filename: String,
                  operation: StirlingOperation) -> AnyPublisher<StirlingResult, StirlingApiError>
 }

@@ -216,7 +216,7 @@ class PdfAdvancedToolViewModel: ObservableObject {
         self.analyticsManager.track(event: .advancedToolStarted(tool: tool))
         self.asyncRun = .loading(Progress.undeterminedProgress)
 
-        self.stirlingApiManager.process(pdfData: pdfData,
+        self.stirlingApiManager.process(fileData: pdfData,
                                         filename: pdf.filename,
                                         operation: tool.operation)
             .sink(receiveCompletion: { [weak self] completion in

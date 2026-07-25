@@ -8,7 +8,6 @@
 import Foundation
 import Factory
 import PhotosUI
-import PSPDFKit
 import Combine
 
 extension Container {
@@ -54,6 +53,12 @@ class ChatPdfSelectionViewModel: ObservableObject {
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncImportPdf)))
+    }()
+
+    // Office / iWork documents are converted on-device, with an optional online
+    // fallback (see OfficeImportCoordinator). Replaces the former PSPDFKit call.
+    lazy var officeImportCoordinator: OfficeImportCoordinator = {
+        Container.shared.officeImportCoordinator(OfficeImportCoordinator.Params(asyncPdf: self.asyncSubject(\.asyncImportPdf)))
     }()
     
     private var currentAnalyticsImportOption: ImportOption? = nil
@@ -159,18 +164,8 @@ class ChatPdfSelectionViewModel: ObservableObject {
         if fileUtType?.conforms(to: .pdf) ?? false {
             self.importPdf(pdfUrl: fileUrl)
         } else {
-            self.asyncImportPdf = AsyncOperation(status: .loading(Progress(totalUnitCount: 1)))
-            Processor.generatePDF(from: fileUrl, options: [:]) { data, error in
-                if let error = error {
-                    debugPrint(for: self, message: "Error converting word file. Error: \(error)")
-                    self.asyncImportPdf = AsyncOperation(status: .error(.unknownError))
-                } else if let data = data, let pdf = Pdf(data: data) {
-                    self.currentAnalyticsFileExtension = fileUrl.pathExtension
-                    self.asyncImportPdf = AsyncOperation(status: .data(pdf))
-                } else {
-                    self.asyncImportPdf = AsyncOperation(status: .error(.unknownError))
-                }
-            }
+            self.currentAnalyticsFileExtension = fileUrl.pathExtension
+            self.officeImportCoordinator.convert(fileUrl: fileUrl)
         }
     }
     
