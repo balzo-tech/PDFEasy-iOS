@@ -125,6 +125,8 @@ enum AnalyticsEvent {
     case pdfPermissionsSet(allowsPrinting: Bool, allowsCopying: Bool)
     case redactionStarted
     case redactionCompleted(boxCount: Int, pageCount: Int)
+    case annotationAdded(type: PdfAnnotationType)
+    case annotationsSaved
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)

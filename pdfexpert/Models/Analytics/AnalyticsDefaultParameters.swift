@@ -32,6 +32,7 @@ enum AnalyticsEventCustomParameters: String {
     case allowsCopying = "allows_copying"
     case redactionBoxCount = "redaction_box_count"
     case redactedPageCount = "redacted_page_count"
+    case annotationType = "annotation_type"
 }
 
 extension OfficeConvertEngine {
@@ -168,6 +169,8 @@ extension AnalyticsEvent {
         case .pdfPermissionsSet: return "pdf_permissions_set"
         case .redactionStarted: return "redaction_started"
         case .redactionCompleted: return "redaction_completed"
+        case .annotationAdded: return "annotation_added"
+        case .annotationsSaved: return "annotations_saved"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -288,6 +291,9 @@ extension AnalyticsEvent {
         case .redactionCompleted(let boxCount, let pageCount):
             return [AnalyticsEventCustomParameters.redactionBoxCount.rawValue: boxCount,
                     AnalyticsEventCustomParameters.redactedPageCount.rawValue: pageCount]
+        case .annotationAdded(let type):
+            return [AnalyticsEventCustomParameters.annotationType.rawValue: type.rawValue]
+        case .annotationsSaved: return nil
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]

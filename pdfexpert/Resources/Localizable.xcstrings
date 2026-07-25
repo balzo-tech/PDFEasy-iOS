@@ -236,6 +236,22 @@
         }
       }
     },
+    "Annotate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annotate"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annota"
+          }
+        }
+      }
+    },
     "Apply": {
       "localizations": {
         "en": {
@@ -264,6 +280,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Applicare le oscurazioni?"
+          }
+        }
+      }
+    },
+    "Apply to selection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply to selection"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applica alla selezione"
           }
         }
       }
@@ -817,6 +849,22 @@
         }
       }
     },
+    "Discard": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discard"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non salvare"
+          }
+        }
+      }
+    },
     "Do you have a Mac?": {
       "extractionState": "stale",
       "localizations": {
@@ -846,6 +894,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ti piace la nostra app?"
+          }
+        }
+      }
+    },
+    "Do you want to save the annotations you added?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do you want to save the annotations you added?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuoi salvare le annotazioni che hai aggiunto?"
           }
         }
       }
@@ -1487,6 +1551,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sanità"
+          }
+        }
+      }
+    },
+    "Highlight": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Highlight"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evidenzia"
           }
         }
       }
@@ -3088,6 +3168,22 @@
         }
       }
     },
+    "Select some text, then apply the markup.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select some text, then apply the markup."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seleziona del testo, poi applica l'evidenziazione."
+          }
+        }
+      }
+    },
     "Select what you love most ": {
       "extractionState": "stale",
       "localizations": {
@@ -3284,6 +3380,22 @@
         }
       }
     },
+    "Strikethrough": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strikethrough"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barra"
+          }
+        }
+      }
+    },
     "Student": {
       "extractionState": "stale",
       "localizations": {
@@ -3442,6 +3554,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "L’editor PDF per iPhone"
+          }
+        }
+      }
+    },
+    "The annotations could not be saved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The annotations could not be saved."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato possibile salvare le annotazioni."
           }
         }
       }
@@ -3912,6 +4040,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Impossibile accedere alla fotocamera"
+          }
+        }
+      }
+    },
+    "Underline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Underline"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sottolinea"
+          }
+        }
+      }
+    },
+    "Unsaved changes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsaved changes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifiche non salvate"
           }
         }
       }
