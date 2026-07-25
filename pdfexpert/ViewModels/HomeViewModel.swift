@@ -54,6 +54,8 @@ enum HomeAction: Hashable, Identifiable {
     case invertColors
     case pdfPermissions
     case redactPdf
+    case compressPdf
+    case comparePdf
 
     case importPdf
     
@@ -94,9 +96,11 @@ enum HomeAction: Hashable, Identifiable {
         case .removeBlankPages: return .pdf
         case .flattenPdf: return .pdf
         case .invertColors: return .pdf
-        // Both run their own import + editor, like the other archive-saving tools.
+        // These run their own import + editor, like the other archive-saving tools.
         case .pdfPermissions: return nil
         case .redactPdf: return nil
+        case .compressPdf: return nil
+        case .comparePdf: return nil
         case .importPdf: return .pdf
         case .readPdf: return .pdf
         case .removePassword: return .pdf
@@ -137,6 +141,8 @@ enum HomeAction: Hashable, Identifiable {
         case .invertColors: return .openInvertColors
         case .pdfPermissions: return nil
         case .redactPdf: return nil
+        case .compressPdf: return nil
+        case .comparePdf: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return nil
@@ -177,6 +183,8 @@ enum HomeAction: Hashable, Identifiable {
         case .invertColors: return nil
         case .pdfPermissions: return nil
         case .redactPdf: return nil
+        case .compressPdf: return nil
+        case .comparePdf: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
@@ -266,6 +274,8 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.pdfAdvancedToolViewModel) var pdfAdvancedToolViewModel
     @Injected(\.pdfPermissionsViewModel) var pdfPermissionsViewModel
     @Injected(\.pdfRedactViewModel) var pdfRedactViewModel
+    @Injected(\.pdfCompressViewModel) var pdfCompressViewModel
+    @Injected(\.pdfCompareViewModel) var pdfCompareViewModel
     @Injected(\.pdfReadViewModel) var pdfReadViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
@@ -385,6 +395,16 @@ public class HomeViewModel : ObservableObject {
                 self?.trackFullActionCompleted()
                 self?.mainCoordinator.goToArchive()
             }
+        case .compressPdf:
+            self.pdfCompressViewModel.run(pdf: nil) { [weak self] in
+                self?.trackFullActionCompleted()
+                self?.mainCoordinator.goToArchive()
+            }
+        case .comparePdf:
+            // Comparing writes nothing, so there is no archive to send the user to.
+            self.pdfCompareViewModel.run(pdf: nil) { [weak self] in
+                self?.trackFullActionCompleted()
+            }
         }
     }
     
@@ -486,7 +506,7 @@ public class HomeViewModel : ObservableObject {
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
                     .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf,
-                    .webToPdf, .markdownToPdf, .pdfPermissions, .redactPdf:
+                    .webToPdf, .markdownToPdf, .pdfPermissions, .redactPdf, .compressPdf, .comparePdf:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }

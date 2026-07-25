@@ -48,6 +48,9 @@ struct ToolsView: View {
         .onAppear() {
             self.viewModel.onAppear()
             self.runPendingToolActionIfNeeded()
+            #if DEBUG
+            self.runDebugToolIfNeeded()
+            #endif
         }
         // A tool started from another tab (Files "New", search results) lands here.
         .onChange(of: self.mainCoordinator.pendingToolAction) { _, action in
@@ -87,6 +90,8 @@ struct ToolsView: View {
         .showMarkdownImportView(viewModel: self.viewModel.pdfMarkdownImportViewModel)
         .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
         .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
+        .showCompressView(viewModel: self.viewModel.pdfCompressViewModel)
+        .showCompareView(viewModel: self.viewModel.pdfCompareViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
@@ -206,6 +211,28 @@ struct ToolsView: View {
             self.viewModel.performHomeAction(action)
         }
     }
+
+    #if DEBUG
+    /// Opens Compress or Compare on the bundled test document, so both screens can
+    /// be inspected on a simulator where the file picker cannot be driven:
+    ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
+    /// Values: `compress`, `compare`.
+    private func runDebugToolIfNeeded() {
+        guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
+              let pdf = K.Test.DebugPdf else { return }
+        DispatchQueue.main.async {
+            switch tool {
+            case "compress":
+                self.viewModel.pdfCompressViewModel.run(pdf: pdf, onCompleted: nil)
+            case "compare":
+                // Two synthetic documents: the picker cannot be driven from here.
+                self.viewModel.pdfCompareViewModel.debugRunWithSampleDocuments()
+            default:
+                break
+            }
+        }
+    }
+    #endif
 }
 
 extension View {

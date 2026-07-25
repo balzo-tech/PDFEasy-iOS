@@ -33,6 +33,9 @@ enum AnalyticsEventCustomParameters: String {
     case redactionBoxCount = "redaction_box_count"
     case redactedPageCount = "redacted_page_count"
     case annotationType = "annotation_type"
+    case compressionPreset = "compression_preset"
+    case compressionSavedPercent = "compression_saved_percent"
+    case changedPageCount = "changed_page_count"
 }
 
 extension OfficeConvertEngine {
@@ -97,6 +100,8 @@ extension AnalyticsScreen {
         case .markdownImport: return "MarkdownImport"
         case .permissions: return "Permissions"
         case .redact: return "Redact"
+        case .compress: return "Compress"
+        case .compare: return "Compare"
         }
     }
 }
@@ -172,6 +177,10 @@ extension AnalyticsEvent {
         case .annotationAdded: return "annotation_added"
         case .annotationsSaved: return "annotations_saved"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
+        case .compressionStarted: return "compression_started"
+        case .compressionCompleted: return "compression_completed"
+        case .compareStarted: return "compare_started"
+        case .compareCompleted: return "compare_completed"
         case .folderSaved: return "folder_saved"
         case .folderDeleted: return "folder_deleted"
         case .pdfFiled: return "pdf_filed"
@@ -301,6 +310,13 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.annotationType.rawValue: type.rawValue]
         case .annotationsSaved: return nil
         case .pdfMetadataUpdated: return nil
+        case .compressionStarted: return nil
+        case .compressionCompleted(let preset, let savedPercent):
+            return [AnalyticsEventCustomParameters.compressionPreset.rawValue: preset.trackingParameterValue,
+                    AnalyticsEventCustomParameters.compressionSavedPercent.rawValue: savedPercent]
+        case .compareStarted: return nil
+        case .compareCompleted(let changedPageCount):
+            return [AnalyticsEventCustomParameters.changedPageCount.rawValue: changedPageCount]
         case .folderSaved: return nil
         case .folderDeleted: return nil
         case .pdfFiled: return nil
@@ -470,6 +486,8 @@ fileprivate extension HomeAction {
         case .invertColors: return "invert_colors"
         case .pdfPermissions: return "pdf_permissions"
         case .redactPdf: return "redact_pdf"
+        case .compressPdf: return "compress_pdf"
+        case .comparePdf: return "compare_pdf"
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"

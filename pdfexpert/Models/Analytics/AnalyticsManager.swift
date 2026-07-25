@@ -57,6 +57,8 @@ enum AnalyticsScreen {
     case markdownImport
     case permissions
     case redact
+    case compress
+    case compare
 }
 
 enum AnalyticsEvent {
@@ -128,6 +130,10 @@ enum AnalyticsEvent {
     case annotationAdded(type: PdfAnnotationType)
     case annotationsSaved
     case pdfMetadataUpdated
+    case compressionStarted
+    case compressionCompleted(preset: CompressionPreset, savedPercent: Int)
+    case compareStarted
+    case compareCompleted(changedPageCount: Int)
     case folderSaved
     case folderDeleted
     case pdfFiled

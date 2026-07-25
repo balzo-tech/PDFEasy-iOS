@@ -133,11 +133,11 @@ In order:
 ### Product features (roadmap)
 ~~OCR / searchable PDF~~ ✅ done (see "What landed" #11; refinements above) ·
 ~~merge/split/extract pages~~ ✅ done (phase 1) · ~~rich annotations~~ ✅ done
-(phase 3, reader markup) · smart compression presets (S/M) · ~~App Intents /
-Shortcuts / Widget~~ ✅ done (phase 5) · ~~archive organization with
-folders/search/tags~~ ✅ done (search #12, folders and tags phase 6) ·
-auto-rename · compare PDFs (dropped from phase 3, still unplanned) ·
-certificate signing via Stirling `cert-sign` (only if the market asks for it).
+(phase 3, reader markup) · ~~smart compression presets~~ ✅ done (phase 7) ·
+~~App Intents / Shortcuts / Widget~~ ✅ done (phase 5) · ~~archive organization
+with folders/search/tags~~ ✅ done (search #12, folders and tags phase 6) ·
+~~compare PDFs~~ ✅ done (phase 7) · auto-rename · certificate signing via
+Stirling `cert-sign` (only if the market asks for it).
 
 ## Phase 3 (2026-07-25) — on-device round 2 + PSPDFKit removal
 
@@ -420,3 +420,65 @@ global search reuses them and therefore now matches folder and tag names too.
   instance) start unfiled — the copy is a new row.
 - `debugSeedArchive` now also seeds two folders and two tags, and
   `debugShowOrganizer=YES` opens the Folders & Tags sheet at launch.
+
+## Phase 7 (2026-07-25) — compression presets and PDF comparison
+
+Two tools: **Compress PDF** (free) and **Compare PDFs** (premium). Suite 178 →
+200 tests.
+
+### Compress PDF
+
+`PdfCompressUtility` with three presets — Light / Balanced / Maximum — each a
+bound on resolution (2400 / 1600 / 1100 px on the longest side) plus a JPEG
+quality. **Resolution is what actually shrinks a scan**; quality alone barely
+dents a 4000 px page.
+
+- Only the pages that are pixels are re-encoded (no extractable text, or
+  image-heavy per `PDFUtility.pageIsImageHeavy`). A text page is left alone, so
+  it stays selectable and crisp.
+- The compression runs **on a copy of the original document**, replacing single
+  pages, rather than assembling a new one. Rebuilding from scratch re-emits
+  shared resources — the font above all — once per page, and a multi-page text
+  document came out *bigger* than it went in (caught on device: 151 KB → 165 KB).
+  When nothing is re-encoded the original size is reported as-is.
+- Per page, whichever version is smaller wins; the tool can therefore never hand
+  back a heavier file, and it says so plainly when a document cannot be shrunk
+  (Save stays disabled).
+- No estimate: the file is compressed for real while the sheet is open, and the
+  preview is the first page of the *result*. The saved document is a new
+  `-compressed` copy; the original stays as the way back.
+
+### Compare PDFs (premium)
+
+`PdfCompareUtility`, entirely on-device, answering in two ways because neither is
+enough alone:
+
+- **Text**: word-level LCS diff per page, grouped into runs ("hereby fully"
+  rather than two entries). Falls back to line granularity above 1500×1500 words,
+  where the quadratic matrix stops being worth it.
+- **Visual**: both pages rendered to a common grayscale raster and compared over
+  a 32-column grid; cells above a mean-difference threshold are reported, and the
+  UI paints them over the page. The grid is row-major **from the top** — a
+  bitmap context stores rows top-down while its coordinates run bottom-up, so
+  drawing the page as-is already lands the top of the page in row 0. There is a
+  test pinning that, because an inverted grid highlights the wrong areas.
+- **Pages are aligned first**, by LCS over their text, then unmatched runs are
+  re-paired when they are similar enough (Jaccard ≥ 0.4). Without that second
+  pass an *edited* page shows up as one removal plus one insertion instead of a
+  page that changed — which is what it did before the tests caught it. Two scans
+  carry no text to align on, so alignment falls back to position.
+- Comparing writes nothing: there is no document to save and neither input can be
+  damaged.
+
+### Watch out
+
+- The visual diff normalizes both pages to the left page's aspect ratio.
+  Comparing a portrait against a landscape is meaningless pixel by pixel; the
+  grid will simply report most of the page as changed.
+- Compression on a long document is a real workload: it renders and JPEG-encodes
+  every image page, and measures each page twice to decide. There is progress,
+  but check the timing on a 100-page scan on a device.
+- Debug hooks: `debugRunTool -string compress|compare` opens either tool at
+  launch (compare uses two synthetic contracts and skips the paywall, since the
+  file picker cannot be driven from the CLI), and `debugCompareMode -string
+  visual` opens the result on the visual tab.
