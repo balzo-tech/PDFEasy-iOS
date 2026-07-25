@@ -52,6 +52,7 @@ enum HomeAction: Hashable, Identifiable {
     case removeBlankPages
     case flattenPdf
     case invertColors
+    case pdfPermissions
 
     case importPdf
     
@@ -92,6 +93,8 @@ enum HomeAction: Hashable, Identifiable {
         case .removeBlankPages: return .pdf
         case .flattenPdf: return .pdf
         case .invertColors: return .pdf
+        // Runs its own import + form, like the other archive-saving tools.
+        case .pdfPermissions: return nil
         case .importPdf: return .pdf
         case .readPdf: return .pdf
         case .removePassword: return .pdf
@@ -130,6 +133,7 @@ enum HomeAction: Hashable, Identifiable {
         case .removeBlankPages: return .openRemoveBlankPages
         case .flattenPdf: return .openFlatten
         case .invertColors: return .openInvertColors
+        case .pdfPermissions: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return nil
@@ -168,6 +172,7 @@ enum HomeAction: Hashable, Identifiable {
         case .removeBlankPages: return nil
         case .flattenPdf: return nil
         case .invertColors: return nil
+        case .pdfPermissions: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
@@ -255,6 +260,7 @@ public class HomeViewModel : ObservableObject {
     @Injected(\.pdfExportViewModel) var pdfExportViewModel
     @Injected(\.pdfConvertViewModel) var pdfConvertViewModel
     @Injected(\.pdfAdvancedToolViewModel) var pdfAdvancedToolViewModel
+    @Injected(\.pdfPermissionsViewModel) var pdfPermissionsViewModel
     @Injected(\.pdfReadViewModel) var pdfReadViewModel
     
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
@@ -364,6 +370,11 @@ public class HomeViewModel : ObservableObject {
                 self?.trackFullActionCompleted()
                 self?.mainCoordinator.goToArchive()
             }
+        case .pdfPermissions:
+            self.pdfPermissionsViewModel.run(pdf: nil) { [weak self] in
+                self?.trackFullActionCompleted()
+                self?.mainCoordinator.goToArchive()
+            }
         }
     }
     
@@ -465,7 +476,7 @@ public class HomeViewModel : ObservableObject {
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
                     .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf,
-                    .webToPdf, .markdownToPdf:
+                    .webToPdf, .markdownToPdf, .pdfPermissions:
                 assertionFailure("Selected file url is not handled for the current action")
             }
         }

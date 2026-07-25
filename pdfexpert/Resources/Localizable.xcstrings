@@ -72,6 +72,22 @@
         }
       }
     },
+    "A protected copy has been saved to your archive.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A protected copy has been saved to your archive."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una copia protetta è stata salvata nel tuo archivio."
+          }
+        }
+      }
+    },
     "AI chat is currently unavailable. Please try again later.": {
       "localizations": {
         "en": {
@@ -168,6 +184,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aggiungi i numeri di pagina a ogni pagina del PDF"
+          }
+        }
+      }
+    },
+    "Allow copying text": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow copying text"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti la copia del testo"
+          }
+        }
+      }
+    },
+    "Allow printing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow printing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti la stampa"
           }
         }
       }
@@ -608,6 +656,22 @@
         }
       }
     },
+    "Copy protection is a convention that PDF readers choose to respect: it discourages copying but does not make the text unreadable.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy protection is a convention that PDF readers choose to respect: it discourages copying but does not make the text unreadable."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La protezione dalla copia è una convenzione che i lettori PDF scelgono di rispettare: scoraggia la copia ma non rende il testo illeggibile."
+          }
+        }
+      }
+    },
     "Couldn't extract this image": {
       "localizations": {
         "en": {
@@ -963,6 +1027,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Inserisci una password per proteggere il PDF, puoi rimuoverla e cambiarla quando vuoi."
+          }
+        }
+      }
+    },
+    "Enter an owner password: without it the permissions cannot be enforced.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter an owner password: without it the permissions cannot be enforced."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci una password proprietario: senza di essa i permessi non possono essere applicati."
           }
         }
       }
@@ -2179,6 +2259,22 @@
         }
       }
     },
+    "Owner password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Owner password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password proprietario"
+          }
+        }
+      }
+    },
     "PDF Easy": {
       "extractionState": "stale",
       "localizations": {
@@ -2240,6 +2336,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "I PDF sono limitati a 32MB per file\ne a 2000 pagine"
+          }
+        }
+      }
+    },
+    "PDF permissions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF permissions"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permessi PDF"
           }
         }
       }
@@ -2684,6 +2796,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ripristina acquisto"
+          }
+        }
+      }
+    },
+    "Restrict printing and copying on a copy of your PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restrict printing and copying on a copy of your PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limita stampa e copia su una copia del tuo PDF"
           }
         }
       }
@@ -3318,6 +3446,22 @@
         }
       }
     },
+    "The document still opens without a password. The owner password is what makes the restrictions below enforceable.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The document still opens without a password. The owner password is what makes the restrictions below enforceable."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il documento si apre comunque senza password. La password proprietario è ciò che rende applicabili le restrizioni qui sotto."
+          }
+        }
+      }
+    },
     "The pdf file couldn't be saved on your device. You can still view it and share it.": {
       "extractionState": "stale",
       "localizations": {
@@ -3331,6 +3475,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Impossibile salvare il file PDF sul dispositivo. Puoi comunque visualizzarlo e condividerlo."
+          }
+        }
+      }
+    },
+    "The permissions could not be applied to this PDF.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The permissions could not be applied to this PDF."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato possibile applicare i permessi a questo PDF."
           }
         }
       }

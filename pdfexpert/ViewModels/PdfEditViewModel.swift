@@ -42,6 +42,7 @@ enum EditAction: CaseIterable {
     case removeBlankPages
     case flatten
     case invertColors
+    case permissions
     case metadata
 }
 
@@ -151,6 +152,7 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
     @Injected(\.pdfExportViewModel) var pdfExportViewModel
+    @Injected(\.pdfPermissionsViewModel) var pdfPermissionsViewModel
 
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -407,6 +409,8 @@ class PdfEditViewModel: ObservableObject {
                 self.runCleanup(.flatten)
             case .invertColors:
                 self.runCleanup(.invertColors)
+            case .permissions:
+                self.pdfPermissionsViewModel.run(pdf: self.pdf, onCompleted: nil)
             case .metadata:
                 self.activeSheet = .metadata
             }

@@ -199,7 +199,12 @@ struct HomeView: View {
                      description: String(localized: "Bake annotations and form fields into the page"),
                      imageName: "square.stack.3d.down.forward",
                      isSystemImage: true,
-                     homeAction: .flattenPdf)
+                     homeAction: .flattenPdf),
+            HomeItem(title: String(localized: "PDF permissions"),
+                     description: String(localized: "Restrict printing and copying on a copy of your PDF"),
+                     imageName: "hand.raised",
+                     isSystemImage: true,
+                     homeAction: .pdfPermissions)
         ]
         if Container.shared.stirlingApiManager().isAvailable {
             items.append(
@@ -289,6 +294,7 @@ struct HomeView: View {
         .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
         .showWebImportView(viewModel: self.viewModel.pdfWebImportViewModel)
         .showMarkdownImportView(viewModel: self.viewModel.pdfMarkdownImportViewModel)
+        .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })

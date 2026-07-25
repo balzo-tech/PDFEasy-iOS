@@ -127,6 +127,25 @@ enum PdfExtractError: LocalizedError, UnderlyingError {
     }
 }
 
+enum PdfPermissionsError: LocalizedError, Equatable {
+    /// The permission flags are only enforceable when an owner password is set, so an
+    /// empty one is rejected instead of writing a file that promises nothing.
+    case missingOwnerPassword
+    case encodingFailed
+    case unknownError
+
+    var errorDescription: String? {
+        switch self {
+        case .missingOwnerPassword:
+            return String(localized: "Enter an owner password: without it the permissions cannot be enforced.")
+        case .encodingFailed:
+            return String(localized: "The permissions could not be applied to this PDF.")
+        case .unknownError:
+            return String(localized: "Internal Error. Please try again later")
+        }
+    }
+}
+
 enum PdfExportError: LocalizedError, Equatable {
     case noTextFound
     case noImagesFound

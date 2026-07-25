@@ -169,6 +169,7 @@ struct PdfEditView: View {
         .extractSuccessfulAlert(show: self.$viewModel.extractSuccessAlertShow,
                                 goToArchiveCallback: { self.viewModel.goToArchive() })
         .showExportView(viewModel: self.viewModel.pdfExportViewModel)
+        .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
         .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
                               onComplete: { self.viewModel.onOcrMonetizationClose() })
         .showSubscriptionView(self.$viewModel.pageNumbersMonetizationShow,
@@ -425,6 +426,11 @@ struct PdfEditView: View {
             case .invertColors:
                 return OptionItem(title: String(localized: "Invert colors"),
                                   imageName: "circle.lefthalf.filled",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .permissions:
+                return OptionItem(title: String(localized: "PDF permissions"),
+                                  imageName: "hand.raised",
                                   isSystemImage: true,
                                   callBack: callback)
             case .metadata:

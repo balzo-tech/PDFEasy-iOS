@@ -28,6 +28,8 @@ enum AnalyticsEventCustomParameters: String {
     case advancedTool = "advanced_tool"
     case officeConvertEngine = "office_convert_engine"
     case removedPagesCount = "removed_pages_count"
+    case allowsPrinting = "allows_printing"
+    case allowsCopying = "allows_copying"
 }
 
 extension OfficeConvertEngine {
@@ -90,6 +92,7 @@ extension AnalyticsScreen {
         case .advancedTool: return "AdvancedTool"
         case .webImport: return "WebImport"
         case .markdownImport: return "MarkdownImport"
+        case .permissions: return "Permissions"
         }
     }
 }
@@ -159,6 +162,7 @@ extension AnalyticsEvent {
         case .blankPagesRemoved: return "blank_pages_removed"
         case .pdfFlattened: return "pdf_flattened"
         case .colorsInverted: return "colors_inverted"
+        case .pdfPermissionsSet: return "pdf_permissions_set"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -272,6 +276,9 @@ extension AnalyticsEvent {
         case .blankPagesRemoved(let count):
             return [AnalyticsEventCustomParameters.removedPagesCount.rawValue: count]
         case .pdfFlattened, .colorsInverted: return nil
+        case .pdfPermissionsSet(let allowsPrinting, let allowsCopying):
+            return [AnalyticsEventCustomParameters.allowsPrinting.rawValue: allowsPrinting,
+                    AnalyticsEventCustomParameters.allowsCopying.rawValue: allowsCopying]
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
@@ -434,6 +441,7 @@ fileprivate extension HomeAction {
         case .removeBlankPages: return "remove_blank_pages"
         case .flattenPdf: return "flatten_pdf"
         case .invertColors: return "invert_colors"
+        case .pdfPermissions: return "pdf_permissions"
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"
