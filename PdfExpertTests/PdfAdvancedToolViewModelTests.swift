@@ -291,6 +291,14 @@ private final class RepositoryMock: Repository {
     func delete(signatures: [Signature]) throws {}
     func saveSuggestedFields(suggestedFields: SuggestedFields) throws -> SuggestedFields { suggestedFields }
     func loadSuggestedFields() throws -> SuggestedFields? { nil }
+    func loadFolders() throws -> [Folder] { [] }
+    func save(folder: Folder) throws -> Folder { folder }
+    func delete(folder: Folder) throws {}
+    func setFolder(_ folder: Folder?, for pdf: Pdf) throws -> Pdf { pdf }
+    func loadTags() throws -> [Tag] { [] }
+    func save(tag: Tag) throws -> Tag { tag }
+    func delete(tag: Tag) throws {}
+    func setTags(_ tags: [Tag], for pdf: Pdf) throws -> Pdf { pdf }
 }
 
 /// Synchronous Stirling stub: returns `resultData` (or fails with `errorMode`)

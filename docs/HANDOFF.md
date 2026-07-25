@@ -133,10 +133,11 @@ In order:
 ### Product features (roadmap)
 ~~OCR / searchable PDF~~ ✅ done (see "What landed" #11; refinements above) ·
 ~~merge/split/extract pages~~ ✅ done (phase 1) · ~~rich annotations~~ ✅ done
-(phase 3, reader markup) · smart compression presets (S/M) · App Intents /
-Shortcuts / Widget (M — phase 4) · archive organization with
-folders/~~search~~/tags (M — search ✅ done, see #12) · compare PDFs
-(dropped from phase 3, still unplanned).
+(phase 3, reader markup) · smart compression presets (S/M) · ~~App Intents /
+Shortcuts / Widget~~ ✅ done (phase 5) · ~~archive organization with
+folders/search/tags~~ ✅ done (search #12, folders and tags phase 6) ·
+auto-rename · compare PDFs (dropped from phase 3, still unplanned) ·
+certificate signing via Stirling `cert-sign` (only if the market asks for it).
 
 ## Phase 3 (2026-07-25) — on-device round 2 + PSPDFKit removal
 
@@ -193,8 +194,12 @@ save/discard flow; the 14-row "…" menu on a small device.
 - Per-env `Info.plist` / `GoogleService-Info.plist` live in
   `pdfexpert/Resources/{Staging,Production}` and are git-ignored too.
 - **Verify build/test from CLI (Apple Silicon)**:
-  `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging" -destination "platform=iOS Simulator,name=iPhone 17 Pro" -configuration "Staging Debug" CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 -derivedDataPath <isolated-dir>`
+  `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging" -destination "platform=iOS Simulator,name=iPhone 17 Pro" -configuration "Staging Debug" CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES ONLY_ACTIVE_ARCH=YES ARCHS=arm64 -derivedDataPath <isolated-dir>`
   (use an isolated DerivedData if Xcode is open). Or `bundle exec fastlane test`.
+  Since phase 6 the ad-hoc signing is **required**: with `CODE_SIGNING_ALLOWED=NO`
+  the app has no iCloud entitlement and CoreData+CloudKit traps inside
+  `CKContainer` while setting the mirroring up, killing the test host before it
+  connects (`Early unexpected exit … crashed before establishing connection`).
 - The unit-test target was created with the `xcodeproj` Ruby gem (it handles the
   custom configs cleanly). The test host boots Firebase under tests (harmless
   keychain noise); do NOT make `AppDelegate` skip Firebase under tests — it
@@ -353,3 +358,65 @@ suite is now 166).
 
 Siri phrases, the Shortcuts actions against real files, and both widget sizes on
 the Home Screen (a widget cannot be added from the command line).
+
+## Phase 6 (2026-07-25) — folders and tags in the archive
+
+The last piece of the roadmap's "phase 4 — automation" bucket: organising the
+archive. Free, on-device, no premium gate. Suite 166 → 178 tests.
+
+### Model
+
+Two new Core Data entities, `Folder` (`CDFolder`) and `Tag` (`CDTag`), each with
+`name`, `colorIndex` and `creationDate`. `Pdf` gained a to-one `folder` and a
+to-many `tags`, both `nullify`, both with inverses — deleting a folder keeps its
+documents, they just become unfiled. Folders are **flat on purpose**: a document
+is in one folder or in none, and anything cutting across folders is what tags
+are for.
+
+- **Filing never goes through `savePdf`.** `Repository.setFolder(_:for:)` and
+  `setTags(_:for:)` touch the relationship alone; `CDPdf.update(withPdf:)`
+  deliberately leaves both untouched. Otherwise moving a document into a folder
+  would rewrite its whole blob and re-run text extraction — and any later save
+  from the editor would silently drop the filing.
+- `ArchiveColor` is an index, not a hex string: the hues stay a design decision
+  and can be retuned without migrating data or CloudKit records.
+- Creating a folder or tag whose name already exists returns the existing one
+  (case-insensitively), so the same pile does not end up split in two.
+
+### UI
+
+`FilesFilterBar` above the archive — All · folders · Unfiled · tags — one folder
+at a time, tags on top of it, and **multiple tags narrow rather than widen** (a
+document must carry all of them). The bar only appears once something has been
+created. Filing itself lives in the document's own context menu ("Move to",
+"Tags"), where a new folder or tag can be created and is applied to that
+document straight away. `ArchiveOrganizerView` (filter bar or the ⋯ menu) is
+where they get renamed, recoloured and deleted. Cards and rows show the folder
+name and coloured tag dots.
+
+`ArchiveFilter` holds the rules as a value type over the `ArchiveFilterable`
+protocol, so the 12 new tests exercise them without a Core Data stack. The
+global search reuses them and therefore now matches folder and tag names too.
+
+### Watch out
+
+- **The CloudKit production schema must be deployed before release.** Two new
+  record types plus the two relationships. Dev creates them automatically; for
+  production, flip `InitializeCloudKitSchema` in `Persistence.swift` once against
+  the dev environment, then Deploy Schema Changes in the CloudKit Dashboard. This
+  is now blocking together with the older `searchableText` attribute.
+- **Running tests on a simulator now needs a signed build.** The model change
+  makes CoreData+CloudKit run its setup request at launch, and without the iCloud
+  entitlement `CKContainer` traps — the test host dies before the runner
+  connects. Use `CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES
+  CODE_SIGNING_ALLOWED=YES` instead of `CODE_SIGNING_ALLOWED=NO` (see the command
+  in "Build / project notes").
+- **No cross-device de-duplication.** Two devices offline can each create a
+  folder called "Invoices" and iCloud will keep both. The Apple template's
+  history-processing dedupe hook is present but commented out in
+  `PersistenceController.storeRemoteChange`; wire it up if this shows up in the
+  wild.
+- Documents saved as a *new* document (redaction saves a `-redacted` copy, for
+  instance) start unfiled — the copy is a new row.
+- `debugSeedArchive` now also seeds two folders and two tags, and
+  `debugShowOrganizer=YES` opens the Folders & Tags sheet at launch.

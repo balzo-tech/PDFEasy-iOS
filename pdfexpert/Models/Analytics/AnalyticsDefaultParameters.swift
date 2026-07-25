@@ -172,6 +172,12 @@ extension AnalyticsEvent {
         case .annotationAdded: return "annotation_added"
         case .annotationsSaved: return "annotations_saved"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
+        case .folderSaved: return "folder_saved"
+        case .folderDeleted: return "folder_deleted"
+        case .pdfFiled: return "pdf_filed"
+        case .tagSaved: return "tag_saved"
+        case .tagDeleted: return "tag_deleted"
+        case .pdfTagged: return "pdf_tagged"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -295,6 +301,12 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.annotationType.rawValue: type.rawValue]
         case .annotationsSaved: return nil
         case .pdfMetadataUpdated: return nil
+        case .folderSaved: return nil
+        case .folderDeleted: return nil
+        case .pdfFiled: return nil
+        case .tagSaved: return nil
+        case .tagDeleted: return nil
+        case .pdfTagged: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil

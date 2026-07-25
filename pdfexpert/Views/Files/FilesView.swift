@@ -58,6 +58,20 @@ enum FilesSort: String, CaseIterable, Identifiable {
     }
 }
 
+/// A folder or tag being created from a document's context menu.
+enum QuickLabelRequest: Identifiable {
+
+    case folder(pdf: Pdf)
+    case tag(pdf: Pdf)
+
+    var id: String {
+        switch self {
+        case .folder(let pdf): return "folder-\(pdf.filename)"
+        case .tag(let pdf): return "tag-\(pdf.filename)"
+        }
+    }
+}
+
 struct FilesView: View {
 
     @InjectedObject(\.archiveViewModel) var viewModel
@@ -69,6 +83,10 @@ struct FilesView: View {
     @State private var pdfToDelete: Pdf? = nil
     @State private var pdfForInfo: Pdf? = nil
     @State private var importTutorialShow: Bool = false
+    @State private var organizerShow: Bool = false
+    /// A folder or tag being created from a document's own menu: once saved it is
+    /// applied to that document straight away.
+    @State private var quickLabel: QuickLabelRequest? = nil
 
     /// Three columns on a phone, more on an iPad: page previews are recognisable
     /// well below thumbnail-per-half-screen size, and the denser grid shows a
@@ -91,15 +109,40 @@ struct FilesView: View {
                 self.viewOptionsMenu
             }
         }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            // Only worth the vertical space once there is something to filter by.
+            if !self.viewModel.folders.isEmpty || !self.viewModel.tags.isEmpty {
+                FilesFilterBar(folders: self.viewModel.folders,
+                               tags: self.viewModel.tags,
+                               folderFilter: self.$viewModel.folderFilter,
+                               selectedTagIds: self.$viewModel.selectedTagIds,
+                               onManage: { self.organizerShow = true })
+                    .background(.bar)
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             self.newDocumentButton
         }
         .onAppear() {
             self.viewModel.onAppear()
+            #if DEBUG
+            // debugShowOrganizer=YES opens the folders/tags sheet straight away,
+            // the simulator takes no programmatic taps.
+            if UserDefaults.standard.bool(forKey: "debugShowOrganizer") {
+                self.organizerShow = true
+            }
+            #endif
         }
         .asyncView(asyncOperation: self.$viewModel.asyncItemDelete)
+        .asyncView(asyncOperation: self.$viewModel.asyncFiling)
         .fullScreenCover(isPresented: self.$importTutorialShow) {
             ImportTutorialView()
+        }
+        .sheet(isPresented: self.$organizerShow) {
+            ArchiveOrganizerView(viewModel: self.viewModel)
+        }
+        .sheet(item: self.$quickLabel) { request in
+            self.quickLabelEditor(for: request)
         }
         .sheet(item: self.$pdfForInfo) { pdf in
             let inputParameter = PdfMetadataViewModel
@@ -144,6 +187,8 @@ struct FilesView: View {
         if items.isEmpty {
             if !self.viewModel.searchText.isEmpty {
                 ContentUnavailableView.search(text: self.viewModel.searchText)
+            } else if self.viewModel.filter.isFiltering {
+                self.noMatchesView
             } else {
                 self.emptyView
             }
@@ -191,10 +236,88 @@ struct FilesView: View {
             Label("Document info", systemImage: "info.circle")
         }
         Divider()
+        self.folderMenu(for: pdf)
+        self.tagsMenu(for: pdf)
+        Divider()
         Button(role: .destructive) {
             self.pdfToDelete = pdf
         } label: {
             Label("Delete", systemImage: "trash")
+        }
+    }
+
+    /// Filing lives in the document's own menu: it is a property of that
+    /// document, not a mode the whole screen has to enter.
+    @ViewBuilder private func folderMenu(for pdf: Pdf) -> some View {
+        Menu {
+            ForEach(self.viewModel.folders) { folder in
+                Button {
+                    self.viewModel.setFolder(folder, for: pdf)
+                } label: {
+                    Label(folder.name, systemImage: pdf.folderId == folder.id ? "checkmark" : "folder")
+                }
+            }
+            if pdf.folder != nil {
+                Divider()
+                Button {
+                    self.viewModel.setFolder(nil, for: pdf)
+                } label: {
+                    Label("Remove from folder", systemImage: "tray")
+                }
+            }
+            Divider()
+            Button {
+                self.quickLabel = .folder(pdf: pdf)
+            } label: {
+                Label("New folder…", systemImage: "folder.badge.plus")
+            }
+        } label: {
+            Label("Move to", systemImage: "folder")
+        }
+    }
+
+    @ViewBuilder private func tagsMenu(for pdf: Pdf) -> some View {
+        Menu {
+            ForEach(self.viewModel.tags) { tag in
+                Button {
+                    self.viewModel.toggleTag(tag, for: pdf)
+                } label: {
+                    Label(tag.name, systemImage: pdf.tagIds.contains(tag.id) ? "checkmark" : "circle")
+                }
+            }
+            if !self.viewModel.tags.isEmpty {
+                Divider()
+            }
+            Button {
+                self.quickLabel = .tag(pdf: pdf)
+            } label: {
+                Label("New tag…", systemImage: "plus")
+            }
+        } label: {
+            Label("Tags", systemImage: "tag")
+        }
+    }
+
+    /// Creating a folder or tag from a document's menu also files that document
+    /// into it — otherwise the user has to go and repeat the assignment.
+    @ViewBuilder private func quickLabelEditor(for request: QuickLabelRequest) -> some View {
+        switch request {
+        case .folder(let pdf):
+            LabelEditorView(title: String(localized: "New folder"),
+                            placeholder: String(localized: "Folder name"),
+                            color: self.viewModel.suggestedFolderColor) { name, color in
+                if let folder = self.viewModel.createFolder(name: name, color: color) {
+                    self.viewModel.setFolder(folder, for: pdf)
+                }
+            }
+        case .tag(let pdf):
+            LabelEditorView(title: String(localized: "New tag"),
+                            placeholder: String(localized: "Tag name"),
+                            color: self.viewModel.suggestedTagColor) { name, color in
+                if let tag = self.viewModel.createTag(name: name, color: color) {
+                    self.viewModel.toggleTag(tag, for: pdf)
+                }
+            }
         }
     }
 
@@ -219,6 +342,14 @@ struct FilesView: View {
                 Text("Sort by")
             }
             .pickerStyle(.inline)
+
+            Divider()
+
+            Button {
+                self.organizerShow = true
+            } label: {
+                Label("Folders & Tags", systemImage: "folder.badge.gearshape")
+            }
         } label: {
             Label("View options", systemImage: "ellipsis")
         }
@@ -291,6 +422,19 @@ struct FilesView: View {
             .frame(maxWidth: 260)
             Button("Convert from any file") {
                 self.importTutorialShow = true
+            }
+            .font(forCategory: .linkText)
+        }
+    }
+
+    private var noMatchesView: some View {
+        ContentUnavailableView {
+            Label("Nothing filed here yet", systemImage: "folder")
+        } description: {
+            Text("No document matches the folder and tags you picked.")
+        } actions: {
+            Button("Clear filters") {
+                withAnimation(DS.Motion.quick) { self.viewModel.clearFilters() }
             }
             .font(forCategory: .linkText)
         }

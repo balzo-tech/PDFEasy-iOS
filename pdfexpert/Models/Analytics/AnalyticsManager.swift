@@ -128,6 +128,12 @@ enum AnalyticsEvent {
     case annotationAdded(type: PdfAnnotationType)
     case annotationsSaved
     case pdfMetadataUpdated
+    case folderSaved
+    case folderDeleted
+    case pdfFiled
+    case tagSaved
+    case tagDeleted
+    case pdfTagged
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

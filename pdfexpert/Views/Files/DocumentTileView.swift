@@ -43,10 +43,13 @@ struct DocumentCardView: View {
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
-                    Text(self.pdf.pageCountText)
-                        .font(forCategory: .caption2)
-                        .foregroundStyle(ColorPalette.textSecondary)
-                        .lineLimit(1)
+                    HStack(spacing: DS.Spacing.xxs) {
+                        Text(self.pdf.pageCountText)
+                            .font(forCategory: .caption2)
+                            .foregroundStyle(ColorPalette.textSecondary)
+                            .lineLimit(1)
+                        TagDotsView(tags: self.pdf.tags)
+                    }
                 }
                 .frame(maxWidth: .infinity, minHeight: 46, alignment: .topLeading)
                 .padding(.horizontal, DS.Spacing.xs)
@@ -84,10 +87,23 @@ struct DocumentRowView: View {
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(ColorPalette.textSecondary)
                         }
+                        if let folder = self.pdf.folder {
+                            Image(systemName: "folder.fill")
+                                .font(.system(size: 9))
+                                .foregroundStyle(folder.color.color)
+                            Text(folder.name)
+                                .font(forCategory: .caption1)
+                                .foregroundStyle(ColorPalette.textSecondary)
+                                .lineLimit(1)
+                            Text("·")
+                                .font(forCategory: .caption1)
+                                .foregroundStyle(ColorPalette.textTertiary)
+                        }
                         Text(self.pdf.metadataText)
                             .font(forCategory: .caption1)
                             .foregroundStyle(ColorPalette.textSecondary)
                             .lineLimit(1)
+                        TagDotsView(tags: self.pdf.tags)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -101,6 +117,32 @@ struct DocumentRowView: View {
         .buttonStyle(PressableTileButtonStyle(radius: DS.Radius.control))
         .accessibilityLabel(Text(self.pdf.filename))
         .accessibilityValue(Text(self.pdf.metadataText))
+    }
+}
+
+/// The document's tags as coloured dots: on a card there is no room for their
+/// names, and the colours are enough to recognise a pile at a glance.
+struct TagDotsView: View {
+
+    let tags: [Tag]
+    var maxCount: Int = 3
+
+    var body: some View {
+        if !self.tags.isEmpty {
+            HStack(spacing: 2) {
+                ForEach(self.tags.prefix(self.maxCount)) { tag in
+                    Circle()
+                        .fill(tag.color.color)
+                        .frame(width: 6, height: 6)
+                }
+                if self.tags.count > self.maxCount {
+                    Text(verbatim: "+\(self.tags.count - self.maxCount)")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(ColorPalette.textTertiary)
+                }
+            }
+            .accessibilityLabel(Text(self.tags.map(\.name).joined(separator: ", ")))
+        }
     }
 }
 

@@ -28,6 +28,11 @@ struct Pdf {
     // Indexed page text loaded from Core Data; used for the archive's full-text
     // search. nil for documents saved before indexing or never re-saved.
     private(set) var searchableText: String? = nil
+    // Filing, loaded from the Core Data relationships. Read-only here on purpose:
+    // both are changed through `Repository.setFolder`/`setTags`, which touch the
+    // relationship alone instead of rewriting the document blob.
+    private(set) var folder: Folder? = nil
+    private(set) var tags: [Tag] = []
 
     var rawData: Data? {
         return self.pdfDocument.dataRepresentation()
@@ -40,7 +45,9 @@ struct Pdf {
          fileName: String?,
          compression: CompressionOption,
          margins: MarginsOption,
-         searchableText: String? = nil) {
+         searchableText: String? = nil,
+         folder: Folder? = nil,
+         tags: [Tag] = []) {
         self.storeId = storeId
         self.pdfDocument = pdfDocument
         self.password = password
@@ -49,6 +56,8 @@ struct Pdf {
         self.compression = compression
         self.margins = margins
         self.searchableText = searchableText
+        self.folder = folder
+        self.tags = tags
     }
     
     init?(data: Data) {
@@ -95,6 +104,16 @@ struct Pdf {
     
     mutating func updateFilename(_ filename: String) {
         self.filename = filename
+    }
+
+    /// Mirrors a filing change already persisted by the repository, so callers
+    /// get an up-to-date value without re-reading (and re-parsing) the document.
+    mutating func updateFolder(_ folder: Folder?) {
+        self.folder = folder
+    }
+
+    mutating func updateTags(_ tags: [Tag]) {
+        self.tags = tags.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }
     
     var thumbnail: UIImage? {

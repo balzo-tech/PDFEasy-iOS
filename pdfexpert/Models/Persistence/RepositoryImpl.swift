@@ -87,7 +87,90 @@ class RepositoryImpl: Repository {
     func loadSuggestedFields() throws -> SuggestedFields? {
         return try self.loadItems(sortByCreationDate: false).first
     }
-    
+
+    // MARK: - Folders
+
+    func loadFolders() throws -> [Folder] {
+        return try self.loadItems(sortByCreationDate: false)
+            .sorted { (lhs: Folder, rhs: Folder) in
+                lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            }
+    }
+
+    func save(folder: Folder) throws -> Folder {
+        let folder = try self.save(folder)
+        self.analyticsMananger.track(event: .folderSaved)
+        return folder
+    }
+
+    func delete(folder: Folder) throws {
+        // The relationship is `nullify`, so the documents inside survive and go
+        // back to being unfiled.
+        try self.delete(folder)
+        self.analyticsMananger.track(event: .folderDeleted)
+    }
+
+    func setFolder(_ folder: Folder?, for pdf: Pdf) throws -> Pdf {
+        guard let storedPdf = pdf.getSavedCoreDataEntity(context: self.sharedManagedContext) else {
+            debugPrint(for: self, message: "Cannot file a pdf that isn't in the archive yet")
+            throw SaveError.unknownError
+        }
+        if let folder {
+            guard let storedFolder = folder.getSavedCoreDataEntity(context: self.sharedManagedContext) else {
+                debugPrint(for: self, message: "Cannot file a pdf into a folder that isn't stored yet")
+                throw SaveError.unknownError
+            }
+            storedPdf.folder = storedFolder
+        } else {
+            storedPdf.folder = nil
+        }
+        try self.saveChanges()
+        self.analyticsMananger.track(event: .pdfFiled)
+
+        var updatedPdf = pdf
+        updatedPdf.updateFolder(folder)
+        return updatedPdf
+    }
+
+    // MARK: - Tags
+
+    func loadTags() throws -> [Tag] {
+        return try self.loadItems(sortByCreationDate: false)
+            .sorted { (lhs: Tag, rhs: Tag) in
+                lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            }
+    }
+
+    func save(tag: Tag) throws -> Tag {
+        let tag = try self.save(tag)
+        self.analyticsMananger.track(event: .tagSaved)
+        return tag
+    }
+
+    func delete(tag: Tag) throws {
+        try self.delete(tag)
+        self.analyticsMananger.track(event: .tagDeleted)
+    }
+
+    func setTags(_ tags: [Tag], for pdf: Pdf) throws -> Pdf {
+        guard let storedPdf = pdf.getSavedCoreDataEntity(context: self.sharedManagedContext) else {
+            debugPrint(for: self, message: "Cannot tag a pdf that isn't in the archive yet")
+            throw SaveError.unknownError
+        }
+        let storedTags = tags.compactMap { $0.getSavedCoreDataEntity(context: self.sharedManagedContext) }
+        guard storedTags.count == tags.count else {
+            debugPrint(for: self, message: "Cannot attach a tag that isn't stored yet")
+            throw SaveError.unknownError
+        }
+        storedPdf.tags = NSSet(array: storedTags)
+        try self.saveChanges()
+        self.analyticsMananger.track(event: .pdfTagged)
+
+        var updatedPdf = pdf
+        updatedPdf.updateTags(tags)
+        return updatedPdf
+    }
+
     // MARK: - Private Methods
     
     private func save<T: Persistable>(_ persistable: T) throws -> T {
