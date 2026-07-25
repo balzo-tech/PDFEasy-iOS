@@ -204,7 +204,12 @@ struct HomeView: View {
                      description: String(localized: "Restrict printing and copying on a copy of your PDF"),
                      imageName: "hand.raised",
                      isSystemImage: true,
-                     homeAction: .pdfPermissions)
+                     homeAction: .pdfPermissions),
+            HomeItem(title: String(localized: "Redact PDF"),
+                     description: String(localized: "Permanently black out sensitive content"),
+                     imageName: "eye.slash",
+                     isSystemImage: true,
+                     homeAction: .redactPdf)
         ]
         if Container.shared.stirlingApiManager().isAvailable {
             items.append(
@@ -295,6 +300,7 @@ struct HomeView: View {
         .showWebImportView(viewModel: self.viewModel.pdfWebImportViewModel)
         .showMarkdownImportView(viewModel: self.viewModel.pdfMarkdownImportViewModel)
         .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
+        .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })

@@ -56,6 +56,7 @@ enum AnalyticsScreen {
     case webImport
     case markdownImport
     case permissions
+    case redact
 }
 
 enum AnalyticsEvent {
@@ -122,6 +123,8 @@ enum AnalyticsEvent {
     case pdfFlattened
     case colorsInverted
     case pdfPermissionsSet(allowsPrinting: Bool, allowsCopying: Bool)
+    case redactionStarted
+    case redactionCompleted(boxCount: Int, pageCount: Int)
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)

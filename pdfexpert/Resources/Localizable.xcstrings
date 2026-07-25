@@ -88,6 +88,22 @@
         }
       }
     },
+    "A redacted copy has been saved to your archive.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A redacted copy has been saved to your archive."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una copia oscurata è stata salvata nel tuo archivio."
+          }
+        }
+      }
+    },
     "AI chat is currently unavailable. Please try again later.": {
       "localizations": {
         "en": {
@@ -232,6 +248,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Applica"
+          }
+        }
+      }
+    },
+    "Apply redactions?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply redactions?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applicare le oscurazioni?"
           }
         }
       }
@@ -862,6 +894,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trascina per ordinare i tuoi documenti"
+          }
+        }
+      }
+    },
+    "Drag over the areas you want to black out.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag over the areas you want to black out."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trascina sulle aree che vuoi oscurare."
           }
         }
       }
@@ -2536,6 +2584,22 @@
         }
       }
     },
+    "Permanently black out sensitive content": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permanently black out sensitive content"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oscura definitivamente i contenuti sensibili"
+          }
+        }
+      }
+    },
     "Personal data": {
       "localizations": {
         "en": {
@@ -2699,6 +2763,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Riconosce il testo nelle pagine scansionate e rende il PDF ricercabile"
+          }
+        }
+      }
+    },
+    "Redact PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redact PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oscura PDF"
           }
         }
       }
@@ -3491,6 +3571,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Non è stato possibile applicare i permessi a questo PDF."
+          }
+        }
+      }
+    },
+    "The redacted pages are converted into images: on those pages the text will no longer be selectable or searchable. A new copy is saved and your original is left untouched.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The redacted pages are converted into images: on those pages the text will no longer be selectable or searchable. A new copy is saved and your original is left untouched."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le pagine oscurate vengono convertite in immagini: su quelle pagine il testo non sarà più selezionabile né ricercabile. Viene salvata una nuova copia e l'originale resta intatto."
           }
         }
       }

@@ -30,6 +30,8 @@ enum AnalyticsEventCustomParameters: String {
     case removedPagesCount = "removed_pages_count"
     case allowsPrinting = "allows_printing"
     case allowsCopying = "allows_copying"
+    case redactionBoxCount = "redaction_box_count"
+    case redactedPageCount = "redacted_page_count"
 }
 
 extension OfficeConvertEngine {
@@ -93,6 +95,7 @@ extension AnalyticsScreen {
         case .webImport: return "WebImport"
         case .markdownImport: return "MarkdownImport"
         case .permissions: return "Permissions"
+        case .redact: return "Redact"
         }
     }
 }
@@ -163,6 +166,8 @@ extension AnalyticsEvent {
         case .pdfFlattened: return "pdf_flattened"
         case .colorsInverted: return "colors_inverted"
         case .pdfPermissionsSet: return "pdf_permissions_set"
+        case .redactionStarted: return "redaction_started"
+        case .redactionCompleted: return "redaction_completed"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -279,6 +284,10 @@ extension AnalyticsEvent {
         case .pdfPermissionsSet(let allowsPrinting, let allowsCopying):
             return [AnalyticsEventCustomParameters.allowsPrinting.rawValue: allowsPrinting,
                     AnalyticsEventCustomParameters.allowsCopying.rawValue: allowsCopying]
+        case .redactionStarted: return nil
+        case .redactionCompleted(let boxCount, let pageCount):
+            return [AnalyticsEventCustomParameters.redactionBoxCount.rawValue: boxCount,
+                    AnalyticsEventCustomParameters.redactedPageCount.rawValue: pageCount]
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
@@ -442,6 +451,7 @@ fileprivate extension HomeAction {
         case .flattenPdf: return "flatten_pdf"
         case .invertColors: return "invert_colors"
         case .pdfPermissions: return "pdf_permissions"
+        case .redactPdf: return "redact_pdf"
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"

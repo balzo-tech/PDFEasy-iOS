@@ -170,6 +170,7 @@ struct PdfEditView: View {
                                 goToArchiveCallback: { self.viewModel.goToArchive() })
         .showExportView(viewModel: self.viewModel.pdfExportViewModel)
         .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
+        .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
         .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
                               onComplete: { self.viewModel.onOcrMonetizationClose() })
         .showSubscriptionView(self.$viewModel.pageNumbersMonetizationShow,
@@ -431,6 +432,11 @@ struct PdfEditView: View {
             case .permissions:
                 return OptionItem(title: String(localized: "PDF permissions"),
                                   imageName: "hand.raised",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .redact:
+                return OptionItem(title: String(localized: "Redact PDF"),
+                                  imageName: "eye.slash",
                                   isSystemImage: true,
                                   callBack: callback)
             case .metadata:

@@ -43,6 +43,7 @@ enum EditAction: CaseIterable {
     case flatten
     case invertColors
     case permissions
+    case redact
     case metadata
 }
 
@@ -153,6 +154,7 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
     @Injected(\.pdfExportViewModel) var pdfExportViewModel
     @Injected(\.pdfPermissionsViewModel) var pdfPermissionsViewModel
+    @Injected(\.pdfRedactViewModel) var pdfRedactViewModel
 
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -411,6 +413,8 @@ class PdfEditViewModel: ObservableObject {
                 self.runCleanup(.invertColors)
             case .permissions:
                 self.pdfPermissionsViewModel.run(pdf: self.pdf, onCompleted: nil)
+            case .redact:
+                self.pdfRedactViewModel.run(pdf: self.pdf, onCompleted: nil)
             case .metadata:
                 self.activeSheet = .metadata
             }
