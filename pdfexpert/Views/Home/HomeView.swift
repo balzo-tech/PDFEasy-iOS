@@ -84,6 +84,11 @@ struct HomeView: View {
                      imageName: "doc.on.doc",
                      isSystemImage: true,
                      homeAction: .extractPages),
+            HomeItem(title: String(localized: "Remove blank pages"),
+                     description: String(localized: "Find and delete the empty pages of your PDF"),
+                     imageName: "rectangle.dashed",
+                     isSystemImage: true,
+                     homeAction: .removeBlankPages),
         ]
         if Container.shared.stirlingApiManager().isAvailable {
             items.append(
@@ -127,7 +132,12 @@ struct HomeView: View {
                  description: String(localized: "Stamp a text watermark across every page"),
                  imageName: "drop.halffull",
                  isSystemImage: true,
-                 homeAction: .watermark)
+                 homeAction: .watermark),
+        HomeItem(title: String(localized: "Invert colors"),
+                 description: String(localized: "Invert the colors of your PDF for comfortable reading"),
+                 imageName: "circle.lefthalf.filled",
+                 isSystemImage: true,
+                 homeAction: .invertColors)
     ]
     
     // Built dynamically: the online-conversion tiles (PDF → Word / PowerPoint /
@@ -184,7 +194,12 @@ struct HomeView: View {
             HomeItem(title: "PDF Protector",
                      description: "Enter a password to protect your pdf",
                      imageName: "home_add_password",
-                     homeAction: .addPassword)
+                     homeAction: .addPassword),
+            HomeItem(title: String(localized: "Flatten PDF"),
+                     description: String(localized: "Bake annotations and form fields into the page"),
+                     imageName: "square.stack.3d.down.forward",
+                     isSystemImage: true,
+                     homeAction: .flattenPdf)
         ]
         if Container.shared.stirlingApiManager().isAvailable {
             items.append(

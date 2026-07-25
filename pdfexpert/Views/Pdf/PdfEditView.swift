@@ -126,6 +126,13 @@ struct PdfEditView: View {
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncOcr,
                    loadingView: { AnimationType.pdf.view })
+        .asyncView(asyncOperation: self.$viewModel.asyncCleanup,
+                   loadingView: { AnimationType.pdf.view })
+        .alert(String(localized: "Done"), isPresented: self.$viewModel.cleanupAlertShow, actions: {
+            Button("Ok", role: .cancel, action: {})
+        }, message: {
+            Text(self.viewModel.cleanupAlertMessage)
+        })
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
         .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
@@ -137,9 +144,13 @@ struct PdfEditView: View {
         })
         .showError(self.$viewModel.pdfSaveError)
         // Height is derived from the option count so newly added rows stay visible
-        // (~96pt chrome + ~58pt per row, matching the layout used today).
+        // (~96pt chrome + ~58pt per row, matching the layout used today), capped at 80%
+        // of the screen: past ~10 rows the computed height overflows a small device, and
+        // the list scrolls instead (see OptionListView's `scrollable`).
         .formSheet(isPresented: self.$viewModel.editOptionListShow,
-                   size: CGSize(width: 400.0, height: 96.0 + 58.0 * CGFloat(EditAction.allCases.count))) {
+                   size: CGSize(width: 400.0,
+                                height: min(96.0 + 58.0 * CGFloat(EditAction.allCases.count),
+                                            UIScreen.main.bounds.height * 0.8))) {
             self.editListView
         }
         .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
@@ -355,7 +366,7 @@ struct PdfEditView: View {
     }
     
     @ViewBuilder var editListView: some View {
-        OptionListView(title: "Edit pdf", items: EditAction.allCases.map { editAction in
+        OptionListView(title: "Edit pdf", scrollable: true, items: EditAction.allCases.map { editAction in
             let callback = { self.viewModel.handleEditAction(editAction) }
             switch editAction {
             case .password:
@@ -399,6 +410,21 @@ struct PdfEditView: View {
             case .watermark:
                 return OptionItem(title: String(localized: "Watermark"),
                                   imageName: "drop.halffull",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .removeBlankPages:
+                return OptionItem(title: String(localized: "Remove blank pages"),
+                                  imageName: "rectangle.dashed",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .flatten:
+                return OptionItem(title: String(localized: "Flatten PDF"),
+                                  imageName: "square.stack.3d.down.forward",
+                                  isSystemImage: true,
+                                  callBack: callback)
+            case .invertColors:
+                return OptionItem(title: String(localized: "Invert colors"),
+                                  imageName: "circle.lefthalf.filled",
                                   isSystemImage: true,
                                   callBack: callback)
             case .metadata:

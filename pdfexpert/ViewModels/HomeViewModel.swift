@@ -49,6 +49,9 @@ enum HomeAction: Hashable, Identifiable {
     case rotatePdf
     case pageNumbers
     case watermark
+    case removeBlankPages
+    case flattenPdf
+    case invertColors
 
     case importPdf
     
@@ -86,6 +89,9 @@ enum HomeAction: Hashable, Identifiable {
         case .rotatePdf: return .pdf
         case .pageNumbers: return .pdf
         case .watermark: return .pdf
+        case .removeBlankPages: return .pdf
+        case .flattenPdf: return .pdf
+        case .invertColors: return .pdf
         case .importPdf: return .pdf
         case .readPdf: return .pdf
         case .removePassword: return .pdf
@@ -121,6 +127,9 @@ enum HomeAction: Hashable, Identifiable {
         case .rotatePdf: return .openRotate
         case .pageNumbers: return .openPageNumbers
         case .watermark: return .openWatermark
+        case .removeBlankPages: return .openRemoveBlankPages
+        case .flattenPdf: return .openFlatten
+        case .invertColors: return .openInvertColors
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return nil
@@ -156,6 +165,9 @@ enum HomeAction: Hashable, Identifiable {
         case .rotatePdf: return nil
         case .pageNumbers: return nil
         case .watermark: return nil
+        case .removeBlankPages: return nil
+        case .flattenPdf: return nil
+        case .invertColors: return nil
         case .importPdf: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
@@ -300,7 +312,8 @@ public class HomeViewModel : ObservableObject {
             break
         case .imageToPdf:
             self.importOptionGroup = .image
-        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword, .rotatePdf, .pageNumbers, .watermark:
+        case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword,
+                .rotatePdf, .pageNumbers, .watermark, .removeBlankPages, .flattenPdf, .invertColors:
             self.openFilePicker(fileSource: .files)
         case .sign, .addText, .ocr:
             self.importOptionGroup = .fileAndScan
@@ -447,7 +460,8 @@ public class HomeViewModel : ObservableObject {
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
-            case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark:
+            case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark,
+                    .removeBlankPages, .flattenPdf, .invertColors:
                 self.importPdf(pdfUrl: fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
                     .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf,

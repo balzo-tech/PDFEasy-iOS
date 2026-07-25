@@ -27,6 +27,7 @@ enum AnalyticsEventCustomParameters: String {
     case convertFormat = "convert_format"
     case advancedTool = "advanced_tool"
     case officeConvertEngine = "office_convert_engine"
+    case removedPagesCount = "removed_pages_count"
 }
 
 extension OfficeConvertEngine {
@@ -155,6 +156,9 @@ extension AnalyticsEvent {
         case .webToPdfStarted: return "web_to_pdf_started"
         case .webToPdfCompleted: return "web_to_pdf_completed"
         case .markdownToPdfCompleted: return "markdown_to_pdf_completed"
+        case .blankPagesRemoved: return "blank_pages_removed"
+        case .pdfFlattened: return "pdf_flattened"
+        case .colorsInverted: return "colors_inverted"
         case .pdfMetadataUpdated: return "pdf_metadata_updated"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
@@ -265,6 +269,9 @@ extension AnalyticsEvent {
             return [AnalyticsEventCustomParameters.officeConvertEngine.rawValue: engine.trackingParameterValue]
         case .officeConvertFallbackOffered: return nil
         case .webToPdfStarted, .webToPdfCompleted, .markdownToPdfCompleted: return nil
+        case .blankPagesRemoved(let count):
+            return [AnalyticsEventCustomParameters.removedPagesCount.rawValue: count]
+        case .pdfFlattened, .colorsInverted: return nil
         case .pdfMetadataUpdated: return nil
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
@@ -424,6 +431,9 @@ fileprivate extension HomeAction {
         case .ocr: return "ocr"
         case .pageNumbers: return "page_numbers"
         case .watermark: return "watermark"
+        case .removeBlankPages: return "remove_blank_pages"
+        case .flattenPdf: return "flatten_pdf"
+        case .invertColors: return "invert_colors"
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .readPdf: return "read_pdf"

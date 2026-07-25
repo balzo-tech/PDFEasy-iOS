@@ -101,8 +101,16 @@ class PdfOverlayUtility {
     /// - The source document is treated as read-only; the result is always a fresh
     ///   document built from the renderer's output data.
     /// - A 0-page document yields a valid, empty document (the loop is simply skipped).
-    private static func redrawPages(of document: PDFDocument,
-                                    overlay: (CGContext, _ pageIndex: Int, _ pageSize: CGSize) -> Void) -> PDFDocument? {
+    ///
+    /// Shared with `PdfCleanupUtility` (flatten / invert colors), which needs exactly
+    /// this rotation-aware, vector-preserving rebuild.
+    ///
+    /// `underlay` paints *behind* the page content. PDF pages have no background —
+    /// unpainted areas are transparent — so any effect that has to compose against the
+    /// page (colour inversion, for one) needs an opaque backdrop laid down first.
+    static func redrawPages(of document: PDFDocument,
+                            underlay: ((CGContext, _ pageSize: CGSize) -> Void)? = nil,
+                            overlay: (CGContext, _ pageIndex: Int, _ pageSize: CGSize) -> Void) -> PDFDocument? {
 
         let newDocument = PDFDocument()
 
@@ -123,6 +131,9 @@ class PdfOverlayUtility {
             let data = renderer.pdfData { ctx in
                 ctx.beginPage()
                 let cg = ctx.cgContext
+
+                // 0) Optional backdrop, painted before anything else.
+                underlay?(cg, pageSize)
 
                 // 1) Draw the original page content. Flip into PDF (bottom-left,
                 //    y-up) space, honoring the media-box origin — mirrors the vector

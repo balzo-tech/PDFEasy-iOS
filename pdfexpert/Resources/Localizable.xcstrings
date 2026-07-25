@@ -236,6 +236,38 @@
         }
       }
     },
+    "Bake annotations and form fields into the page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bake annotations and form fields into the page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incorpora annotazioni e campi modulo nella pagina"
+          }
+        }
+      }
+    },
+    "Blank pages removed: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blank pages removed: %lld"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pagine vuote rimosse: %lld"
+          }
+        }
+      }
+    },
     "Business and Sales Manager": {
       "extractionState": "stale",
       "localizations": {
@@ -361,6 +393,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Scegli la sorgente"
+          }
+        }
+      }
+    },
+    "Colors have been inverted.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colors have been inverted."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I colori sono stati invertiti."
           }
         }
       }
@@ -1182,6 +1230,22 @@
         }
       }
     },
+    "Find and delete the empty pages of your PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find and delete the empty pages of your PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trova ed elimina le pagine vuote del tuo PDF"
+          }
+        }
+      }
+    },
     "Fix a corrupted or damaged PDF file": {
       "localizations": {
         "en": {
@@ -1194,6 +1258,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ripara un file PDF corrotto o danneggiato"
+          }
+        }
+      }
+    },
+    "Flatten PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flatten PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appiattisci PDF"
           }
         }
       }
@@ -1530,6 +1610,38 @@
         }
       }
     },
+    "Invert colors": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invert colors"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inverti colori"
+          }
+        }
+      }
+    },
+    "Invert the colors of your PDF for comfortable reading": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invert the colors of your PDF for comfortable reading"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inverti i colori del tuo PDF per una lettura più comoda"
+          }
+        }
+      }
+    },
     "Keywords": {
       "localizations": {
         "en": {
@@ -1819,6 +1931,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nessun PDF corrisponde alla ricerca"
+          }
+        }
+      }
+    },
+    "No blank pages were found in your PDF.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No blank pages were found in your PDF."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non sono state trovate pagine vuote nel tuo PDF."
           }
         }
       }
@@ -2476,6 +2604,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Riduci la dimensione del file"
+          }
+        }
+      }
+    },
+    "Remove blank pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove blank pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi pagine vuote"
           }
         }
       }
@@ -3842,6 +3986,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hai raggiunto il limite mensile di %lld messaggi."
+          }
+        }
+      }
+    },
+    "Your PDF has been flattened. Annotations and form fields are now part of the page.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your PDF has been flattened. Annotations and form fields are now part of the page."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è stato appiattito. Annotazioni e campi modulo ora fanno parte della pagina."
           }
         }
       }

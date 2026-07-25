@@ -117,6 +117,9 @@ enum AnalyticsEvent {
     case webToPdfStarted
     case webToPdfCompleted
     case markdownToPdfCompleted
+    case blankPagesRemoved(count: Int)
+    case pdfFlattened
+    case colorsInverted
     case pdfMetadataUpdated
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)

@@ -25,6 +25,9 @@ enum PdfEditStartAction {
     case openRotate
     case openPageNumbers
     case openWatermark
+    case openRemoveBlankPages
+    case openFlatten
+    case openInvertColors
 }
 
 enum EditAction: CaseIterable {
@@ -36,6 +39,9 @@ enum EditAction: CaseIterable {
     case ocr
     case pageNumbers
     case watermark
+    case removeBlankPages
+    case flatten
+    case invertColors
     case metadata
 }
 
@@ -90,6 +96,21 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
+    // Document-hygiene tools (remove blank pages / flatten / invert colors) replace the
+    // whole document, like OCR — hence their own channel rather than asyncPdf, which appends.
+    @Published var asyncCleanup: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
+        didSet {
+            if let pdf = self.asyncCleanup.data {
+                self.updatePdf(pdf: pdf)
+                self.asyncCleanup = AsyncOperation(status: .empty)
+            }
+        }
+    }
+
+    @Published var cleanupAlertShow: Bool = false
+    /// Message for the alert above; set right before it is shown.
+    private(set) var cleanupAlertMessage: String = ""
+
     @Published var saveSuccessfulAlertShow: Bool = false
     
     @Published var pdfFilename: String {
@@ -193,6 +214,12 @@ class PdfEditViewModel: ObservableObject {
                     self.startPageNumbers()
                 case .openWatermark:
                     self.startWatermark()
+                case .openRemoveBlankPages:
+                    self.runCleanup(.removeBlankPages)
+                case .openFlatten:
+                    self.runCleanup(.flatten)
+                case .openInvertColors:
+                    self.runCleanup(.invertColors)
                 }
             }
             self.startAction = nil
@@ -374,6 +401,12 @@ class PdfEditViewModel: ObservableObject {
                 self.startPageNumbers()
             case .watermark:
                 self.startWatermark()
+            case .removeBlankPages:
+                self.runCleanup(.removeBlankPages)
+            case .flatten:
+                self.runCleanup(.flatten)
+            case .invertColors:
+                self.runCleanup(.invertColors)
             case .metadata:
                 self.activeSheet = .metadata
             }
@@ -415,6 +448,34 @@ class PdfEditViewModel: ObservableObject {
     private func performOcr() {
         self.analyticsManager.track(event: .ocrStarted)
         OcrUtility.makeSearchable(pdf: self.pdf, asyncOperation: self.asyncSubject(\.asyncOcr))
+    }
+
+    /// Entry point for the document-hygiene tools. All three are free and on-device, so
+    /// there is no gate: they run straight away and report their outcome in an alert.
+    @MainActor
+    func runCleanup(_ operation: PdfCleanupOperation) {
+        PdfCleanupUtility.run(operation,
+                              pdf: self.pdf,
+                              asyncOperation: self.asyncSubject(\.asyncCleanup),
+                              onCompleted: { [weak self] removedCount in
+            guard let self = self else { return }
+            switch operation {
+            case .removeBlankPages:
+                // Phrased as a count rather than "N blank pages were removed" so the
+                // sentence stays correct for 1 as well, in every language.
+                self.cleanupAlertMessage = removedCount > 0
+                    ? String(localized: "Blank pages removed: \(removedCount)")
+                    : String(localized: "No blank pages were found in your PDF.")
+                self.analyticsManager.track(event: .blankPagesRemoved(count: removedCount))
+            case .flatten:
+                self.cleanupAlertMessage = String(localized: "Your PDF has been flattened. Annotations and form fields are now part of the page.")
+                self.analyticsManager.track(event: .pdfFlattened)
+            case .invertColors:
+                self.cleanupAlertMessage = String(localized: "Colors have been inverted.")
+                self.analyticsManager.track(event: .colorsInverted)
+            }
+            self.cleanupAlertShow = true
+        })
     }
 
     /// Entry point for the page-number tool. Premium-gated exactly like OCR: the
