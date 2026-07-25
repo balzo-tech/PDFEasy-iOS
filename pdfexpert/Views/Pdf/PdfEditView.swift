@@ -4,60 +4,62 @@
 //
 //  Created by Leonardo Passeri on 11/04/23.
 //
+//  The document editor. The page fills the screen, the four things people do
+//  most often live in a glass bar floating over it, and everything else is one
+//  grouped menu away — the old flat list of fourteen options in a form sheet
+//  made them all look equally likely.
+//
 
 import SwiftUI
 import Factory
 import PhotosUI
 
 struct PdfEditView: View {
-    
-    fileprivate static let cellSide: CGFloat = 80.0
-    fileprivate static let selectedCellBorderWidth: CGFloat = 4.0
-    
+
+    fileprivate static let cellSide: CGFloat = 64.0
+    fileprivate static let selectedCellBorderWidth: CGFloat = 3.0
+
     @StateObject var viewModel: PdfEditViewModel
     @State private var showingImageInputPicker = false
     @State private var showingDeleteConfermation = false
-    
+
     @State private var draggedImage: UIImage? = nil
-    
+
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(spacing: 16) {
-                VStack(spacing: 0) {
-                    Spacer()
-                    self.pdfView
-                    Spacer()
+        ZStack {
+            ColorPalette.background.ignoresSafeArea()
+            VStack(spacing: 0) {
+                self.pdfView
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if self.viewModel.pdfThumbnails.count > 1 {
+                    self.pageListView
                 }
-                self.pageListView
-                self.editButtonsView
             }
-            .padding([.leading, .trailing], 16)
-            self.editOptionsView
+        }
+        .safeAreaInset(edge: .bottom) {
+            if self.viewModel.pageImages.count > 0 {
+                self.actionBar
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(self.$viewModel.pdfFilename)
         .ignoresSafeArea(.keyboard)
-        .background(ColorPalette.primaryBG)
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                if self.viewModel.pageImages.count > 0 {
-                    Button(action: { self.viewModel.rotateOptionsShow = true }) {
-                        Image(systemName: "rotate.right")
-                            .foregroundColor(ColorPalette.primaryText)
-                    }
-                    Button(action: { self.showingDeleteConfermation = true }) {
-                        Image(systemName: "trash")
-                            .foregroundColor(ColorPalette.primaryText)
-                    }
+            ToolbarItem(placement: .topBarTrailing) {
+                self.moreMenu
+            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    self.viewModel.save()
+                } label: {
+                    Label("Save PDF", systemImage: "checkmark")
                 }
-                Button(action: { self.viewModel.editOptionListShow = true }) {
-                    Image(systemName: "ellipsis.circle")
-                        .foregroundColor(ColorPalette.primaryText)
-                }
+                .buttonStyle(.glassProminent)
+                .tint(ColorPalette.accent)
             }
         }
-
-        .onAppear(perform:self.viewModel.onAppear)
+        .onAppear(perform: self.viewModel.onAppear)
         // File picker
         .filePicker(isPresented: self.$viewModel.filePickerShow,
                     fileTypes: K.Misc.ImportFileTypesForAddPage,
@@ -143,16 +145,6 @@ struct PdfEditView: View {
             Text("Your pdf has no  fields that you can fill in.")
         })
         .showError(self.$viewModel.pdfSaveError)
-        // Height is derived from the option count so newly added rows stay visible
-        // (~96pt chrome + ~58pt per row, matching the layout used today), capped at 80%
-        // of the screen: past ~10 rows the computed height overflows a small device, and
-        // the list scrolls instead (see OptionListView's `scrollable`).
-        .formSheet(isPresented: self.$viewModel.editOptionListShow,
-                   size: CGSize(width: 400.0,
-                                height: min(96.0 + 58.0 * CGFloat(EditAction.allCases.count),
-                                            UIScreen.main.bounds.height * 0.8))) {
-            self.editListView
-        }
         .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
                              goToArchiveCallback: { self.viewModel.goToArchive() },
                              sharePdfCallback: { self.viewModel.share() })
@@ -177,292 +169,284 @@ struct PdfEditView: View {
                               onComplete: { self.viewModel.onPageNumbersMonetizationClose() })
         .showSubscriptionView(self.$viewModel.watermarkMonetizationShow,
                               onComplete: { self.viewModel.onWatermarkMonetizationClose() })
-        .actionDialog(
-            Text("Rotate"),
-            isPresented: self.$viewModel.rotateOptionsShow,
-            titleVisibility: .visible
-        ) {
-            Button("Rotate page right") {
-                self.viewModel.rotateCurrentPage(clockwise: true)
-            }
-            Button("Rotate page left") {
-                self.viewModel.rotateCurrentPage(clockwise: false)
-            }
-            Button("Rotate all pages") {
-                self.viewModel.rotateAllPages(clockwise: true)
+        .confirmationDialog(Text("Delete this page?"),
+                            isPresented: self.$showingDeleteConfermation,
+                            titleVisibility: .visible) {
+            Button("Delete this page", role: .destructive) {
+                self.showingDeleteConfermation = false
+                withAnimation(DS.Motion.smooth) {
+                    self.viewModel.deleteCurrentPage()
+                }
             }
             Button("Cancel", role: .cancel) {}
         }
+        .confirmationDialog(Text("Choose your source"),
+                            isPresented: self.$showingImageInputPicker,
+                            titleVisibility: .visible) {
+            Button("Photo Gallery") { self.viewModel.openGallery() }
+            Button("Camera") { self.viewModel.openCamera() }
+            Button("File") { self.viewModel.openFilePicker() }
+            Button("Scan") { self.viewModel.openScanner() }
+            Button("Cancel", role: .cancel) {}
+        }
     }
-    
+
+    // MARK: - Pages
+
     @ViewBuilder var pdfView: some View {
         if self.viewModel.pageImages.count > 0 {
             TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
                 ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, pageImage) in
-                    ZStack {
-                        Image(uiImage: pageImage)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
+                    Image(uiImage: pageImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(.rect(cornerRadius: DS.Radius.thumbnail, style: .continuous))
+                        .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
+                        .padding(.horizontal, DS.Spacing.md)
+                        .padding(.vertical, DS.Spacing.xs)
+                        .tag(pageIndex)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            .overlay(alignment: .top) {
+                self.pageCounterBadge
+            }
         } else {
             self.emptyView
         }
     }
-    
+
+    private var pageCounterBadge: some View {
+        Text("\(self.viewModel.pdfCurrentPageIndex + 1) of \(self.viewModel.pageImages.count)")
+            .font(forCategory: .caption1)
+            .foregroundStyle(ColorPalette.textPrimary)
+            .padding(.horizontal, DS.Spacing.sm)
+            .padding(.vertical, 6)
+            .floatingGlassCapsule(interactive: false)
+            .padding(.top, DS.Spacing.xs)
+            .animation(DS.Motion.quick, value: self.viewModel.pdfCurrentPageIndex)
+    }
+
     var emptyView: some View {
-        VStack(spacing: 16) {
-            Spacer()
-            Image("archive_empty")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 80)
-            Text("You have no pages")
-                .font(forCategory: .body1)
-                .foregroundColor(ColorPalette.primaryText)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .multilineTextAlignment(.center)
-            self.getDefaultButton(text: "Add a new page") {
+        ContentUnavailableView {
+            Label("You have no pages", systemImage: "doc")
+        } description: {
+            Text("Add a page from your photos, the camera, a file or a scan.")
+        } actions: {
+            PrimaryActionButton(title: String(localized: "Add a new page"), systemImage: "plus") {
                 self.showingImageInputPicker = true
             }
-            Spacer()
+            .frame(maxWidth: 260)
         }
     }
-    
-    var editButtonsView: some View {
-        HStack {
-            self.getDefaultButton(text: "Save PDF") {
-                self.viewModel.save()
-            }
-            Button(action: { self.viewModel.share() }) {
-                Image(systemName: "square.and.arrow.up")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .font(.system(size: 16).bold())
-                    .foregroundColor(ColorPalette.primaryText)
-                    .contentShape(Capsule())
-            }
-            .frame(width: 64, height: 48)
-            .background(self.defaultGradientBackground)
-            .cornerRadius(10)
-        }
-    }
-    
+
     var pageListView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack {
+            LazyHStack(spacing: DS.Spacing.xs) {
                 ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
                     Button(action: {
-                        self.viewModel.pdfCurrentPageIndex = index
+                        withAnimation(DS.Motion.quick) {
+                            self.viewModel.pdfCurrentPageIndex = index
+                        }
                     }) {
-                        self.getThumbnailCell(image: image)
-                            .applyCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
-                    }
-                    .actionDialog(
-                        Text("Action"),
-                        isPresented: self.$showingDeleteConfermation,
-                        titleVisibility: .visible
-                    ) {
-                        Button("Delete this page", role: .destructive) {
-                            self.showingDeleteConfermation = false
-                            withAnimation {
-                                self.viewModel.deleteCurrentPage()
-                            }
+                        VStack(spacing: 4) {
+                            self.getThumbnailCell(image: image)
+                                .applyCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
+                            Text("\(index + 1)")
+                                .font(forCategory: .caption2)
+                                .foregroundStyle(index == self.viewModel.pdfCurrentPageIndex
+                                                 ? ColorPalette.accent
+                                                 : ColorPalette.textTertiary)
                         }
                     }
+                    .buttonStyle(.plain)
                 }
             }
-            .padding([.trailing, .leading], Self.selectedCellBorderWidth)
+            .padding(.horizontal, DS.Spacing.md)
+            .padding(.vertical, DS.Spacing.xs)
         }
-        .frame(height: Self.cellSide + Self.selectedCellBorderWidth)
+        .scrollClipDisabled()
+        .frame(height: Self.cellSide + 34)
     }
-    
-    var editOptionsView: some View {
-        HStack {
-            self.addPageButton.frame(maxWidth: .infinity)
-            self.showAddSignatureButton.frame(maxWidth: .infinity)
-            self.showFillFormButton.frame(maxWidth: .infinity)
-            self.showFillWidgetButton.frame(maxWidth: .infinity)
+
+    // MARK: - Actions
+
+    /// The four edits people reach for constantly, floating over the page.
+    private var actionBar: some View {
+        GlassEffectContainer(spacing: DS.Spacing.sm) {
+            HStack(spacing: DS.Spacing.sm) {
+                self.actionButton(title: String(localized: "Page"),
+                                  systemImage: "plus.rectangle.on.rectangle") {
+                    self.showingImageInputPicker = true
+                }
+                self.actionButton(title: String(localized: "Signature"),
+                                  systemImage: "signature") {
+                    self.viewModel.showAddSignature()
+                }
+                self.actionButton(title: String(localized: "Add text"),
+                                  systemImage: "textformat") {
+                    self.viewModel.showFillForm()
+                }
+                self.actionButton(title: String(localized: "Fill Form"),
+                                  systemImage: "list.bullet.rectangle.portrait") {
+                    self.viewModel.showFillWidget()
+                }
+            }
         }
-        .padding([.trailing, .leading], 16)
-        .frame(height: 100)
-        .frame(maxWidth: .infinity)
-        .background(ColorPalette.secondaryBG)
+        .padding(.horizontal, DS.Spacing.md)
+        .padding(.bottom, DS.Spacing.xs)
     }
-    
-    var addPageButton: some View {
-        Button(action: {
-            self.showingImageInputPicker = true
-        }) {
-            self.getEditOptionView(text: "Add page", imageName: "edit_add_file")
+
+    private func actionButton(title: String,
+                              systemImage: String,
+                              action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 18, weight: .medium))
+                Text(title)
+                    .font(forCategory: .caption2)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .foregroundStyle(ColorPalette.textPrimary)
+            .frame(maxWidth: .infinity)
+            .frame(height: 54)
+            .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
         }
-        .actionDialog(
-            Text("Choose your source"),
-            isPresented: self.$showingImageInputPicker,
-            titleVisibility: .visible
-        ) {
-            Button("Photo Gallery") {
-                self.viewModel.openGallery()
+        .buttonStyle(.plain)
+        .floatingGlass(radius: DS.Radius.control, interactive: true)
+        .accessibilityLabel(Text(title))
+    }
+
+    /// Everything beyond the four primary edits, grouped so the list reads as
+    /// four short menus instead of one long one.
+    private var moreMenu: some View {
+        Menu {
+            if self.viewModel.pageImages.count > 0 {
+                Section {
+                    Button {
+                        self.viewModel.rotateCurrentPage(clockwise: true)
+                    } label: {
+                        Label("Rotate page right", systemImage: "rotate.right")
+                    }
+                    Button {
+                        self.viewModel.rotateCurrentPage(clockwise: false)
+                    } label: {
+                        Label("Rotate page left", systemImage: "rotate.left")
+                    }
+                    Button {
+                        self.viewModel.rotateAllPages(clockwise: true)
+                    } label: {
+                        Label("Rotate all pages", systemImage: "arrow.trianglehead.2.clockwise")
+                    }
+                    Button(role: .destructive) {
+                        self.showingDeleteConfermation = true
+                    } label: {
+                        Label("Delete this page", systemImage: "trash")
+                    }
+                }
             }
-            Button("Camera") {
-                self.viewModel.openCamera()
+
+            Section(String(localized: "Organize pages")) {
+                self.menuButton(for: .split, title: String(localized: "Split"), systemImage: "scissors")
+                self.menuButton(for: .extract, title: String(localized: "Extract"), systemImage: "doc.on.doc")
+                self.menuButton(for: .removeBlankPages,
+                                title: String(localized: "Remove blank pages"),
+                                systemImage: "rectangle.dashed")
             }
-            Button("File") {
-                self.viewModel.openFilePicker()
+
+            Section(String(localized: "Edit content")) {
+                self.menuButton(for: .ocr,
+                                title: String(localized: "Make Searchable (OCR)"),
+                                systemImage: "text.viewfinder")
+                self.menuButton(for: .pageNumbers,
+                                title: String(localized: "Page numbers"),
+                                systemImage: "textformat.123")
+                self.menuButton(for: .watermark,
+                                title: String(localized: "Watermark"),
+                                systemImage: "drop.halffull")
+                self.menuButton(for: .invertColors,
+                                title: String(localized: "Invert colors"),
+                                systemImage: "circle.lefthalf.filled")
             }
-            Button("Scan") {
-                self.viewModel.openScanner()
+
+            Section(String(localized: "Protect")) {
+                self.menuButton(for: .password,
+                                title: self.viewModel.pdf.password != nil
+                                    ? String(localized: "Unlock")
+                                    : String(localized: "Protect"),
+                                systemImage: self.viewModel.pdf.password != nil ? "lock.open" : "lock")
+                self.menuButton(for: .permissions,
+                                title: String(localized: "PDF permissions"),
+                                systemImage: "hand.raised")
+                self.menuButton(for: .redact,
+                                title: String(localized: "Redact PDF"),
+                                systemImage: "eye.slash")
+                self.menuButton(for: .flatten,
+                                title: String(localized: "Flatten PDF"),
+                                systemImage: "square.stack.3d.down.forward")
             }
-            Button("Cancel", role: .cancel) {}
+
+            Section {
+                self.menuButton(for: .compression,
+                                title: String(localized: "Compress"),
+                                systemImage: "arrow.down.right.and.arrow.up.left")
+                self.menuButton(for: .export,
+                                title: String(localized: "Export as…"),
+                                systemImage: "square.and.arrow.up.on.square")
+                self.menuButton(for: .metadata,
+                                title: String(localized: "Document info"),
+                                systemImage: "info.circle")
+                Button {
+                    self.viewModel.share()
+                } label: {
+                    Label("Share pdf", systemImage: "square.and.arrow.up")
+                }
+            }
+        } label: {
+            Label("More", systemImage: "ellipsis")
         }
     }
-    
+
+    private func menuButton(for action: EditAction,
+                            title: String,
+                            systemImage: String) -> some View {
+        Button {
+            self.viewModel.handleEditAction(action)
+        } label: {
+            Label(title, systemImage: systemImage)
+        }
+    }
+
     func getThumbnailCell(image: UIImage) -> some View {
-        return AnyView(
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .onDrag {
-                    self.draggedImage = image
-                    return NSItemProvider()
-                }
-                .onDrop(of: [.image],
-                        delegate: PdfEditDropViewDelegate(destinationItem: image,
-                                                          draggedItem: self.$draggedImage,
-                                                          viewModel: self.viewModel))
-        )
-    }
-    
-    var showFillWidgetButton: some View {
-        Button(action: { self.viewModel.showFillWidget() }) {
-            self.getEditOptionView(text: "Fill Form", imageName: "edit_fill_form")
-        }
-    }
-    
-    var showFillFormButton: some View {
-        Button(action: { self.viewModel.showFillForm() }) {
-            self.getEditOptionView(text: "Add text", imageName: "edit_add_text")
-        }
-    }
-    
-    var showAddSignatureButton: some View {
-        Button(action: { self.viewModel.showAddSignature() }) {
-            self.getEditOptionView(text: "Signature", imageName: "edit_signature")
-        }
-    }
-    
-    func getEditOptionView(text: String, imageName: String) -> some View {
-        return VStack(spacing: 6) {
-            Spacer()
-            Image(imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 32, height: 32)
-                .foregroundColor(ColorPalette.primaryText)
-            Text(text)
-                .font(forCategory: .callout)
-                .foregroundColor(ColorPalette.primaryText)
-            Spacer()
-        }
-    }
-    
-    @ViewBuilder var editListView: some View {
-        OptionListView(title: "Edit pdf", scrollable: true, items: EditAction.allCases.map { editAction in
-            let callback = { self.viewModel.handleEditAction(editAction) }
-            switch editAction {
-            case .password:
-                if self.viewModel.pdf.password != nil {
-                    return OptionItem(title: "Unlock",
-                                      imageName: "edit_option_password_unlock",
-                                      callBack: callback)
-                } else {
-                    return OptionItem(title: "Protect",
-                                      imageName: "edit_option_password_lock",
-                                      callBack: callback)
-                }
-            case .compression:
-                return OptionItem(title: "Compress",
-                                  imageName: "edit_option_compress",
-                                  callBack: callback)
-            case .split:
-                return OptionItem(title: "Split",
-                                  imageName: "edit_option_split",
-                                  callBack: callback)
-            case .extract:
-                return OptionItem(title: String(localized: "Extract"),
-                                  imageName: "doc.on.doc",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .export:
-                return OptionItem(title: String(localized: "Export as…"),
-                                  imageName: "square.and.arrow.up.on.square",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .ocr:
-                return OptionItem(title: String(localized: "Make Searchable (OCR)"),
-                                  imageName: "text.viewfinder",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .pageNumbers:
-                return OptionItem(title: String(localized: "Page numbers"),
-                                  imageName: "textformat.123",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .watermark:
-                return OptionItem(title: String(localized: "Watermark"),
-                                  imageName: "drop.halffull",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .removeBlankPages:
-                return OptionItem(title: String(localized: "Remove blank pages"),
-                                  imageName: "rectangle.dashed",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .flatten:
-                return OptionItem(title: String(localized: "Flatten PDF"),
-                                  imageName: "square.stack.3d.down.forward",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .invertColors:
-                return OptionItem(title: String(localized: "Invert colors"),
-                                  imageName: "circle.lefthalf.filled",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .permissions:
-                return OptionItem(title: String(localized: "PDF permissions"),
-                                  imageName: "hand.raised",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .redact:
-                return OptionItem(title: String(localized: "Redact PDF"),
-                                  imageName: "eye.slash",
-                                  isSystemImage: true,
-                                  callBack: callback)
-            case .metadata:
-                return OptionItem(title: String(localized: "Document info"),
-                                  imageName: "info.circle",
-                                  isSystemImage: true,
-                                  callBack: callback)
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .onDrag {
+                self.draggedImage = image
+                return NSItemProvider()
             }
-        })
+            .onDrop(of: [.image],
+                    delegate: PdfEditDropViewDelegate(destinationItem: image,
+                                                      draggedItem: self.$draggedImage,
+                                                      viewModel: self.viewModel))
     }
 }
 
 fileprivate extension View {
+
     func applyCellStyle(highlight: Bool) -> some View {
         self
             .frame(width: PdfEditView.cellSide, height: PdfEditView.cellSide)
-            .cornerRadius(16)
-            .if(highlight) { view in
-                view.overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(ColorPalette.buttonGradientStart,
-                                lineWidth: PdfEditView.selectedCellBorderWidth)
-                )
+            .clipShape(.rect(cornerRadius: 8, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(highlight ? ColorPalette.accent : ColorPalette.separator,
+                                  lineWidth: highlight ? PdfEditView.selectedCellBorderWidth : 0.5)
             }
     }
-    
+
     @ViewBuilder func saveSuccessfullAlert(show: Binding<Bool>,
                                           goToArchiveCallback: @escaping () -> (),
                                           sharePdfCallback: @escaping () -> ()) -> some View {
@@ -474,7 +458,7 @@ fileprivate extension View {
             Text("Your pdf has been successfully saved")
         })
     }
-    
+
     func splitSuccessfulAlert(show: Binding<Bool>,
                               goToArchiveCallback: @escaping () -> ()) -> some View {
         self.alert("PDF split!", isPresented: show, actions: {
@@ -497,7 +481,7 @@ fileprivate extension View {
 }
 
 fileprivate extension MarginsOption {
-    
+
     var iconImage: some View {
         let insets: EdgeInsets = {
             switch self {
@@ -529,20 +513,20 @@ struct PdfEditView_Previews: PreviewProvider {
 }
 
 fileprivate struct PdfEditDropViewDelegate: DropDelegate {
-    
+
     let destinationItem: UIImage
     @Binding var draggedItem: UIImage?
     var viewModel: PdfEditViewModel
-    
+
     func dropUpdated(info: DropInfo) -> DropProposal? {
         return DropProposal(operation: .move)
     }
-    
+
     func performDrop(info: DropInfo) -> Bool {
         self.draggedItem = nil
         return true
     }
-    
+
     func dropEntered(info: DropInfo) {
         // Swap Items
         if let draggedItem {

@@ -20,7 +20,7 @@ struct PdfSignaturePickerView: View {
                 Spacer().frame(height: 16)
                 Text("Your Signatures")
                     .font(forCategory: .body1)
-                    .foregroundColor(ColorPalette.primaryBG)
+                    .foregroundColor(ColorPalette.signatureInk)
                 Spacer().frame(height: 16)
                 self.content
                 Spacer().frame(height: 16)
@@ -29,13 +29,13 @@ struct PdfSignaturePickerView: View {
             if self.viewModel.isLoading {
                 self.loadingView
             }
-            self.getCloseButton(color: ColorPalette.primaryBG,
+            self.getCloseButton(color: ColorPalette.signatureInk,
                                 onClose: { self.viewModel.cancel() })
             self.getEditButton(color: ColorPalette.buttonGradientStart,
                                font: FontCategory.body1.font,
                                editMode: self.$editMode)
         }
-        .background(ColorPalette.primaryText)
+        .background(ColorPalette.signatureSheet)
         .onAppear {
             self.viewModel.onAppear()
         }
@@ -91,7 +91,7 @@ struct PdfSignaturePickerView: View {
             Spacer()
             Text("No signature added")
                 .font(forCategory: .body1)
-                .foregroundColor(ColorPalette.thirdText)
+                .foregroundColor(ColorPalette.signatureInkSecondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
             Spacer()
@@ -112,11 +112,11 @@ struct PdfSignaturePickerView: View {
                 .frame(height: 80)
             Text("Oh nou")
                 .font(forCategory: .largeTitle)
-                .foregroundColor(ColorPalette.primaryBG)
+                .foregroundColor(ColorPalette.signatureInk)
                 .frame(maxWidth: .infinity, alignment: .center)
             Text("Something went wrong,\nmind trying again?")
                 .font(forCategory: .body1)
-                .foregroundColor(ColorPalette.primaryBG)
+                .foregroundColor(ColorPalette.signatureInk)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
             self.getDefaultButton(text: "Retry",

@@ -13,22 +13,33 @@ struct ChatPdfSelectionView: View {
     @InjectedObject(\.chatPdfSelectionViewModel) var viewModel
     
     var body: some View {
-        VStack {
+        VStack(spacing: DS.Spacing.lg) {
             Spacer()
-            Text("Our PDF AI summarize and answer questions for free. Drop your PDF here.")
-                .font(forCategory: .body2)
-                .foregroundColor(ColorPalette.primaryText)
-                .multilineTextAlignment(.center)
-                .padding([.leading, .trailing], 32)
-            Spacer().frame(height: 60)
+            Image(systemName: "sparkles")
+                .font(.system(size: 34, weight: .light))
+                .foregroundStyle(ColorPalette.categoryAi)
+                .frame(width: 76, height: 76)
+                .background(ColorPalette.categoryAi.opacity(0.14), in: .circle)
+            VStack(spacing: DS.Spacing.xs) {
+                Text("Ask your PDF anything")
+                    .font(forCategory: .title2)
+                    .foregroundStyle(ColorPalette.textPrimary)
+                    .multilineTextAlignment(.center)
+                Text("Our PDF AI summarize and answer questions for free. Drop your PDF here.")
+                    .font(forCategory: .body2)
+                    .foregroundStyle(ColorPalette.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal, DS.Spacing.xl)
             self.buttonView
-            Spacer().frame(height: 50)
+                .padding(.horizontal, DS.Spacing.xl)
             self.warningView
-                .padding([.leading, .trailing], 32)
+                .padding(.horizontal, DS.Spacing.xl)
             Spacer()
         }
         .ignoresSafeArea(.keyboard)
-        .background(ColorPalette.primaryBG)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(ColorPalette.background)
         .onAppear() {
             self.viewModel.onAppear()
         }
@@ -62,39 +73,43 @@ struct ChatPdfSelectionView: View {
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     
+    /// Drop target for the document: a dashed well, the way file pickers read
+    /// everywhere else.
     @ViewBuilder var buttonView: some View {
         Button(action: self.viewModel.getPdfButtonPressed) {
-            GeometryReader { geometryReader in
-                Group {
-                    Image(systemName: "arrow.up.circle.fill")
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fit)
-                        .frame(width: 48)
-                        .foregroundColor(ColorPalette.secondaryText)
-                }
-                .frame(width: geometryReader.size.width * 0.7, height: geometryReader.size.height)
-                .overlay(RoundedRectangle(cornerRadius: 8)
-                    .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [10]))
-                    .foregroundColor(ColorPalette.primaryText))
-                .position(x: geometryReader.size.width/2, y: geometryReader.size.height/2)
-                .contentShape(RoundedRectangle(cornerRadius: 8))
+            VStack(spacing: DS.Spacing.xs) {
+                Image(systemName: "arrow.up.doc")
+                    .font(.system(size: 26, weight: .light))
+                    .foregroundStyle(ColorPalette.accent)
+                Text("Choose a PDF")
+                    .font(forCategory: .body3)
+                    .foregroundStyle(ColorPalette.accent)
             }
+            .frame(maxWidth: .infinity)
+            .frame(height: 130)
+            .background {
+                RoundedRectangle(cornerRadius: DS.Radius.tile, style: .continuous)
+                    .fill(ColorPalette.accent.opacity(0.06))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: DS.Radius.tile, style: .continuous)
+                            .strokeBorder(ColorPalette.accent.opacity(0.5),
+                                          style: StrokeStyle(lineWidth: 1.5, dash: [7, 5]))
+                    }
+            }
+            .contentShape(.rect(cornerRadius: DS.Radius.tile, style: .continuous))
         }
-        .frame(height: 130)
+        .buttonStyle(.plain)
     }
-    
+
     @ViewBuilder var warningView: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DS.Spacing.xs) {
             Image(systemName: "exclamationmark.circle")
-                .resizable()
-                .aspectRatio(1, contentMode: .fit)
-                .frame(width: 18)
-                
-                .foregroundColor(ColorPalette.thirdText)
+                .font(.system(size: 14))
+                .foregroundStyle(ColorPalette.textTertiary)
             Text("PDF are limited to 32MB per file\nand are limited to 2000 pages")
                 .font(forCategory: .caption1)
-                .foregroundColor(ColorPalette.thirdText)
-                .minimumScaleFactor(0.5)
+                .foregroundStyle(ColorPalette.textTertiary)
+                .minimumScaleFactor(0.7)
         }
     }
 }

@@ -19,7 +19,7 @@ struct PdfSignatureProviderFlowView: ViewModifier {
                 PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({
                     self.flow.onSignatureSelected(signature: $0)
                 }))
-                .background(ColorPalette.primaryText)
+                .background(ColorPalette.signatureSheet)
             }.formSheet(isPresented: self.$flow.showSignaturePicker,
                         size: CGSize(width: 400, height: 700)) {
                 let params = PdfSignaturePickerViewModel.Params(confirmationCallback: {
@@ -30,7 +30,7 @@ struct PdfSignatureProviderFlowView: ViewModifier {
                     self.flow.onCreateNewSignature()
                 })
                 PdfSignaturePickerView(viewModel: Container.shared.pdfSignaturePickerViewModel(params))
-                    .background(ColorPalette.primaryText)
+                    .background(ColorPalette.signatureSheet)
             }
     }
 }

@@ -23,12 +23,11 @@ struct OptionListView: View {
     let items: [OptionItem]
 
     var body: some View {
-        VStack {
+        VStack(spacing: DS.Spacing.md) {
             Text(self.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .font(forCategory: .headline)
-                .foregroundColor(ColorPalette.primaryText)
-            Spacer(minLength: 20)
+                .font(forCategory: .title3)
+                .foregroundStyle(ColorPalette.textPrimary)
             if self.scrollable {
                 ScrollView {
                     self.itemsView
@@ -37,16 +36,19 @@ struct OptionListView: View {
                 self.itemsView
             }
         }
-        .padding(EdgeInsets(top: 44, leading: 16, bottom: 32, trailing: 16))
-        .background(ColorPalette.secondaryBG)
-        .cornerRadius(20, corners: [.topLeft, .topRight])
+        .padding(EdgeInsets(top: DS.Spacing.sm, leading: DS.Spacing.md,
+                            bottom: DS.Spacing.xl, trailing: DS.Spacing.md))
+        .background(ColorPalette.background)
+        .cornerRadius(28, corners: [.topLeft, .topRight])
     }
 
     @ViewBuilder private var itemsView: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: DS.Spacing.xs) {
             ForEach(self.items, id: \.title) { item in
-                OptionItemView(title: item.title, imageName: item.imageName, isSystemImage: item.isSystemImage, onPressed: item.callBack)
-                Spacer().frame(height: 10)
+                OptionItemView(title: item.title,
+                               imageName: item.imageName,
+                               isSystemImage: item.isSystemImage,
+                               onPressed: item.callBack)
             }
         }
     }

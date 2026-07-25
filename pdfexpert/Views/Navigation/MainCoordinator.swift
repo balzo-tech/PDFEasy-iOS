@@ -9,10 +9,38 @@ import Foundation
 import SwiftUI
 import Factory
 
-enum MainTab: Int, CaseIterable {
-    case archive
-    case home
-    case chatPdf
+enum MainTab: Int, CaseIterable, Hashable {
+    /// Saved documents — the app opens here.
+    case files
+    /// The tool catalog.
+    case tools
+    /// ChatPDF.
+    case chat
+    /// Cross-content search (documents + tools), presented with the system's
+    /// search tab role.
+    case search
+
+    /// The tabs shown in the bar, in order. `search` is added separately
+    /// because it carries the `.search` role.
+    static var mainCases: [MainTab] { [.files, .tools, .chat] }
+
+    var title: String {
+        switch self {
+        case .files: return String(localized: "Files")
+        case .tools: return String(localized: "Tools")
+        case .chat: return String(localized: "ChatPDF")
+        case .search: return String(localized: "Search")
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .files: return "folder"
+        case .tools: return "square.grid.2x2"
+        case .chat: return "sparkles"
+        case .search: return "magnifyingglass"
+        }
+    }
 }
 
 struct PdfEditFlowData: Hashable, Identifiable {
@@ -36,10 +64,14 @@ class MainCoordinator: ObservableObject {
     }
     
     @Published var rootView: RootView = .onboarding
-    @Published var tab: MainTab = MainTab.home
+    @Published var tab: MainTab = MainTab.files
     @Published var path: [Route] = []
     @Published var pdfEditFlowData: PdfEditFlowData? = nil
     @Published var settingsShow: Bool = false
+    /// A tool requested from outside the Tools tab (the Files "New" button, the
+    /// search results). The Tools screen owns every tool flow, so it picks this
+    /// up and runs it once the tab is on screen.
+    @Published var pendingToolAction: HomeAction? = nil
     
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.reviewFlow) var reviewFlow
@@ -50,6 +82,20 @@ class MainCoordinator: ObservableObject {
         } else {
             self.rootView = .onboarding
         }
+        #if DEBUG
+        // Lets a debug build launch straight into a given tab:
+        //   xcrun simctl spawn booted defaults write <bundle-id> debugInitialTab -int 1
+        // Handy for the simulator, where tapping through is not always possible.
+        if let raw = UserDefaults.standard.object(forKey: "debugInitialTab") as? Int,
+           let tab = MainTab(rawValue: raw) {
+            self.rootView = .main
+            self.tab = tab
+        }
+        if UserDefaults.standard.bool(forKey: "debugShowSettings") {
+            self.rootView = .main
+            self.settingsShow = true
+        }
+        #endif
     }
     
     func showOnboarding() {
@@ -61,7 +107,19 @@ class MainCoordinator: ObservableObject {
     }
     
     func goToArchive() {
-        self.tab = MainTab.archive
+        self.tab = MainTab.files
+    }
+
+    /// Switches to the Tools tab and asks it to start `action`.
+    func runTool(_ action: HomeAction) {
+        self.tab = .tools
+        self.pendingToolAction = action
+    }
+
+    /// Returns the queued tool action, if any, and clears it so it runs once.
+    func consumePendingToolAction() -> HomeAction? {
+        defer { self.pendingToolAction = nil }
+        return self.pendingToolAction
     }
     
     func showPdfEditFlow(pdf: Pdf, startAction: PdfEditStartAction? = nil, isNewPdf: Bool) {
@@ -87,7 +145,11 @@ class MainCoordinator: ObservableObject {
         case .chatPdf:
             self.cacheManager.onboardingShown = true
             self.rootView = .main
-            self.tab = .chatPdf
+            self.tab = .chat
+        case .tab(let tab):
+            self.cacheManager.onboardingShown = true
+            self.rootView = .main
+            self.tab = tab
         }
     }
 }

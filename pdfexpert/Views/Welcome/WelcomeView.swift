@@ -13,36 +13,30 @@ struct WelcomeView: View {
     @Injected(\.mainCoordinator) private var coordinator
     
     var body: some View {
-        ZStack {
-            GeometryReader { geometry in
-                VStack(spacing: 16) {
-                    Image("logo_large")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 600)
-                        .padding(60)
-                    Text("Welcome in \(K.Misc.AppTitle):\nConvert & Edit")
-                        .font(forCategory: .title1)
-                        .foregroundColor(ColorPalette.primaryText)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    Text("The PDF editor for iPhone")
-                        .font(forCategory: .headline)
-                        .foregroundColor(ColorPalette.primaryText)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-                .position(x: geometry.size.width/2, y: geometry.size.height/3)
-            }
-            VStack {
-                Spacer()
-                self.getDefaultButton(text: "Start",
-                                      onButtonPressed: self.coordinator.showOnboarding)
-            }
+        VStack(spacing: DS.Spacing.md) {
+            Spacer(minLength: DS.Spacing.xl)
+            Image("logo_large")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: 320, maxHeight: 320)
+            Spacer(minLength: DS.Spacing.lg)
+            Text("Welcome in \(K.Misc.AppTitle):\nConvert & Edit")
+                .font(forCategory: .largeTitle)
+                .foregroundStyle(ColorPalette.textPrimary)
+                .multilineTextAlignment(.center)
+            Text("The PDF editor for iPhone")
+                .font(forCategory: .body1)
+                .foregroundStyle(ColorPalette.textSecondary)
+                .multilineTextAlignment(.center)
+            Spacer(minLength: DS.Spacing.xl)
+            self.getDefaultButton(text: String(localized: "Start"),
+                                  onButtonPressed: self.coordinator.showOnboarding)
         }
-        .padding([.leading, .trailing], 16)
-        .padding([.top, .bottom], 64)
-        .background(ColorPalette.primaryBG)
+        .padding(.horizontal, DS.Spacing.xl)
+        .padding(.top, DS.Spacing.xxl)
+        .padding(.bottom, DS.Spacing.xxl)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(ColorPalette.background)
     }
 }
 

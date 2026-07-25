@@ -1,0 +1,250 @@
+//
+//  ToolsView.swift
+//  PdfExpert
+//
+//  The tool catalog. Replaces the old Home grid: the same actions, but reachable
+//  by search or by family instead of by scrolling through six stacked sections.
+//
+
+import SwiftUI
+import Factory
+import PhotosUI
+
+struct ToolsView: View {
+
+    @InjectedObject(\.homeViewModel) var viewModel
+    @InjectedObject(\.mainCoordinator) private var mainCoordinator
+
+    @State private var searchText: String = ""
+
+    private static let gridColumns: [GridItem] = [
+        GridItem(.adaptive(minimum: 158, maximum: 260), spacing: DS.Spacing.sm)
+    ]
+
+    private var tools: [PdfTool] { ToolCatalog.allTools }
+
+    private var searchResults: [PdfTool] {
+        let query = self.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return [] }
+        return self.tools.filter { $0.matches(query: query) }
+    }
+
+    private var isSearching: Bool {
+        !self.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var body: some View {
+        ScrollView {
+            if self.isSearching {
+                self.searchResultsView
+            } else {
+                self.catalogView
+            }
+        }
+        .scrollDismissesKeyboard(.immediately)
+        .background(ColorPalette.background)
+        .searchable(text: self.$searchText, prompt: Text("Search tools"))
+        .animation(DS.Motion.smooth, value: self.isSearching)
+        .onAppear() {
+            self.viewModel.onAppear()
+            self.runPendingToolActionIfNeeded()
+        }
+        // A tool started from another tab (Files "New", search results) lands here.
+        .onChange(of: self.mainCoordinator.pendingToolAction) { _, action in
+            guard action != nil else { return }
+            self.runPendingToolActionIfNeeded()
+        }
+        .formSheet(item: self.$viewModel.importOptionGroup) {
+            OptionListView.getImportView(forImportOptionGroup: $0,
+                                         importViewCallback: { self.viewModel.handleImportOption(importOption: $0) })
+        }
+        .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
+            self.viewModel.processPickedFileUrl($0.first)
+        })
+        // Camera / scanner modal flows, driven by a single activeSheet state machine.
+        .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in
+            switch sheet {
+            case .scanner:
+                ScannerView(onScannerResult: {
+                    self.viewModel.convertScan(scannerResult: $0)
+                })
+            case .camera:
+                CameraView(model: Container.shared.cameraViewModel({ uiImage in
+                    self.viewModel.convertImage(uiImage: uiImage)
+                }))
+            }
+        }
+        // Photo gallery picker
+        .photosPicker(isPresented: self.$viewModel.imagePickerShow,
+                      selection: self.$viewModel.imageSelection,
+                      matching: .images)
+        .asyncView(asyncOperation: self.$viewModel.asyncPdf,
+                   loadingView: { AnimationType.pdf.view })
+        .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
+                   loadingView: { AnimationType.pdf.view })
+        .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
+        .showWebImportView(viewModel: self.viewModel.pdfWebImportViewModel)
+        .showMarkdownImportView(viewModel: self.viewModel.pdfMarkdownImportViewModel)
+        .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
+        .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
+        .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
+        .addPasswordView(show: self.$viewModel.addPasswordShow,
+                         addPasswordCallback: { self.viewModel.setPassword($0) })
+        .addPasswordCompletedAlert(show: self.$viewModel.addPasswordCompletedShow,
+                                   goToArchiveCallback: { self.viewModel.goToArchive() },
+                                   sharePdfCallback: { self.viewModel.share() })
+        .removePasswordCompletedAlert(show: self.$viewModel.removePasswordCompletedShow,
+                                      goToArchiveCallback: { self.viewModel.goToArchive() },
+                                      sharePdfCallback: { self.viewModel.share() })
+        .showError(self.$viewModel.addPasswordError)
+        .showError(self.$viewModel.removePasswordError)
+        .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
+        .showMergeView(viewModel: self.viewModel.pdfMergeViewModel)
+        .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
+        .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
+        .showExportView(viewModel: self.viewModel.pdfExportViewModel)
+        .showConvertView(viewModel: self.viewModel.pdfConvertViewModel)
+        .showAdvancedToolView(viewModel: self.viewModel.pdfAdvancedToolViewModel)
+        .showReadView(viewModel: self.viewModel.pdfReadViewModel)
+        .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            self.viewModel.onDidBecomeActive()
+        }
+    }
+
+    // MARK: - Catalog
+
+    private var catalogView: some View {
+        LazyVStack(alignment: .leading, spacing: DS.Spacing.xl, pinnedViews: []) {
+            self.quickActionsSection
+            ForEach(ToolCategory.allCases) { category in
+                let tools = self.tools.filter { $0.category == category }
+                if !tools.isEmpty {
+                    VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+                        SectionHeaderView(title: category.title, subtitle: category.subtitle)
+                            .padding(.horizontal, DS.Spacing.md)
+                        LazyVGrid(columns: Self.gridColumns, spacing: DS.Spacing.sm) {
+                            ForEach(tools) { tool in
+                                self.tile(for: tool)
+                            }
+                        }
+                        .padding(.horizontal, DS.Spacing.md)
+                    }
+                }
+            }
+        }
+        .padding(.vertical, DS.Spacing.md)
+    }
+
+    private var quickActionsSection: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+            SectionHeaderView(title: String(localized: "Quick actions"))
+                .padding(.horizontal, DS.Spacing.md)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: DS.Spacing.xs) {
+                    ForEach(ToolUsageTracker.quickActions(from: self.tools)) { tool in
+                        QuickActionView(title: tool.title,
+                                        systemImage: tool.systemImage,
+                                        tint: tool.tint) {
+                            self.perform(tool)
+                        }
+                    }
+                }
+                .padding(.horizontal, DS.Spacing.md)
+            }
+            .scrollClipDisabled()
+        }
+    }
+
+    // MARK: - Search
+
+    @ViewBuilder private var searchResultsView: some View {
+        let results = self.searchResults
+        if results.isEmpty {
+            ContentUnavailableView.search(text: self.searchText)
+                .padding(.top, DS.Spacing.xxl)
+        } else {
+            LazyVStack(spacing: DS.Spacing.xs) {
+                ForEach(results) { tool in
+                    ToolRowView(title: tool.title,
+                                subtitle: tool.subtitle,
+                                systemImage: tool.systemImage,
+                                tint: tool.tint,
+                                isPremium: tool.isPremium) {
+                        self.perform(tool)
+                    }
+                }
+            }
+            .padding(DS.Spacing.md)
+        }
+    }
+
+    // MARK: - Actions
+
+    private func tile(for tool: PdfTool) -> some View {
+        ToolTileView(title: tool.title,
+                     subtitle: tool.subtitle,
+                     systemImage: tool.systemImage,
+                     tint: tool.tint,
+                     isPremium: tool.isPremium) {
+            self.perform(tool)
+        }
+    }
+
+    private func perform(_ tool: PdfTool) {
+        ToolUsageTracker.registerUse(of: tool.action)
+        self.searchText = ""
+        self.viewModel.performHomeAction(tool.action)
+    }
+
+    /// Runs an action queued by another tab. Deferred to the next runloop so the
+    /// tool's sheet is presented on a screen that is already on stage.
+    private func runPendingToolActionIfNeeded() {
+        guard let action = self.mainCoordinator.consumePendingToolAction() else { return }
+        DispatchQueue.main.async {
+            ToolUsageTracker.registerUse(of: action)
+            self.viewModel.performHomeAction(action)
+        }
+    }
+}
+
+extension View {
+
+    @ViewBuilder func addPasswordCompletedAlert(show: Binding<Bool>,
+                                                goToArchiveCallback: @escaping () -> (),
+                                                sharePdfCallback: @escaping () -> ()) -> some View {
+        self.alert("PDF Protected!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Share pdf", action: sharePdfCallback)
+        }, message: {
+            Text("Your pdf has been successfully protected")
+        })
+    }
+
+    @ViewBuilder func removePasswordCompletedAlert(show: Binding<Bool>,
+                                                   goToArchiveCallback: @escaping () -> (),
+                                                   sharePdfCallback: @escaping () -> ()) -> some View {
+        self.alert("PDF Unlocked!", isPresented: show, actions: {
+            Button("Go to files", action: goToArchiveCallback)
+            Button("Share pdf", action: sharePdfCallback)
+        }, message: {
+            Text("Your pdf has been successfully unlocked")
+        })
+    }
+}
+
+extension ImportOptionGroup: FormSheetItem {
+    var viewSize: CGSize {
+        switch self {
+        case .image: return CGSize(width: 400.0, height: 250.0)
+        case .fileAndScan: return CGSize(width: 400.0, height: 220.0)
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ToolsView()
+            .navigationTitle("Tools")
+    }
+}

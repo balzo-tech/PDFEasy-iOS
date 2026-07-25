@@ -2,68 +2,70 @@
 //  MainTabView.swift
 //  PdfExpert
 //
-//  Created by Leonardo Passeri on 06/04/23.
+//  The app shell: documents first, then the tool catalog, ChatPDF, and a search
+//  tab that spans both. The tab bar is the system's Liquid Glass bar and pulls
+//  back as the user scrolls into content.
 //
 
 import SwiftUI
 import Factory
 
-fileprivate extension MainTab {
-    
-    var name: String {
-        switch self {
-        case .archive: return "File"
-        case .home: return "Explore"
-        case .chatPdf: return "ChatPDF"
-        }
-    }
-    
-    var imageName: String {
-        switch self {
-        case .archive: return "tab_archive"
-        case .home: return "tab_home"
-        case .chatPdf: return "tab_chat_pdf"
-        }
-    }
-}
-
 struct MainTabView: View {
-    
+
     @InjectedObject(\.mainCoordinator) var mainCoordinator
-    
+
     var body: some View {
         TabView(selection: self.$mainCoordinator.tab) {
-            ForEach(MainTab.allCases, id:\.self) { tab in
-                NavigationStack {
-                    self.getRootView(forTab: tab)
-                        .navigationTitle(tab.name)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbarBackground(ColorPalette.secondaryBG, for: .navigationBar)
-                        .toolbarBackground(.visible, for: .navigationBar)
-                        .settingsButton(showSettings: self.$mainCoordinator.settingsShow)
-                }
-                .tabItem {
-                    Label(tab.name, image: tab.imageName)
-                }
-                .tag(tab.rawValue)
+            Tab(MainTab.files.title,
+                systemImage: MainTab.files.systemImage,
+                value: MainTab.files) {
+                self.rootView(for: .files)
+            }
+
+            Tab(MainTab.tools.title,
+                systemImage: MainTab.tools.systemImage,
+                value: MainTab.tools) {
+                self.rootView(for: .tools)
+            }
+
+            Tab(MainTab.chat.title,
+                systemImage: MainTab.chat.systemImage,
+                value: MainTab.chat) {
+                self.rootView(for: .chat)
+            }
+
+            Tab(MainTab.search.title,
+                systemImage: MainTab.search.systemImage,
+                value: MainTab.search,
+                role: .search) {
+                self.rootView(for: .search)
             }
         }
-        .background(ColorPalette.primaryBG)
+        .tabBarMinimizeBehavior(.onScrollDown)
+        .tint(ColorPalette.accent)
         .pdfEditFlowView(pdfEditFlowData: self.$mainCoordinator.pdfEditFlowData)
         .settingsView(showSettings: self.$mainCoordinator.settingsShow)
     }
-    
-    @MainActor @ViewBuilder private func getRootView(forTab tab: MainTab) -> some View {
-        switch tab {
-        case .archive: ArchiveView()
-        case .home: HomeView()
-        case .chatPdf: ChatPdfSelectionView()
+
+    @MainActor @ViewBuilder private func rootView(for tab: MainTab) -> some View {
+        NavigationStack {
+            Group {
+                switch tab {
+                case .files: FilesView()
+                case .tools: ToolsView()
+                case .chat: ChatPdfSelectionView()
+                case .search: GlobalSearchView()
+                }
+            }
+            .navigationTitle(tab.title)
+            .navigationBarTitleDisplayMode(tab == .files ? .large : .inline)
+            .settingsButton(showSettings: self.$mainCoordinator.settingsShow)
         }
     }
 }
 
 fileprivate extension View {
-    
+
     func pdfEditFlowView(pdfEditFlowData: Binding<PdfEditFlowData?>) -> some View {
         self.fullScreenCover(item: pdfEditFlowData) { data in
             PdfFlowView(
@@ -73,35 +75,35 @@ fileprivate extension View {
             )
         }
     }
-    
+
     func settingsView(showSettings: Binding<Bool>) -> some View {
-        self.fullScreenCover(isPresented: showSettings) {
+        self.sheet(isPresented: showSettings) {
             NavigationStack {
                 SettingsView()
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationTitle("Settings")
-                    .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                        showSettings.wrappedValue = false
-                    })
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Done") { showSettings.wrappedValue = false }
+                        }
+                    }
             }
-            .background(ColorPalette.primaryBG)
         }
     }
-    
+
     func settingsButton(showSettings: Binding<Bool>) -> some View {
         self.toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showSettings.wrappedValue = true }) {
-                    Image(systemName: "gearshape")
-                        .foregroundColor(ColorPalette.primaryText)
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    showSettings.wrappedValue = true
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
                 }
             }
         }
     }
 }
 
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabView()
-    }
+#Preview {
+    MainTabView()
 }

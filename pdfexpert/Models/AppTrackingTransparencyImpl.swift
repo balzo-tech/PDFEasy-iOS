@@ -39,6 +39,11 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
     }
     
     func requestPermissionIfNeeded() async {
+        // There is no advertising identifier on the simulator, so the prompt
+        // would only sit in front of every screen during development.
+        #if targetEnvironment(simulator)
+        return
+        #else
         if #available(iOS 14, *) {
             debugPrint(for: self, message: "Current Auth Status: \(ATTrackingManager.trackingAuthorizationStatus.rawValue)")
         }
@@ -56,8 +61,9 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
         } else {
             return
         }
+        #endif
     }
-    
+
     private func updateFacebookAdvertiseTrackingSettings() {
         let enableAdvertiserTracking = self.permissionGranted ?? false
         #if FACEBOOK

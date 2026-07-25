@@ -89,8 +89,37 @@ class ArchiveViewModel: ObservableObject {
     
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.files))
+        #if DEBUG
+        self.seedDebugArchiveIfNeeded()
+        #endif
         self.refresh()
+        #if DEBUG
+        // debugOpenEditor=YES opens the first document straight away, so the
+        // editor can be inspected on a simulator without tapping.
+        if UserDefaults.standard.bool(forKey: "debugOpenEditor"),
+           case .data(let items) = self.asyncItems.status,
+           let first = items.first {
+            DispatchQueue.main.async { self.editItem(item: first) }
+        }
+        #endif
     }
+
+    #if DEBUG
+    /// Fills an empty archive with copies of the bundled test document, so the
+    /// Files layouts can be exercised on a simulator where importing is not
+    /// possible. Enable with:
+    ///   xcrun simctl spawn booted defaults write <bundle-id> debugSeedArchive -bool YES
+    private func seedDebugArchiveIfNeeded() {
+        guard UserDefaults.standard.bool(forKey: "debugSeedArchive"),
+              (try? self.repository.getDoPdfExist()) == false else { return }
+        let names = ["Rental agreement", "Invoice 2026-07", "Scanned receipt", "Passport scan", "Meeting notes"]
+        for name in names {
+            guard var pdf = K.Test.DebugPdf else { return }
+            pdf.updateFilename("\(name).pdf")
+            _ = try? self.repository.savePdf(pdf: pdf)
+        }
+    }
+    #endif
     
     func refresh() {
         do {

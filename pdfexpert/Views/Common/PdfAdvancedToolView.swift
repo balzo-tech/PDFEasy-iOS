@@ -54,7 +54,7 @@ struct PdfAdvancedToolView: ViewModifier {
                 Spacer()
                 Text("Processing…")
                     .font(forCategory: .headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(ColorPalette.textPrimary)
                     .padding(.bottom, 80)
             }
         }

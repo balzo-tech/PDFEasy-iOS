@@ -22,27 +22,10 @@ extension View {
                        startPoint: UnitPoint(x: 0.25, y: 0.5), endPoint: UnitPoint(x: 0.75, y: 0.5))
     }
     
+    /// The app's primary call to action. Every screen that used the old gradient
+    /// pill goes through here, so they all picked up the glass treatment at once.
     @ViewBuilder func getDefaultButton(text: String, enabled: Bool = true, onButtonPressed: @escaping () -> ()) -> some View {
-        Button(action: onButtonPressed) {
-            Text(text)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .font(forCategory: .button)
-                .foregroundColor(ColorPalette.primaryText)
-                .contentShape(Capsule())
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 48)
-        .background(self.getDefaultButtonBackground(enabled: enabled))
-        .cornerRadius(10)
-        .disabled(!enabled)
-    }
-    
-    @ViewBuilder private func getDefaultButtonBackground(enabled: Bool) -> some View {
-        if enabled {
-            self.defaultGradientBackground
-        } else {
-            ColorPalette.thirdText
-        }
+        PrimaryActionButton(title: text, isEnabled: enabled, action: onButtonPressed)
     }
     
     func getDisclamer(color: Color, onSelection: @escaping (DisclamerType) -> ()) -> some View {

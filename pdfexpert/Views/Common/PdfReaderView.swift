@@ -4,26 +4,29 @@
 //
 //  Created by Leonardo Passeri on 21/08/23.
 //
+//  Reading is the whole point of this screen, so the page runs edge to edge and
+//  every control floats above it in glass: the page counter, the markup bar and
+//  the toolbar.
+//
 
 import SwiftUI
 import Factory
 
 struct PdfReaderView: View {
-    
+
     @Injected(\.analyticsManager) private var analyticsManager
-    
+
     @Environment(\.dismiss) var dismiss
-    
+
     @StateObject var viewModel: PdfReaderViewModel
-    
+
     var body: some View {
         NavigationStack {
             self.contentView
-            .padding(16)
-            .background(ColorPalette.primaryBG)
+            .background(ColorPalette.background)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(self.viewModel.filename)
-            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+            .addSystemCloseButton(color: ColorPalette.textPrimary, onPress: {
                 self.viewModel.requestClose(onClose: { self.dismiss() })
             })
             .alert(String(localized: "Unsaved changes"),
@@ -50,8 +53,19 @@ struct PdfReaderView: View {
             .showSubscriptionView(self.$viewModel.monetizationShow,
                                   onComplete: { self.viewModel.onMonetizationClose() })
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    self.toolbar
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation(DS.Motion.snappy) {
+                            self.viewModel.toggleAnnotationMode()
+                        }
+                    } label: {
+                        Label("Annotate", systemImage: "highlighter")
+                    }
+                    .tint(self.viewModel.annotationMode ? ColorPalette.accent : ColorPalette.textPrimary)
+                }
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+                ToolbarItem(placement: .topBarTrailing) {
+                    self.readerMenu
                 }
             }
             .fullScreenCover(isPresented: self.$viewModel.showPageSelection) {
@@ -64,135 +78,172 @@ struct PdfReaderView: View {
                                    images: self.viewModel.pageImages.data ?? [])
             }
         }
-        .background(ColorPalette.primaryBG)
         .onAppear(perform: self.viewModel.onAppear)
         .asyncView(asyncItem: self.$viewModel.pageThumbnails)
         .asyncView(asyncItem: self.$viewModel.pageImages)
     }
-    
+
     @ViewBuilder var contentView: some View {
-        VStack(spacing: 16) {
-            if self.viewModel.textMode {
-                self.textView
-            } else {
-                self.standardView
+        ZStack(alignment: .bottom) {
+            Group {
+                if self.viewModel.textMode {
+                    self.textView
+                } else {
+                    self.standardView
+                }
             }
-            if self.viewModel.annotationMode {
-                self.annotationToolbar
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            VStack(spacing: DS.Spacing.xs) {
+                if self.viewModel.annotationMode {
+                    self.annotationToolbar
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+                self.pageCounterBadge
             }
-            self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
-                             totalPages: self.viewModel.pageCount)
+            .padding(.horizontal, DS.Spacing.md)
+            .padding(.bottom, DS.Spacing.sm)
         }
+    }
+
+    private var pageCounterBadge: some View {
+        Text("\(self.viewModel.pageIndex + 1) of \(self.viewModel.pageCount)")
+            .font(forCategory: .caption1)
+            .foregroundStyle(ColorPalette.textPrimary)
+            .padding(.horizontal, DS.Spacing.sm)
+            .padding(.vertical, 6)
+            .floatingGlassCapsule(interactive: false)
     }
 
     /// Markup controls: type, colour, apply-to-selection and undo.
     @ViewBuilder var annotationToolbar: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DS.Spacing.sm) {
             Text("Select some text, then apply the markup.")
                 .font(forCategory: .caption1)
-                .foregroundColor(ColorPalette.thirdText)
+                .foregroundStyle(ColorPalette.textSecondary)
 
-            HStack(spacing: 16) {
+            HStack(spacing: DS.Spacing.md) {
                 ForEach(PdfAnnotationType.allCases) { type in
-                    Button(action: { self.viewModel.annotationType = type }) {
+                    Button(action: {
+                        withAnimation(DS.Motion.quick) { self.viewModel.annotationType = type }
+                    }) {
                         Image(systemName: type.systemImageName)
-                            .foregroundColor(self.viewModel.annotationType == type
-                                             ? ColorPalette.buttonGradientStart
-                                             : ColorPalette.primaryText)
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundStyle(self.viewModel.annotationType == type
+                                             ? ColorPalette.accent
+                                             : ColorPalette.textPrimary)
+                            .frame(width: 36, height: 32)
                     }
                     .accessibilityLabel(type.displayName)
                 }
 
-                Divider().frame(height: 20)
+                Divider().frame(height: 22)
 
                 ForEach(Array(PdfReaderViewModel.annotationColors.enumerated()), id: \.offset) { _, color in
-                    Button(action: { self.viewModel.annotationColor = color }) {
+                    Button(action: {
+                        withAnimation(DS.Motion.quick) { self.viewModel.annotationColor = color }
+                    }) {
                         Circle()
                             .fill(color)
-                            .frame(width: 22, height: 22)
-                            .overlay(
-                                Circle().stroke(ColorPalette.primaryText,
+                            .frame(width: 24, height: 24)
+                            .overlay {
+                                Circle().stroke(ColorPalette.textPrimary,
                                                 lineWidth: self.viewModel.annotationColor == color ? 2 : 0)
-                            )
+                            }
                     }
                 }
             }
 
-            HStack(spacing: 16) {
+            HStack(spacing: DS.Spacing.sm) {
                 Button(action: { self.viewModel.annotateSelection() }) {
                     Text("Apply to selection")
                         .font(forCategory: .button)
-                        .foregroundColor(ColorPalette.buttonGradientStart)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 40)
                 }
+                .buttonStyle(.glassProminent)
+                .buttonBorderShape(.capsule)
+                .tint(ColorPalette.accent)
+
                 Button(action: { self.viewModel.undoLastAnnotation() }) {
                     Image(systemName: "arrow.uturn.backward")
-                        .foregroundColor(self.viewModel.canUndoAnnotation
-                                         ? ColorPalette.primaryText
-                                         : ColorPalette.thirdText)
+                        .frame(width: 40, height: 40)
                 }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .tint(ColorPalette.textPrimary)
                 .disabled(!self.viewModel.canUndoAnnotation)
+                .accessibilityLabel(Text("Undo"))
             }
         }
-        .padding(12)
+        .padding(DS.Spacing.sm)
         .frame(maxWidth: .infinity)
-        .background(ColorPalette.secondaryBG)
-        .cornerRadius(12)
+        .floatingGlass(radius: DS.Radius.card)
     }
-    
+
     var textView: some View {
         TabView(selection: self.$viewModel.pageIndex) {
             ForEach(Array(self.viewModel.pages.enumerated()), id:\.offset) { _, page in
                 if let page = page {
                     ScrollView {
                         Text(page)
+                            .font(forCategory: .body1)
+                            .foregroundStyle(ColorPalette.textPrimary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(DS.Spacing.md)
+                            .padding(.bottom, 80)
                     }
                 } else {
                     Text("No text available on this page")
                         .font(forCategory: .body1)
-                        .foregroundColor(ColorPalette.primaryText)
+                        .foregroundStyle(ColorPalette.textSecondary)
                 }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .background(ColorPalette.primaryBG)
+        .background(ColorPalette.background)
     }
-    
+
     var standardView: some View {
         PdfKitViewBinder(
             pdfView: self.$viewModel.pdfView,
             singlePage: false,
             pageMargins: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
-            backgroundColor: UIColor(ColorPalette.primaryBG),
+            backgroundColor: UIColor(ColorPalette.background),
             usePaginator: true
         )
     }
-    
-    @ViewBuilder var toolbar: some View {
-        if self.viewModel.hasUnsavedAnnotations {
-            Button(action: { self.viewModel.save() }) {
-                Image(systemName: "square.and.arrow.down")
-                    .foregroundColor(ColorPalette.primaryText)
+
+    /// Reading-mode switches, kept out of the way of the page itself.
+    private var readerMenu: some View {
+        Menu {
+            if self.viewModel.hasUnsavedAnnotations {
+                Button {
+                    _ = self.viewModel.save()
+                } label: {
+                    Label("Save", systemImage: "square.and.arrow.down")
+                }
             }
-            .accessibilityLabel(String(localized: "Save"))
-        }
-        Button(action: { self.viewModel.toggleAnnotationMode() }) {
-            Image(systemName: "highlighter")
-                .foregroundColor(self.viewModel.annotationMode
-                                 ? ColorPalette.buttonGradientStart
-                                 : ColorPalette.primaryText)
-        }
-        .accessibilityLabel(String(localized: "Annotate"))
-        Button(action: { self.viewModel.switchTextMode() }) {
-            Image(systemName: self.viewModel.textMode ? "doc" : "doc.text")
-                .foregroundColor(ColorPalette.primaryText)
-        }
-        Button(action: { self.viewModel.presentPageImages() }) {
-            Image(systemName: "photo.stack")
-                .foregroundColor(ColorPalette.primaryText)
-        }
-        Button(action: { self.viewModel.presentPageSelection() }) {
-            Image("page_selection")
-                .foregroundColor(ColorPalette.primaryText)
+            Button {
+                self.viewModel.switchTextMode()
+            } label: {
+                Label(self.viewModel.textMode
+                      ? String(localized: "Page view")
+                      : String(localized: "Text view"),
+                      systemImage: self.viewModel.textMode ? "doc" : "doc.text")
+            }
+            Button {
+                self.viewModel.presentPageSelection()
+            } label: {
+                Label("Pages", systemImage: "square.grid.2x2")
+            }
+            Button {
+                self.viewModel.presentPageImages()
+            } label: {
+                Label("Images", systemImage: "photo.stack")
+            }
+        } label: {
+            Label("More", systemImage: "ellipsis")
         }
     }
 }
@@ -208,7 +259,7 @@ extension View {
 }
 
 struct PdfReaderView_Previews: PreviewProvider {
-    
+
     static var previews: some View {
         Color.white
             .showPdfReaderView(item: .constant(K.Test.DebugPdf))

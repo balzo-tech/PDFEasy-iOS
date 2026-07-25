@@ -66,7 +66,7 @@ struct SubscriptionVerticalView: View {
                 Spacer().frame(height: 16)
                 Text("No obligation, you can cancel whenever you want.")
                     .font(forCategory: .body2)
-                    .foregroundColor(ColorPalette.primaryText)
+                    .foregroundColor(ColorPalette.textSecondary)
                     .lineLimit(2)
                     .minimumScaleFactor(0.5)
                     .frame(maxWidth: .infinity, alignment: .leading)

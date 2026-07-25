@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		01B36A41FD65CBF057C77820 /* PdfMarkdownImportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF719042ABAEB9A02F2A21A0 /* PdfMarkdownImportViewModel.swift */; };
+		119C2D21F8F37B6A381A8D24 /* ToolCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D945D88CB0FACAE63B3AC7 /* ToolCatalog.swift */; };
 		1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */; };
+		2473648B07EC4B7DCCB0D1FE /* DocumentTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5B05C3170D6CAE7D56A7BF /* DocumentTileView.swift */; };
 		29314965C39F60D7B45CD469 /* PdfMarkdownImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546644E7201C33A0304DB80B /* PdfMarkdownImportView.swift */; };
 		2E8335470DCB20BE2EBD1B40 /* PdfCleanupUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6122CD802552BE96019419CD /* PdfCleanupUtility.swift */; };
 		2F1743C48BC2401A8B242C54 /* PdfPermissionsUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFCD3B9E018C23C99E6EF738 /* PdfPermissionsUtility.swift */; };
@@ -20,17 +22,20 @@
 		46F054ECB917A10EC54D16E7 /* PdfAnnotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14FF9709A641E3F5C6DED28 /* PdfAnnotationTests.swift */; };
 		49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */; };
 		49685A878BBA7FFF559ADCCF /* OfficeImportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5406EC92E539D0412B2B8DF /* OfficeImportCoordinator.swift */; };
+		53CD16D3BF28FC2D7F6CA417 /* GlobalSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D745BFF18DE814B941CF384 /* GlobalSearchView.swift */; };
 		544D6E0E1EA7CA7A83868ECF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
 		56FCE7FC9E244E4C98688EEE /* PdfMetadataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6401AC744A4271821CDB87 /* PdfMetadataViewModel.swift */; };
 		57D5CC6114DF9057DA506A3E /* PdfPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB81D716DFDF26CAF87B7B /* PdfPermissionsView.swift */; };
 		61B1451DD20E9FF7531DCE77 /* PdfCleanupUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8182CA141142B57D9B63CE37 /* PdfCleanupUtilityTests.swift */; };
 		62FEA205766D8EF339E4FA71 /* PdfAdvancedToolViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE9B8BA6CA858E0E790D321 /* PdfAdvancedToolViewModelTests.swift */; };
+		67C8C5C94428F976E794604F /* CommonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4807DA710D777CC83C2F180 /* CommonControls.swift */; };
 		6A5FBA082C264A6D815AB566 /* PdfWatermarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917D8256592E4DA8B7E10970 /* PdfWatermarkView.swift */; };
 		6BC85A1A6BF48BB4CFEF4488 /* PdfRedactUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487A5A6F6F32B19ABB984CD6 /* PdfRedactUtility.swift */; };
 		6D4F1BA7DCC34BBBBE528796 /* PdfOverlayUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F76D922605F497582E22531 /* PdfOverlayUtility.swift */; };
 		702EFD3C7CCEAD86C6D04FB0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
 		72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */; };
 		7FB9F5502FC5B0DFE1173081 /* DocumentRenderUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24153D439F3CDE6B1261253 /* DocumentRenderUtility.swift */; };
+		8051C0E021ADD224FE4A4039 /* ToolUsageTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3DCC9A58C57584806464EA /* ToolUsageTracker.swift */; };
 		81B6A9B17926789E0FE40C6A /* PdfWebImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBD8755216D9D4FB53A30D /* PdfWebImportView.swift */; };
 		834584A1DB6303F10E6DFAEF /* PdfAdvancedToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC8E774753D8BF0BA1375B6 /* PdfAdvancedToolView.swift */; };
 		879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */; };
@@ -68,7 +73,6 @@
 		893B04BD2AA9C2C100F86813 /* CoreGraphics+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */; };
 		893BE52B2A6A7864004B05B9 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 893BE52A2A6A7864004B05B9 /* CombineMoya */; };
 		893BE52F2A6A7C0C004B05B9 /* NetworkUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */; };
-		893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FC829DED190000E35BD /* ArchiveView.swift */; };
 		893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */; };
 		893C8FCE29DED254000E35BD /* AppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCC29DED254000E35BD /* AppCoreData.xcdatamodeld */; };
 		893C8FD029DED278000E35BD /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FCF29DED278000E35BD /* Persistence.swift */; };
@@ -189,7 +193,6 @@
 		89923E6729D437F500E246FC /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 89923E6629D437F500E246FC /* FirebasePerformance */; };
 		89923E6929D46A9900E246FC /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89923E6829D46A9900E246FC /* FilePicker.swift */; };
 		89923E6B29D47B9E00E246FC /* pdf-scanning.json in Resources */ = {isa = PBXBuildFile; fileRef = 89923E6A29D47B9E00E246FC /* pdf-scanning.json */; };
-		8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694129D33B1300566EF4 /* HomeItemView.swift */; };
 		8995694429D3450300566EF4 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8995694329D3450300566EF4 /* HomeViewModel.swift */; };
 		899F484429DF128200E7E1E4 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899F484329DF128200E7E1E4 /* MainTabView.swift */; };
 		89AAFEA129DB2672002D348E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAFE9F29DB2672002D348E /* CacheManager.swift */; };
@@ -239,7 +242,6 @@
 		89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */; };
 		89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */; };
 		89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */; };
-		89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBA29D330FB003F1C3A /* HomeView.swift */; };
 		89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */; };
 		89D1FE7E2A84D428009AC57C /* SubscriptionPickerPlanListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D1FE7D2A84D428009AC57C /* SubscriptionPickerPlanListView.swift */; };
 		89D1FE802A84D76B009AC57C /* FullScreenClearBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */; };
@@ -278,6 +280,7 @@
 		906FD359567CDFB08303737F /* PdfRedactUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D1D21120BBA459D1E33557 /* PdfRedactUtilityTests.swift */; };
 		99C1926D9E0BCC1EE621A360 /* PdfWebImportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A66784A35E726993125997F /* PdfWebImportViewModel.swift */; };
 		9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */; };
+		9DC4C1642296B1764C7D1174 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7887A98265D88D87F8D58BC /* DesignSystem.swift */; };
 		A0D48C2DB73F4373D8D3DDD5 /* PdfPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B195271BEEC0385779003266 /* PdfPermissionsViewModel.swift */; };
 		A1B2C3D4E5F600000000A002 /* ObfuscatedSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A001 /* ObfuscatedSecret.swift */; };
 		A1B2C3D4E5F600000000A004 /* ObfuscatedSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A003 /* ObfuscatedSecrets.swift */; };
@@ -286,9 +289,11 @@
 		AEE68613BD8214E4C8230938 /* DocumentRenderUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CEB49EF337CFDB9967BCC2 /* DocumentRenderUtilityTests.swift */; };
 		C3B0B01EC4E52311A5B765D3 /* OcrUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B741298CFD66C4AA2310F784 /* OcrUtility.swift */; };
 		C443B890349E858D04682E9D /* PdfRedactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D6989FE8D5E01C705E98BF /* PdfRedactViewModel.swift */; };
+		CA4D0A36A0B9134A9B17290C /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CBC6496C308494982DBF43 /* FilesView.swift */; };
 		CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEC26104F59A1229C145C29 /* PdfExtractView.swift */; };
 		CD81BEFD471AD97FD6526894 /* PdfExtractViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */; };
 		CF264175F6F9C9AB3D5B0BA8 /* OfficeImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B643D94F580903A7855D2 /* OfficeImportView.swift */; };
+		D32EEBA7C31BB249B5ACE94E /* ToolTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EC3A7137C6581334095286 /* ToolTileView.swift */; };
 		D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */; };
 		D803CF2A0EEE999C06EAEF60 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A56A520C1AA285C2FEA012 /* SmokeTests.swift */; };
 		DA15D6C79FF2C282B8334C90 /* PdfConvertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731333E3FF44FB5FADB73EC /* PdfConvertView.swift */; };
@@ -303,6 +308,7 @@
 		E7DC622DB4A8BBAFED1D253B /* PdfWebImportViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA32C92F5D63567E2EC98234 /* PdfWebImportViewModelTests.swift */; };
 		EA094BD1F3E65F32E9BE1747 /* PdfConvertViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */; };
 		EAAD2DD3A52A51DCD7173837 /* PdfAdvancedToolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6342025A7A979F2DFCD5421 /* PdfAdvancedToolViewModel.swift */; };
+		F844F1753C60D4BD27E9B6C3 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD905A352026CF62BB13FCF /* ToolsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -339,6 +345,7 @@
 /* Begin PBXFileReference section */
 		01E063C045C32C627710F557 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		08CEB49EF337CFDB9967BCC2 /* DocumentRenderUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentRenderUtilityTests.swift; sourceTree = "<group>"; };
+		0C3DCC9A58C57584806464EA /* ToolUsageTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolUsageTracker.swift; sourceTree = "<group>"; };
 		0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExtractViewModel.swift; sourceTree = "<group>"; };
 		0F76D922605F497582E22531 /* PdfOverlayUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PdfOverlayUtility.swift; path = ../../pdfexpert/InternalUtils/PdfOverlayUtility.swift; sourceTree = "<group>"; };
 		1343CCCB86CD41B7AC7C1D41 /* OpenAiChatPdfManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAiChatPdfManagerImpl.swift; sourceTree = "<group>"; };
@@ -348,10 +355,12 @@
 		29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		2FC8E774753D8BF0BA1375B6 /* PdfAdvancedToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolView.swift; sourceTree = "<group>"; };
 		31A56A520C1AA285C2FEA012 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
+		3A5B05C3170D6CAE7D56A7BF /* DocumentTileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentTileView.swift; sourceTree = "<group>"; };
 		3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageNumberViewModel.swift; sourceTree = "<group>"; };
 		3AEC26104F59A1229C145C29 /* PdfExtractView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExtractView.swift; sourceTree = "<group>"; };
 		3CE9B8BA6CA858E0E790D321 /* PdfAdvancedToolViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolViewModelTests.swift; sourceTree = "<group>"; };
 		3F9B9BF13B20A579E20B3AA3 /* PdfConvertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertViewModel.swift; sourceTree = "<group>"; };
+		42CBC6496C308494982DBF43 /* FilesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		42DBD8755216D9D4FB53A30D /* PdfWebImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfWebImportView.swift; sourceTree = "<group>"; };
 		479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfOverlayUtilityTests.swift; sourceTree = "<group>"; };
 		487A5A6F6F32B19ABB984CD6 /* PdfRedactUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactUtility.swift; sourceTree = "<group>"; };
@@ -361,8 +370,10 @@
 		5C950ACA41EA45A7A7C7B55E /* PdfWatermarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfWatermarkViewModel.swift; sourceTree = "<group>"; };
 		6122CD802552BE96019419CD /* PdfCleanupUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfCleanupUtility.swift; sourceTree = "<group>"; };
 		6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertViewModelTests.swift; sourceTree = "<group>"; };
+		6D745BFF18DE814B941CF384 /* GlobalSearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GlobalSearchView.swift; sourceTree = "<group>"; };
 		8182CA141142B57D9B63CE37 /* PdfCleanupUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfCleanupUtilityTests.swift; sourceTree = "<group>"; };
 		87009AB8685943CBBEFB5345 /* PdfMetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMetadataView.swift; sourceTree = "<group>"; };
+		88D945D88CB0FACAE63B3AC7 /* ToolCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolCatalog.swift; sourceTree = "<group>"; };
 		8902898C29DC1F10007E6372 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		89127AA02A177E370059005F /* PencilKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilKitView.swift; sourceTree = "<group>"; };
 		89127AA22A177F170059005F /* PdfSignatureCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfSignatureCanvasView.swift; sourceTree = "<group>"; };
@@ -397,7 +408,6 @@
 		893AAFCA2A39B2AF00EF9B00 /* FormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSheet.swift; sourceTree = "<group>"; };
 		893B04BC2AA9C2C100F86813 /* CoreGraphics+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreGraphics+Extensions.swift"; sourceTree = "<group>"; };
 		893BE52E2A6A7C0C004B05B9 /* NetworkUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtility.swift; sourceTree = "<group>"; };
-		893C8FC829DED190000E35BD /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		893C8FCA29DED1AF000E35BD /* ArchiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveViewModel.swift; sourceTree = "<group>"; };
 		893C8FCD29DED254000E35BD /* PdfExpert.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PdfExpert.xcdatamodel; sourceTree = "<group>"; };
 		893C8FCF29DED278000E35BD /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -517,7 +527,6 @@
 		89923E5E29D4350F00E246FC /* AppTrackingTransparency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTrackingTransparency.swift; sourceTree = "<group>"; };
 		89923E6829D46A9900E246FC /* FilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
 		89923E6A29D47B9E00E246FC /* pdf-scanning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "pdf-scanning.json"; sourceTree = "<group>"; };
-		8995694129D33B1300566EF4 /* HomeItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeItemView.swift; sourceTree = "<group>"; };
 		8995694329D3450300566EF4 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		899F484329DF128200E7E1E4 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		89AA36082A1BC5FD0077A70A /* StagingProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StagingProducts.storekit; sourceTree = "<group>"; };
@@ -569,7 +578,6 @@
 		89CD7B2F29D329B1003F1C3A /* View+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Internal.swift"; sourceTree = "<group>"; };
 		89CD7BAE29D32D06003F1C3A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
-		89CD7BBA29D330FB003F1C3A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89D1FE7D2A84D428009AC57C /* SubscriptionPickerPlanListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerPlanListView.swift; sourceTree = "<group>"; };
 		89D1FE7F2A84D76B009AC57C /* FullScreenClearBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenClearBackground.swift; sourceTree = "<group>"; };
@@ -604,6 +612,7 @@
 		89F9E4FA2A9606ED0001D48B /* PdfImageViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfImageViewerView.swift; sourceTree = "<group>"; };
 		89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomImageModifier.swift; sourceTree = "<group>"; };
 		917D8256592E4DA8B7E10970 /* PdfWatermarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfWatermarkView.swift; sourceTree = "<group>"; };
+		98EC3A7137C6581334095286 /* ToolTileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolTileView.swift; sourceTree = "<group>"; };
 		9A66784A35E726993125997F /* PdfWebImportViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfWebImportViewModel.swift; sourceTree = "<group>"; };
 		A14FF9709A641E3F5C6DED28 /* PdfAnnotationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfAnnotationTests.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F600000000A001 /* ObfuscatedSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObfuscatedSecret.swift; sourceTree = "<group>"; };
@@ -611,9 +620,12 @@
 		A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObfuscatedSecretTests.swift; sourceTree = "<group>"; };
 		A5406EC92E539D0412B2B8DF /* OfficeImportCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OfficeImportCoordinator.swift; sourceTree = "<group>"; };
 		A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManager.swift; sourceTree = "<group>"; };
+		AAD905A352026CF62BB13FCF /* ToolsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		B195271BEEC0385779003266 /* PdfPermissionsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsViewModel.swift; sourceTree = "<group>"; };
+		B4807DA710D777CC83C2F180 /* CommonControls.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CommonControls.swift; sourceTree = "<group>"; };
 		B6342025A7A979F2DFCD5421 /* PdfAdvancedToolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolViewModel.swift; sourceTree = "<group>"; };
 		B741298CFD66C4AA2310F784 /* OcrUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OcrUtility.swift; path = ../../pdfexpert/InternalUtils/OcrUtility.swift; sourceTree = "<group>"; };
+		B7887A98265D88D87F8D58BC /* DesignSystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUsageTracker.swift; sourceTree = "<group>"; };
 		C0D6989FE8D5E01C705E98BF /* PdfRedactViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactViewModel.swift; sourceTree = "<group>"; };
 		C24153D439F3CDE6B1261253 /* DocumentRenderUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentRenderUtility.swift; sourceTree = "<group>"; };
@@ -691,9 +703,20 @@
 				A96C57FC21DBDA392938F5EB /* InternalUtils */,
 				1693907709B7EB765B74BAC0 /* ViewModels */,
 				E76705D1ED0057C94EC4F42A /* Views */,
+				D5F1578961A2B1E6B2F922B9 /* Style */,
 			);
 			name = pdfexpert;
 			path = pdfexpert;
+			sourceTree = "<group>";
+		};
+		149B855A06A58944441CEC24 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B4807DA710D777CC83C2F180 /* CommonControls.swift */,
+				98EC3A7137C6581334095286 /* ToolTileView.swift */,
+			);
+			name = Components;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		1693907709B7EB765B74BAC0 /* ViewModels */ = {
@@ -764,7 +787,6 @@
 		893C8FC729DED15B000E35BD /* Archive */ = {
 			isa = PBXGroup;
 			children = (
-				893C8FC829DED190000E35BD /* ArchiveView.swift */,
 			);
 			path = Archive;
 			sourceTree = "<group>";
@@ -1360,8 +1382,6 @@
 		89CD7BB729D330B2003F1C3A /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				89CD7BBA29D330FB003F1C3A /* HomeView.swift */,
-				8995694129D33B1300566EF4 /* HomeItemView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1377,6 +1397,17 @@
 				893EB5062AA723C80066914E /* AnalyticsDefaultParameters.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		94A513BCE8080DBCE6F4453F /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				88D945D88CB0FACAE63B3AC7 /* ToolCatalog.swift */,
+				0C3DCC9A58C57584806464EA /* ToolUsageTracker.swift */,
+				AAD905A352026CF62BB13FCF /* ToolsView.swift */,
+			);
+			name = Tools;
+			path = Tools;
 			sourceTree = "<group>";
 		};
 		A1B2C3D4E5F600000000A005 /* Generated */ = {
@@ -1397,6 +1428,25 @@
 			);
 			name = InternalUtils;
 			path = InternalUtils;
+			sourceTree = "<group>";
+		};
+		AD215744F9C1BFD76A9FA36A /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				3A5B05C3170D6CAE7D56A7BF /* DocumentTileView.swift */,
+				42CBC6496C308494982DBF43 /* FilesView.swift */,
+			);
+			name = Files;
+			path = Files;
+			sourceTree = "<group>";
+		};
+		D5F1578961A2B1E6B2F922B9 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				B7887A98265D88D87F8D58BC /* DesignSystem.swift */,
+			);
+			name = Style;
+			path = Style;
 			sourceTree = "<group>";
 		};
 		E2533D9EA3D170E78EBB925E /* PdfExpertTests */ = {
@@ -1427,6 +1477,10 @@
 			isa = PBXGroup;
 			children = (
 				5A9DB76BEC5C4CF68AF5EA2C /* Common */,
+				149B855A06A58944441CEC24 /* Components */,
+				94A513BCE8080DBCE6F4453F /* Tools */,
+				AD215744F9C1BFD76A9FA36A /* Files */,
+				EE01F0597724069518A0008B /* Search */,
 			);
 			name = Views;
 			path = Views;
@@ -1440,6 +1494,15 @@
 				E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */,
 			);
 			path = Stirling;
+			sourceTree = "<group>";
+		};
+		EE01F0597724069518A0008B /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				6D745BFF18DE814B941CF384 /* GlobalSearchView.swift */,
+			);
+			name = Search;
+			path = Search;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1733,7 +1796,6 @@
 				89CD7B5729D329B1003F1C3A /* DebugUtils.swift in Sources */,
 				892E404F2A25E5D9000EEE23 /* PDFAnnotation+Extensions.swift in Sources */,
 				893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */,
-				89CD7BBB29D330FB003F1C3A /* HomeView.swift in Sources */,
 				895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */,
 				89CD7B7329D329B1003F1C3A /* SubscribeViewModel.swift in Sources */,
 				893E849129D5874D00F6B99A /* CameraView.swift in Sources */,
@@ -1852,7 +1914,6 @@
 				892201DC2A0BA70300832CF2 /* PdfSignatureView.swift in Sources */,
 				893E84A029D5944E00F6B99A /* CameraService.swift in Sources */,
 				893C8FDE29DED7F4000E35BD /* PdfUtility.swift in Sources */,
-				8995694229D33B1300566EF4 /* HomeItemView.swift in Sources */,
 				894D485C29D42FE1002B0230 /* RoundedCorner.swift in Sources */,
 				89EBC9052A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift in Sources */,
 				89E601622A829556009492DA /* SubscriptionPickerView.swift in Sources */,
@@ -1861,7 +1922,6 @@
 				89CD7B4C29D329B1003F1C3A /* CircularProgressView.swift in Sources */,
 				89E55BE229DC66240073F268 /* AnalyticsPlatform.swift in Sources */,
 				893ED9D92A693013004EE67C /* MessageView.swift in Sources */,
-				893C8FC929DED190000E35BD /* ArchiveView.swift in Sources */,
 				89467AD72A9E4C6B00FC01FC /* Deeplink.swift in Sources */,
 				89F9E4FD2A9635EC0001D48B /* ZoomImageModifier.swift in Sources */,
 				89AAFEA729DB2AC4002D348E /* WelcomeView.swift in Sources */,
@@ -1930,6 +1990,15 @@
 				6BC85A1A6BF48BB4CFEF4488 /* PdfRedactUtility.swift in Sources */,
 				C443B890349E858D04682E9D /* PdfRedactViewModel.swift in Sources */,
 				AEDBD03506EFD24EDA814302 /* PdfRedactView.swift in Sources */,
+				9DC4C1642296B1764C7D1174 /* DesignSystem.swift in Sources */,
+				67C8C5C94428F976E794604F /* CommonControls.swift in Sources */,
+				D32EEBA7C31BB249B5ACE94E /* ToolTileView.swift in Sources */,
+				119C2D21F8F37B6A381A8D24 /* ToolCatalog.swift in Sources */,
+				8051C0E021ADD224FE4A4039 /* ToolUsageTracker.swift in Sources */,
+				F844F1753C60D4BD27E9B6C3 /* ToolsView.swift in Sources */,
+				2473648B07EC4B7DCCB0D1FE /* DocumentTileView.swift in Sources */,
+				CA4D0A36A0B9134A9B17290C /* FilesView.swift in Sources */,
+				53CD16D3BF28FC2D7F6CA417 /* GlobalSearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1991,7 +2060,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2013,7 +2082,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2042,7 +2111,7 @@
 				INFOPLIST_FILE = ShareFileExtension/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2068,7 +2137,7 @@
 				INFOPLIST_FILE = ShareFileExtension/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2133,7 +2202,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.26;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2172,8 +2241,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2201,7 +2269,7 @@
 				INFOPLIST_FILE = ShareFileExtension/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2260,7 +2328,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.26;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -2299,8 +2367,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2327,7 +2394,7 @@
 				INFOPLIST_FILE = ShareFileExtension/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShareFileExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2392,7 +2459,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.26;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2449,7 +2516,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.26;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -2488,8 +2555,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2531,8 +2597,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2555,7 +2620,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2577,7 +2642,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

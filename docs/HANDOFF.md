@@ -217,3 +217,79 @@ save/discard flow; the 14-row "…" menu on a small device.
    A4/A5 verifications**, then the **interpolated-string localization pass** in
    Xcode, then a product feature (OCR is the strongest premium hook).
 4. Land each unit as its own small change against `main`.
+
+## Phase 4 (2026-07-25) — UI rebuild on iOS 26 / Liquid Glass
+
+Full visual and structural rework of the app. The tools, view models and PDF
+utilities are unchanged; what changed is the shell, the navigation and every
+screen's presentation.
+
+### Decisions taken with the product owner
+
+- **Minimum iOS is now 26.0** (was 16.4), on every target and configuration.
+  Liquid Glass (`glassEffect`, `GlassEffectContainer`, `.buttonStyle(.glass)`,
+  the `Tab` API with roles, `tabBarMinimizeBehavior`, `ToolbarSpacer`) is used
+  directly, with no availability branches.
+- **The app follows the system appearance.** `INFOPLIST_KEY_UIUserInterfaceStyle
+  = Dark` is gone from all four configs.
+- **Typography is SF with Dynamic Type.** Poppins is no longer used;
+  `FontPalette` survives as a shim that maps the old `font*(withSize:)` calls
+  onto system text styles, so the untouched screens scale too.
+- **Information architecture is files-first**: Files · Tools · ChatPDF, plus a
+  search tab carrying the system `.search` role.
+
+### What landed
+
+1. **Design system** — `Style/ColorPalette.swift` is now semantic and defined in
+   code (`background`, `surface`, `textPrimary`, `accent`, per-category tints…),
+   each token with a light and a dark value; the old names (`primaryBG`,
+   `thirdText`, …) remain as aliases. `Style/DesignSystem.swift` holds spacing,
+   radii, motion and the two surface treatments — **opaque for content, glass
+   only for floating chrome**. New shared components live in
+   `Views/Components/`.
+2. **Shell** — `MainTabView` uses the iOS 26 `Tab` API, the tab bar minimizes on
+   scroll, and `MainTab` gained titles/symbols. `MainCoordinator` gained
+   `runTool(_:)` + `pendingToolAction`, so any screen can start a tool flow (the
+   flows themselves still live on the Tools screen).
+3. **Files** (`Views/Files/`, replaces `ArchiveView`) — grid or list, sortable,
+   searchable, context menu per document, a glass "New" button, and
+   `ContentUnavailableView` empty/error states.
+4. **Tools** (`Views/Tools/`, replaces `HomeView`) — every tool now described
+   once in `ToolCatalog` (title, subtitle, SF symbol, family, premium flag,
+   search keywords). The screen has a search field, a quick-actions strip backed
+   by `ToolUsageTracker` (real usage, persisted), and one grid per family.
+5. **Search** (`Views/Search/`) — one field over documents (filename + indexed
+   text) and tools.
+6. **Editor** — the fourteen-row form sheet became a grouped `Menu`; the four
+   common edits sit in a glass bar over the page; save is a prominent toolbar
+   button; the page strip shows numbers and a tinted selection.
+7. **Reader** — page runs edge to edge, markup bar and page counter float in
+   glass, reading modes moved into a menu.
+8. **Settings** — grouped list with subscription state, restore purchases,
+   legal links and the app version.
+9. **Localization** — 162 new Italian translations added to
+   `Localizable.xcstrings` (459 keys total).
+
+### Watch out
+
+- **The signature sheet must stay white with black ink.** It used to rely on the
+  app being dark-only (`ColorPalette.primaryText` as a background). It now uses
+  the fixed `signatureSheet` / `signatureInk` / `signatureInkSecondary` tokens —
+  do not swap those for theme-aware ones.
+- **ATT is skipped on the simulator** (`#if targetEnvironment(simulator)` in
+  `AppTrackingTransparencyImpl`), otherwise the prompt sits in front of every
+  screen during development. Device behaviour is unchanged.
+- **Debug hooks** (all `#if DEBUG`, driven by `UserDefaults`, useful because the
+  simulator takes no programmatic taps):
+  `xcrun simctl spawn booted defaults write <bundle-id> debugInitialTab -int 1`
+  (0 files, 1 tools, 2 chat, 3 search), `debugShowSettings`, `debugSeedArchive`
+  (fills an empty archive with copies of the bundled test PDF), `debugOpenEditor`.
+- **Simulator runs need a signed build**: `CODE_SIGNING_ALLOWED=NO` produces an
+  app without the iCloud entitlement and CoreData+CloudKit throws on launch. Use
+  `CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES`.
+- The staging `Info.plist` (git-ignored) registers only the `pdfpro` URL scheme
+  while the code builds `pdfprostaging://` — deeplinks do not resolve on staging
+  unless that scheme is added.
+- Still to check on a device: the three paywall variants and the signature flow
+  in light appearance, and the tool sheets that were only re-tinted (they follow
+  the tokens, but they were not redesigned).

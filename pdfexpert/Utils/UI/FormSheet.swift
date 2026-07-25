@@ -154,6 +154,7 @@ extension View {
             self.sheet(isPresented: isPresented) {
                 content()
                     .presentationDetents([.height(size.height)])
+                    .presentationDragIndicator(.visible)
             }
         }
     }
@@ -167,6 +168,7 @@ extension View {
             self.sheet(item: item) { item in
                 content(item)
                     .presentationDetents([.height(item.viewSize.height)])
+                    .presentationDragIndicator(.visible)
             }
         }
     }

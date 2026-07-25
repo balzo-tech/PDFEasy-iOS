@@ -82,7 +82,7 @@ struct SubscriptionVerticalItemView: View {
             if self.isSelected {
                 Image(systemName: "circle.fill")
                     .resizable()
-                    .foregroundColor(.white)
+                    .foregroundColor(ColorPalette.surface)
                 Image(systemName: "checkmark.circle.fill")
                     .resizable()
                     .foregroundColor(ColorPalette.buttonGradientStart)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OptionItemView: View {
-    
+
     let title: String
     let imageName: String
     var isSystemImage: Bool = false
@@ -16,30 +16,33 @@ struct OptionItemView: View {
 
     var body: some View {
         Button(action: { self.onPressed() }) {
-            HStack(spacing: 16) {
+            HStack(spacing: DS.Spacing.sm) {
                 self.icon
-                    .frame(width: 20, height: 20)
+                    .frame(width: 22, height: 22)
+                    .foregroundStyle(ColorPalette.accent)
                 Text(self.title)
-                    .font(forCategory: .headline)
-                    .foregroundColor(ColorPalette.primaryText)
+                    .font(forCategory: .body3)
+                    .foregroundStyle(ColorPalette.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(ColorPalette.textTertiary)
             }
-            .padding(.leading, 16)
-            .padding(.trailing, 16)
+            .padding(.horizontal, DS.Spacing.md)
+            .frame(height: 54)
+            .frame(maxWidth: .infinity)
+            .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
         }
-        .frame(height: 48)
-        .frame(maxWidth: .infinity)
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(ColorPalette.thirdText, lineWidth: 1))
+        .buttonStyle(PressableTileButtonStyle(radius: DS.Radius.control))
     }
 
-    // System symbols are tinted with the primary text color; bundled asset icons
-    // keep their original rendering (unchanged from before).
+    // System symbols are tinted with the accent color; bundled asset icons keep
+    // their original rendering.
     @ViewBuilder private var icon: some View {
         if self.isSystemImage {
             Image(systemName: self.imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .foregroundColor(ColorPalette.primaryText)
         } else {
             Image(self.imageName)
                 .resizable()
@@ -50,6 +53,11 @@ struct OptionItemView: View {
 
 struct OptionItemView_Previews: PreviewProvider {
     static var previews: some View {
-        OptionItemView(title: "File", imageName: "edit_option_password_unlock", onPressed: {})
+        VStack(spacing: 10) {
+            OptionItemView(title: "File", imageName: "doc", isSystemImage: true, onPressed: {})
+            OptionItemView(title: "Camera", imageName: "camera", isSystemImage: true, onPressed: {})
+        }
+        .padding()
+        .background(ColorPalette.background)
     }
 }

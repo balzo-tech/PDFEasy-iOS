@@ -32,7 +32,7 @@ struct PdfSignatureCanvasView: View {
                                   onButtonPressed: { self.viewModel.onConfirmButtonPressed() })
         }
         .padding(16)
-        .background(ColorPalette.primaryText)
+        .background(ColorPalette.signatureSheet)
         .galleryImageProviderView(flow: self.viewModel.galleryImageProviderFlow)
         .cameraImageProviderView(flow: self.viewModel.cameraImageProviderFlow)
         .imageCropView(flow: self.viewModel.imageCropFlow)
@@ -48,8 +48,8 @@ struct PdfSignatureCanvasView: View {
                             .font(forCategory: .caption1)
                             .foregroundColor(
                                 self.viewModel.source == source
-                                ? ColorPalette.secondaryText
-                                : ColorPalette.primaryBG
+                                ? ColorPalette.accent
+                                : ColorPalette.signatureInkSecondary
                             )
                     }, icon: {
                         source.icon
@@ -58,8 +58,8 @@ struct PdfSignatureCanvasView: View {
                             .frame(width: 16, height: 16)
                             .foregroundColor(
                                 self.viewModel.source == source
-                                ? ColorPalette.secondaryText
-                                : ColorPalette.primaryBG
+                                ? ColorPalette.accent
+                                : ColorPalette.signatureInkSecondary
                             )
                     })
                 }
@@ -81,16 +81,16 @@ struct PdfSignatureCanvasView: View {
                 Spacer().frame(width: 24)
                 VStack(spacing: 0) {
                     PencilKitView(canvasView: self.$viewModel.canvasView,
-                                  backgroundColor: ColorPalette.primaryText,
+                                  backgroundColor: ColorPalette.signatureSheet,
                                   inkColor: .black,
                                   onSaved: {})
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    ColorPalette.thirdText.frame(height: 1)
+                    ColorPalette.signatureInkSecondary.opacity(0.35).frame(height: 1)
                 }
                 Button(action: { self.viewModel.onClearButtonPressed() }) {
                     Image(systemName: "xmark.circle.fill")
                         .resizable()
-                        .foregroundColor(ColorPalette.thirdText)
+                        .foregroundColor(ColorPalette.signatureInkSecondary)
                         .frame(width: 24, height: 24)
                         .scaledToFit()
                 }
@@ -98,7 +98,7 @@ struct PdfSignatureCanvasView: View {
             Spacer().frame(height: 6)
             Text("Sign in here")
                 .font(forCategory: .body2)
-                .foregroundColor(ColorPalette.thirdText)
+                .foregroundColor(ColorPalette.signatureInkSecondary)
         }
     }
     
@@ -117,7 +117,7 @@ struct PdfSignatureCanvasView: View {
             Spacer().frame(height: 6)
             Text("Select Image")
                 .font(forCategory: .body2)
-                .foregroundColor(ColorPalette.thirdText)
+                .foregroundColor(ColorPalette.signatureInkSecondary)
         }
     }
     
@@ -136,7 +136,7 @@ struct PdfSignatureCanvasView: View {
             Spacer().frame(height: 6)
             Text("Take a Picture")
                 .font(forCategory: .body2)
-                .foregroundColor(ColorPalette.thirdText)
+                .foregroundColor(ColorPalette.signatureInkSecondary)
         }
     }
     
@@ -158,16 +158,16 @@ struct PdfSignatureCanvasView: View {
             .font(forCategory: .callout)
             .foregroundColor(
                 self.viewModel.shouldSaveSignature
-                ? ColorPalette.buttonGradientStart
-                : ColorPalette.thirdText
+                ? ColorPalette.accent
+                : ColorPalette.signatureInkSecondary
             )
             .frame(height: 40)
         }
         .frame(height: 40)
         .overlay(Capsule().stroke(
             self.viewModel.shouldSaveSignature
-            ? ColorPalette.buttonGradientStart
-            : ColorPalette.thirdText,
+            ? ColorPalette.accent
+            : ColorPalette.signatureInkSecondary,
             lineWidth: 1
         ))
     }

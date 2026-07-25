@@ -34,29 +34,27 @@ struct OnboardingView: View {
             Spacer()
             PageControl(currentPageIndex: self.viewModel.pageIndex,
                         numberOfPages: self.pageCount,
-                        currentPageColor: ColorPalette.buttonGradientStart,
-                        normalPageColor: ColorPalette.buttonGradientStart.opacity(0.3),
+                        currentPageColor: ColorPalette.accent,
+                        normalPageColor: ColorPalette.accent.opacity(0.25),
                         enableInteraction: false)
             .frame(height: 40)
-            Spacer().frame(height: 40)
-            self.getDefaultButton(text: "Continue",
+            Spacer().frame(height: DS.Spacing.xl)
+            self.getDefaultButton(text: String(localized: "Continue"),
                                   onButtonPressed: self.viewModel.continueButtonPressed)
-            .padding([.leading, .trailing], 16)
+            .padding(.horizontal, DS.Spacing.xl)
         }
-        .padding(.top, 16)
-        .padding(.bottom, 64)
-        .background(ColorPalette.primaryBG)
+        .padding(.top, DS.Spacing.md)
+        .padding(.bottom, DS.Spacing.xxl)
+        .background(ColorPalette.background)
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { self.viewModel.skipButtonPressed() }) {
                     Text("Skip")
-                        .font(forCategory: .body1)
-                        .foregroundColor(ColorPalette.primaryText)
                 }
+                .tint(ColorPalette.accent)
             }
         }
-        .toolbarBackground(ColorPalette.primaryBG, for: .navigationBar)
         .onAppear() {
             Container.shared.analyticsManager().track(event: .reportScreen(.onboarding))
         }

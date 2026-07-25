@@ -56,6 +56,22 @@
         }
       }
     },
+    "%lld pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pagine"
+          }
+        }
+      }
+    },
     "1 of N": {
       "localizations": {
         "en": {
@@ -68,6 +84,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "1 di N"
+          }
+        }
+      }
+    },
+    "A calm, full-screen reader": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A calm, full-screen reader"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un lettore a schermo intero, senza distrazioni"
+          }
+        }
+      }
+    },
+    "A distraction-free reader": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A distraction-free reader"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un lettore senza distrazioni"
           }
         }
       }
@@ -120,6 +168,22 @@
         }
       }
     },
+    "About": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informazioni"
+          }
+        }
+      }
+    },
     "Action": {
       "localizations": {
         "en": {
@@ -152,6 +216,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aggiungi firma"
+          }
+        }
+      }
+    },
+    "Add a new page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a new page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi una nuova pagina"
+          }
+        }
+      }
+    },
+    "Add a page from your photos, the camera, a file or a scan.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a page from your photos, the camera, a file or a scan."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi una pagina dalle foto, dalla fotocamera, da un file o da una scansione."
           }
         }
       }
@@ -200,6 +296,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aggiungi i numeri di pagina a ogni pagina del PDF"
+          }
+        }
+      }
+    },
+    "Add text": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add text"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi testo"
           }
         }
       }
@@ -300,6 +412,22 @@
         }
       }
     },
+    "Archival format, built to last": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archival format, built to last"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato d'archivio, fatto per durare"
+          }
+        }
+      }
+    },
     "Are you sure?": {
       "localizations": {
         "en": {
@@ -328,6 +456,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chiedimi qualcosa sul tuo PDF!"
+          }
+        }
+      }
+    },
+    "Ask your PDF anything": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask your PDF anything"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiedi qualsiasi cosa al tuo PDF"
           }
         }
       }
@@ -364,6 +508,38 @@
         }
       }
     },
+    "Bake in annotations and fields": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bake in annotations and fields"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fissa annotazioni e campi nella pagina"
+          }
+        }
+      }
+    },
+    "Black out content for good": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black out content for good"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oscura il contenuto per sempre"
+          }
+        }
+      }
+    },
     "Blank pages removed: %lld": {
       "localizations": {
         "en": {
@@ -376,6 +552,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pagine vuote rimosse: %lld"
+          }
+        }
+      }
+    },
+    "Break a file into parts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Break a file into parts"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dividi un file in più parti"
+          }
+        }
+      }
+    },
+    "Bring a file into your archive": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring a file into your archive"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porta un file nel tuo archivio"
           }
         }
       }
@@ -429,6 +637,22 @@
         }
       }
     },
+    "Capture pages with the camera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture pages with the camera"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cattura pagine con la fotocamera"
+          }
+        }
+      }
+    },
     "Chat": {
       "localizations": {
         "en": {
@@ -441,6 +665,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chat"
+          }
+        }
+      }
+    },
+    "ChatPDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatPDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatPDF"
+          }
+        }
+      }
+    },
+    "Choose a PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli un PDF"
           }
         }
       }
@@ -521,6 +777,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "I colori sono stati invertiti."
+          }
+        }
+      }
+    },
+    "Combine files into one": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combine files into one"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unisci più file in uno"
+          }
+        }
+      }
+    },
+    "Compress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compress"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprimi"
           }
         }
       }
@@ -640,6 +928,22 @@
         }
       }
     },
+    "Convert from PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convert from PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Converti da PDF"
+          }
+        }
+      }
+    },
     "Convert from any file": {
       "localizations": {
         "en": {
@@ -720,6 +1024,22 @@
         }
       }
     },
+    "Copy pages into a new file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy pages into a new file"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia le pagine in un nuovo file"
+          }
+        }
+      }
+    },
     "Copy protection is a convention that PDF readers choose to respect: it discourages copying but does not make the text unreadable.": {
       "localizations": {
         "en": {
@@ -748,6 +1068,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Impossibile estrarre questa immagine"
+          }
+        }
+      }
+    },
+    "Create PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crea PDF"
+          }
+        }
+      }
+    },
+    "Create a PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crea un PDF"
           }
         }
       }
@@ -784,6 +1136,22 @@
         }
       }
     },
+    "DOC and DOCX files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DOC and DOCX files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File DOC e DOCX"
+          }
+        }
+      }
+    },
     "Delete": {
       "localizations": {
         "en": {
@@ -812,6 +1180,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Elimina questa pagina"
+          }
+        }
+      }
+    },
+    "Delete this page?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this page?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuoi eliminare questa pagina?"
           }
         }
       }
@@ -930,6 +1314,22 @@
         }
       }
     },
+    "Documents": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documents"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documenti"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "en": {
@@ -974,6 +1374,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trascina sulle aree che vuoi oscurare."
+          }
+        }
+      }
+    },
+    "Draw or place your signature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draw or place your signature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disegna o posiziona la tua firma"
+          }
+        }
+      }
+    },
+    "Drop the empty ones": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drop the empty ones"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elimina quelle vuote"
+          }
+        }
+      }
+    },
+    "Easier on the eyes at night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easier on the eyes at night"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Più riposante per gli occhi di notte"
+          }
+        }
+      }
+    },
+    "Edit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifica"
+          }
+        }
+      }
+    },
+    "Edit content": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit content"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifica il contenuto"
           }
         }
       }
@@ -1024,6 +1504,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Modifica, condividi e salva il tuo\nPDF"
+          }
+        }
+      }
+    },
+    "Editable .docx": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editable .docx"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un .docx modificabile"
+          }
+        }
+      }
+    },
+    "Editable .pptx": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editable .pptx"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un .pptx modificabile"
           }
         }
       }
@@ -1261,6 +1773,38 @@
         }
       }
     },
+    "Every tool unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every tool unlocked"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutti gli strumenti sbloccati"
+          }
+        }
+      }
+    },
+    "Excel to PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excel to PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excel in PDF"
+          }
+        }
+      }
+    },
     "Export PDF as…": {
       "localizations": {
         "en": {
@@ -1405,6 +1949,38 @@
         }
       }
     },
+    "Files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        }
+      }
+    },
+    "Fill Form": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill Form"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compila modulo"
+          }
+        }
+      }
+    },
     "Fill and Sign": {
       "extractionState": "stale",
       "localizations": {
@@ -1418,6 +1994,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Compila e firma"
+          }
+        }
+      }
+    },
+    "Fill in a form": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill in a form"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compila un modulo"
           }
         }
       }
@@ -1450,6 +2042,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ripara un file PDF corrotto o danneggiato"
+          }
+        }
+      }
+    },
+    "Fix a damaged file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fix a damaged file"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripara un file danneggiato"
           }
         }
       }
@@ -1502,9 +2110,57 @@
         }
       }
     },
+    "Formatted text from Markdown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formatted text from Markdown"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testo formattato dal Markdown"
+          }
+        }
+      }
+    },
     "From page number": {
       "comment": "A label displayed next to the text field for the lower bound of a page range.",
       "isCommentAutoGenerated": true
+    },
+    "From photos, scans, Office files or the web": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From photos, scans, Office files or the web"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da foto, scansioni, file Office o dal web"
+          }
+        }
+      }
+    },
+    "From your photo library": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From your photo library"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalla tua libreria foto"
+          }
+        }
+      }
     },
     "Give us a quick rating so we\nknow how you like it": {
       "localizations": {
@@ -1522,6 +2178,22 @@
         }
       }
     },
+    "Go premium": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go premium"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passa a premium"
+          }
+        }
+      }
+    },
     "Go to files": {
       "localizations": {
         "en": {
@@ -1534,6 +2206,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vai ai file"
+          }
+        }
+      }
+    },
+    "Grid": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grid"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Griglia"
           }
         }
       }
@@ -1702,6 +2390,38 @@
         }
       }
     },
+    "Image to PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image to PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immagine in PDF"
+          }
+        }
+      }
+    },
+    "Images": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Images"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immagini"
+          }
+        }
+      }
+    },
     "Images (JPEG)": {
       "localizations": {
         "en": {
@@ -1730,6 +2450,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Immagini (PNG)"
+          }
+        }
+      }
+    },
+    "Images, text or embedded photos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Images, text or embedded photos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immagini, testo o foto incorporate"
+          }
+        }
+      }
+    },
+    "Import PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importa PDF"
           }
         }
       }
@@ -1899,6 +2651,38 @@
         }
       }
     },
+    "Limit printing and copying": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limit printing and copying"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limita stampa e copia"
+          }
+        }
+      }
+    },
+    "List": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elenco"
+          }
+        }
+      }
+    },
     "Load a Markdown file": {
       "localizations": {
         "en": {
@@ -1915,6 +2699,22 @@
         }
       }
     },
+    "Lock it with a password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock it with a password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bloccalo con una password"
+          }
+        }
+      }
+    },
     "Make Searchable (OCR)": {
       "localizations": {
         "en": {
@@ -1927,6 +2727,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rendi ricercabile (OCR)"
+          }
+        }
+      }
+    },
+    "Make scans searchable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make scans searchable"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rendi ricercabili le scansioni"
           }
         }
       }
@@ -2062,6 +2878,22 @@
         }
       }
     },
+    "Merge, split, reorder and clean up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merge, split, reorder and clean up"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unisci, dividi, riordina e ripulisci"
+          }
+        }
+      }
+    },
     "Metadata": {
       "localizations": {
         "en": {
@@ -2090,6 +2922,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "Modificato"
+          }
+        }
+      }
+    },
+    "More": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Altro"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome"
+          }
+        }
+      }
+    },
+    "New": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuovo"
+          }
+        }
+      }
+    },
+    "New document": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuovo documento"
+          }
+        }
+      }
+    },
+    "Newest first": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Newest first"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prima i più recenti"
           }
         }
       }
@@ -2239,6 +3151,22 @@
         }
       }
     },
+    "Number every page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Number every page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Numera tutte le pagine"
+          }
+        }
+      }
+    },
     "OCR": {
       "extractionState": "stale",
       "localizations": {
@@ -2305,6 +3233,22 @@
         }
       }
     },
+    "Oldest first": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oldest first"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prima i meno recenti"
+          }
+        }
+      }
+    },
     "Online conversion": {
       "localizations": {
         "en": {
@@ -2350,6 +3294,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Opacità"
+          }
+        }
+      }
+    },
+    "Organize pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Organize pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Organizza le pagine"
           }
         }
       }
@@ -2416,6 +3376,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "PDF Easy"
+          }
+        }
+      }
+    },
+    "PDF Pro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF Pro"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF Pro"
           }
         }
       }
@@ -2612,9 +3588,73 @@
         }
       }
     },
+    "PPT and PPTX files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PPT and PPTX files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File PPT e PPTX"
+          }
+        }
+      }
+    },
+    "PRO": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PRO"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PRO"
+          }
+        }
+      }
+    },
+    "Page": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pagina"
+          }
+        }
+      }
+    },
     "Page %lld": {
       "comment": "The title of the navigation bar at the top of the view. The placeholder is replaced with the current page number.",
       "isCommentAutoGenerated": true
+    },
+    "Page count": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page count"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Numero di pagine"
+          }
+        }
+      }
     },
     "Page numbers": {
       "localizations": {
@@ -2628,6 +3668,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Numeri di pagina"
+          }
+        }
+      }
+    },
+    "Page view": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page view"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vista pagina"
           }
         }
       }
@@ -2660,6 +3716,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pagine estratte!"
+          }
+        }
+      }
+    },
+    "Passwords, permissions and redaction": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passwords, permissions and redaction"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password, permessi e oscuramento"
           }
         }
       }
@@ -2712,6 +3784,22 @@
         }
       }
     },
+    "Place text anywhere": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Place text anywhere"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci testo dove vuoi"
+          }
+        }
+      }
+    },
     "Please select yes or not": {
       "extractionState": "stale",
       "localizations": {
@@ -2745,6 +3833,38 @@
         }
       }
     },
+    "Powerpoint to PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Powerpoint to PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Powerpoint in PDF"
+          }
+        }
+      }
+    },
+    "Premium feature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premium feature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Funzione premium"
+          }
+        }
+      }
+    },
     "Privacy policy": {
       "extractionState": "stale",
       "localizations": {
@@ -2774,6 +3894,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Elaborazione in corso…"
+          }
+        }
+      }
+    },
+    "Protect": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protect"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proteggi"
+          }
+        }
+      }
+    },
+    "Protect PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protect PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proteggi PDF"
           }
         }
       }
@@ -2827,9 +3979,73 @@
         }
       }
     },
+    "Quick actions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick actions"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azioni rapide"
+          }
+        }
+      }
+    },
     "Range %lld": {
       "comment": "A label at the top of each range in the PDF page range editor, showing the index of the range. The argument is the index of the range.",
       "isCommentAutoGenerated": true
+    },
+    "Read": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leggi"
+          }
+        }
+      }
+    },
+    "Read PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leggi PDF"
+          }
+        }
+      }
+    },
+    "Recent documents": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent documents"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documenti recenti"
+          }
+        }
+      }
     },
     "Recognize text in scanned pages and make your PDF searchable": {
       "localizations": {
@@ -2876,6 +4092,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Riduci la dimensione del file"
+          }
+        }
+      }
+    },
+    "Remove a known password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove a known password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi una password che conosci"
           }
         }
       }
@@ -2960,6 +4192,22 @@
         }
       }
     },
+    "Restore purchases": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore purchases"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripristina acquisti"
+          }
+        }
+      }
+    },
     "Restrict printing and copying on a copy of your PDF": {
       "localizations": {
         "en": {
@@ -2972,6 +4220,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Limita stampa e copia su una copia del tuo PDF"
+          }
+        }
+      }
+    },
+    "Retry": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riprova"
           }
         }
       }
@@ -3104,6 +4368,38 @@
         }
       }
     },
+    "Save PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salva PDF"
+          }
+        }
+      }
+    },
+    "Save any URL as a document": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save any URL as a document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salva qualsiasi URL come documento"
+          }
+        }
+      }
+    },
     "Save any web page as a PDF document": {
       "localizations": {
         "en": {
@@ -3136,6 +4432,38 @@
         }
       }
     },
+    "Scan a document, turn photos into a PDF, or import a file to get started.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan a document, turn photos into a PDF, or import a file to get started."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scansiona un documento, trasforma le foto in PDF o importa un file per iniziare."
+          }
+        }
+      }
+    },
+    "Search": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca"
+          }
+        }
+      }
+    },
     "Search PDFs": {
       "localizations": {
         "en": {
@@ -3148,6 +4476,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cerca PDF"
+          }
+        }
+      }
+    },
+    "Search documents and tools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search documents and tools"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca documenti e strumenti"
+          }
+        }
+      }
+    },
+    "Search tools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search tools"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca strumenti"
           }
         }
       }
@@ -3249,6 +4609,22 @@
         }
       }
     },
+    "Sign PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma PDF"
+          }
+        }
+      }
+    },
     "Sign in here": {
       "localizations": {
         "en": {
@@ -3261,6 +4637,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Firma qui"
+          }
+        }
+      }
+    },
+    "Sign, fill in, annotate and stamp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign, fill in, annotate and stamp"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma, compila, annota e timbra"
           }
         }
       }
@@ -3331,6 +4723,54 @@
         }
       }
     },
+    "Sort by": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort by"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordina per"
+          }
+        }
+      }
+    },
+    "Split": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Split"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dividi"
+          }
+        }
+      }
+    },
+    "Split PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Split PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dividi PDF"
+          }
+        }
+      }
+    },
     "Split pages into ranges": {
       "localizations": {
         "en": {
@@ -3363,6 +4803,22 @@
         }
       }
     },
+    "Stamp text across pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stamp text across pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imprimi un testo su ogni pagina"
+          }
+        }
+      }
+    },
     "Start": {
       "extractionState": "stale",
       "localizations": {
@@ -3380,6 +4836,22 @@
         }
       }
     },
+    "Start from a blank document": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start from a blank document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parti da un documento vuoto"
+          }
+        }
+      }
+    },
     "Strikethrough": {
       "localizations": {
         "en": {
@@ -3392,6 +4864,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Barra"
+          }
+        }
+      }
+    },
+    "Strip scripts and attachments": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strip scripts and attachments"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi script e allegati"
           }
         }
       }
@@ -3429,6 +4917,22 @@
         }
       }
     },
+    "Subscription": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subscription"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbonamento"
+          }
+        }
+      }
+    },
     "Suggested questions:": {
       "localizations": {
         "en": {
@@ -3441,6 +4945,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Domande suggerite:"
+          }
+        }
+      }
+    },
+    "Tables as .csv": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tables as .csv"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tabelle in .csv"
           }
         }
       }
@@ -3538,6 +5058,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "File di testo"
+          }
+        }
+      }
+    },
+    "Text view": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text view"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vista testo"
           }
         }
       }
@@ -3980,6 +5516,22 @@
       "comment": "A label displayed next to the text field for the upper page number in a PDF page range.",
       "isCommentAutoGenerated": true
     },
+    "Tools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tools"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strumenti"
+          }
+        }
+      }
+    },
     "Turn Markdown text into a formatted PDF": {
       "localizations": {
         "en": {
@@ -3996,6 +5548,22 @@
         }
       }
     },
+    "Turn one page or all of them": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn one page or all of them"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruota una pagina o tutte"
+          }
+        }
+      }
+    },
     "Turn your PDF into an editable PowerPoint presentation (.pptx)": {
       "localizations": {
         "en": {
@@ -4008,6 +5576,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trasforma il tuo PDF in una presentazione PowerPoint modificabile (.pptx)"
+          }
+        }
+      }
+    },
+    "Turn your PDF into another format": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn your PDF into another format"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trasforma il PDF in un altro formato"
+          }
+        }
+      }
+    },
+    "Type into form fields": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type into form fields"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrivi nei campi del modulo"
           }
         }
       }
@@ -4060,6 +5660,70 @@
         }
       }
     },
+    "Undo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annulla"
+          }
+        }
+      }
+    },
+    "Unlock": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sblocca"
+          }
+        }
+      }
+    },
+    "Unlock PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sblocca PDF"
+          }
+        }
+      }
+    },
+    "Unlock every tool": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock every tool"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sblocca tutti gli strumenti"
+          }
+        }
+      }
+    },
     "Unsaved changes": {
       "localizations": {
         "en": {
@@ -4072,6 +5736,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Modifiche non salvate"
+          }
+        }
+      }
+    },
+    "Version": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versione"
+          }
+        }
+      }
+    },
+    "View": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vista"
+          }
+        }
+      }
+    },
+    "View options": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View options"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opzioni di vista"
           }
         }
       }
@@ -4104,6 +5816,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Testo filigrana"
+          }
+        }
+      }
+    },
+    "We could not find a purchase to restore.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We could not find a purchase to restore."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non abbiamo trovato acquisti da ripristinare."
           }
         }
       }
@@ -4195,6 +5923,22 @@
         }
       }
     },
+    "Word to PDF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Word to PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Word in PDF"
+          }
+        }
+      }
+    },
     "Would you like to remove your password?": {
       "localizations": {
         "en": {
@@ -4272,6 +6016,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Password errata"
+          }
+        }
+      }
+    },
+    "XLS and XLSX files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XLS and XLSX files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File XLS e XLSX"
           }
         }
       }
@@ -4680,6 +6440,278 @@
         }
       }
     },
+    "Your subscription is active again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your subscription is active again."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo abbonamento è di nuovo attivo."
+          }
+        }
+      }
+    },
+    "annotate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "annotate"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "annota"
+          }
+        }
+      }
+    },
+    "archive": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "archive"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "archivio"
+          }
+        }
+      }
+    },
+    "blank": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "blank"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vuoto"
+          }
+        }
+      }
+    },
+    "brand": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "brand"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "marchio"
+          }
+        }
+      }
+    },
+    "camera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "camera"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fotocamera"
+          }
+        }
+      }
+    },
+    "censor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "censor"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "censura"
+          }
+        }
+      }
+    },
+    "clean": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "clean"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pulisci"
+          }
+        }
+      }
+    },
+    "combine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "combine"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "combina"
+          }
+        }
+      }
+    },
+    "copy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "copy"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "copia"
+          }
+        }
+      }
+    },
+    "damaged": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "damaged"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "danneggiato"
+          }
+        }
+      }
+    },
+    "dark": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dark"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "scuro"
+          }
+        }
+      }
+    },
+    "decrypt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "decrypt"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "decifra"
+          }
+        }
+      }
+    },
+    "divide": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "divide"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dividi"
+          }
+        }
+      }
+    },
+    "document": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "documento"
+          }
+        }
+      }
+    },
+    "empty": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "empty"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vuote"
+          }
+        }
+      }
+    },
+    "encrypt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "encrypt"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cifra"
+          }
+        }
+      }
+    },
     "example.com": {
       "localizations": {
         "en": {
@@ -4692,6 +6724,566 @@
           "stringUnit": {
             "state": "translated",
             "value": "esempio.it"
+          }
+        }
+      }
+    },
+    "fields": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fields"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "campi"
+          }
+        }
+      }
+    },
+    "files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "file"
+          }
+        }
+      }
+    },
+    "fix": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fix"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ripara"
+          }
+        }
+      }
+    },
+    "form": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "form"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "modulo"
+          }
+        }
+      }
+    },
+    "gallery": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "gallery"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "galleria"
+          }
+        }
+      }
+    },
+    "hide": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hide"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nascondi"
+          }
+        }
+      }
+    },
+    "images": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "images"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "immagini"
+          }
+        }
+      }
+    },
+    "join": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "join"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unisci"
+          }
+        }
+      }
+    },
+    "landscape": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "landscape"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "orizzontale"
+          }
+        }
+      }
+    },
+    "lock content": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "lock content"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "blocca contenuto"
+          }
+        }
+      }
+    },
+    "merge layers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "merge layers"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unisci livelli"
+          }
+        }
+      }
+    },
+    "negative": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "negative"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "negativo"
+          }
+        }
+      }
+    },
+    "new": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "new"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nuovo"
+          }
+        }
+      }
+    },
+    "numbering": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "numbering"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "numerazione"
+          }
+        }
+      }
+    },
+    "office": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "office"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "office"
+          }
+        }
+      }
+    },
+    "open": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "open"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "apri"
+          }
+        }
+      }
+    },
+    "pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pages"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pagine"
+          }
+        }
+      }
+    },
+    "pagination": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pagination"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "impaginazione"
+          }
+        }
+      }
+    },
+    "password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "password"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "password"
+          }
+        }
+      }
+    },
+    "photo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "photo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foto"
+          }
+        }
+      }
+    },
+    "print": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "print"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "stampa"
+          }
+        }
+      }
+    },
+    "reader": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "reader"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "lettore"
+          }
+        }
+      }
+    },
+    "recognize": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "recognize"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "riconosci"
+          }
+        }
+      }
+    },
+    "scripts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "scripts"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "script"
+          }
+        }
+      }
+    },
+    "searchable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "searchable"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ricercabile"
+          }
+        }
+      }
+    },
+    "separate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "separate"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "separa"
+          }
+        }
+      }
+    },
+    "sign": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sign"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "firma"
+          }
+        }
+      }
+    },
+    "signature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "signature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "firma"
+          }
+        }
+      }
+    },
+    "slides": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "slides"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "diapositive"
+          }
+        }
+      }
+    },
+    "spreadsheet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "spreadsheet"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foglio di calcolo"
+          }
+        }
+      }
+    },
+    "stamp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "stamp"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "timbro"
+          }
+        }
+      }
+    },
+    "text": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "text"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "testo"
+          }
+        }
+      }
+    },
+    "turn": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "turn"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ruota"
+          }
+        }
+      }
+    },
+    "website": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "website"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sito web"
+          }
+        }
+      }
+    },
+    "write": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "write"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "scrivi"
           }
         }
       }
