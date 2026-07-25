@@ -132,9 +132,45 @@ In order:
 
 ### Product features (roadmap)
 ~~OCR / searchable PDF~~ ✅ done (see "What landed" #11; refinements above) ·
-merge/split/extract pages (M) · rich annotations (M/L) · smart compression
-presets (S/M) · App Intents / Shortcuts / Widget (M) · archive organization with
-folders/~~search~~/tags (M — search ✅ done, see #12).
+~~merge/split/extract pages~~ ✅ done (phase 1) · ~~rich annotations~~ ✅ done
+(phase 3, reader markup) · smart compression presets (S/M) · App Intents /
+Shortcuts / Widget (M — phase 4) · archive organization with
+folders/~~search~~/tags (M — search ✅ done, see #12) · compare PDFs
+(dropped from phase 3, still unplanned).
+
+## Phase 3 (2026-07-25) — on-device round 2 + PSPDFKit removal
+
+Branch `feature/phase-3`, six commits, suite 96 → 154 tests. Plan:
+`~/.claude/plans/glowing-herding-galaxy.md`.
+
+1. **PSPDFKit removed** (release blocker: no license ⇒ 1-hour demo mode,
+   "not for redistribution", trial watermark). Its single use, Office→PDF, is
+   now `DocumentRenderUtility` (WebKit + `UIPrintPageRenderer` A4 pagination) with
+   an optional high-fidelity fallback through Stirling `/api/v1/convert/file/pdf`
+   — offered explicitly, gated premium, never silent. `OfficeImportCoordinator`
+   owns that flow for Home, editor and chat.
+2. **Web page → PDF** and **Markdown → PDF** (free, on-device).
+3. **Remove blank pages / Flatten / Invert colors** (free), on the shared
+   `PdfOverlayUtility.redrawPages` rebuild.
+4. **PDF permissions** (premium): printing/copying flags via `CGPDFContext`.
+5. **Redaction** (premium): touched pages are rasterized, so covered text leaves
+   the file; saved as a `-redacted` copy.
+6. **Reader annotations** (premium): highlight / underline / strikethrough,
+   persisted to the archive.
+
+Deviations from the plan, both deliberate:
+- Permissions are a **separate tool** rather than an extension of "PDF Protector".
+  That flow keeps `pdf.password` as model state applied at share time; carrying
+  permissions the same way needed a new Core Data attribute, and with the model
+  `usedWithCloudKit` that means a production schema deploy. **No schema change
+  landed in phase 3.**
+- Annotations offer **undo**, not tap-to-delete: a delete gesture on `PDFView`
+  fights its own text selection.
+
+Still to verify on device (not CLI-checkable): real `.docx/.xlsx/.pptx/.pages`
+conversion quality and the fallback prompt; web pages behind cookie banners;
+redaction box placement on rotated pages at various zoom levels; the annotation
+save/discard flow; the 14-row "…" menu on a small device.
 
 ## Build / project notes (still true — save time)
 
@@ -167,9 +203,11 @@ folders/~~search~~/tags (M — search ✅ done, see #12).
 - **CI on Xcode 26**: the SDK-26 `PDFImageExtractor` fix is required to compile
   there; it only uses the concrete CGPDF types, so it's backward-compatible with
   older Xcode too.
-- PSPDFKit runs in **trial** (no license key). True per-image PDF recompression
-  (the A2c "surgical" path) needs a licensed PSPDFKit Document Editor; the current
-  heuristic flattens image-heavy pages instead.
+- **PSPDFKit is gone** (removed in phase 3 — it could not ship without a paid
+  license). Office→PDF is on-device via `DocumentRenderUtility`, with the Stirling
+  API as an opt-in high-fidelity fallback. Per-image PDF recompression (the A2c
+  "surgical" path) has no on-device equivalent; the current heuristic keeps
+  flattening image-heavy pages instead.
 
 ## How to resume
 
