@@ -1,19 +1,98 @@
-# Handoff — review fixes re-applied onto `main`
+# Handoff — PdfExpert / PDF Easy
 
-Updated 2026-06-28. Read this first when picking the work up in a fresh session.
+Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
-## TL;DR
+## Where things stand
 
-The review/bug-fix/refactor work that used to live on the diverged branch
-`fix/review-bugs-and-pdf-refactor` (which was 111 commits behind a restructured
-`main` and **not** mergeable) has been **re-applied by hand onto the current
-`main`** and merged in. Everything below is on `main`, each piece built and/or
-unit-tested on **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro
-simulator).
+Eleven phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 582 catalog keys, 195 unit tests
+green, and a localization lint in CI. Every phase below was built and tested on
+**Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
+simulators).
 
-What's left is mostly **on-device behavioral verification** (things the CLI
-can't validate) plus a few intentionally-deferred refactors and the product
-backlog — see "Remaining".
+**Two things to know before anything else:**
+
+1. **`main` is 10 commits ahead of `origin/main` and nothing is pushed.** That
+   covers phases 6 through 11 — folders and tags, compression presets and
+   comparison, the iPad interface, the compression reconciliation, Spanish, and
+   the lint. Do **not** run a plain `git pull` expecting to be up to date; the
+   work is local. Pushing has not been asked for yet.
+2. **Nothing in phases 4–11 has been tried on a real device.** Everything was
+   verified from simulator screenshots, unit tests and scripts. Anything needing a
+   tap, a hardware key, a drag, an Apple Pencil or a real purchase is unverified.
+   The accumulated checklist is the memory note `device-test-setup`, and each
+   phase below has its own "watch out".
+
+## How to resume
+
+1. `git checkout main`. Do not pull over the unpushed work — see above.
+2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
+   or nothing compiles. See "Build / project notes".
+3. `bundle exec fastlane test` — runs the localization lint, then the 195 tests.
+   Both should be clean before you touch anything.
+4. Pick the next task. **The only things standing between the app and a release
+   are not code**: deploying the CloudKit production schema, the real API keys,
+   the Firebase `stirling_api_enabled` flip, and the device test run. See
+   "Remaining" and the `open-work-backlog` memory note.
+5. Land each unit as its own small change against `main`.
+
+## The phases, in order
+
+Sections below, newest last. Phases 1–2 predate this document; what they left
+behind is in "What landed on `main`".
+
+| Phase | What |
+|---|---|
+| 3 | On-device round 2, PSPDFKit removed |
+| 4 | UI rebuilt on iOS 26 / Liquid Glass |
+| 5 | App Intents, Siri shortcuts, Home Screen widget |
+| 6 | Folders and tags in the archive |
+| 7 | Compression presets and PDF comparison |
+| 8 | Dedicated iPad interface |
+| 9 | One way to compress (the old picker removed) |
+| 10 | Spanish, and the Italian long tail |
+| 11 | A localization lint, and the 27 strings it found |
+
+## Build / project notes (still true — save time)
+
+- **Non-standard build configs**: `Staging Debug`, `Production Debug`,
+  `Staging Release`, `Production Release`. There is NO plain `Debug`/`Release` —
+  passing one makes xcodebuild silently fall back to `Production Release` and emit
+  misleading `Unable to resolve module` errors. Always pass an explicit config.
+- **Local build needs `ProjectInfo.plist`**: `pdfexpert/Resources/ProjectInfo.plist`
+  is git-ignored (holds `OPENAI_API_KEY`, and now `STIRLING_API_KEY`) and must exist
+  locally. A placeholder is enough to compile; use the real key to exercise ChatPDF.
+  The plist is **no longer bundled** into the app. At build time the "Generate Secrets"
+  run-script phase (runs before Compile Sources; see `pdfexpert/Scripts/generate_secrets.sh`)
+  reads the plist and emits `pdfexpert/Generated/ObfuscatedSecrets.swift` (git-ignored)
+  with each key XOR-obfuscated against a fresh random pad. `ProjectInfo.openAiApiKey` /
+  `ProjectInfo.stirlingApiKey` deobfuscate it at runtime via `ObfuscatedSecret`. Result:
+  no cleartext key in the IPA and nothing recognizable in `strings` on the binary. To
+  set the real key, just edit the git-ignored plist and rebuild — nothing else. This
+  only raises the bar; a runtime attacker can still extract keys, so the eventual fix
+  is still a server-side proxy.
+- Per-env `Info.plist` / `GoogleService-Info.plist` live in
+  `pdfexpert/Resources/{Staging,Production}` and are git-ignored too.
+- **Verify build/test from CLI (Apple Silicon)**:
+  `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging" -destination "platform=iOS Simulator,name=iPhone 17 Pro" -configuration "Staging Debug" CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES ONLY_ACTIVE_ARCH=YES ARCHS=arm64 -derivedDataPath <isolated-dir>`
+  (use an isolated DerivedData if Xcode is open). Or `bundle exec fastlane test`.
+  Since phase 6 the ad-hoc signing is **required**: with `CODE_SIGNING_ALLOWED=NO`
+  the app has no iCloud entitlement and CoreData+CloudKit traps inside
+  `CKContainer` while setting the mirroring up, killing the test host before it
+  connects (`Early unexpected exit … crashed before establishing connection`).
+- The unit-test target was created with the `xcodeproj` Ruby gem (it handles the
+  custom configs cleanly). The test host boots Firebase under tests (harmless
+  keychain noise); do NOT make `AppDelegate` skip Firebase under tests — it
+  crashes the host. `PdfEditViewModel`/`HomeViewModel` resolve `@Injected`
+  eagerly, so mock `repository`/`store`/`analyticsManager` in VM tests.
+- **CI on Xcode 26**: the SDK-26 `PDFImageExtractor` fix is required to compile
+  there; it only uses the concrete CGPDF types, so it's backward-compatible with
+  older Xcode too.
+- **PSPDFKit is gone** (removed in phase 3 — it could not ship without a paid
+  license). Office→PDF is on-device via `DocumentRenderUtility`, with the Stirling
+  API as an opt-in high-fidelity fallback. Per-image PDF recompression (the A2c
+  "surgical" path) has no on-device equivalent; the current heuristic keeps
+  flattening image-heavy pages instead.
 
 ## What landed on `main`
 
@@ -78,6 +157,20 @@ In order:
     unit tests (filter logic needs a real `NSManagedObjectID`, so it's on-device).
 
 ## Remaining
+
+### Release blockers — none of them are code
+
+1. **Deploy the CloudKit production schema.** `searchableText` (phase 2) and the
+   `Folder` / `Tag` record types with their relationships (phase 6). The dev
+   environment creates these on its own; production does not, and the app will
+   fail to sync without them.
+2. **Real keys in the local/CI `ProjectInfo.plist`**: `OPENAI_API_KEY` (ChatPDF),
+   `STIRLING_API_KEY` (the six conversion tools).
+3. **Flip `stirling_api_enabled=true`** in Firebase Remote Config, or those six
+   tools stay invisible in the catalog.
+4. **The device test run.** See the `device-test-setup` memory note — it is the
+   accumulated checklist for phases 1–11, and it needs an iPad as well as an
+   iPhone since phase 8.
 
 ### Needs on-device / behavioral verification (the code is in, the behavior isn't CLI-checkable)
 - **A5/A5b** — open & dismiss each modal (PdfEdit: camera, scanner, signature,
@@ -176,56 +269,6 @@ Still to verify on device (not CLI-checkable): real `.docx/.xlsx/.pptx/.pages`
 conversion quality and the fallback prompt; web pages behind cookie banners;
 redaction box placement on rotated pages at various zoom levels; the annotation
 save/discard flow; the 14-row "…" menu on a small device.
-
-## Build / project notes (still true — save time)
-
-- **Non-standard build configs**: `Staging Debug`, `Production Debug`,
-  `Staging Release`, `Production Release`. There is NO plain `Debug`/`Release` —
-  passing one makes xcodebuild silently fall back to `Production Release` and emit
-  misleading `Unable to resolve module` errors. Always pass an explicit config.
-- **Local build needs `ProjectInfo.plist`**: `pdfexpert/Resources/ProjectInfo.plist`
-  is git-ignored (holds `OPENAI_API_KEY`, and now `STIRLING_API_KEY`) and must exist
-  locally. A placeholder is enough to compile; use the real key to exercise ChatPDF.
-  The plist is **no longer bundled** into the app. At build time the "Generate Secrets"
-  run-script phase (runs before Compile Sources; see `pdfexpert/Scripts/generate_secrets.sh`)
-  reads the plist and emits `pdfexpert/Generated/ObfuscatedSecrets.swift` (git-ignored)
-  with each key XOR-obfuscated against a fresh random pad. `ProjectInfo.openAiApiKey` /
-  `ProjectInfo.stirlingApiKey` deobfuscate it at runtime via `ObfuscatedSecret`. Result:
-  no cleartext key in the IPA and nothing recognizable in `strings` on the binary. To
-  set the real key, just edit the git-ignored plist and rebuild — nothing else. This
-  only raises the bar; a runtime attacker can still extract keys, so the eventual fix
-  is still a server-side proxy.
-- Per-env `Info.plist` / `GoogleService-Info.plist` live in
-  `pdfexpert/Resources/{Staging,Production}` and are git-ignored too.
-- **Verify build/test from CLI (Apple Silicon)**:
-  `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging" -destination "platform=iOS Simulator,name=iPhone 17 Pro" -configuration "Staging Debug" CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES ONLY_ACTIVE_ARCH=YES ARCHS=arm64 -derivedDataPath <isolated-dir>`
-  (use an isolated DerivedData if Xcode is open). Or `bundle exec fastlane test`.
-  Since phase 6 the ad-hoc signing is **required**: with `CODE_SIGNING_ALLOWED=NO`
-  the app has no iCloud entitlement and CoreData+CloudKit traps inside
-  `CKContainer` while setting the mirroring up, killing the test host before it
-  connects (`Early unexpected exit … crashed before establishing connection`).
-- The unit-test target was created with the `xcodeproj` Ruby gem (it handles the
-  custom configs cleanly). The test host boots Firebase under tests (harmless
-  keychain noise); do NOT make `AppDelegate` skip Firebase under tests — it
-  crashes the host. `PdfEditViewModel`/`HomeViewModel` resolve `@Injected`
-  eagerly, so mock `repository`/`store`/`analyticsManager` in VM tests.
-- **CI on Xcode 26**: the SDK-26 `PDFImageExtractor` fix is required to compile
-  there; it only uses the concrete CGPDF types, so it's backward-compatible with
-  older Xcode too.
-- **PSPDFKit is gone** (removed in phase 3 — it could not ship without a paid
-  license). Office→PDF is on-device via `DocumentRenderUtility`, with the Stirling
-  API as an opt-in high-fidelity fallback. Per-image PDF recompression (the A2c
-  "surgical" path) has no on-device equivalent; the current heuristic keeps
-  flattening image-heavy pages instead.
-
-## How to resume
-
-1. `git checkout main && git pull` (HEAD should be the localization commit).
-2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place.
-3. Pick from "Remaining": the highest-leverage next steps are the **on-device A2/
-   A4/A5 verifications**, then the **interpolated-string localization pass** in
-   Xcode, then a product feature (OCR is the strongest premium hook).
-4. Land each unit as its own small change against `main`.
 
 ## Phase 4 (2026-07-25) — UI rebuild on iOS 26 / Liquid Glass
 
