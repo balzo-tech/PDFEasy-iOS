@@ -137,6 +137,17 @@ extension Pdf: Hashable, Identifiable {
 
 extension Pdf {
 
+    /// True while the document still carries the name the app generated for it
+    /// (`File-07-26-2026`) — that is, nobody has named it yet. The editor only
+    /// proposes a name in that case: a document already called something is
+    /// called that on purpose.
+    static func isGeneratedFilename(_ filename: String) -> Bool {
+        filename.range(of: "^File-\\d{2}-\\d{2}-\\d{4}$", options: .regularExpression) != nil
+    }
+}
+
+extension Pdf {
+
     /// Identity that survives a reload. The synthesized `Hashable` above follows
     /// the `PDFDocument` instance, so a document re-read from the store never
     /// equals the copy a view is still holding — no good for a selection that has

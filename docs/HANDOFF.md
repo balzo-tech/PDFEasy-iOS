@@ -4,8 +4,8 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Twelve phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 582 catalog keys, 195 unit tests
+Thirteen phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 585 catalog keys, 216 unit tests
 green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -24,7 +24,7 @@ or a real purchase is unverified. The accumulated checklist is the memory note
 1. `git checkout main && git pull`.
 2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
    or nothing compiles. See "Build / project notes".
-3. `bundle exec fastlane lint` — should say `clean`. For the 195 tests use
+3. `bundle exec fastlane lint` — should say `clean`. For the 216 tests use
    `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging"
    -configuration "Staging Debug" -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
    CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES`:
@@ -54,6 +54,7 @@ behind is in "What landed on `main`".
 | 10 | Spanish, and the Italian long tail |
 | 11 | A localization lint, and the 27 strings it found |
 | 12 | The rest of the tool sheets on a wide window |
+| 13 | The document proposes its own name |
 
 ## Build / project notes (still true — save time)
 
@@ -915,3 +916,78 @@ move. 195 unit tests green, localization lint clean.
 - `PdfPageSelectionView` numbers its rows from **0** (`Text("\(index)")`) while
   the reader says "1 of 3". Pre-existing, left alone: it is a one-line change but
   a visible one, in three languages, and not what this phase was about.
+
+## Phase 13 (2026-07-26) — the document proposes its own name
+
+The last open item from the phase-4 roadmap. A scanned or converted document was
+saved as `File-07-26-2026` unless the user went and typed a name, and almost
+nobody does.
+
+**Proposed, never applied.** The editor reads a name off the document and offers
+it in a bar under the toolbar: *Suggested name — Lorem ipsum — [Use] [×]*. Doing
+nothing leaves the document named exactly as it was. Applying a name for someone
+is a name they then have to go and undo, and the app cannot tell a bad guess from
+a good one.
+
+### Where the name comes from — `PdfTitleUtility`
+
+Two sources, in order:
+
+1. **The `Title` metadata field**, when it holds something a person would
+   recognise.
+2. **The first page's typography**: of the first 25 lines, the one set in the
+   largest type wins; ties go to whichever is higher on the page. On an invoice, a
+   contract, a letter and a report that line is the title, which is a far better
+   signal than "the first line" — that is usually a letterhead or a date.
+
+Both sources go through the same plausibility check, because both produce the
+same junk. Rejected: file URLs and paths, placeholders (`untitled`, `document`,
+`sin título`, …), lines with no letters at all (dates, rules, page numbers),
+anything over 140 characters (a body paragraph), and **filename-shaped strings** —
+no spaces plus an underscore, a dash or a digit (`file-sample_100kB`,
+`IMG_2026_07_26`, `scan0001`). That last rule came out of the simulator: the
+bundled test document carries `file-sample_100kB` in its title field, and the
+first version of this proposed it. A genuine one-word title (`Contratto`) carries
+none of those marks and survives.
+
+Shaping: `Microsoft Word - Contract.docx` → `Contract` (the prefix and the known
+office extensions are stripped), whitespace collapsed, characters a filename
+cannot carry replaced — **after** the plausibility check, since stripping the
+slashes out of a URL first would turn it into a perfectly good-looking title —
+and a cut to 60 characters on a word boundary.
+
+### When it is offered
+
+`PdfEditViewModel.refreshFilenameSuggestion()`, gated on
+`Pdf.isGeneratedFilename` — the offer only appears while the document still
+carries the app-generated `File-MM-dd-YYYY`. A document already called something
+is called that on purpose. Recomputed on appear, on `updatePdf` and on page
+append, because the text can arrive after the document does: a scan has nothing
+to read until OCR has run. Dismissed once, gone for that editing session.
+`useSuggestedFilename()` writes through the same published property a manual
+rename uses, so the close warning and the `pdfRenamed` event stay in one place.
+
+### Verification
+
+21 new unit tests (**216** total, up from 195): the utility's two sources, every
+rejection rule, the shaping, and the view-model gate (offered / not offered when
+already named / applied / dismissed). Seen on an iPhone 17 Pro and an iPad Pro
+13" simulator through the new `debugRunTool -string editor`, which opens the
+editor on an unnamed copy of the test document — `Pdf(data:)` keeps the generated
+filename, which is what the offer keys off. Catalog at **585** keys: `Suggested
+name`, `Use`, `Dismiss`, all three translated. Lint clean.
+
+### Watch out
+
+- The heuristic reads `page.attributedString` for the **first page only**, so its
+  cost does not grow with the document. It has not been measured on a page with
+  thousands of runs.
+- A scanned document has no text until OCR runs. The suggestion appears after
+  it, through the `updatePdf` path — that is by design, but it means the bar can
+  turn up a while after the document opened.
+- Nothing renames documents already in the archive; this is the editor only. A
+  bulk "rename my old scans" pass would be a different feature, with different
+  risks.
+- The bar sits in a `safeAreaInset(edge: .top)` on the whole editor, so on iPad
+  it centres on the window rather than on the page area beside the thumbnail
+  rail. It reads fine; it is not perfectly aligned with the page.

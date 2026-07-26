@@ -120,6 +120,15 @@ class PdfEditViewModel: ObservableObject {
             self.onPdfChanged()
         }
     }
+
+    /// A name the document proposes for itself, from its metadata or its own first
+    /// page (see `PdfTitleUtility`). Offered, never applied: it sits in a bar the
+    /// user can accept or dismiss, because a name chosen for someone is a name they
+    /// have to go and undo.
+    @Published private(set) var suggestedFilename: String? = nil
+    /// Dismissed once, gone for this editing session — re-offering it after every
+    /// page added would be nagging.
+    private var filenameSuggestionDismissed: Bool = false
     enum ActiveSheet: Identifiable {
         case camera, scanner, signature, fillForm, fillWidget, pageNumbers, watermark, metadata
         var id: Self { self }
@@ -220,10 +229,41 @@ class PdfEditViewModel: ObservableObject {
                 }
             }
             self.startAction = nil
+            self.refreshFilenameSuggestion()
             #if DEBUG
             self.openDebugSheetIfNeeded()
             #endif
         }
+    }
+
+    // MARK: - Proposed name
+
+    /// Recomputed whenever the document changes, since the text it is read from can
+    /// arrive later than the document does — an OCR run is the usual case, and a
+    /// scan has nothing to read before it.
+    func refreshFilenameSuggestion() {
+        guard !self.filenameSuggestionDismissed,
+              Pdf.isGeneratedFilename(self.pdfFilename) else {
+            self.suggestedFilename = nil
+            return
+        }
+        let suggestion = PdfTitleUtility.suggestedName(for: self.pdf.pdfDocument)
+        self.suggestedFilename = suggestion == self.pdfFilename ? nil : suggestion
+    }
+
+    @MainActor
+    func useSuggestedFilename() {
+        guard let suggestion = self.suggestedFilename else { return }
+        // Goes through the same published property a manual rename does, so the
+        // close warning and the rename event are handled in one place.
+        self.pdfFilename = suggestion
+        self.suggestedFilename = nil
+    }
+
+    @MainActor
+    func dismissFilenameSuggestion() {
+        self.filenameSuggestionDismissed = true
+        self.suggestedFilename = nil
     }
 
     #if DEBUG
@@ -582,6 +622,7 @@ class PdfEditViewModel: ObservableObject {
         self.shouldShowCloseWarning.wrappedValue = true
         self.refreshThumbnails()
         self.refreshImages()
+        self.refreshFilenameSuggestion()
     }
     
     func handlePageReordering(fromIndex: Int, toIndex: Int) {
@@ -713,6 +754,7 @@ class PdfEditViewModel: ObservableObject {
         let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdf.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
         self.pdfThumbnails.append(contentsOf: thumbnails)
         self.shouldShowCloseWarning.wrappedValue = true
+        self.refreshFilenameSuggestion()
         self.trackPageAddedEvent()
     }
     

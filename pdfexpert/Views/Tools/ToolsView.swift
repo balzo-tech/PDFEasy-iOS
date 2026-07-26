@@ -251,8 +251,8 @@ struct ToolsView: View {
     /// simulator where the file picker cannot be driven:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
     /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
-    /// `sort`, `read`. The premium ones also need `debugPremium -bool YES`, or the
-    /// paywall opens instead of the tool.
+    /// `sort`, `read`, `editor`. The premium ones also need `debugPremium -bool YES`,
+    /// or the paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
               let pdf = K.Test.DebugPdf else { return }
@@ -279,6 +279,12 @@ struct ToolsView: View {
                 self.viewModel.pdfMergeViewModel.showPdfSorter = true
             case "read":
                 self.viewModel.pdfReadViewModel.read(pdf: pdf)
+            case "editor":
+                // The editor on a document nobody has named yet: `Pdf(data:)` keeps
+                // the generated filename, which is what the name suggestion needs.
+                if let data = K.Test.DebugPdfDocumentData, let unnamed = Pdf(data: data) {
+                    self.mainCoordinator.showPdfEditFlow(pdf: unnamed, isNewPdf: true)
+                }
             default:
                 break
             }

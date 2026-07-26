@@ -63,6 +63,11 @@ struct PdfEditView: View {
                 }
             }
         }
+        .safeAreaInset(edge: .top) {
+            if let suggestion = self.viewModel.suggestedFilename {
+                self.nameSuggestionBar(suggestion)
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             // On a wide window these four live in the toolbar instead: a bar
             // floating over the page only reads as "above the content" when the
@@ -388,6 +393,51 @@ struct PdfEditView: View {
         case .text: self.viewModel.showFillForm()
         case .form: self.viewModel.showFillWidget()
         }
+    }
+
+    /// The name the document proposes for itself. A bar, not a rename: the app
+    /// reads a title off the page, the user accepts it or waves it away, and doing
+    /// nothing leaves the document named exactly as it was.
+    private func nameSuggestionBar(_ suggestion: String) -> some View {
+        HStack(spacing: DS.Spacing.sm) {
+            Image(systemName: "text.viewfinder")
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(ColorPalette.accent)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Suggested name")
+                    .font(forCategory: .caption2)
+                    .foregroundStyle(ColorPalette.textSecondary)
+                Text(suggestion)
+                    .font(forCategory: .body3)
+                    .foregroundStyle(ColorPalette.textPrimary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Button("Use") {
+                withAnimation(DS.Motion.quick) { self.viewModel.useSuggestedFilename() }
+            }
+            .buttonStyle(.glassProminent)
+            .tint(ColorPalette.accent)
+            Button {
+                withAnimation(DS.Motion.quick) { self.viewModel.dismissFilenameSuggestion() }
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(ColorPalette.textSecondary)
+                    .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                    .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Dismiss"))
+        }
+        .padding(.leading, DS.Spacing.sm)
+        .padding(.vertical, 6)
+        .floatingGlass(radius: DS.Radius.control)
+        .padding(.horizontal, DS.Spacing.md)
+        .padding(.top, DS.Spacing.xs)
+        .readableColumn()
+        .transition(.move(edge: .top).combined(with: .opacity))
     }
 
     private var actionBar: some View {
