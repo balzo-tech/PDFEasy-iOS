@@ -53,7 +53,10 @@ struct ToolDetailView: View {
                 }
             }
 
-            PrimaryActionButton(title: String(localized: "Start"), systemImage: tool.systemImage) {
+            // Not "Start": that key belongs to the onboarding's Get-started
+            // button, where it reads as "begin" rather than "run this tool", and
+            // the two want different words in every language.
+            PrimaryActionButton(title: String(localized: "Run"), systemImage: tool.systemImage) {
                 self.onRun(tool)
             }
             .frame(maxWidth: 280)

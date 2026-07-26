@@ -1,116 +1,182 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%lld pages" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld pagine"
+  "sourceLanguage": "en",
+  "strings": {
+    "%lld pages": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld páginas"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pagine"
           }
         }
       }
     },
-    "Merge" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unisci"
+    "Merge": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combinar"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unisci"
           }
         }
       }
     },
-    "No documents yet" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nessun documento"
+    "No documents yet": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todavía no hay documentos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun documento"
           }
         }
       }
     },
-    "Photos" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Foto"
+    "Photos": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto"
           }
         }
       }
     },
-    "Quick actions" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Azioni rapide"
+    "Quick actions": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acciones rápidas"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azioni rapide"
           }
         }
       }
     },
-    "Recent" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recenti"
+    "Recent": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recientes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recenti"
           }
         }
       }
     },
-    "Recent documents" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Documenti recenti"
+    "Recent documents": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documentos recientes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documenti recenti"
           }
         }
       }
     },
-    "Scan" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scansiona"
+    "Scan": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escanear"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scansiona"
           }
         }
       }
     },
-    "Sign" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Firma"
+    "Sign": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firmar"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma"
           }
         }
       }
     },
-    "Start a scan or a conversion straight from the Home Screen." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avvia una scansione o una conversione dalla schermata Home."
+    "Start a scan or a conversion straight from the Home Screen.": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inicia un escaneo o una conversión directamente desde la pantalla de inicio."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avvia una scansione o una conversione dalla schermata Home."
           }
         }
       }
     },
-    "Your latest PDFs, one tap away." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I tuoi ultimi PDF, a portata di tocco."
+    "Your latest PDFs, one tap away.": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tus últimos PDF, a un toque de distancia."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I tuoi ultimi PDF, a portata di tocco."
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

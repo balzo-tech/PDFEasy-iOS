@@ -36,8 +36,9 @@ In order:
    build configs, added to the "PdfExpert Staging" scheme. 6 tests.
 6. **fastlane** — `ci_build`, `test`, `beta`, `release` lanes.
 7. **EN/IT String Catalog** — `Localizable.xcstrings` + `it` known region, on the
-   app and `ShareFileExtension`. Now **142 keys, all translated** (incl. the
-   long-tail extraction of static UI strings).
+   app and `ShareFileExtension`. **142 keys** at the time, all translated (incl.
+   the long-tail extraction of static UI strings).
+   **Since phase 10**: EN / IT / ES, 569 keys, all three complete.
 8. **A2/A2b/A2c (margins + compression)** — `applyPostProcess` draws margins into
    a PDF context so text stays vector, and only rasterizes/JPEG-compresses
    image-only or image-heavy pages (`pageIsImageHeavy`). Covered by
@@ -105,10 +106,10 @@ In order:
   `pages: [PdfPagePreview]` with background preview generation. Riskier
   data-model refactor (page display/reorder/delete), not headless-verifiable.
   Only the state-machine part of A5 was done.
-- **Localization interpolated strings** — ~7 strings with interpolation
-  (`"Page \(n)"`, `"\(x) of \(y)"`, `"Welcome in \(AppTitle)…"`) need an Xcode
-  build-time extraction pass to generate their `%@/%lld` catalog keys. The static
-  strings are all done.
+- ~~**Localization interpolated strings**~~ — **done in phase 10.** No Xcode
+  extraction pass was needed in the end: the keys were already in the catalog
+  (`Page %lld`, `%lld of %lld`, `Welcome in %@:\nConvert & Edit`, …), they had
+  simply never been translated.
 - **`AppleAttribution` package** — the old branch added it as an *unused*
   dependency; re-adding it as dead weight was skipped. If attribution is actually
   wanted it needs a real integration (init + config in `AppDelegate`).
@@ -641,3 +642,58 @@ What changed:
   reaching it needs a tap on the editor's More menu, which the CLI cannot do, and
   `PdfEditStartAction` has no `openCompression` case to drive it with. The tool
   itself was verified on iPad through `debugRunTool -string compress`.
+
+## Phase 10 (2026-07-26) — Spanish, and the Italian long tail
+
+The catalog is now EN / IT / ES, 569 keys, every one translated in all three.
+
+**Italian was not actually complete.** 11 keys had been extracted by Xcode but
+never translated — the interpolated long tail the backlog had been carrying for
+months (`Page %lld`, `Range %lld`, `%@: %lld`, `Welcome in %@:\nConvert & Edit`,
+`Enter the password of\n%@\nin order to import it.`, `From page number`,
+`To page number`, …). No Xcode pass was needed: they were already in the file,
+just empty. Phase 8 had added 12 more keys that were not in the catalog at all —
+those were extracted from the source by hand and translated.
+
+**Spanish is new**: `es` added to `knownRegions`, all 569 keys in the app catalog
+and all 11 in the widget's own catalog. Both plural keys (`%lld documents`,
+`%lld pages changed`) carry proper `one`/`other` variations rather than a single
+form.
+
+Terminology worth keeping consistent if more strings are added: *archivo* for
+file, *carpeta* / *etiqueta* for folder / tag, *marca de agua* for watermark,
+*censurar* for redact (what Acrobat uses in Spanish), *aplanar* for flatten,
+*desinfectar* for sanitize, *combinar* for merge, *Ajustes* for Settings and
+*Listo* for Done (both what iOS itself uses in Spanish).
+
+### Two source-level fixes that came out of this
+
+- `Text("")` in `ChatPdfView` — a scroll anchor — was being extracted as a blank
+  catalog key no translator could act on. It is a `Color.clear` now, and the
+  empty key is gone from the catalog.
+- `Text("·")` in `DocumentTileView` is `Text(verbatim:)`, so a lone separator
+  stops being offered for translation.
+- The tool detail pane's button was `String(localized: "Start")`, which is the
+  onboarding's Get-started key. There it means "begin", here it means "run this
+  tool", and the two want different words in Italian *and* Spanish — so the
+  button has its own `Run` key (Avvia / Iniciar).
+
+### Verification
+
+Built and run on the iPad simulator under `-AppleLanguages "(es)"` and `"(it)"`:
+sidebar, tools column and detail empty states are correct in both. The compiled
+bundle carries `en.lproj` (556), `it.lproj` (566) and `es.lproj` (566). A script
+checked, for every key, that the placeholder set (`%@` / `%lld` / `%%`, positional
+or not) and the newline count match the source — a dropped placeholder is a crash
+at format time, and a dropped `\n` silently reflows a two-line title.
+
+### Watch out
+
+- `en.lproj` has 10 fewer keys than the other two. That is expected: those keys
+  have no explicit `en` localization because the key *is* the English text.
+- Nothing here was seen on a device, only in the simulator. Spanish is more
+  verbose than English in places (`Clockwise` → *En el sentido de las agujas del
+  reloj*); worth a look at the tightest labels — the editor's More menu, the
+  compression presets, the paywall — on a small screen.
+- The onboarding still says "The PDF editor for iPhone" (all three languages).
+  Since phase 8 that is wrong on an iPad. Copy decision, left alone.

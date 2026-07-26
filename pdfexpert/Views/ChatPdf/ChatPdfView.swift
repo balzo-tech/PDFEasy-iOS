@@ -38,7 +38,10 @@ struct ChatPdfView: View {
                                     self.viewModel.getResponse(text: $0)
                                 })
                             }
-                            Text("").id(self.bottomID)
+                            // Scroll anchor. Not a `Text("")`: an empty literal
+                            // gets extracted into the string catalog as a blank
+                            // key that no translator can do anything with.
+                            Color.clear.frame(height: 0).id(self.bottomID)
                         }
                         .onAppear{
                             if self.isScrollToAvailable {

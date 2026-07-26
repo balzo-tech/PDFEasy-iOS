@@ -103,7 +103,9 @@ struct DocumentRowView: View {
                                 .font(forCategory: .caption1)
                                 .foregroundStyle(ColorPalette.textSecondary)
                                 .lineLimit(1)
-                            Text("·")
+                            // verbatim: a lone separator is punctuation, not a
+                            // string to hand a translator.
+                            Text(verbatim: "·")
                                 .font(forCategory: .caption1)
                                 .foregroundStyle(ColorPalette.textTertiary)
                         }
