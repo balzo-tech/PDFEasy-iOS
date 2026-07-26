@@ -10,22 +10,18 @@ green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
 
-**Two things to know before anything else:**
+**`main` is pushed and in sync with `origin/main`** as of `e20214f` — phases 6
+through 11 went up together, since none of them had been pushed before.
 
-1. **`main` is 10 commits ahead of `origin/main` and nothing is pushed.** That
-   covers phases 6 through 11 — folders and tags, compression presets and
-   comparison, the iPad interface, the compression reconciliation, Spanish, and
-   the lint. Do **not** run a plain `git pull` expecting to be up to date; the
-   work is local. Pushing has not been asked for yet.
-2. **Nothing in phases 4–11 has been tried on a real device.** Everything was
-   verified from simulator screenshots, unit tests and scripts. Anything needing a
-   tap, a hardware key, a drag, an Apple Pencil or a real purchase is unverified.
-   The accumulated checklist is the memory note `device-test-setup`, and each
-   phase below has its own "watch out".
+**The one thing to know before anything else: nothing in phases 4–11 has been
+tried on a real device.** Everything was verified from simulator screenshots, unit
+tests and scripts. Anything needing a tap, a hardware key, a drag, an Apple Pencil
+or a real purchase is unverified. The accumulated checklist is the memory note
+`device-test-setup`, and each phase below has its own "watch out".
 
 ## How to resume
 
-1. `git checkout main`. Do not pull over the unpushed work — see above.
+1. `git checkout main && git pull`.
 2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
    or nothing compiles. See "Build / project notes".
 3. `bundle exec fastlane test` — runs the localization lint, then the 195 tests.
