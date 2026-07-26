@@ -2051,6 +2051,28 @@
         }
       }
     },
+    "Couldn't import the selected photo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't import the selected photo."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se ha podido importar la foto seleccionada."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato possibile importare la foto selezionata."
+          }
+        }
+      }
+    },
     "Counterclockwise": {
       "localizations": {
         "en": {
@@ -2599,6 +2621,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Disegna o posiziona la tua firma"
+          }
+        }
+      }
+    },
+    "Drawing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drawing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dibujo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disegno"
           }
         }
       }
@@ -3378,6 +3422,28 @@
         }
       }
     },
+    "FREE TRIAL for %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FREE TRIAL for %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PRUEBA GRATIS durante %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PROVA GRATUITA per %@"
+          }
+        }
+      }
+    },
     "File": {
       "localizations": {
         "en": {
@@ -3751,6 +3817,50 @@
           "stringUnit": {
             "state": "translated",
             "value": "Testo formattato dal Markdown"
+          }
+        }
+      }
+    },
+    "From Camera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From Camera"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desde la cámara"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da fotocamera"
+          }
+        }
+      }
+    },
+    "From Image": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From Image"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desde una imagen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da immagine"
           }
         }
       }
@@ -11324,6 +11434,94 @@
         }
       }
     },
+    "Your pdf has only one page, so you cannot split it into multiple pdfs.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has only one page, so you cannot split it into multiple pdfs."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu PDF solo tiene una página, así que no puedes dividirlo en varios PDF."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF ha una sola pagina, quindi non puoi dividerlo in più PDF."
+          }
+        }
+      }
+    },
+    "Your pdf has too many pages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf has too many pages"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu PDF tiene demasiadas páginas"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF ha troppe pagine"
+          }
+        }
+      }
+    },
+    "Your pdf is already protected": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf is already protected"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu PDF ya está protegido"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è già protetto"
+          }
+        }
+      }
+    },
+    "Your pdf is already unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf is already unlocked"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu PDF ya está desbloqueado"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è già sbloccato"
+          }
+        }
+      }
+    },
     "Your pdf is protected": {
       "localizations": {
         "en": {
@@ -11342,6 +11540,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Il tuo PDF è protetto"
+          }
+        }
+      }
+    },
+    "Your pdf is too large": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your pdf is too large"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu PDF es demasiado grande"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo PDF è troppo grande"
           }
         }
       }

@@ -738,8 +738,8 @@ enum PdfEditSaveError: LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .unknown: return "Internal Error. Please try again later."
-        case .noPages: return "Your pdf doesn't contain any pages."
+        case .unknown: return String(localized: "Internal Error. Please try again later.")
+        case .noPages: return String(localized: "Your pdf doesn't contain any pages.")
         }
     }
 }

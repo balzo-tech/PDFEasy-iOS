@@ -719,3 +719,64 @@ unavailable`, the take-pictures variant) were added. Catalog: 572 keys.
 If more `String`-typed user-facing text turns up, the same trap applies — a
 `Text(someString)` never localizes. That is what the "localization lint" item in
 the backlog is for.
+
+## Phase 11 (2026-07-26) — a localization lint, and the 27 strings it found
+
+`pdfexpert/Scripts/localization_lint.py`. Run it with `bundle exec fastlane lint`;
+the `test` lane runs it first, because there is no point compiling if a string was
+left untranslated. Output is in Xcode's `file:line: error:` format, so it also
+works wired up as a build phase. Exit 0 clean, 1 otherwise.
+
+Three checks, each of which had already caught a real bug before it was written:
+
+1. **untranslated-key** — a literal in a construct that localizes (`Text("…")`,
+   `String(localized:)`, `Label(_:systemImage:)`, `.navigationTitle`, `.alert`,
+   `Section`, `CommandMenu`, `.accessibilityLabel`, `prompt:`) with no catalog
+   entry, or an entry missing a language. This is what phase 8 shipped twelve of.
+2. **raw-string-text** — a `return "Some sentence"` not wrapped in
+   `String(localized:)`. This is the `CameraError` trap from phase 10: a `String`
+   reaches `Text` through the verbatim overload and never localizes.
+3. **broken-translation / empty-key** — a translation whose placeholder set or
+   newline count differs from the source, and blank catalog keys.
+
+### What it found on the existing code
+
+27 strings, all of them user-facing text that was appearing in English in every
+language — **and eleven of them already had Italian and Spanish sitting in the
+catalog, unused**, because the code never looked them up:
+
+- `SharedErrors.swift` — most of the app's error messages (`Wrong Password`,
+  `Your pdf is already protected`, `Your pdf has no pages.`, the seven copies of
+  `Internal Error. Please try again later`)
+- `ChatPdfManager`, `PickedImage`, `SubscribeViewModel`, `PdfEditViewModel` —
+  the same shape, one enum each
+- `PdfSignatureCanvasView` — the signature sheet's three tab labels
+  (`Drawing` / `From Image` / `From Camera`)
+- `SubscriptionViewUtility` — `FREE TRIAL for \(duration)`, now the
+  `FREE TRIAL for %@` key
+
+Ten keys had to be added; the rest just needed `String(localized:)`. Note that
+`PdfExtractError` had been doing it correctly all along — the pattern was right
+there, the other enums had simply never been updated to match. Catalog: 582 keys.
+
+Two blank keys also came out of it: `Button("")` in `PdfPageRangeEditorView` was
+an invisible hit area, now a `Color.clear` label.
+
+### Watch out
+
+- Check 2 is a **heuristic**: it fires on strings with a space that start with a
+  capital, because anything looser drowns in symbol names and analytics values.
+  A single-word label (`"Drawing"`) slips through — that one was caught by eye,
+  not by the lint. If you add a one-word user-facing string, the lint will not
+  help you.
+- `LocalizedStringResource` and `LocalizedStringKey` returns are skipped: a bare
+  literal in those already resolves against the catalog. That is why the App
+  Intents' error strings are not flagged.
+- Exceptions go in `ALLOWED_FILES` (currently just the analytics descriptions,
+  which are wire values dashboards read) or `ALLOWED_RAW_STRINGS`, both with a
+  written reason. There is deliberately no way to silence checks 1 and 3 — a
+  literal that should not be translated belongs in `Text(verbatim:)`, which the
+  lint ignores by design.
+- The lint was tested against a probe file with three failing and three passing
+  cases before being trusted; if you extend it, do that again. A lint that
+  reports nothing looks identical to a clean codebase.

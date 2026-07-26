@@ -111,9 +111,9 @@ enum RefreshError: LocalizedError, UnderlyingError {
     
     var errorDescription: String? {
         switch self {
-        case .unknownError: return "Internal Error. Please try again later"
+        case .unknownError: return String(localized: "Internal Error. Please try again later")
         case .underlyingError(let errorMessage): return errorMessage
-        case .missingExpectedSubscriptionPlanError: return "Internal Error. Please try again later"
+        case .missingExpectedSubscriptionPlanError: return String(localized: "Internal Error. Please try again later")
         }
     }
 }

@@ -31,7 +31,7 @@ enum ImageTransferError: LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .importFailed: return "Couldn't import the selected photo."
+        case .importFailed: return String(localized: "Couldn't import the selected photo.")
         }
     }
 }

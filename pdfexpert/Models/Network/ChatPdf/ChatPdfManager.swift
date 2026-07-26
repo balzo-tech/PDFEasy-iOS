@@ -24,10 +24,10 @@ enum ChatPdfError: LocalizedError, UnderlyingError {
     
     var errorDescription: String? {
         switch self {
-        case .unknownError, .parse: return "Internal Error. Please try again later"
+        case .unknownError, .parse: return String(localized: "Internal Error. Please try again later")
         case .underlyingError(let errorMessage): return errorMessage
-        case .pdfTooLarge: return "Your pdf is too large"
-        case .pdfTooManyPages: return "Your pdf has too many pages"
+        case .pdfTooLarge: return String(localized: "Your pdf is too large")
+        case .pdfTooManyPages: return String(localized: "Your pdf has too many pages")
         }
     }
 }

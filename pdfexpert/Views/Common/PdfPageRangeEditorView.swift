@@ -167,8 +167,12 @@ struct PdfPageRangeEditorView: View {
                          equals: isLowerBound ? .lowerBound(index: index) : .upperBound(index: index))
                 .keyboardType(.numberPad)
             }
-            Button("") {
+            // An invisible hit area over the field, not a titled button: an empty
+            // literal here was being extracted into the catalog as a blank key.
+            Button {
                 self.viewModel.focus(index: index, isLowerBound: isLowerBound)
+            } label: {
+                Color.clear.contentShape(.rect)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

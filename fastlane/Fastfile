@@ -30,8 +30,15 @@ platform :ios do
     )
   end
 
+  desc "Check that user-facing text is localizable and the translations are intact"
+  lane :lint do
+    sh("python3", "../pdfexpert/Scripts/localization_lint.py")
+  end
+
   desc "Run the unit test suite (PdfExpertTests) on a simulator"
   lane :test do
+    # Cheap and fails fast: no point compiling if a string was left untranslated.
+    lint
     run_tests(
       project: XCODEPROJ,
       scheme: STAGING_SCHEME,

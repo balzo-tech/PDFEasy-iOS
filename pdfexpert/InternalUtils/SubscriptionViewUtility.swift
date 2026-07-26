@@ -189,7 +189,7 @@ extension Product {
     var freeTrialText: String? {
         if let introductoryOffer = self.subscription?.introductoryOffer, introductoryOffer.paymentMode == .freeTrial {
             let freeTrialDuration = introductoryOffer.period.getInternalPeriod(weekFrom7days: false).displayPeriodWithNumber
-            return "FREE TRIAL for \(freeTrialDuration)"
+            return String(localized: "FREE TRIAL for \(freeTrialDuration)")
         } else {
             return nil
         }

@@ -182,9 +182,9 @@ struct PdfSignatureCanvasView: View {
 fileprivate extension SignatureSource {
     var text: String {
         switch self {
-        case .drawing: return "Drawing"
-        case .image: return "From Image"
-        case .camera: return "From Camera"
+        case .drawing: return String(localized: "Drawing")
+        case .image: return String(localized: "From Image")
+        case .camera: return String(localized: "From Camera")
         }
     }
     
