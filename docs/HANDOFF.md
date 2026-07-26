@@ -38,7 +38,7 @@ In order:
 7. **EN/IT String Catalog** — `Localizable.xcstrings` + `it` known region, on the
    app and `ShareFileExtension`. **142 keys** at the time, all translated (incl.
    the long-tail extraction of static UI strings).
-   **Since phase 10**: EN / IT / ES, 569 keys, all three complete.
+   **Since phase 10**: EN / IT / ES, 572 keys, all three complete.
 8. **A2/A2b/A2c (margins + compression)** — `applyPostProcess` draws margins into
    a PDF context so text stays vector, and only rasterizes/JPEG-compresses
    image-only or image-heavy pages (`pageIsImageHeavy`). Covered by
