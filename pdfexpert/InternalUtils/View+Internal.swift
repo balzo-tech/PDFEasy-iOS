@@ -79,14 +79,14 @@ extension View {
         }
     }
     
-    func sharePdf(_ pdf: Binding<Pdf?>, applyPostProcess: Bool, onDismiss: @escaping () -> ()) -> some View {
+    func sharePdf(_ pdf: Binding<Pdf?>, onDismiss: @escaping () -> ()) -> some View {
         self.sheet(item: pdf, onDismiss: {
             if let pdf = pdf.wrappedValue {
                 PDFUtility.cleanSharedPdf(pdf: pdf)
             }
             onDismiss()
         }) { pdf in
-            ActivityViewController(activityItems: [PDFUtility.processToShare(pdf: pdf, applyPostProcess: applyPostProcess)],
+            ActivityViewController(activityItems: [PDFUtility.processToShare(pdf: pdf)],
                                    thumbnail: pdf.thumbnail,
                                    title: pdf.filename)
         }

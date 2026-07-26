@@ -164,9 +164,7 @@ struct PdfEditView: View {
                 PdfMetadataView(viewModel: Container.shared.pdfMetadataViewModel(inputParameter))
             }
         }
-        .fullScreenCover(isPresented: self.$viewModel.compressionShow) {
-            PdfCompressionPickerView(compressionOption: self.$viewModel.compression)
-        }
+        .showCompressView(viewModel: self.viewModel.pdfCompressViewModel)
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncOcr,
@@ -626,23 +624,6 @@ fileprivate extension View {
         }, message: {
             Text("Your pages have been successfully extracted and saved!")
         })
-    }
-}
-
-fileprivate extension MarginsOption {
-
-    var iconImage: some View {
-        let insets: EdgeInsets = {
-            switch self {
-            case .noMargins: return EdgeInsets(top: 4, leading: 3, bottom: 4, trailing: 3)
-            case .mediumMargins: return EdgeInsets(top: 8, leading: 6, bottom: 8, trailing: 6)
-            case .heavyMargins: return EdgeInsets(top: 12, leading: 9, bottom: 12, trailing: 9)
-            }
-        }()
-        return ColorPalette.fourthText
-            .cornerRadius(4)
-            .padding(insets)
-            .overlay(RoundedRectangle(cornerRadius: 5).stroke(ColorPalette.primaryText, lineWidth: 2))
     }
 }
 

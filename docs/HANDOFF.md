@@ -580,3 +580,61 @@ app-wide modals (the editor cover, the settings sheet) that used to hang off
   whatever was last typed into search.
 - New debug hook: `debugSelectDocument -bool YES` previews the first document in
   the iPad detail column at launch, since the simulator cannot be tapped.
+
+## Phase 9 (2026-07-26) — one way to compress
+
+The app had two things called compression. The Compress tool from phase 7 does
+the work and shows it: it compresses for real while the sheet is open, reports
+the before/after, and refuses to hand back a heavier file. The older
+`PdfCompressionPickerView` in the editor stored a `CompressionOption` on the
+document, and that option was applied in exactly one place — `applyPostProcess`,
+on the way into the share sheet.
+
+Which meant the picker promised something the app never showed. Pick "Maximum
+compression", save, and the document in the archive weighs precisely what it
+weighed before; the only way to see any effect was to share the file and look at
+what came out. Worth noting that `PdfDefaultCompression`/`PdfDefaultMarginsOption`
+are `.noCompression`/`.noMargins` and `applyPostProcess` returned early when both
+were at their default, so for every document that never went through that picker
+the whole path was already a no-op.
+
+What changed:
+
+- The editor's "Compress" menu item now runs the Compress tool on the open
+  document (`pdfCompressViewModel.run(pdf:onCompleted:)`), so there is one
+  compressor in the app and it is the one that reports what it did. It still
+  saves a `-compressed` copy rather than replacing the open document — that is
+  deliberate, the original is the way back from a preset that went too far.
+- `PdfCompressionPickerView` is gone, along with `PdfEditViewModel.compression`
+  and `compressionShow`.
+- `processToShare` no longer takes an `applyPostProcess` flag and no longer
+  re-processes anything: **what you share is what you saved**. The flag is gone
+  from `PdfShareCoordinator`, `sharePdf` and `PdfFileTransfer` too. As a side
+  effect sharing from the archive is also cheaper — it used to round-trip the
+  document through `PDFDocument` on every share.
+- `PDFUtility.applyPostProcess` is deleted, and with it the six tests that
+  covered it (suite 201 → 195). `pageIsImageHeavy` stays — `PdfCompressUtility`
+  uses it. `PdfOverlayUtility` is untouched and still backs page numbers,
+  watermark, flatten and invert.
+- Orphans removed: `MarginsOption.horizontalMargin`, `CompressionOption.quality`,
+  `K.Misc.PdfMarginsColor`, `Pdf.updateCompression`, `Pdf.updateMargins`, the
+  `compressionPicker` screen and `compressionOptionChanged` analytics events, and
+  the dead `MarginsOption.iconImage` the redesign had left behind in
+  `PdfEditView`.
+- The Compress sheet is bounded and centred on a regular-width window; full-width
+  rows left two thirds of an iPad empty.
+
+### Watch out
+
+- **The `compression` and `margins` attributes stay on `CDPdf`.** Nothing writes
+  them any more and `Pdf` has no setters for them, but the store is CloudKit-backed
+  and dropping a column is not worth a migration. They are read back so old
+  documents round-trip unchanged.
+- **Behaviour change for old documents**: anyone who had used the picker will now
+  share the document as stored, i.e. bigger than before. There is no migration
+  and no notice — the alternative was keeping a feature whose effect the app
+  never showed.
+- The one line not exercised is `handleEditAction(.compression)` → `run(...)`:
+  reaching it needs a tap on the editor's More menu, which the CLI cannot do, and
+  `PdfEditStartAction` has no `openCompression` case to drive it with. The tool
+  itself was verified on iPad through `debugRunTool -string compress`.

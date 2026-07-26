@@ -5,7 +5,7 @@
 //  Shared drawing utility for stamping overlays (page numbers, watermarks) onto a
 //  PDF. It rebuilds every page by re-drawing the original page content into a fresh
 //  `UIGraphicsPDFRenderer` context and then painting the overlay on top — the same
-//  vector-preserving redraw used by `PDFUtility.applyPostProcess`'s text branch.
+//  vector-preserving redraw the cleanup utilities share.
 //
 //  Trade-off (identical to the share post-process): the redraw *flattens*
 //  annotations. Existing signatures / free-text stay visible but stop being
@@ -136,8 +136,7 @@ class PdfOverlayUtility {
                 underlay?(cg, pageSize)
 
                 // 1) Draw the original page content. Flip into PDF (bottom-left,
-                //    y-up) space, honoring the media-box origin — mirrors the vector
-                //    branch of `PDFUtility.applyPostProcess`.
+                //    y-up) space, honoring the media-box origin.
                 cg.saveGState()
                 cg.translateBy(x: -pageRect.origin.x, y: pageSize.height - pageRect.origin.y)
                 cg.scaleBy(x: 1, y: -1)

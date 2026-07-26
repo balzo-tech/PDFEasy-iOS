@@ -25,37 +25,6 @@ final class PdfUtilityTests: XCTestCase {
         return document
     }
 
-    /// The no-op path (no margins, no compression) returns an equivalent document
-    /// and must not trap on the force-unwraps that used to live on that branch.
-    func testApplyPostProcessNoOpPreservesPageCount() {
-        let document = makePdf(pageCount: 3)
-        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
-                                                 margins: .noMargins,
-                                                 compression: .noCompression)
-        XCTAssertEqual(result.pageCount, 3)
-    }
-
-    /// The processing path (margins + compression) must keep every page.
-    func testApplyPostProcessWithMarginsKeepsPages() {
-        let document = makePdf(pageCount: 2)
-        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
-                                                 margins: .mediumMargins,
-                                                 compression: .high)
-        XCTAssertEqual(result.pageCount, 2)
-    }
-
-    /// An empty document must not crash: the `pageCount > 0` guard and the removed
-    /// `dataRepresentation()!` force-unwrap are what this exercises. Reaching the
-    /// assertion at all is the guarantee; PDFKit round-trips an empty document into
-    /// a single blank page, so the page count is only loosely bounded here.
-    func testApplyPostProcessEmptyDocumentDoesNotCrash() {
-        let document = PDFDocument()
-        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
-                                                 margins: .noMargins,
-                                                 compression: .noCompression)
-        XCTAssertLessThanOrEqual(result.pageCount, 1)
-    }
-
     /// Builds a PDF page containing real, selectable text.
     private func makeTextPdf(text: String) -> PDFDocument {
         let bounds = CGRect(x: 0, y: 0, width: 400, height: 600)
@@ -65,32 +34,6 @@ final class PdfUtilityTests: XCTestCase {
                                     withAttributes: [.font: UIFont.systemFont(ofSize: 24)])
         }
         return PDFDocument(data: data) ?? PDFDocument()
-    }
-
-    /// Margins must be drawn into a PDF context so the text stays selectable (A2):
-    /// with the old rasterizing implementation the result page carried no text.
-    func testApplyPostProcessKeepsTextSelectableWithMargins() {
-        let document = makeTextPdf(text: "Hello selectable world")
-        XCTAssertTrue((document.page(at: 0)?.string ?? "").contains("selectable"),
-                      "fixture should have extractable text")
-        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
-                                                 margins: .mediumMargins,
-                                                 compression: .noCompression)
-        let resultText = result.page(at: 0)?.string ?? ""
-        XCTAssertTrue(resultText.contains("selectable"),
-                      "text must survive margins, got: \(resultText)")
-    }
-
-    /// A text page must stay vector even when compression is requested (A2b):
-    /// only image-only / image-heavy pages get rasterized.
-    func testApplyPostProcessKeepsTextPageVectorUnderCompression() {
-        let document = makeTextPdf(text: "Keep me vector")
-        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
-                                                 margins: .noMargins,
-                                                 compression: .high)
-        let resultText = result.page(at: 0)?.string ?? ""
-        XCTAssertTrue(resultText.contains("vector"),
-                      "a text page must stay vector under compression, got: \(resultText)")
     }
 
     /// Full-text indexing: a text PDF must yield its page text.
@@ -232,21 +175,6 @@ final class PdfUtilityTests: XCTestCase {
         }
         XCTAssertGreaterThan(image.size.width, image.size.height,
                              "a rotated portrait page should produce a landscape thumbnail")
-    }
-
-    /// applyPostProcess with margins + compression on a 90°-rotated portrait page must
-    /// keep the rotated aspect (a wider-than-tall output page).
-    func testApplyPostProcessRotatedPageKeepsRotatedAspect() {
-        let document = makePdf(pageCount: 1) // portrait 200 x 300
-        guard let page = document.page(at: 0) else { return XCTFail("missing page") }
-        PDFUtility.rotatePage(page, clockwise: true) // 90
-        let result = PDFUtility.applyPostProcess(toPdfDocument: document,
-                                                 margins: .mediumMargins,
-                                                 compression: .high)
-        guard let resultPage = result.page(at: 0) else { return XCTFail("missing result page") }
-        let size = resultPage.bounds(for: .mediaBox).size
-        XCTAssertGreaterThan(size.width, size.height,
-                             "a rotated portrait page must stay landscape after post-process")
     }
 
     // MARK: - Document metadata

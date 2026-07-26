@@ -79,8 +79,7 @@ class PDFUtility {
 
         // Round-trip so the result is fully self-contained: the inserted pages reference
         // the source clones, which are released when this method returns. Serializing now
-        // (while they're alive) and reloading keeps text/rendering intact afterwards,
-        // mirroring `applyPostProcess`.
+        // (while they're alive) and reloading keeps text/rendering intact afterwards.
         return newDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? newDocument
     }
     
@@ -132,90 +131,6 @@ class PDFUtility {
         }
     }
     
-    static func applyPostProcess(toPdfDocument pdfDocument: PDFDocument, margins: MarginsOption, compression: CompressionOption) -> PDFDocument {
-
-        let horizontalMargin = margins.horizontalMargin
-        let quality = compression.quality
-
-        // If neither margins nor compression are requested, return the document untouched.
-        // Rasterizing every page is lossy (it discards selectable/vector text) and pointless here.
-        guard horizontalMargin > 0 || quality < 1.0 else {
-            return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
-        }
-
-        guard pdfDocument.pageCount > 0 else {
-            return pdfDocument.dataRepresentation().flatMap { PDFDocument(data: $0) } ?? pdfDocument
-        }
-
-        let newPdfDocument = PDFDocument()
-        let applyCompression = quality < 1.0
-        for pageIndex in 0..<pdfDocument.pageCount {
-            guard let page = pdfDocument.page(at: pageIndex) else {
-                continue
-            }
-
-            // Fetch the page rect for the page we want to render.
-            let pageRect = page.bounds(for: .mediaBox)
-            // A page rotated by a quarter turn (90°/270°) displays with its width and
-            // height swapped. `page.draw`/`PDFPage(image:)` honor that rotation, so the
-            // output page must be sized to the rotation-adjusted bounds — otherwise a
-            // rotated page shared with margins/compression comes out distorted.
-            let originalSize = (page.rotation % 180 != 0)
-                ? CGSize(width: pageRect.size.height, height: pageRect.size.width)
-                : pageRect.size
-
-            let newWidth = originalSize.width - horizontalMargin * 2
-            let newHeight = (originalSize.height / originalSize.width) * newWidth
-
-            // Draws the page inset by the margins and vertically centered. Identical math for a
-            // bitmap or a PDF context; only the destination (raster vs vector) differs below.
-            let drawPage: (CGContext) -> Void = { cg in
-                // Fill the background (the margin area) with the margins color.
-                cg.setFillColor(K.Misc.PdfMarginsColor.cgColor)
-                cg.fill(CGRect(origin: .zero, size: originalSize))
-                // Inset by the horizontal margin and center vertically.
-                cg.translateBy(x: -pageRect.origin.x + horizontalMargin,
-                               y: originalSize.height - pageRect.origin.y - (originalSize.height - newHeight) / 2)
-                // Flip vertically because Core Graphics' origin is at the bottom.
-                cg.scaleBy(x: newWidth / originalSize.width, y: -newHeight / originalSize.height)
-                page.draw(with: .mediaBox, to: cg)
-            }
-
-            // Compress a page when compression is requested AND the page is effectively an
-            // image: either it has no extractable text (a scan), or it is dominated by a
-            // high-resolution image (e.g. a photo with a caption). A pure text page stays vector
-            // so the text remains selectable — re-encoding it as JPEG would wreck quality for
-            // little size gain. Apple's APIs can't recompress a single embedded image while
-            // keeping the rest of the page vector, so an image-heavy page is flattened whole.
-            let pageHasText = !(page.string ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-
-            if applyCompression && (!pageHasText || Self.pageIsImageHeavy(page)) {
-                // Image-only page: rasterize and re-encode as JPEG to actually shrink it.
-                let renderer = UIGraphicsImageRenderer(size: originalSize)
-                var newImage = renderer.image { ctx in drawPage(ctx.cgContext) }
-                if let jpegData = newImage.jpegData(compressionQuality: quality),
-                   let compressed = UIImage(data: jpegData) {
-                    newImage = compressed
-                }
-                if let pdfPage = PDFPage(image: newImage) {
-                    newPdfDocument.insert(pdfPage, at: newPdfDocument.pageCount)
-                }
-            } else {
-                // Text/vector page (or margins-only): draw into a PDF context so the content
-                // stays selectable and crisp instead of being flattened into an image.
-                let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: originalSize))
-                let pageData = pdfRenderer.pdfData { ctx in
-                    ctx.beginPage()
-                    drawPage(ctx.cgContext)
-                }
-                if let pageDocument = PDFDocument(data: pageData), let newPage = pageDocument.page(at: 0) {
-                    newPdfDocument.insert(newPage, at: newPdfDocument.pageCount)
-                }
-            }
-        }
-        return newPdfDocument
-    }
-
     /// Returns true when a page is dominated by a high-resolution embedded image
     /// (e.g. a photo with a caption), by inspecting the CGPDF XObject dictionary.
     static func pageIsImageHeavy(_ page: PDFPage, pixelThreshold: Int = 1_000_000) -> Bool {
@@ -308,15 +223,14 @@ class PDFUtility {
         return documentDirectory.appendingPathComponent(pdf.filename).appendingPathExtension(for: .pdf)
     }
     
-    static func processToShare(pdf: Pdf, applyPostProcess: Bool) -> URL {
-        
-        var pdfDocument = pdf.pdfDocument
-        if applyPostProcess {
-            pdfDocument = Self.applyPostProcess(toPdfDocument: pdfDocument,
-                                                margins: pdf.margins,
-                                                compression: pdf.compression)
-        }
-        
+    /// Writes the document out exactly as it is stored, password and all. It used
+    /// to re-run margins and compression on the way out, which meant the file a
+    /// user shared was not the file the archive showed them — and the only way to
+    /// see the difference was to share it. Compressing is now the Compress tool's
+    /// job, and it produces a document you can look at before you keep it.
+    static func processToShare(pdf: Pdf) -> URL {
+
+        let pdfDocument = pdf.pdfDocument
         let fileURL = Self.getSharePdfUrl(pdf: pdf)
         
         let options: [PDFDocumentWriteOption: Any] = {
@@ -463,8 +377,8 @@ extension UIImage {
                                                                                     maxHeight: imageMaxHeight)) ?? fixedOrientationImage
         let renderer = UIGraphicsPDFRenderer(bounds: pageBounds)
         
-        // This procedure for rendering pdf pages (copied from WeScan) is the only one that seems
-        // to make the applyPostProcess method to work. Creating PDFPage instances with PDFPage.init(_ image: UIImage)
+        // This procedure for rendering pdf pages (copied from WeScan) is the only one that produces
+        // a page which later redraws correctly. Creating PDFPage instances with PDFPage.init(_ image: UIImage)
         // causes the PDFPage.draw method to draw a black page.
         let data = renderer.pdfData { ctx in
             ctx.beginPage()

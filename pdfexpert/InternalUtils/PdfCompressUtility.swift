@@ -14,7 +14,7 @@
 //
 //  Apple's APIs cannot recompress a single embedded image while keeping the rest
 //  of the page vector, so a page that mixes a large photo with a caption is
-//  flattened whole. That is the same known trade-off as `applyPostProcess`.
+//  flattened whole. That is a known trade-off of the Apple APIs, not a choice.
 //
 
 import Foundation

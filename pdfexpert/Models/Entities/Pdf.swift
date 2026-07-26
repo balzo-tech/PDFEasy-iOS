@@ -94,14 +94,11 @@ struct Pdf {
         self.password = newPassword
     }
     
-    mutating func updateCompression(_ newCompression: CompressionOption) {
-        self.compression = newCompression
-    }
-    
-    mutating func updateMargins(_ newMargins: MarginsOption) {
-        self.margins = newMargins
-    }
-    
+    // No setters for `compression` and `margins`: nothing in the app sets either
+    // any more. They are read back from the store so old documents round-trip
+    // unchanged, and that is all they are for.
+
+
     mutating func updateFilename(_ filename: String) {
         self.filename = filename
     }

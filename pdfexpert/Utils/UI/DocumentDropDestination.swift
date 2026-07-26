@@ -117,7 +117,7 @@ struct PdfFileTransfer: Transferable {
 
     static var transferRepresentation: some TransferRepresentation {
         FileRepresentation(exportedContentType: .pdf) { transfer in
-            SentTransferredFile(PDFUtility.processToShare(pdf: transfer.pdf, applyPostProcess: true))
+            SentTransferredFile(PDFUtility.processToShare(pdf: transfer.pdf))
         }
         .suggestedFileName { $0.pdf.filename }
     }

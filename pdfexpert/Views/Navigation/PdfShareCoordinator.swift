@@ -19,17 +19,15 @@ class PdfShareCoordinator: ObservableObject {
     @Published var monetizationShow: Bool = false
     @Published var pdfToBeShared: Pdf?
     
-    var applyPostProcess: Bool = false
     var onComplete: () -> () = {}
-    
+
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.store) private var store
-    
+
     private var pdfWantToBeShared: Pdf? = nil
-    
-    func share(pdf: Pdf, applyPostProcess: Bool, onComplete: @escaping () -> ()) {
+
+    func share(pdf: Pdf, onComplete: @escaping () -> ()) {
         self.analyticsManager.track(event: .pdfShared)
-        self.applyPostProcess = applyPostProcess
         self.onComplete = onComplete
         if self.store.isPremium.value {
             self.pdfToBeShared = pdf

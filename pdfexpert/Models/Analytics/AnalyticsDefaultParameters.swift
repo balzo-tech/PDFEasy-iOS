@@ -8,7 +8,6 @@
 import Foundation
 
 enum AnalyticsEventCustomParameters: String {
-    case compressionOption = "compression_option"
     case marginOption = "margin_option"
     case homeActionType = "home_action_type"
     case importOption = "import_option"
@@ -47,16 +46,6 @@ extension OfficeConvertEngine {
     }
 }
 
-extension MarginsOption {
-    var trackingParameterValue: String {
-        switch self {
-        case .noMargins: return "no_margins"
-        case .mediumMargins: return "medium_margins"
-        case .heavyMargins: return "heavy_margins"
-        }
-    }
-}
-
 extension FileSource {
     var trackingParameterValue: String {
         switch self {
@@ -83,7 +72,6 @@ extension AnalyticsScreen {
         case .fillForm: return "FillForm"
         case .fillWidget: return "FillWidget"
         case .chatPdf: return "ChatPdf"
-        case .compressionPicker: return "CompressionPicker"
         case .sortPdf: return "SortPdf"
         case .pageRangeEditor: return "PageRangeEditor"
         case .reader: return "Reader"
@@ -122,7 +110,6 @@ extension AnalyticsEvent {
         case .pdfRenamed: return "pdf_renamed"
         case .passwordAdded: return "password_added"
         case .passwordRemoved: return "password_remove"
-        case .compressionOptionChanged: return "compression_option_changed"
         case .pdfMerge: return "pdf_merge"
         case .pdfSplit: return "pdf_split"
         case .pdfExtract: return "pdf_extract"
@@ -232,8 +219,6 @@ extension AnalyticsEvent {
         case .pdfRenamed: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil
-        case .compressionOptionChanged(let compressionOption):
-            return [AnalyticsEventCustomParameters.compressionOption.rawValue: compressionOption.trackingParameterValue]
         case .pdfMerge: return nil
         case .pdfSplit: return nil
         case .pdfExtract: return nil
@@ -515,14 +500,3 @@ fileprivate extension ImportOption {
     }
 }
 
-fileprivate extension CompressionOption {
-    
-    var trackingParameterValue: String {
-        switch self {
-        case .noCompression: return "no_compression"
-        case .low: return "low"
-        case .medium: return "medium"
-        case .high: return "high"
-        }
-    }
-}

@@ -120,12 +120,6 @@ class PdfEditViewModel: ObservableObject {
             self.onPdfChanged()
         }
     }
-    @Published var compression: CompressionOption {
-        didSet {
-            self.onPdfChanged()
-        }
-    }
-    
     enum ActiveSheet: Identifiable {
         case camera, scanner, signature, fillForm, fillWidget, pageNumbers, watermark, metadata
         var id: Self { self }
@@ -138,7 +132,6 @@ class PdfEditViewModel: ObservableObject {
     @Published var removePasswordAlertShow: Bool = false
     @Published var splitSuccessAlertShow: Bool = false
     @Published var extractSuccessAlertShow: Bool = false
-    @Published var compressionShow: Bool = false
     @Published var ocrMonetizationShow: Bool = false
     @Published var pageNumbersMonetizationShow: Bool = false
     @Published var watermarkMonetizationShow: Bool = false
@@ -155,6 +148,7 @@ class PdfEditViewModel: ObservableObject {
     @Injected(\.pdfExportViewModel) var pdfExportViewModel
     @Injected(\.pdfPermissionsViewModel) var pdfPermissionsViewModel
     @Injected(\.pdfRedactViewModel) var pdfRedactViewModel
+    @Injected(\.pdfCompressViewModel) var pdfCompressViewModel
 
     lazy var pdfUnlockViewModel: PdfUnlockViewModel = {
         Container.shared.pdfUnlockViewModel(PdfUnlockViewModel.Params(asyncUnlockedPdfSingleOutput: self.asyncSubject(\.asyncPdf)))
@@ -186,7 +180,6 @@ class PdfEditViewModel: ObservableObject {
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
         self.pdfFilename = inputParameter.pdf.filename
-        self.compression = inputParameter.pdf.compression
         self.startAction = inputParameter.startAction
         self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
         self.refreshImages()
@@ -388,7 +381,10 @@ class PdfEditViewModel: ObservableObject {
                     self.passwordTextFieldShow = true
                 }
             case .compression:
-                self.compressionShow = true
+                // The Compress tool, the same one the catalog offers: it reports
+                // what the compression actually costs instead of storing a
+                // preference whose effect the archive never shows.
+                self.pdfCompressViewModel.run(pdf: self.pdf, onCompleted: nil)
             case .split:
                 self.pdfSplitViewModel.split(pdf: self.pdf, onSplitCompleted: { [weak self] in
                     self?.splitSuccessAlertShow = true
@@ -600,21 +596,16 @@ class PdfEditViewModel: ObservableObject {
     }
     
     private func internalShare() {
-        self.pdfShareCoordinator.share(pdf: self.pdf, applyPostProcess: true, onComplete: { [weak self] in
+        self.pdfShareCoordinator.share(pdf: self.pdf, onComplete: { [weak self] in
             self?.pdfCoordinator.startReview()
         })
     }
-    
+
     private func onPdfChanged() {
         if self.pdf.filename != self.pdfFilename {
             self.pdf.updateFilename(self.pdfFilename)
             self.shouldShowCloseWarning.wrappedValue = true
             self.analyticsManager.track(event: .pdfRenamed)
-        }
-        if self.pdf.compression != self.compression {
-            self.pdf.updateCompression(self.compression)
-            self.shouldShowCloseWarning.wrappedValue = true
-            self.analyticsManager.track(event: .compressionOptionChanged(compressionOption: self.compression))
         }
     }
     

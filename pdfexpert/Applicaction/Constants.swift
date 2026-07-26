@@ -148,32 +148,14 @@ struct K {
         static let PdfPageDefaultMargin: CGFloat = 0
         static let DefaultAnnotationTextFontSize: CGFloat = 10.0
         static let DefaultAnnotationTextFontName: String = "Arial"
-        static let PdfMarginsColor: UIColor = .white
+        // Both of these are now the only value either option ever takes: the
+        // pickers that set them are gone (compressing is the Compress tool's job),
+        // but the attributes stay on the Core Data entity — the store is
+        // CloudKit-backed and dropping a column is not worth a migration.
         static let PdfDefaultMarginsOption: MarginsOption = .noMargins
         static let PdfDefaultCompression: CompressionOption = .noCompression
         static let PdfReaderDefaultFontScale: CGFloat = 1.5
         static let SignatureDrawScaleFactor: CGFloat = 3.0
-    }
-}
-
-extension MarginsOption {
-    var horizontalMargin: CGFloat {
-        switch self {
-        case .noMargins: return 0.0
-        case .mediumMargins: return 20.0
-        case .heavyMargins: return 40.0
-        }
-    }
-}
-
-extension CompressionOption {
-    var quality: CGFloat {
-        switch self {
-        case .noCompression: return 1.0
-        case .low: return 0.66
-        case .medium: return 0.33
-        case .high: return 0
-        }
     }
 }
 

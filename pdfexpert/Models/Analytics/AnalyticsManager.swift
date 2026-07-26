@@ -40,7 +40,6 @@ enum AnalyticsScreen {
     case fillForm
     case fillWidget
     case chatPdf
-    case compressionPicker
     case sortPdf
     case pageRangeEditor
     case reader
@@ -78,7 +77,6 @@ enum AnalyticsEvent {
     case pdfMerge
     case pdfSplit
     case pdfExtract
-    case compressionOptionChanged(compressionOption: CompressionOption)
     case existingPdfOpened
     case existingPdfRemoved
     case importTutorialCompleted
