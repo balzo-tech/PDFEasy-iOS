@@ -42,6 +42,9 @@ In order:
    a PDF context so text stays vector, and only rasterizes/JPEG-compresses
    image-only or image-heavy pages (`pageIsImageHeavy`). Covered by
    text-preservation unit tests.
+   **Superseded by phase 9**: `applyPostProcess` is deleted — nothing could reach
+   it any more once the compression picker was removed. `pageIsImageHeavy` lives
+   on in `PdfCompressUtility`, which is where compressing happens now.
 9. **A4 (concurrency)** — `Store`/`StoreImpl` isolated on the main actor; pure
    helpers and `isPremium` stay `nonisolated`.
 10. **A5/A5b (presentation state machine)** — the per-modal `fullScreenCover`
@@ -83,9 +86,9 @@ In order:
   the reason for the removed `Task.sleep`).
 - **A4** — purchase / restore / Family Sharing with StoreKit Testing; confirm
   `isPremium` flips and persists across relaunch, and no main-thread hang.
-- **A2** — apply margins/compression to real PDFs: text must stay selectable;
-  mixed text+image PDFs must shrink while text pages stay vector (a caption on an
-  image-heavy page is flattened — known tradeoff).
+- ~~**A2** — apply margins/compression to real PDFs~~. **Dropped in phase 9**:
+  there is no margins/compression-on-share path left to test. What replaces it is
+  the Compress tool's own checklist under Phase 7, plus Phase 9's "watch out".
 - **OCR** — run on a real scanned PDF (editor `…` → Make Searchable, and Home →
   Make Searchable via file/scan): paywall shows for non-premium and OCR runs after
   purchase; progress bar; resulting text is selectable/searchable; a PDF that is
