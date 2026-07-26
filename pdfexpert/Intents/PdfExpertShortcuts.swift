@@ -15,7 +15,7 @@ struct PdfExpertShortcuts: AppShortcutsProvider {
 
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
-            intent: ScanDocumentShortcutIntent(),
+            intent: ScanDocumentIntent(),
             phrases: [
                 "Scan a document with \(.applicationName)",
                 "Scan a PDF with \(.applicationName)",
@@ -23,6 +23,24 @@ struct PdfExpertShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Scan a document",
             systemImageName: "doc.viewfinder"
+        )
+        AppShortcut(
+            intent: OpenScansIntent(),
+            phrases: [
+                "Show my scans in \(.applicationName)",
+                "Open the scanner in \(.applicationName)"
+            ],
+            shortTitle: "My scans",
+            systemImageName: "doc.on.doc"
+        )
+        AppShortcut(
+            intent: ScanImagesToPdfIntent(),
+            phrases: [
+                "Make a scanned PDF with \(.applicationName)",
+                "Turn my photos into a scan with \(.applicationName)"
+            ],
+            shortTitle: "Scanned PDF from images",
+            systemImageName: "doc.text.image"
         )
         AppShortcut(
             intent: OpenFilesIntent(),
@@ -62,17 +80,5 @@ struct PdfExpertShortcuts: AppShortcutsProvider {
     }
 }
 
-/// Scanning needs the camera, so it opens the app on the scanner rather than
-/// trying to run in the background.
-struct ScanDocumentShortcutIntent: AppIntent {
-
-    static var title: LocalizedStringResource = "Scan a document"
-    static var description = IntentDescription("Opens the scanner to turn pages into a PDF.")
-    static var openAppWhenRun: Bool = true
-
-    @MainActor
-    func perform() async throws -> some IntentResult {
-        Container.shared.mainCoordinator().runTool(.scan)
-        return .result()
-    }
-}
+// `ScanDocumentIntent` and the rest of the scanning actions live in
+// `ScanIntents.swift`.

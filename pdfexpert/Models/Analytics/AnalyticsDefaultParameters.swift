@@ -35,6 +35,20 @@ enum AnalyticsEventCustomParameters: String {
     case compressionPreset = "compression_preset"
     case compressionSavedPercent = "compression_saved_percent"
     case changedPageCount = "changed_page_count"
+    case scanAutomaticShutter = "scan_automatic_shutter"
+    case scanFilter = "scan_filter"
+    case scanFilterAppliedToAll = "scan_filter_applied_to_all"
+    case scanFormat = "scan_format"
+    case scanPageCount = "scan_page_count"
+}
+
+extension AnalyticsScanFormat {
+    var trackingParameterValue: String {
+        switch self {
+        case .pdf: return "pdf"
+        case .image: return "image"
+        }
+    }
 }
 
 extension OfficeConvertEngine {
@@ -90,6 +104,9 @@ extension AnalyticsScreen {
         case .redact: return "Redact"
         case .compress: return "Compress"
         case .compare: return "Compare"
+        case .scan: return "Scan"
+        case .scanReview: return "ScanReview"
+        case .scanLibrary: return "ScanLibrary"
         }
     }
 }
@@ -174,6 +191,11 @@ extension AnalyticsEvent {
         case .tagSaved: return "tag_saved"
         case .tagDeleted: return "tag_deleted"
         case .pdfTagged: return "pdf_tagged"
+        case .scanPageCaptured: return "scan_page_captured"
+        case .scanPageRetaken: return "scan_page_retaken"
+        case .scanFilterApplied: return "scan_filter_applied"
+        case .scanCropAdjusted: return "scan_crop_adjusted"
+        case .scanSaved: return "scan_saved"
         case .reportScreen: return "report_screen"
         case .reportNonFatalError: return ""
         }
@@ -308,6 +330,16 @@ extension AnalyticsEvent {
         case .tagSaved: return nil
         case .tagDeleted: return nil
         case .pdfTagged: return nil
+        case .scanPageCaptured(let automatic):
+            return [AnalyticsEventCustomParameters.scanAutomaticShutter.rawValue: automatic]
+        case .scanPageRetaken: return nil
+        case .scanFilterApplied(let filter, let appliedToAll):
+            return [AnalyticsEventCustomParameters.scanFilter.rawValue: filter.rawValue,
+                    AnalyticsEventCustomParameters.scanFilterAppliedToAll.rawValue: appliedToAll]
+        case .scanCropAdjusted: return nil
+        case .scanSaved(let format, let pageCount):
+            return [AnalyticsEventCustomParameters.scanFormat.rawValue: format.trackingParameterValue,
+                    AnalyticsEventCustomParameters.scanPageCount.rawValue: pageCount]
         case .reportScreen(let screen):
             return [AnalyticsEventCustomParameters.screenName.rawValue: screen.name]
         case .reportNonFatalError: return nil

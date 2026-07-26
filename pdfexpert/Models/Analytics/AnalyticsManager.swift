@@ -58,6 +58,15 @@ enum AnalyticsScreen {
     case redact
     case compress
     case compare
+    case scan
+    case scanReview
+    case scanLibrary
+}
+
+/// What a finished scan was turned into.
+enum AnalyticsScanFormat {
+    case pdf
+    case image
 }
 
 enum AnalyticsEvent {
@@ -138,6 +147,11 @@ enum AnalyticsEvent {
     case tagSaved
     case tagDeleted
     case pdfTagged
+    case scanPageCaptured(automatic: Bool)
+    case scanPageRetaken
+    case scanFilterApplied(filter: ScanFilter, appliedToAll: Bool)
+    case scanCropAdjusted
+    case scanSaved(format: AnalyticsScanFormat, pageCount: Int)
     case reportScreen(_ screen: AnalyticsScreen)
     case reportNonFatalError(_ error: AnalyticsError)
 }

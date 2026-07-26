@@ -345,7 +345,9 @@ public class HomeViewModel : ObservableObject {
         case .markdownToPdf:
             self.pdfMarkdownImportViewModel.start()
         case .scan:
-            self.scanPdf()
+            // The scanner is a place in the app, not a modal this screen owns:
+            // the tool tile is one of several doors onto the same tab.
+            self.mainCoordinator.startScan()
         case .merge:
             self.pdfMergeViewModel.merge()
         case .readPdf:
@@ -478,10 +480,10 @@ public class HomeViewModel : ObservableObject {
     }
     
     @MainActor
-    func convertScan(scannerResult: ScannerResult) {
+    func convertScan(pages: [ScannedPage]) {
         self.activeSheet = nil
         DispatchQueue.main.async {
-            PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
+            PdfScanUtility.convertScan(pages: pages, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
     }
     

@@ -17,6 +17,17 @@ enum CompressionOption: Int32, CaseIterable {
     case noCompression, low, medium, high
 }
 
+/// Where a document came from. Only the scanner sets anything other than
+/// `.unknown`: the Scanner tab lists what the camera produced, and it needs a
+/// way to tell those documents apart from imported and converted ones. Stored
+/// as an optional integer so every document already in the archive keeps
+/// reading back — and so the tab is simply empty on a fresh install rather than
+/// wrong.
+enum PdfSource: Int32, CaseIterable {
+    case unknown = 0
+    case scan = 1
+}
+
 struct Pdf {
     private(set) var storeId: NSManagedObjectID? = nil
     private(set) var pdfDocument: PDFDocument
@@ -33,6 +44,7 @@ struct Pdf {
     // relationship alone instead of rewriting the document blob.
     private(set) var folder: Folder? = nil
     private(set) var tags: [Tag] = []
+    private(set) var source: PdfSource = .unknown
 
     var rawData: Data? {
         return self.pdfDocument.dataRepresentation()
@@ -47,7 +59,8 @@ struct Pdf {
          margins: MarginsOption,
          searchableText: String? = nil,
          folder: Folder? = nil,
-         tags: [Tag] = []) {
+         tags: [Tag] = [],
+         source: PdfSource = .unknown) {
         self.storeId = storeId
         self.pdfDocument = pdfDocument
         self.password = password
@@ -58,6 +71,14 @@ struct Pdf {
         self.searchableText = searchableText
         self.folder = folder
         self.tags = tags
+        self.source = source
+    }
+
+    /// A document straight out of the scanner.
+    init(pdfDocument: PDFDocument, filename: String, source: PdfSource) {
+        self.pdfDocument = pdfDocument
+        self.filename = filename
+        self.source = source
     }
     
     init?(data: Data) {
@@ -138,11 +159,14 @@ extension Pdf: Hashable, Identifiable {
 extension Pdf {
 
     /// True while the document still carries the name the app generated for it
-    /// (`File-07-26-2026`) — that is, nobody has named it yet. The editor only
-    /// proposes a name in that case: a document already called something is
-    /// called that on purpose.
+    /// — `File-07-26-2026` for an import, `Scan 2026-07-26 14.49.26` for a scan.
+    /// That is, nobody has named it yet: the editor only proposes a name in that
+    /// case, because a document already called something is called that on
+    /// purpose.
     static func isGeneratedFilename(_ filename: String) -> Bool {
-        filename.range(of: "^File-\\d{2}-\\d{2}-\\d{4}$", options: .regularExpression) != nil
+        let patterns = ["^File-\\d{2}-\\d{2}-\\d{4}$",
+                        "^Scan \\d{4}-\\d{2}-\\d{2} \\d{2}\\.\\d{2}\\.\\d{2}$"]
+        return patterns.contains { filename.range(of: $0, options: .regularExpression) != nil }
     }
 }
 

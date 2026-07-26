@@ -61,7 +61,7 @@ struct MainSidebarView: View {
     var body: some View {
         List(selection: self.selection) {
             Section {
-                ForEach(MainTab.allCases, id: \.self) { tab in
+                ForEach(MainTab.sidebarCases, id: \.self) { tab in
                     Label(tab.title, systemImage: tab.systemImage)
                         .tag(SidebarSelection.section(tab))
                 }

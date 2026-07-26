@@ -156,6 +156,28 @@ struct K {
         static let PdfDefaultCompression: CompressionOption = .noCompression
         static let PdfReaderDefaultFontScale: CGFloat = 1.5
         static let SignatureDrawScaleFactor: CGFloat = 3.0
+
+        // MARK: Scanner
+        //
+        /// JPEG quality for a scanned page. High enough that small print stays
+        /// legible after the perspective correction has resampled it, low enough
+        /// that a twenty-page scan is still mailable.
+        static let ScanJpegQuality: CGFloat = 0.8
+        /// Longest side of a page kept in the finished PDF. Well above what a
+        /// 300-dpi A4 scan needs (2480 px), so text stays sharp, while capping
+        /// the 48-megapixel captures recent phones produce.
+        static let ScanPageMaxDimension: CGFloat = 2600
+        /// Longest side of the page previews shown during review.
+        static let ScanPreviewMaxDimension: CGFloat = 1400
+        /// Longest side of the thumbnails in the capture strip.
+        static let ScanThumbnailMaxDimension: CGFloat = 240
+        /// How still the detected page has to be, in normalized units, for the
+        /// automatic shutter to consider the phone steady.
+        static let ScanAutoShutterTolerance: CGFloat = 0.022
+        /// How many consecutive steady detections trigger the automatic shutter.
+        /// At roughly ten detections a second this is a beat under a second —
+        /// long enough not to fire while the user is still framing.
+        static let ScanAutoShutterSteadyFrames: Int = 8
     }
 }
 

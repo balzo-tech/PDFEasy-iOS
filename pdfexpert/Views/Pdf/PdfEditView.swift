@@ -130,9 +130,9 @@ struct PdfEditView: View {
                     self.viewModel.imageToConvert = uiImage
                 })).onDisappear { self.viewModel.convert() }
             case .scanner:
-                ScannerView(onScannerResult: {
+                ScanFlowView(mode: .handOff, onPages: {
                     self.viewModel.activeSheet = nil
-                    self.viewModel.scannerResult = $0
+                    self.viewModel.scannedPages = $0
                 }).onDisappear { self.viewModel.convert() }
             case .signature:
                 let inputParameter = PdfSignatureViewModel

@@ -58,6 +58,8 @@ enum Deeplink {
             self = .tab(.tools)
         case "search":
             self = .tab(.search)
+        case "scanner":
+            self = .tab(.scanner)
         default:
             return nil
         }

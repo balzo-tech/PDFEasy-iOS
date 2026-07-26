@@ -37,6 +37,13 @@ struct RootShellView: View {
         }
         .pdfEditFlowView(pdfEditFlowData: self.$mainCoordinator.pdfEditFlowData)
         .settingsView(showSettings: self.$mainCoordinator.settingsShow)
+        // The scanner covers everything, from every tab, because every entry
+        // point into it — the tab, the tool, a widget, a shortcut — lands here.
+        .fullScreenCover(isPresented: self.$mainCoordinator.scanFlowShow) {
+            ScanFlowView(mode: .newDocument, onSaved: { _ in
+                self.archive.refresh()
+            })
+        }
     }
 }
 

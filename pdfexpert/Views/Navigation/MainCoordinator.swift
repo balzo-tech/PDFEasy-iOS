@@ -19,10 +19,21 @@ enum MainTab: Int, CaseIterable, Hashable {
     /// Cross-content search (documents + tools), presented with the system's
     /// search tab role.
     case search
+    /// The camera and everything it has produced. Deliberately its own tab
+    /// rather than a tool: scanning is the one thing people open this app for
+    /// while standing over a piece of paper, and it should never be more than
+    /// one tap away. Raw value 4 keeps the earlier ones — and `debugInitialTab`
+    /// — as they were.
+    case scanner
 
     /// The tabs shown in the bar, in order. `search` is added separately
     /// because it carries the `.search` role.
-    static var mainCases: [MainTab] { [.files, .tools, .chat] }
+    static var mainCases: [MainTab] { [.files, .tools, .scanner, .chat] }
+
+    /// The same sections in the iPad sidebar, where search is a row like any
+    /// other and belongs last. `allCases` would put the scanner after it, purely
+    /// because of the order the cases happen to be declared in.
+    static var sidebarCases: [MainTab] { Self.mainCases + [.search] }
 
     var title: String {
         switch self {
@@ -30,6 +41,7 @@ enum MainTab: Int, CaseIterable, Hashable {
         case .tools: return String(localized: "Tools")
         case .chat: return String(localized: "ChatPDF")
         case .search: return String(localized: "Search")
+        case .scanner: return String(localized: "Scanner")
         }
     }
 
@@ -39,8 +51,16 @@ enum MainTab: Int, CaseIterable, Hashable {
         case .tools: return "square.grid.2x2"
         case .chat: return "sparkles"
         case .search: return "magnifyingglass"
+        case .scanner: return "doc.viewfinder"
         }
     }
+}
+
+/// A scanner opened with something specific in mind — today only Shortcuts
+/// sends one. `nil` fields mean "leave it as the user left it".
+struct ScanRequest: Equatable {
+    var filter: ScanFilter? = nil
+    var automaticShutter: Bool? = nil
 }
 
 struct PdfEditFlowData: Hashable, Identifiable {
@@ -79,6 +99,14 @@ class MainCoordinator: ObservableObject {
     /// search results). The Tools screen owns every tool flow, so it picks this
     /// up and runs it once the tab is on screen.
     @Published var pendingToolAction: HomeAction? = nil
+    /// The scanner, presented over whichever shell is on screen. It lives here
+    /// rather than inside the Scanner tab because a widget, a shortcut or the
+    /// Files "New" menu can all ask for it while another tab is showing.
+    @Published var scanFlowShow: Bool = false
+    /// How the caller wants the scanner set up. Shortcuts can ask for a filter
+    /// or turn the automatic shutter off; a tap on the tab asks for nothing and
+    /// gets whatever the user last used.
+    private(set) var scanRequest: ScanRequest? = nil
     
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.reviewFlow) var reviewFlow
@@ -103,6 +131,14 @@ class MainCoordinator: ObservableObject {
             self.rootView = .main
             self.settingsShow = true
         }
+        // debugStartScan=YES opens the scanner straight away. Paired with
+        // debugScanPages it lands on the review screen, which is the only way to
+        // see it on a simulator.
+        if UserDefaults.standard.bool(forKey: "debugStartScan") {
+            self.rootView = .main
+            self.tab = .scanner
+            self.scanFlowShow = true
+        }
         #endif
     }
     
@@ -118,8 +154,27 @@ class MainCoordinator: ObservableObject {
         self.tab = MainTab.files
     }
 
+    /// Opens the scanner, from wherever the request came from.
+    func startScan(request: ScanRequest? = nil) {
+        self.scanRequest = request
+        self.tab = .scanner
+        self.scanFlowShow = true
+    }
+
+    /// Returns the queued setup, if any, and clears it so it applies once.
+    func consumeScanRequest() -> ScanRequest? {
+        defer { self.scanRequest = nil }
+        return self.scanRequest
+    }
+
     /// Switches to the Tools tab and asks it to start `action`.
     func runTool(_ action: HomeAction) {
+        // Scanning has a tab and a flow of its own; the catalog entry is a way
+        // to find it, not a second implementation of it.
+        guard action != .scan else {
+            self.startScan()
+            return
+        }
         self.tab = .tools
         self.selectedTool = ToolCatalog.allTools.first { $0.action == action }
         self.pendingToolAction = action

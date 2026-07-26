@@ -103,6 +103,10 @@ ALLOWED_RAW_STRINGS = {
     "File-\\(dateFormatter.string(from: self))":
         "generated filename, not a sentence — a localized month name here would "
         "produce filenames that differ per device language",
+    "Scan \\(formatter.string(from: date))":
+        "same reason: the name a scan is offered before the user types one. The "
+        "formatter is pinned to en_US_POSIX so a scan taken abroad still sorts "
+        "next to the others",
 }
 
 

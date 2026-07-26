@@ -61,6 +61,9 @@ struct MainSplitView: View {
                     ChatPdfSelectionView(viewModel: self.chat, presentsChatInline: true)
                 case .search:
                     GlobalSearchView(selection: self.$mainCoordinator.selectedDocumentId)
+                case .scanner:
+                    ScannerHomeView(viewModel: self.archive,
+                                    selection: self.$mainCoordinator.selectedDocumentId)
                 }
             }
             .navigationTitle(self.mainCoordinator.tab.title)
@@ -70,7 +73,7 @@ struct MainSplitView: View {
 
     @ViewBuilder private var detailColumn: some View {
         switch self.mainCoordinator.tab {
-        case .files, .search:
+        case .files, .search, .scanner:
             NavigationStack {
                 DocumentDetailView(viewModel: self.archive,
                                    documentId: self.mainCoordinator.selectedDocumentId)

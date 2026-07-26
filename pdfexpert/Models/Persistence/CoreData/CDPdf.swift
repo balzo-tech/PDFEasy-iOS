@@ -22,6 +22,7 @@ public class CDPdf: NSManagedObject {
         self.filename = pdf.filename
         self.compression = pdf.compression.rawValue
         self.margins = pdf.margins.rawValue
+        self.sourceType = pdf.source.rawValue
         // Index the document text on save so the archive can full-text search it.
         // Empty for non-OCR'd scans (run OCR to make them searchable).
         self.searchableText = PDFUtility.extractText(from: pdf.pdfDocument)
@@ -45,6 +46,7 @@ extension CDPdf {
     @NSManaged public var compression: Int32
     @NSManaged public var margins: Int32
     @NSManaged public var searchableText: String?
+    @NSManaged public var sourceType: Int32
     @NSManaged public var folder: CDFolder?
     @NSManaged public var tags: NSSet?
 }

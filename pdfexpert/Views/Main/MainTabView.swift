@@ -33,6 +33,12 @@ struct MainTabView: View {
                 self.rootView(for: .tools)
             }
 
+            Tab(MainTab.scanner.title,
+                systemImage: MainTab.scanner.systemImage,
+                value: MainTab.scanner) {
+                self.rootView(for: .scanner)
+            }
+
             Tab(MainTab.chat.title,
                 systemImage: MainTab.chat.systemImage,
                 value: MainTab.chat) {
@@ -57,6 +63,7 @@ struct MainTabView: View {
                 case .files: FilesView(viewModel: self.archive)
                 case .tools: ToolsView(viewModel: self.tools)
                 case .chat: ChatPdfSelectionView(viewModel: self.chat)
+                case .scanner: ScannerHomeView(viewModel: self.archive)
                 case .search: GlobalSearchView()
                 }
             }

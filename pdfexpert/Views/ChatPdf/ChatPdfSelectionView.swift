@@ -56,8 +56,8 @@ struct ChatPdfSelectionView: View {
         })
         .fullScreenCover(isPresented: self.$viewModel.scannerShow) {
             // Scanner
-            ScannerView(onScannerResult: {
-                self.viewModel.convertScan(scannerResult: $0)
+            ScanFlowView(mode: .handOff, onPages: {
+                self.viewModel.convertScan(pages: $0)
             })
         }
         .fullScreenCover(item: self.modalChatParams) { chatPdfInitParams in

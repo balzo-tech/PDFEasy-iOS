@@ -73,8 +73,8 @@ struct ToolsView: View {
         .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in
             switch sheet {
             case .scanner:
-                ScannerView(onScannerResult: {
-                    self.viewModel.convertScan(scannerResult: $0)
+                ScanFlowView(mode: .handOff, onPages: {
+                    self.viewModel.convertScan(pages: $0)
                 })
             case .camera:
                 CameraView(model: Container.shared.cameraViewModel({ uiImage in

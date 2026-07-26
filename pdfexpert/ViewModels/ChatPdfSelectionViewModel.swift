@@ -124,11 +124,11 @@ class ChatPdfSelectionViewModel: ObservableObject {
     }
     
     @MainActor
-    func convertScan(scannerResult: ScannerResult) {
+    func convertScan(pages: [ScannedPage]) {
         self.scannerShow = false
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
-            PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncImportPdf))
+            PdfScanUtility.convertScan(pages: pages, asyncOperation: self.asyncSubject(\.asyncImportPdf))
         }
     }
     

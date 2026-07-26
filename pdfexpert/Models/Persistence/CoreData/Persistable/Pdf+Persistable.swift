@@ -40,7 +40,8 @@ extension Pdf: Persistable {
                    margins: MarginsOption(rawValue: coreDataEntity.margins) ?? K.Misc.PdfDefaultMarginsOption,
                    searchableText: coreDataEntity.searchableText,
                    folder: coreDataEntity.folder.flatMap { Folder.create(withCoreDataEntity: $0) },
-                   tags: coreDataEntity.tagList)
+                   tags: coreDataEntity.tagList,
+                   source: PdfSource(rawValue: coreDataEntity.sourceType) ?? .unknown)
     }
     
     static func fetchRequest() -> NSFetchRequest<CDPdf> {

@@ -4,8 +4,8 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Thirteen phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 585 catalog keys, 216 unit tests
+Fourteen phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 630 catalog keys, 256 unit tests
 green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -24,7 +24,7 @@ or a real purchase is unverified. The accumulated checklist is the memory note
 1. `git checkout main && git pull`.
 2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
    or nothing compiles. See "Build / project notes".
-3. `bundle exec fastlane lint` — should say `clean`. For the 216 tests use
+3. `bundle exec fastlane lint` — should say `clean`. For the 256 tests use
    `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging"
    -configuration "Staging Debug" -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
    CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES`:
@@ -55,6 +55,7 @@ behind is in "What landed on `main`".
 | 11 | A localization lint, and the 27 strings it found |
 | 12 | The rest of the tool sheets on a wide window |
 | 13 | The document proposes its own name |
+| 14 | A scanner of our own: camera, review, Scanner tab, Shortcuts |
 
 ## Build / project notes (still true — save time)
 
@@ -163,17 +164,19 @@ In order:
 
 ### Release blockers — none of them are code
 
-1. **Deploy the CloudKit production schema.** `searchableText` (phase 2) and the
-   `Folder` / `Tag` record types with their relationships (phase 6). The dev
-   environment creates these on its own; production does not, and the app will
-   fail to sync without them.
+1. **Deploy the CloudKit production schema.** `searchableText` (phase 2), the
+   `Folder` / `Tag` record types with their relationships (phase 6), and
+   `sourceType` on `Pdf` (phase 14 — it is what the Scanner tab filters on). The
+   dev environment creates these on its own; production does not, and the app
+   will fail to sync without them.
 2. **Real keys in the local/CI `ProjectInfo.plist`**: `OPENAI_API_KEY` (ChatPDF),
    `STIRLING_API_KEY` (the six conversion tools).
 3. **Flip `stirling_api_enabled=true`** in Firebase Remote Config, or those six
    tools stay invisible in the catalog.
 4. **The device test run.** See the `device-test-setup` memory note — it is the
    accumulated checklist for phases 1–11, and it needs an iPad as well as an
-   iPhone since phase 8.
+   iPhone since phase 8. **Phase 14 raises the stakes here**: the scanner's
+   camera has never run against real frames, and a simulator cannot run it.
 
 ### Needs on-device / behavioral verification (the code is in, the behavior isn't CLI-checkable)
 - **A5/A5b** — open & dismiss each modal (PdfEdit: camera, scanner, signature,
@@ -181,6 +184,12 @@ In order:
   convert-on-dismiss, the `startAction` auto-open, and the no-widget alert. Watch
   for a sheet that fails to present because another is still dismissing (that was
   the reason for the removed `Task.sleep`).
+- **The scanner (phase 14)** — the whole camera half: does the outline sit on the
+  page, does the automatic shutter fire when the phone settles and not before,
+  does the flash reach the paper, does the crop from the still line up, is a
+  filtered page legible, does an iPad in landscape come out upright. Then the
+  ends: Save as PDF lands in the Scanner tab, Save as images lands in Photos
+  after the add-only prompt, and the Shortcuts actions run against real files.
 - **A4** — purchase / restore / Family Sharing with StoreKit Testing; confirm
   `isPremium` flips and persists across relaunch, and no main-thread hang.
 - ~~**A2** — apply margins/compression to real PDFs~~. **Dropped in phase 9**:
@@ -991,3 +1000,133 @@ name`, `Use`, `Dismiss`, all three translated. Lint clean.
 - The bar sits in a `safeAreaInset(edge: .top)` on the whole editor, so on iPad
   it centres on the window rather than on the page area beside the thumbnail
   rail. It reads fine; it is not perfectly aligned with the page.
+
+
+## Phase 14 (2026-07-26) — a scanner of our own
+
+Scanning was `VNDocumentCameraViewController`: Apple's screen, Apple's shutter,
+Apple's idea of a filter, and no way in between the capture and the PDF. It is
+now a camera the app owns end to end, with its own tab.
+
+### The pipeline
+
+`ScannedPage` (`Models/Entities/ScannedPage.swift`) is the unit: the untouched
+capture plus three edits — a `ScanQuad` (where the page is), a `ScanFilter`, and
+a `ScanRotation`. **Nothing is ever flattened into the capture.** Every render
+re-derives from the original, so a crop can be redone, a filter swapped, a page
+un-rotated, at any point before Save and without generation loss.
+
+`ScanImageProcessor` turns one into pixels, always in this order: straighten
+(`CIPerspectiveCorrection`) → filter → turn. Filtering first would measure
+contrast over the table the page is lying on, and `CIColorThresholdOtsu` in
+particular would pick its threshold from the wrong histogram. Filters are
+Original / Document (`CIDocumentEnhancer`) / Greyscale / Black & white.
+
+`DocumentDetector` is an actor over Vision's `DetectDocumentSegmentationRequest`
+(the iOS 18+ Swift API, not the `VN…` one). It runs twice per page: on the video
+frames, for the live outline, and again on the still, because the capture is
+sharper than the preview and gives a crop that lines up with the pixels actually
+being straightened.
+
+**Three coordinate conventions meet here** and every conversion lives in
+`ScanQuad`: Vision measures from the bottom left, Core Image from the bottom left
+in pixels, the screen from the top left. `ScanGeometryTests` exists mostly to
+keep that straight — a flip does not crash, it silently mirrors the scan.
+
+### The camera
+
+`ScanCaptureService` runs one `AVCaptureSession` with two outputs: a video data
+output the detector watches (one detection in flight at a time, frames dropped
+rather than queued) and a photo output for the page itself. It is separate from
+`CameraService`, which stays what it was for Image to PDF.
+
+The automatic shutter fires after `ScanAutoShutterSteadyFrames` (8) consecutive
+detections that moved less than `ScanAutoShutterTolerance` (0.022 of the frame)
+**from the previous frame** — measuring against the first frame would let a slow
+drift accumulate into "steady". After a capture it disarms until the camera is
+pointed somewhere else, or it would take the same page twice.
+
+Both connections and the preview layer are pinned to
+`videoRotationAngleForHorizonLevelPreview` — the *preview* angle, deliberately,
+for the still too. With two angles in play there is no single mapping from a
+normalized quad to the filled preview, and the outline drifts off the page.
+
+### The screens (`Views/Scan/`)
+
+- `ScanFlowView` owns the session: camera → review → save, plus the
+  discard confirmation. Two modes: `.newDocument` (names it, saves it, offers
+  Photos) and `.handOff`, which returns `[ScannedPage]` to whoever opened it —
+  the editor appending pages, ChatPDF importing, the "file or scan" import sheet.
+- `ScanCameraView`: outline overlay, flash, filter, automatic-shutter toggle,
+  pinch zoom, tap to focus, thumbnail of the stack, shutter with the countdown
+  ring drawn around it.
+- `ScanReviewView`: a pager over the pages, with Adjust / Filters / Rotate /
+  Delete, Retake, and a separate reorder sheet (dragging thumbnails inside the
+  pager would fight the swipe).
+- `ScanCropView`: four handles with a loupe, because a finger covers exactly the
+  corner it is placing. It works on the **unrotated original** — that is the
+  frame the corners are measured against.
+- `ScannerHomeView`: the Scanner tab. Grid, search, empty state, round scan
+  button.
+
+### Where the scans live
+
+In the same archive as everything else. `Pdf.source` (`PdfSource`, backed by a
+new optional `sourceType` on `CDPdf`) marks what the camera made, and the Scanner
+tab is the archive narrowed to it. Two stores would have meant two places to
+search, two things to sync and two answers to "where did my file go".
+
+**This adds a column to the CloudKit schema** — one more reason the production
+deploy in "Remaining" has to happen before release.
+
+Saving as images goes to Photos with add-only authorization
+(`PhotoLibrarySaver`), which is a softer prompt than full library access;
+`INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription` was added to all four configs.
+
+### Shortcuts and Siri (`Intents/ScanIntents.swift`)
+
+Split the way scanning splits. `ScanDocumentIntent` opens the app on the scanner
+— a camera needs a person — carrying a filter and an automatic-shutter flag
+through `MainCoordinator.startScan(request:)`. Everything after the shutter needs
+no camera, so it runs in the background on images the shortcut already has:
+
+- `ScanImagesToPdfIntent` — images → detected, straightened, filtered PDF.
+- `EnhanceScanImagesIntent` — images → straightened, filtered images.
+- `ScanTextFromImagesIntent` — straighten first, then recognize (premium, like
+  the other text extraction).
+- `ScannedDocumentEntity` + query, `GetScanFileIntent`, `OpenScanIntent`,
+  `OpenScansIntent` — the saved scans, findable and passable.
+
+Three new zero-setup phrases in `PdfExpertShortcuts`. The old
+`ScanDocumentShortcutIntent` is gone, replaced by the parameterized one.
+
+### Verification
+
+40 new unit tests (**256** total, up from 216) across `ScanGeometryTests` and
+`ScanImageProcessorTests`: usability rules, corner relabelling, both coordinate
+flips, the preview mapping, crop/rotate/filter on real pixels, page bounds and
+document assembly. Catalog at **630** keys, all three languages, lint clean.
+Seen on an iPhone 17 Pro and an iPad Pro 13" simulator through new debug hooks:
+
+```
+xcrun simctl spawn booted defaults write <bundle-id> debugStartScan -bool YES
+xcrun simctl spawn booted defaults write <bundle-id> debugScanPages -bool YES  # two drawn pages, review screen
+xcrun simctl spawn booted defaults write <bundle-id> debugScanSave  -bool YES  # …and the save sheet
+```
+
+### Watch out
+
+- **The camera itself is untested.** A simulator has no camera: detection, the
+  automatic shutter, the torch, the rotation coordinator, tap-to-focus and pinch
+  zoom have never run against real frames. Everything above the shutter line is
+  verified; nothing below it is.
+- The steadiness thresholds (8 frames, 0.022) are reasoned, not measured. They
+  are the first thing to tune on a device.
+- `Otsu` on a dim page is the case to try in the black & white filter; it is also
+  the one most likely to need a fallback.
+- The Scanner tab reads `PdfSource.scan`, which only exists from this build on.
+  Documents scanned by earlier versions stay in Files and do not appear there.
+  That is intentional — there is no way to tell retroactively.
+- Rendering caches by `ScannedPage.renderKey` and clears the whole cache past 60
+  entries. A very long session re-renders after that, which is a stutter, not a
+  bug.

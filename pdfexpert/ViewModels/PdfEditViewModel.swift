@@ -174,7 +174,8 @@ class PdfEditViewModel: ObservableObject {
     var shouldShowCloseWarning: Binding<Bool>
     var urlToFileToConvert: URL?
     var imageToConvert: UIImage?
-    var scannerResult: ScannerResult?
+    /// Pages waiting to be appended, handed over by the scanner.
+    var scannedPages: [ScannedPage]?
     
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
@@ -610,9 +611,9 @@ class PdfEditViewModel: ObservableObject {
         } else if let imageToConvert = self.imageToConvert {
             self.imageToConvert = nil
             self.appendUiImageToPdf(uiImage: imageToConvert)
-        } else if let scannerResult = self.scannerResult {
-            self.scannerResult = nil
-            PdfScanUtility.convertScan(scannerResult: scannerResult, asyncOperation: self.asyncSubject(\.asyncPdf))
+        } else if let scannedPages = self.scannedPages {
+            self.scannedPages = nil
+            PdfScanUtility.convertScan(pages: scannedPages, asyncOperation: self.asyncSubject(\.asyncPdf))
         }
     }
     
