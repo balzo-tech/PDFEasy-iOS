@@ -130,31 +130,35 @@ struct CameraView: View {
     }
 }
 
+// These are read into `Text(_ verbatim:)` through the `String` overload, so they
+// have to be localized here — as plain literals the whole camera alert stayed in
+// English in every language.
 extension CameraError {
     var title: String {
         switch self {
-        case .permissionDenied: return "No Permission"
-        case .cameraUnavailable: return "Camera unavailable"
+        case .permissionDenied: return String(localized: "No Permission")
+        case .cameraUnavailable: return String(localized: "Camera unavailable")
         }
     }
-    
+
     var message: String {
         switch self {
-        case .permissionDenied: return "You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to take pictures of your documents."
-        case .cameraUnavailable: return "Unable to access camera"
+        case .permissionDenied:
+            return String(localized: "You have denied permission to access the camera of your device. Please go to Settings to change your camera permission to be able to take pictures of your documents.")
+        case .cameraUnavailable: return String(localized: "Unable to access camera")
         }
     }
-    
+
     var dismissText: String {
         switch self {
-        case .permissionDenied: return "Cancel"
-        case .cameraUnavailable: return "OK"
+        case .permissionDenied: return String(localized: "Cancel")
+        case .cameraUnavailable: return String(localized: "OK")
         }
     }
-    
+
     var confirmText: String? {
         switch self {
-        case .permissionDenied: return "Settings"
+        case .permissionDenied: return String(localized: "Settings")
         case .cameraUnavailable: return nil
         }
     }

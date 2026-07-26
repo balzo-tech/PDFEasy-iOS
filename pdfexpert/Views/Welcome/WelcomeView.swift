@@ -24,7 +24,7 @@ struct WelcomeView: View {
                 .font(forCategory: .largeTitle)
                 .foregroundStyle(ColorPalette.textPrimary)
                 .multilineTextAlignment(.center)
-            Text("The PDF editor for iPhone")
+            Text("The PDF editor for iPhone and iPad")
                 .font(forCategory: .body1)
                 .foregroundStyle(ColorPalette.textSecondary)
                 .multilineTextAlignment(.center)

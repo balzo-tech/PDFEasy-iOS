@@ -645,7 +645,7 @@ What changed:
 
 ## Phase 10 (2026-07-26) — Spanish, and the Italian long tail
 
-The catalog is now EN / IT / ES, 569 keys, every one translated in all three.
+The catalog is now EN / IT / ES, 572 keys, every one translated in all three.
 
 **Italian was not actually complete.** 11 keys had been extracted by Xcode but
 never translated — the interpolated long tail the backlog had been carrying for
@@ -655,7 +655,7 @@ months (`Page %lld`, `Range %lld`, `%@: %lld`, `Welcome in %@:\nConvert & Edit`,
 just empty. Phase 8 had added 12 more keys that were not in the catalog at all —
 those were extracted from the source by hand and translated.
 
-**Spanish is new**: `es` added to `knownRegions`, all 569 keys in the app catalog
+**Spanish is new**: `es` added to `knownRegions`, every key in the app catalog
 and all 11 in the widget's own catalog. Both plural keys (`%lld documents`,
 `%lld pages changed`) carry proper `one`/`other` variations rather than a single
 form.
@@ -695,5 +695,27 @@ at format time, and a dropped `\n` silently reflows a two-line title.
   verbose than English in places (`Clockwise` → *En el sentido de las agujas del
   reloj*); worth a look at the tightest labels — the editor's More menu, the
   compression presets, the paywall — on a small screen.
-- The onboarding still says "The PDF editor for iPhone" (all three languages).
-  Since phase 8 that is wrong on an iPad. Copy decision, left alone.
+### Device-specific copy that phase 8 had made wrong
+
+Two strings still assumed the app was iPhone-only, and both are fixed:
+
+- The onboarding claim is now **"The PDF editor for iPhone and iPad"** —
+  *L'editor PDF per iPhone e iPad* / *El editor de PDF para iPhone y iPad*. Note
+  the Spanish uses **y** rather than *e*: the *e* exception only applies before a
+  word that actually starts with an /i/ sound, and *iPad* is /ai̯/.
+- The camera-permission alert said "go to **your phone** Settings". It now says
+  "go to Settings", which is also better in Italian and Spanish, where the system
+  app has a name of its own (*Impostazioni* / *Ajustes*) that reads worse with a
+  device bolted in front of it. Both variants of that message — the scanner one
+  and the camera one — were updated.
+
+And the reason the camera one mattered twice over: `CameraError.title/message/
+dismissText/confirmText` returned **plain `String` literals**, which reach
+`Text(_ verbatim:)` through the `String` overload. The entire camera alert was
+therefore showing in English in every language, catalog or no catalog. They go
+through `String(localized:)` now, and the missing keys (`No Permission`, `Camera
+unavailable`, the take-pictures variant) were added. Catalog: 572 keys.
+
+If more `String`-typed user-facing text turns up, the same trap applies — a
+`Text(someString)` never localizes. That is what the "localization lint" item in
+the backlog is for.

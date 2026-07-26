@@ -53,7 +53,7 @@ extension View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents.")
+            Text("You have denied permission to access the camera of your device. Please go to Settings to change your camera permission to be able to scan and convert your documents.")
         }
     }
     

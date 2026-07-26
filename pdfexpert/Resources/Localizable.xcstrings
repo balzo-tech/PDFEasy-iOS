@@ -1168,6 +1168,28 @@
         }
       }
     },
+    "Camera unavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera unavailable"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cámara no disponible"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotocamera non disponibile"
+          }
+        }
+      }
+    },
     "Cancel": {
       "localizations": {
         "en": {
@@ -5436,6 +5458,28 @@
         }
       }
     },
+    "No Permission": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Permission"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permiso denegado"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permesso negato"
+          }
+        }
+      }
+    },
     "No blank pages were found in your PDF.": {
       "localizations": {
         "en": {
@@ -9165,24 +9209,24 @@
         }
       }
     },
-    "The PDF editor for iPhone": {
+    "The PDF editor for iPhone and iPad": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The PDF editor for iPhone"
+            "value": "The PDF editor for iPhone and iPad"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El editor de PDF para iPhone"
+            "value": "El editor de PDF para iPhone y iPad"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "L’editor PDF per iPhone"
+            "value": "L’editor PDF per iPhone e iPad"
           }
         }
       }
@@ -10860,24 +10904,46 @@
         }
       }
     },
-    "You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents.": {
+    "You have denied permission to access the camera of your device. Please go to Settings to change your camera permission to be able to scan and convert your documents.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You have denied permission to access the camera of your device. Please go to your phone Settings to change your camera permission to be able to scan and convert your documents."
+            "value": "You have denied permission to access the camera of your device. Please go to Settings to change your camera permission to be able to scan and convert your documents."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Has denegado el permiso para acceder a la cámara de tu dispositivo. Ve a los Ajustes del teléfono para cambiar el permiso de la cámara y poder escanear y convertir tus documentos."
+            "value": "Has denegado el permiso para acceder a la cámara de tu dispositivo. Ve a Ajustes para cambiar el permiso de la cámara y poder escanear y convertir tus documentos."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hai negato il permesso di accedere alla fotocamera del tuo dispositivo. Vai nelle Impostazioni del telefono per modificare il permesso della fotocamera e poter scansionare e convertire i tuoi documenti."
+            "value": "Hai negato il permesso di accedere alla fotocamera del tuo dispositivo. Vai in Impostazioni per modificare il permesso della fotocamera e poter scansionare e convertire i tuoi documenti."
+          }
+        }
+      }
+    },
+    "You have denied permission to access the camera of your device. Please go to Settings to change your camera permission to be able to take pictures of your documents.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have denied permission to access the camera of your device. Please go to Settings to change your camera permission to be able to take pictures of your documents."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Has denegado el permiso para acceder a la cámara de tu dispositivo. Ve a Ajustes para cambiar el permiso de la cámara y poder fotografiar tus documentos."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai negato il permesso di accedere alla fotocamera del tuo dispositivo. Vai in Impostazioni per modificare il permesso della fotocamera e poter fotografare i tuoi documenti."
           }
         }
       }
