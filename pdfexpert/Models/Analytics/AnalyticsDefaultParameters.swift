@@ -123,6 +123,7 @@ extension AnalyticsEvent {
         case .homeFullActionCompleted: return "home_full_action_completed"
         case .pageAdded: return "page_added"
         case .pageRemoved: return "page_remove"
+        case .pageDuplicated: return "page_duplicated"
         case .pageRotated: return "page_rotated"
         case .pdfRenamed: return "pdf_renamed"
         case .passwordAdded: return "password_added"
@@ -236,6 +237,7 @@ extension AnalyticsEvent {
         case .onboardingCompleted: return nil
         case .onboardingSkipped: return nil
         case .pageRemoved: return nil
+        case .pageDuplicated: return nil
         case .pageRotated(let rotationType):
             return [AnalyticsEventCustomParameters.rotationType.rawValue: rotationType.trackingParameterValue]
         case .pdfRenamed: return nil

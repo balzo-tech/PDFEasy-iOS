@@ -79,6 +79,7 @@ enum AnalyticsEvent {
     case homeFullActionCompleted(homeAction: HomeAction, importOption: ImportOption?, fileExtension: String?)
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
     case pageRemoved
+    case pageDuplicated
     case pageRotated(rotationType: AnalyticsPageRotationType)
     case pdfRenamed
     case passwordAdded

@@ -30,7 +30,22 @@ struct PdfPermissionsView: ViewModifier {
     }
 
     private var formView: some View {
-        NavigationStack {
+        PdfPermissionsFormView(viewModel: self.viewModel)
+    }
+}
+
+/// The form itself, so the editor can push it while the Tools tab keeps
+/// presenting it modally.
+struct PdfPermissionsFormView: View {
+
+    @ObservedObject var viewModel: PdfPermissionsViewModel
+
+    var body: some View {
+        ToolScreen(title: String(localized: "PDF permissions"),
+                   confirm: ToolScreenAction(title: String(localized: "Confirm"),
+                                             isEnabled: self.viewModel.canConfirm,
+                                             action: { self.viewModel.confirm() }),
+                   onCancel: { self.viewModel.cancel() }) {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Owner password")
@@ -70,20 +85,6 @@ struct PdfPermissionsView: ViewModifier {
             .frame(maxWidth: .infinity, alignment: .leading)
             .readableColumn()
             .background(ColorPalette.primaryBG)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(String(localized: "PDF permissions"))
-            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                self.viewModel.cancel()
-            })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(String(localized: "Confirm")) {
-                        self.viewModel.confirm()
-                    }
-                    .disabled(!self.viewModel.canConfirm)
-                    .foregroundColor(self.viewModel.canConfirm ? ColorPalette.primaryText : ColorPalette.thirdText)
-                }
-            }
         }
     }
 }

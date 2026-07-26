@@ -24,7 +24,7 @@ struct PdfPageNumberView: View {
     ]
 
     var body: some View {
-        NavigationStack {
+        ToolScreen(title: String(localized: "Page numbers")) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     self.positionSection
@@ -41,9 +41,6 @@ struct PdfPageNumberView: View {
                 .readableColumn()
             }
             .background(ColorPalette.primaryBG)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(String(localized: "Page numbers"))
-            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: { self.dismiss() })
             .asyncView(asyncOperation: self.$viewModel.asyncApply,
                        loadingView: { AnimationType.pdf.view })
         }

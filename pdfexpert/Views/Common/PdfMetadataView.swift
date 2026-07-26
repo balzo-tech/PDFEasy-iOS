@@ -17,7 +17,7 @@ struct PdfMetadataView: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        NavigationStack {
+        ToolScreen(title: String(localized: "Document info")) {
             // The ZStack disables keyboard avoidance for the footer button while
             // keeping it for the metadata text fields (same pattern as the
             // suggested-fields form).
@@ -27,11 +27,7 @@ struct PdfMetadataView: View {
                     .ignoresSafeArea(.keyboard)
             }
             .readableColumn()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(String(localized: "Document info"))
             .background(ColorPalette.primaryBG)
-            .addSystemCloseButton(color: ColorPalette.primaryText,
-                                  onPress: { self.dismiss() })
         }
         .background(ColorPalette.primaryBG)
         .onAppear(perform: self.viewModel.onAppear)

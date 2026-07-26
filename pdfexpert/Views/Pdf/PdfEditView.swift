@@ -4,14 +4,21 @@
 //
 //  Created by Leonardo Passeri on 11/04/23.
 //
-//  The document editor. The page fills the screen, the four things people do
-//  most often live in a glass bar floating over it, and everything else is one
-//  grouped menu away — the old flat list of fourteen options in a form sheet
-//  made them all look equally likely.
+//  The document editor. The page fills the screen; under it sit the two bars
+//  that matter — what you can do to *this page*, and the four edits people reach
+//  for constantly — and everything that acts on the whole document is behind the
+//  wrench, in a panel that looks like the Tools tab because it is describing the
+//  same tools.
+//
+//  A tool that asks a question is now pushed onto the editor's own navigation
+//  stack instead of covering it: the document stays one back-swipe away, and on
+//  a wide window it stays visible beside the form. The tools that are a flow of
+//  their own — import, configure, produce a second document — still own their
+//  presentation; see `EditorTool.presentation`.
 //
 //  Given a wide window it reflows: the page thumbnails become a rail down the
-//  left where a dozen of them are visible at once instead of three, and the four
-//  frequent edits move up into the toolbar, since a bar floating over the page
+//  left where a dozen of them are visible at once instead of three, and the
+//  primary edits move up into the toolbar, since a bar floating over the page
 //  only makes sense when the page is the whole screen.
 //
 
@@ -29,6 +36,9 @@ struct PdfEditView: View {
     fileprivate static let railCellSize = CGSize(width: 84, height: 110)
 
     @StateObject var viewModel: PdfEditViewModel
+    /// What the close button does. The editor does not know whether closing it
+    /// means losing work — the flow that opened it does.
+    var onClose: (() -> Void)? = nil
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -42,6 +52,15 @@ struct PdfEditView: View {
     private var hasPages: Bool { self.viewModel.pageImages.count > 0 }
 
     var body: some View {
+        NavigationStack(path: self.$viewModel.path) {
+            self.editor
+                .navigationDestination(for: EditorRoute.self) { route in
+                    EditorDestinationView(route: route, viewModel: self.viewModel)
+                }
+        }
+    }
+
+    private var editor: some View {
         ZStack {
             ColorPalette.background.ignoresSafeArea()
             if self.isWideLayout {
@@ -69,46 +88,20 @@ struct PdfEditView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            // On a wide window these four live in the toolbar instead: a bar
-            // floating over the page only reads as "above the content" when the
-            // page is the whole screen.
-            if self.hasPages, !self.isWideLayout {
-                self.actionBar
+            if self.hasPages {
+                self.bottomBars
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(self.$viewModel.pdfFilename)
         .ignoresSafeArea(.keyboard)
-        .toolbar {
-            if self.isWideLayout, self.hasPages {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    ForEach(PrimaryEdit.allCases) { edit in
-                        Button {
-                            self.perform(edit)
-                        } label: {
-                            Label(edit.title, systemImage: edit.systemImage)
-                        }
-                    }
-                }
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                self.moreMenu
-            }
-            ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    self.viewModel.save()
-                } label: {
-                    Label("Save PDF", systemImage: "checkmark")
-                }
-                .buttonStyle(.glassProminent)
-                .tint(ColorPalette.accent)
-                .keyboardShortcut("s", modifiers: [.command])
-            }
-        }
+        .toolbar { self.toolbarContent }
         .onAppear(perform: self.viewModel.onAppear)
-        // File picker
+        .sheet(isPresented: self.$viewModel.toolPanelShow) {
+            PdfEditToolPanel(isPasswordSet: self.viewModel.pdf.password != nil,
+                             pageCount: self.viewModel.pageImages.count,
+                             onTool: { self.perform($0) })
+        }
         .filePicker(isPresented: self.$viewModel.filePickerShow,
                     fileTypes: K.Misc.ImportFileTypesForAddPage,
                     onPickedFiles: {
@@ -116,105 +109,33 @@ struct PdfEditView: View {
             self.viewModel.urlToFileToConvert = $0.first
             self.viewModel.convert()
         })
-        // Photo gallery picker
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
                       selection: self.$viewModel.imageSelection,
                       matching: .images)
-        // Camera / scanner / signature / fill-form / fill-widget modal flows,
-        // driven by a single activeSheet state machine.
+        // What is left of the covers: the tools that are direct manipulation of
+        // the page, and the two ways of photographing a new one.
         .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in
-            switch sheet {
-            case .camera:
-                CameraView(model: Container.shared.cameraViewModel({ uiImage in
-                    self.viewModel.activeSheet = nil
-                    self.viewModel.imageToConvert = uiImage
-                })).onDisappear { self.viewModel.convert() }
-            case .scanner:
-                ScanFlowView(mode: .handOff, onPages: {
-                    self.viewModel.activeSheet = nil
-                    self.viewModel.scannedPages = $0
-                }).onDisappear { self.viewModel.convert() }
-            case .signature:
-                let inputParameter = PdfSignatureViewModel
-                    .InputParameter(pdf: self.viewModel.pdf,
-                                    currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-                PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
-            case .fillForm:
-                let inputParameter = PdfFillFormViewModel
-                    .InputParameter(pdf: self.viewModel.pdf,
-                                    currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-                PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
-            case .fillWidget:
-                let inputParameter = PdfFillWidgetViewModel
-                    .InputParameter(pdf: self.viewModel.pdf,
-                                    currentPageIndex: self.viewModel.pdfCurrentPageIndex,
-                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-                PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
-            case .pageNumbers:
-                let inputParameter = PdfPageNumberViewModel
-                    .InputParameter(pdf: self.viewModel.pdf,
-                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-                PdfPageNumberView(viewModel: Container.shared.pdfPageNumberViewModel(inputParameter))
-            case .watermark:
-                let inputParameter = PdfWatermarkViewModel
-                    .InputParameter(pdf: self.viewModel.pdf,
-                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
-                PdfWatermarkView(viewModel: Container.shared.pdfWatermarkViewModel(inputParameter))
-            case .metadata:
-                let inputParameter = PdfMetadataViewModel
-                    .InputParameter(pdf: self.viewModel.pdf,
-                                    onConfirm: { self.viewModel.applyMetadata(pdf: $0) })
-                PdfMetadataView(viewModel: Container.shared.pdfMetadataViewModel(inputParameter))
-            }
+            self.cover(for: sheet)
         }
-        .showCompressView(viewModel: self.viewModel.pdfCompressViewModel)
-        .asyncView(asyncOperation: self.$viewModel.asyncPdf,
-                   loadingView: { AnimationType.pdf.view })
-        .asyncView(asyncOperation: self.$viewModel.asyncOcr,
-                   loadingView: { AnimationType.pdf.view })
-        .asyncView(asyncOperation: self.$viewModel.asyncCleanup,
-                   loadingView: { AnimationType.pdf.view })
-        .alert(String(localized: "Done"), isPresented: self.$viewModel.cleanupAlertShow, actions: {
-            Button("Ok", role: .cancel, action: {})
-        }, message: {
-            Text(self.viewModel.cleanupAlertMessage)
-        })
-        .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
-                   loadingView: { AnimationType.pdf.view })
-        .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
-        .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
-        .alert("Info", isPresented: self.$viewModel.missingWidgetWarningShow, actions: {
-            Button("Ok", role: .cancel, action: {})
-        }, message: {
-            Text("Your pdf has no  fields that you can fill in.")
-        })
-        .showError(self.$viewModel.pdfSaveError)
-        .saveSuccessfullAlert(show: self.$viewModel.saveSuccessfulAlertShow,
-                             goToArchiveCallback: { self.viewModel.goToArchive() },
-                             sharePdfCallback: { self.viewModel.share() })
-        .removePasswordView(show: self.$viewModel.removePasswordAlertShow,
-                            removePasswordCallback: self.viewModel.removePassword)
-        .addPasswordView(show: self.$viewModel.passwordTextFieldShow,
-                         addPasswordCallback: { self.viewModel.setPassword($0) })
-        .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
-        .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
-        .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
-        .splitSuccessfulAlert(show: self.$viewModel.splitSuccessAlertShow,
-                              goToArchiveCallback: { self.viewModel.goToArchive() })
-        .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
-        .extractSuccessfulAlert(show: self.$viewModel.extractSuccessAlertShow,
-                                goToArchiveCallback: { self.viewModel.goToArchive() })
-        .showExportView(viewModel: self.viewModel.pdfExportViewModel)
-        .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
-        .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
-        .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
-                              onComplete: { self.viewModel.onOcrMonetizationClose() })
-        .showSubscriptionView(self.$viewModel.pageNumbersMonetizationShow,
-                              onComplete: { self.viewModel.onPageNumbersMonetizationClose() })
-        .showSubscriptionView(self.$viewModel.watermarkMonetizationShow,
-                              onComplete: { self.viewModel.onWatermarkMonetizationClose() })
+        .pdfEditAlerts(viewModel: self.viewModel)
+        // Page turning by keyboard. It used to hang off the "…" menu, which is
+        // gone; the shortcuts are worth keeping on an iPad with a keyboard, so
+        // they live on two buttons that are present but invisible.
+        .background {
+            Group {
+                Button {
+                    self.goToPage(self.viewModel.pdfCurrentPageIndex - 1)
+                } label: { Color.clear }
+                    .keyboardShortcut(.upArrow, modifiers: [.command])
+                Button {
+                    self.goToPage(self.viewModel.pdfCurrentPageIndex + 1)
+                } label: { Color.clear }
+                    .keyboardShortcut(.downArrow, modifiers: [.command])
+            }
+            .frame(width: 0, height: 0)
+            .opacity(0)
+            .accessibilityHidden(true)
+        }
         .confirmationDialog(Text("Delete this page?"),
                             isPresented: self.$showingDeleteConfermation,
                             titleVisibility: .visible) {
@@ -234,6 +155,41 @@ struct PdfEditView: View {
             Button("File") { self.viewModel.openFilePicker() }
             Button("Scan") { self.viewModel.openScanner() }
             Button("Cancel", role: .cancel) {}
+        }
+    }
+
+    // MARK: - Covers
+
+    @ViewBuilder private func cover(for sheet: PdfEditViewModel.ActiveSheet) -> some View {
+        switch sheet {
+        case .camera:
+            CameraView(model: Container.shared.cameraViewModel({ uiImage in
+                self.viewModel.activeSheet = nil
+                self.viewModel.imageToConvert = uiImage
+            })).onDisappear { self.viewModel.convert() }
+        case .scanner:
+            ScanFlowView(mode: .handOff, onPages: {
+                self.viewModel.activeSheet = nil
+                self.viewModel.scannedPages = $0
+            }).onDisappear { self.viewModel.convert() }
+        case .signature:
+            let inputParameter = PdfSignatureViewModel
+                .InputParameter(pdf: self.viewModel.pdf,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+            PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
+        case .fillForm:
+            let inputParameter = PdfFillFormViewModel
+                .InputParameter(pdf: self.viewModel.pdf,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+            PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
+        case .fillWidget:
+            let inputParameter = PdfFillWidgetViewModel
+                .InputParameter(pdf: self.viewModel.pdf,
+                                currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+            PdfFillWidgetView(viewModel: Container.shared.pdfFillWidgetViewModel(inputParameter))
         }
     }
 
@@ -354,44 +310,78 @@ struct PdfEditView: View {
         .frame(height: Self.cellSide + 34)
     }
 
-    // MARK: - Actions
+    // MARK: - Bars
 
-    /// The four edits people reach for constantly. A glass bar over the page on
-    /// a phone, toolbar buttons on a wide window — same four either way.
-    enum PrimaryEdit: Int, CaseIterable, Identifiable {
-
-        case page
-        case signature
-        case text
-        case form
-
-        var id: Int { self.rawValue }
-
-        var title: String {
-            switch self {
-            case .page: return String(localized: "Page")
-            case .signature: return String(localized: "Signature")
-            case .text: return String(localized: "Add text")
-            case .form: return String(localized: "Fill Form")
+    /// Page actions first, then the frequent edits: the closer a control is to
+    /// the page, the more it is about that page.
+    @ViewBuilder private var bottomBars: some View {
+        VStack(spacing: DS.Spacing.xs) {
+            PdfEditPageBar(canReorder: self.viewModel.pageImages.count > 1,
+                           onTool: { self.perform($0) })
+            if !self.isWideLayout {
+                PdfEditPrimaryBar(onTool: { self.perform($0) })
             }
         }
+        .padding(.horizontal, DS.Spacing.md)
+        .padding(.bottom, DS.Spacing.xs)
+        .readableColumn()
+    }
 
-        var systemImage: String {
-            switch self {
-            case .page: return "plus.rectangle.on.rectangle"
-            case .signature: return "signature"
-            case .text: return "textformat"
-            case .form: return "list.bullet.rectangle.portrait"
+    @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
+        if let onClose = self.onClose {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: onClose) {
+                    Label("Close", systemImage: "xmark")
+                }
             }
+        }
+        if self.isWideLayout, self.hasPages {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                ForEach(PdfEditPrimaryBar.tools) { tool in
+                    Button {
+                        self.perform(tool)
+                    } label: {
+                        Label(tool.title, systemImage: tool.systemImage)
+                    }
+                }
+            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                self.viewModel.toolPanelShow = true
+            } label: {
+                Label("Tools", systemImage: "wrench.and.screwdriver")
+            }
+        }
+        ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                self.viewModel.save()
+            } label: {
+                Label("Save PDF", systemImage: "checkmark")
+            }
+            .buttonStyle(.glassProminent)
+            .tint(ColorPalette.accent)
+            .keyboardShortcut("s", modifiers: [.command])
         }
     }
 
-    private func perform(_ edit: PrimaryEdit) {
-        switch edit {
-        case .page: self.showingImageInputPicker = true
-        case .signature: self.viewModel.showAddSignature()
-        case .text: self.viewModel.showFillForm()
-        case .form: self.viewModel.showFillWidget()
+    private func goToPage(_ index: Int) {
+        guard index >= 0, index < self.viewModel.pageImages.count else { return }
+        withAnimation(DS.Motion.quick) { self.viewModel.pdfCurrentPageIndex = index }
+    }
+
+    /// Every tool goes through here. The two that need a question asked first
+    /// are asked here; the rest are the view model's business.
+    private func perform(_ tool: EditorTool) {
+        switch tool {
+        case .addPage:
+            self.showingImageInputPicker = true
+        case .deletePage:
+            self.showingDeleteConfermation = true
+        default:
+            self.viewModel.run(tool)
         }
     }
 
@@ -440,169 +430,6 @@ struct PdfEditView: View {
         .transition(.move(edge: .top).combined(with: .opacity))
     }
 
-    private var actionBar: some View {
-        GlassEffectContainer(spacing: DS.Spacing.sm) {
-            HStack(spacing: DS.Spacing.sm) {
-                ForEach(PrimaryEdit.allCases) { edit in
-                    self.actionButton(title: edit.title, systemImage: edit.systemImage) {
-                        self.perform(edit)
-                    }
-                }
-            }
-        }
-        .padding(.horizontal, DS.Spacing.md)
-        .padding(.bottom, DS.Spacing.xs)
-    }
-
-    private func goToPage(_ index: Int) {
-        guard index >= 0, index < self.viewModel.pageImages.count else { return }
-        withAnimation(DS.Motion.quick) { self.viewModel.pdfCurrentPageIndex = index }
-    }
-
-    private func actionButton(title: String,
-                              systemImage: String,
-                              action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                Image(systemName: systemImage)
-                    .font(.system(size: 18, weight: .medium))
-                Text(title)
-                    .font(forCategory: .caption2)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
-            .foregroundStyle(ColorPalette.textPrimary)
-            .frame(maxWidth: .infinity)
-            .frame(height: 54)
-            .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
-        }
-        .buttonStyle(.plain)
-        .floatingGlass(radius: DS.Radius.control, interactive: true)
-        .accessibilityLabel(Text(title))
-    }
-
-    /// Everything beyond the four primary edits, grouped so the list reads as
-    /// four short menus instead of one long one.
-    private var moreMenu: some View {
-        Menu {
-            // Page turning lives here so it carries a keyboard shortcut that is
-            // also discoverable: nothing else in the editor is a button a
-            // shortcut could sensibly hang off.
-            if self.viewModel.pageImages.count > 1 {
-                Section {
-                    Button {
-                        self.goToPage(self.viewModel.pdfCurrentPageIndex - 1)
-                    } label: {
-                        Label("Previous page", systemImage: "chevron.up")
-                    }
-                    .keyboardShortcut(.upArrow, modifiers: [.command])
-                    .disabled(self.viewModel.pdfCurrentPageIndex == 0)
-                    Button {
-                        self.goToPage(self.viewModel.pdfCurrentPageIndex + 1)
-                    } label: {
-                        Label("Next page", systemImage: "chevron.down")
-                    }
-                    .keyboardShortcut(.downArrow, modifiers: [.command])
-                    .disabled(self.viewModel.pdfCurrentPageIndex >= self.viewModel.pageImages.count - 1)
-                }
-            }
-
-            if self.viewModel.pageImages.count > 0 {
-                Section {
-                    Button {
-                        self.viewModel.rotateCurrentPage(clockwise: true)
-                    } label: {
-                        Label("Rotate page right", systemImage: "rotate.right")
-                    }
-                    Button {
-                        self.viewModel.rotateCurrentPage(clockwise: false)
-                    } label: {
-                        Label("Rotate page left", systemImage: "rotate.left")
-                    }
-                    Button {
-                        self.viewModel.rotateAllPages(clockwise: true)
-                    } label: {
-                        Label("Rotate all pages", systemImage: "arrow.trianglehead.2.clockwise")
-                    }
-                    Button(role: .destructive) {
-                        self.showingDeleteConfermation = true
-                    } label: {
-                        Label("Delete this page", systemImage: "trash")
-                    }
-                }
-            }
-
-            Section(String(localized: "Organize pages")) {
-                self.menuButton(for: .split, title: String(localized: "Split"), systemImage: "scissors")
-                self.menuButton(for: .extract, title: String(localized: "Extract"), systemImage: "doc.on.doc")
-                self.menuButton(for: .removeBlankPages,
-                                title: String(localized: "Remove blank pages"),
-                                systemImage: "rectangle.dashed")
-            }
-
-            Section(String(localized: "Edit content")) {
-                self.menuButton(for: .ocr,
-                                title: String(localized: "Make Searchable (OCR)"),
-                                systemImage: "text.viewfinder")
-                self.menuButton(for: .pageNumbers,
-                                title: String(localized: "Page numbers"),
-                                systemImage: "textformat.123")
-                self.menuButton(for: .watermark,
-                                title: String(localized: "Watermark"),
-                                systemImage: "drop.halffull")
-                self.menuButton(for: .invertColors,
-                                title: String(localized: "Invert colors"),
-                                systemImage: "circle.lefthalf.filled")
-            }
-
-            Section(String(localized: "Protect")) {
-                self.menuButton(for: .password,
-                                title: self.viewModel.pdf.password != nil
-                                    ? String(localized: "Unlock")
-                                    : String(localized: "Protect"),
-                                systemImage: self.viewModel.pdf.password != nil ? "lock.open" : "lock")
-                self.menuButton(for: .permissions,
-                                title: String(localized: "PDF permissions"),
-                                systemImage: "hand.raised")
-                self.menuButton(for: .redact,
-                                title: String(localized: "Redact PDF"),
-                                systemImage: "eye.slash")
-                self.menuButton(for: .flatten,
-                                title: String(localized: "Flatten PDF"),
-                                systemImage: "square.stack.3d.down.forward")
-            }
-
-            Section {
-                self.menuButton(for: .compression,
-                                title: String(localized: "Compress"),
-                                systemImage: "arrow.down.right.and.arrow.up.left")
-                self.menuButton(for: .export,
-                                title: String(localized: "Export as…"),
-                                systemImage: "square.and.arrow.up.on.square")
-                self.menuButton(for: .metadata,
-                                title: String(localized: "Document info"),
-                                systemImage: "info.circle")
-                Button {
-                    self.viewModel.share()
-                } label: {
-                    Label("Share pdf", systemImage: "square.and.arrow.up")
-                }
-            }
-        } label: {
-            Label("More", systemImage: "ellipsis")
-        }
-    }
-
-    private func menuButton(for action: EditAction,
-                            title: String,
-                            systemImage: String) -> some View {
-        Button {
-            self.viewModel.handleEditAction(action)
-        } label: {
-            Label(title, systemImage: systemImage)
-        }
-    }
-
     func getThumbnailCell(image: UIImage) -> some View {
         Image(uiImage: image)
             .resizable()
@@ -642,38 +469,6 @@ fileprivate extension View {
                     .strokeBorder(highlight ? ColorPalette.accent : ColorPalette.separator,
                                   lineWidth: highlight ? PdfEditView.selectedCellBorderWidth : 0.5)
             }
-    }
-
-    @ViewBuilder func saveSuccessfullAlert(show: Binding<Bool>,
-                                          goToArchiveCallback: @escaping () -> (),
-                                          sharePdfCallback: @escaping () -> ()) -> some View {
-        self.alert("PDF saved!", isPresented: show, actions: {
-            Button("Go to files", action: goToArchiveCallback)
-            Button("Share pdf", action: sharePdfCallback)
-            Button("Continue edit", action: {})
-        }, message: {
-            Text("Your pdf has been successfully saved")
-        })
-    }
-
-    func splitSuccessfulAlert(show: Binding<Bool>,
-                              goToArchiveCallback: @escaping () -> ()) -> some View {
-        self.alert("PDF split!", isPresented: show, actions: {
-            Button("Go to files", action: goToArchiveCallback)
-            Button("Continue edit", action: {})
-        }, message: {
-            Text("Your pdf has been successfully split and saved!")
-        })
-    }
-
-    func extractSuccessfulAlert(show: Binding<Bool>,
-                                goToArchiveCallback: @escaping () -> ()) -> some View {
-        self.alert("Pages extracted!", isPresented: show, actions: {
-            Button("Go to files", action: goToArchiveCallback)
-            Button("Continue edit", action: {})
-        }, message: {
-            Text("Your pages have been successfully extracted and saved!")
-        })
     }
 }
 

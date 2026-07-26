@@ -4,8 +4,8 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Fourteen phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 630 catalog keys, 256 unit tests
+Fifteen phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 636 catalog keys, 276 unit tests
 green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -24,7 +24,7 @@ or a real purchase is unverified. The accumulated checklist is the memory note
 1. `git checkout main && git pull`.
 2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
    or nothing compiles. See "Build / project notes".
-3. `bundle exec fastlane lint` — should say `clean`. For the 256 tests use
+3. `bundle exec fastlane lint` — should say `clean`. For the 276 tests use
    `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging"
    -configuration "Staging Debug" -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
    CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES`:
@@ -56,6 +56,7 @@ behind is in "What landed on `main`".
 | 12 | The rest of the tool sheets on a wide window |
 | 13 | The document proposes its own name |
 | 14 | A scanner of our own: camera, review, Scanner tab, Shortcuts |
+| 15 | The editor restructured: one tool list, a page bar, pushed tools |
 
 ## Build / project notes (still true — save time)
 
@@ -1130,3 +1131,110 @@ xcrun simctl spawn booted defaults write <bundle-id> debugScanSave  -bool YES  #
 - Rendering caches by `ScannedPage.renderKey` and clears the whole cache past 60
   entries. A very long session re-renders after that, which is a stutter, not a
   bug.
+
+
+## Phase 15 (2026-07-26) — the editor restructured
+
+The editor knew about every tool it could run, four times over, and presented
+them two different ways.
+
+### What it looked like before
+
+- `PdfEditView`: 722 lines, **53 modifiers** stacked on one `body` — seven
+  `asyncView`s, a dozen alerts, a `fullScreenCover` with eight cases and seven
+  `show*View` flow modifiers.
+- **Four parallel lists of "what the editor can do"**: `PrimaryEdit` (4 cases),
+  `EditAction` (14), `ActiveSheet` (8) and `PdfEditStartAction` (10) — while
+  `ToolCatalog` already described 36 tools with title, symbol, category tint and
+  premium flag. The "…" menu wrote out its own copies of names the catalog had.
+- Two presentation mechanisms with nothing in common: `activeSheet` covers, and
+  per-tool `show*View` modifiers each driven by a `show` flag inside its own view
+  model.
+- Three "…and it worked" alerts, identical down to their two buttons.
+
+Adding a tool meant touching at least four places, and its name could drift in
+each one.
+
+### What it is now
+
+**One list.** `EditorTool` (`Views/Pdf/EditorTool.swift`) is the single
+vocabulary. Title, symbol, tint and premium badge come from `ToolCatalog`
+whenever the catalog knows the tool; the enum only spells out what the catalog
+has no entry for, because it is an editor gesture rather than a tool — rotating,
+duplicating, reordering. `EditorToolTests` fails if a name ever drifts.
+
+**One decision per tool about how it appears** — `EditorTool.presentation`:
+
+| | |
+|---|---|
+| `.immediate` | runs now: rotate, duplicate, flatten, invert, remove blank pages, OCR |
+| `.push` | a screen on the editor's stack: reorder, page numbers, watermark, document info |
+| `.flow` | the tool's own view model owns the presentation |
+
+`.flow` is the honest name for the tools that are more than a question — split,
+extract, export, compress, permissions, redact — each of which is an import, a
+form, a saved second document and an alert. Signing and form filling are also
+`.flow`: they are direct manipulation of the page, and a navigation bar over the
+canvas would be in the way. **Those flows were not converted**; that is the
+obvious next slice.
+
+**Pushing works because of `ToolScreen`.** Every tool form used to hard-code its
+own `NavigationStack` plus a close button, which is precisely why the editor
+could only cover itself with them. `ToolScreen` moves that decision to the host
+through `@Environment(\.isPushedToolScreen)`: modal from the Tools tab, pushed
+from the editor, same view. `@Environment(\.dismiss)` needs no special casing —
+it pops or closes as appropriate. Five screens were converted (watermark, page
+numbers, document info, permissions form, compress editor); the diff per file is
+a handful of lines.
+
+The stack itself moved from `PdfFlowView` into `PdfEditView`, which needs to own
+the path it pushes onto. `PdfFlowView` keeps the closing logic and hands it down
+as `onClose`, because it — not the editor — knows what dismissing means.
+
+**The page has its own bar.** Rotate left, rotate right, duplicate, delete,
+reorder, always visible under the page. Four of those were entries in a menu of
+eighteen, at the same depth as "PDF permissions"; the fifth, **duplicate, is
+new** (`duplicateCurrentPage`, the one page operation the editor was missing).
+Reordering is now a screen with the system's own move handles — the thumbnail
+strip still drags, but a strip that scrolls in the direction of the drag cannot
+move a page past its own window.
+
+**The "…" menu is gone**, replaced by a tool panel behind a wrench: a searchable
+grid grouped and tinted by the catalog's own categories, PRO badges included, and
+tools that need more than one page greyed out rather than hidden.
+
+**The alerts moved out** into `pdfEditAlerts` (`PdfEditAlerts.swift`), and the
+three success alerts became one `EditorOutcome`.
+
+Result: `PdfEditView` 722 → 517 lines, its body 53 → 15 modifiers, the rest in
+five files that each say what they are.
+
+### Verification
+
+20 new tests (**276** total, up from 256): that every tool's name and symbol
+still come from the catalog, that pushed tools have a route and non-pushed ones
+do not, that every route is reachable, panel grouping and search, and the page
+maths — duplicate, delete-by-index and move all edit three parallel arrays (the
+document, the page images, the thumbnails) and any of them drifting shows the
+wrong page. Catalog at **636** keys, lint clean. Seen on an iPhone 17 Pro and an
+iPad Pro 13" simulator; two new debug hooks:
+
+```
+xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string tools    # the tool panel
+xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string reorder  # the reorder screen
+```
+
+### Watch out
+
+- **Nothing here was tapped on a device.** The bars, the panel, the pushed
+  screens and the back-swipe are all verified from screenshots and tests.
+- `⌘↑` / `⌘↓` for page turning used to hang off the menu. They now live on two
+  invisible buttons behind the editor — present, so the shortcuts still resolve.
+  Worth confirming on an iPad with a keyboard.
+- The pushed tools inherit the editor's navigation bar. A tool that wants a large
+  title or its own toolbar will have to say so; none currently does.
+- Compress and permissions kept their modal flows but their forms went through
+  `ToolScreen`, so their chrome changed slightly: a close button where compress
+  used to have "Cancel".
+- `EditAction` still exists, now private to `PdfEditViewModel` — the dispatcher's
+  internal vocabulary. It is not a second public list, but it is still a list.

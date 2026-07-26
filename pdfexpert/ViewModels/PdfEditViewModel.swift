@@ -10,6 +10,7 @@ import Factory
 import SwiftUI
 import UIKit
 import PhotosUI
+import PDFKit
 
 extension Container {
     var pdfEditViewModel: ParameterFactory<PdfEditViewModel.InputParameter, PdfEditViewModel> {
@@ -30,7 +31,10 @@ enum PdfEditStartAction {
     case openInvertColors
 }
 
-enum EditAction: CaseIterable {
+/// The editor's internal vocabulary for "run this". The vocabulary the rest of
+/// the app speaks is `EditorTool`, which `run(_:)` translates from; this stays
+/// here so there is one public list of what the editor can do, not two.
+private enum EditAction: CaseIterable {
     case password
     case compression
     case split
@@ -129,13 +133,21 @@ class PdfEditViewModel: ObservableObject {
     /// Dismissed once, gone for this editing session — re-offering it after every
     /// page added would be nagging.
     private var filenameSuggestionDismissed: Bool = false
+    /// The modals the editor still owns: the ones that are direct manipulation
+    /// of the page, or a system picker. Everything that merely asks a question
+    /// is pushed onto `path` instead.
     enum ActiveSheet: Identifiable {
-        case camera, scanner, signature, fillForm, fillWidget, pageNumbers, watermark, metadata
+        case camera, scanner, signature, fillForm, fillWidget
         var id: Self { self }
     }
 
     @Published var activeSheet: ActiveSheet?
-    
+    /// The editor's own navigation stack, driven by `EditorRoute`.
+    @Published var path: [EditorRoute] = []
+    /// The panel behind the wrench, listing everything that acts on the whole
+    /// document.
+    @Published var toolPanelShow: Bool = false
+
     @Published var editOptionListShow: Bool = false
     @Published var passwordTextFieldShow: Bool = false
     @Published var removePasswordAlertShow: Bool = false
@@ -278,7 +290,9 @@ class PdfEditViewModel: ObservableObject {
         switch UserDefaults.standard.string(forKey: "debugEditorSheet") {
         case "pageNumbers": self.startPageNumbers()
         case "watermark": self.startWatermark()
-        case "metadata": self.activeSheet = .metadata
+        case "metadata": self.push(.metadata)
+        case "tools": self.toolPanelShow = true
+        case "reorder": self.push(.reorderPages)
         default: break
         }
     }
@@ -312,6 +326,77 @@ class PdfEditViewModel: ObservableObject {
         self.shouldShowCloseWarning.wrappedValue = true
 
         self.analyticsManager.track(event: .pageRemoved)
+    }
+
+    /// Deletes a page by index, from the reorder screen where the page being
+    /// removed is not necessarily the one on display.
+    @MainActor
+    func deletePage(at index: Int) {
+        guard index >= 0, index < self.pdf.pdfDocument.pageCount else { return }
+        let previousIndex = self.pdfCurrentPageIndex
+        self.pdfCurrentPageIndex = index
+        self.deleteCurrentPage()
+        // Keep looking at what the user was looking at, unless that page is the
+        // one that just went.
+        if previousIndex != index {
+            self.pdfCurrentPageIndex = min(previousIndex > index ? previousIndex - 1 : previousIndex,
+                                           max(self.pdf.pdfDocument.pageCount - 1, 0))
+        }
+    }
+
+    /// Copies the current page and puts the copy straight after it — the one
+    /// page operation the editor was missing, and the usual way of filling in
+    /// the same form twice.
+    @MainActor
+    func duplicateCurrentPage() {
+        guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
+              let copy = page.copy() as? PDFPage else {
+            return
+        }
+        let destination = self.pdfCurrentPageIndex + 1
+        self.pdf.pdfDocument.insert(copy, at: destination)
+
+        if let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
+                                                           size: nil,
+                                                           forPageIndex: destination),
+           let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
+                                                           size: K.Misc.ThumbnailEditSize,
+                                                           forPageIndex: destination) {
+            self.pageImages.insert(pageImage, at: destination)
+            self.pdfThumbnails.insert(thumbnail, at: destination)
+        } else {
+            // Rebuilding everything is the slow path, but a document whose page
+            // list disagrees with its thumbnails is worse than a pause.
+            self.refreshImages()
+            self.refreshThumbnails()
+        }
+
+        self.pdfCurrentPageIndex = destination
+        self.shouldShowCloseWarning.wrappedValue = true
+        self.analyticsManager.track(event: .pageDuplicated)
+    }
+
+    /// `onMove` semantics, for the reorder screen: SwiftUI hands over a set of
+    /// source rows and the row they land before, which is not the pairwise swap
+    /// `handlePageReordering` performs.
+    @MainActor
+    func movePages(from source: IndexSet, to destination: Int) {
+        guard let from = source.first else { return }
+        // A move to a later position counts the moving page itself, so the
+        // landing index is one past where it ends up.
+        let to = destination > from ? destination - 1 : destination
+        guard from != to, to >= 0, to < self.pdf.pdfDocument.pageCount else { return }
+        guard let page = self.pdf.pdfDocument.page(at: from) else { return }
+
+        self.pdf.pdfDocument.removePage(at: from)
+        self.pdf.pdfDocument.insert(page, at: to)
+        self.pdfThumbnails.move(fromOffsets: source, toOffset: destination)
+        self.pageImages.move(fromOffsets: source, toOffset: destination)
+
+        if self.pdfCurrentPageIndex == from {
+            self.pdfCurrentPageIndex = to
+        }
+        self.shouldShowCloseWarning.wrappedValue = true
     }
 
     /// Rotates only the currently displayed page. Regenerates just that page's image
@@ -426,8 +511,46 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
+    /// The single entry point for every tool, whichever bar or panel it was
+    /// tapped in. What each one does is decided here; *how* it appears is
+    /// `EditorTool.presentation`.
     @MainActor
-    func handleEditAction(_ action: EditAction) {
+    func run(_ tool: EditorTool) {
+        switch tool {
+        case .rotateLeft: self.rotateCurrentPage(clockwise: false)
+        case .rotateRight: self.rotateCurrentPage(clockwise: true)
+        case .duplicatePage: self.duplicateCurrentPage()
+        case .deletePage: break // the view asks first
+        case .addPage: break    // the view asks where from
+        case .reorderPages: self.push(.reorderPages)
+        case .signature: self.showAddSignature()
+        case .addText: self.showFillForm()
+        case .fillForm: self.showFillWidget()
+        case .split: self.handleEditAction(.split)
+        case .extractPages: self.handleEditAction(.extract)
+        case .removeBlankPages: self.handleEditAction(.removeBlankPages)
+        case .ocr: self.handleEditAction(.ocr)
+        case .pageNumbers: self.startPageNumbers()
+        case .watermark: self.startWatermark()
+        case .invertColors: self.handleEditAction(.invertColors)
+        case .flatten: self.handleEditAction(.flatten)
+        case .password: self.handleEditAction(.password)
+        case .permissions: self.handleEditAction(.permissions)
+        case .redact: self.handleEditAction(.redact)
+        case .compress: self.handleEditAction(.compression)
+        case .export: self.handleEditAction(.export)
+        case .metadata: self.push(.metadata)
+        case .share: self.share()
+        }
+    }
+
+    @MainActor
+    func push(_ route: EditorRoute) {
+        self.path.append(route)
+    }
+
+    @MainActor
+    private func handleEditAction(_ action: EditAction) {
         
         self.editOptionListShow = false
 
@@ -473,7 +596,7 @@ class PdfEditViewModel: ObservableObject {
             case .redact:
                 self.pdfRedactViewModel.run(pdf: self.pdf, onCompleted: nil)
             case .metadata:
-                self.activeSheet = .metadata
+                self.push(.metadata)
             }
         }
     }
@@ -549,7 +672,7 @@ class PdfEditViewModel: ObservableObject {
     @MainActor
     func startPageNumbers() {
         if self.store.isPremium.value {
-            self.activeSheet = .pageNumbers
+            self.push(.pageNumbers)
         } else {
             self.pageNumbersPending = true
             self.pageNumbersMonetizationShow = true
@@ -561,10 +684,10 @@ class PdfEditViewModel: ObservableObject {
         let shouldOpen = self.pageNumbersPending && self.store.isPremium.value
         self.pageNumbersPending = false
         if shouldOpen {
-            // Defer so the paywall cover finishes dismissing before the tool cover
-            // is presented (two fullScreenCovers on the same hierarchy).
+            // Defer so the paywall cover finishes dismissing before the push:
+            // pushing under a cover that is still on screen loses the animation.
             DispatchQueue.main.async {
-                self.activeSheet = .pageNumbers
+                self.push(.pageNumbers)
             }
         }
     }
@@ -573,7 +696,7 @@ class PdfEditViewModel: ObservableObject {
     @MainActor
     func startWatermark() {
         if self.store.isPremium.value {
-            self.activeSheet = .watermark
+            self.push(.watermark)
         } else {
             self.watermarkPending = true
             self.watermarkMonetizationShow = true
@@ -586,7 +709,7 @@ class PdfEditViewModel: ObservableObject {
         self.watermarkPending = false
         if shouldOpen {
             DispatchQueue.main.async {
-                self.activeSheet = .watermark
+                self.push(.watermark)
             }
         }
     }

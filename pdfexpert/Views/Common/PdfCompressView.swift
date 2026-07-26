@@ -38,7 +38,11 @@ struct PdfCompressEditorView: View {
     private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
 
     var body: some View {
-        NavigationStack {
+        ToolScreen(title: String(localized: "Compress PDF"),
+                   confirm: ToolScreenAction(title: String(localized: "Save"),
+                                             isEnabled: self.viewModel.canSave,
+                                             action: { self.viewModel.save() }),
+                   onCancel: { self.viewModel.cancel() }) {
             ZStack {
                 ColorPalette.background.ignoresSafeArea()
                 VStack(spacing: DS.Spacing.lg) {
@@ -50,17 +54,6 @@ struct PdfCompressEditorView: View {
                 }
                 .padding(DS.Spacing.md)
                 .readableColumn()
-            }
-            .navigationTitle("Compress PDF")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { self.viewModel.cancel() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { self.viewModel.save() }
-                        .disabled(!self.viewModel.canSave)
-                }
             }
         }
     }
