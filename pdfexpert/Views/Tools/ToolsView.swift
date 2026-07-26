@@ -247,10 +247,12 @@ struct ToolsView: View {
     }
 
     #if DEBUG
-    /// Opens Compress or Compare on the bundled test document, so both screens can
-    /// be inspected on a simulator where the file picker cannot be driven:
+    /// Opens a tool on the bundled test document, so its sheet can be inspected on a
+    /// simulator where the file picker cannot be driven:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
-    /// Values: `compress`, `compare`.
+    /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
+    /// `sort`, `read`. The premium ones also need `debugPremium -bool YES`, or the
+    /// paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
               let pdf = K.Test.DebugPdf else { return }
@@ -261,6 +263,22 @@ struct ToolsView: View {
             case "compare":
                 // Two synthetic documents: the picker cannot be driven from here.
                 self.viewModel.pdfCompareViewModel.debugRunWithSampleDocuments()
+            case "redact":
+                self.viewModel.pdfRedactViewModel.run(pdf: pdf, onCompleted: nil)
+            case "permissions":
+                self.viewModel.pdfPermissionsViewModel.run(pdf: pdf, onCompleted: nil)
+            case "split":
+                // Opens the page-range editor, which is the screen worth looking at.
+                self.viewModel.pdfSplitViewModel.split(pdf: pdf, onSplitCompleted: nil)
+            case "markdown":
+                self.viewModel.pdfMarkdownImportViewModel.start()
+            case "sort":
+                // The sorter belongs to Merge, which needs several documents picked
+                // by hand; three copies of the test one stand in for them.
+                self.viewModel.pdfMergeViewModel.toBeSortedPdfs = [pdf, pdf, pdf]
+                self.viewModel.pdfMergeViewModel.showPdfSorter = true
+            case "read":
+                self.viewModel.pdfReadViewModel.read(pdf: pdf)
             default:
                 break
             }

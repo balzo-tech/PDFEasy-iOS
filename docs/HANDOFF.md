@@ -4,7 +4,7 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Eleven phases of work sit on `main`. The app is feature-complete for the release
+Twelve phases of work sit on `main`. The app is feature-complete for the release
 that is planned: iPhone and iPad, EN / IT / ES, 582 catalog keys, 195 unit tests
 green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
@@ -24,7 +24,12 @@ or a real purchase is unverified. The accumulated checklist is the memory note
 1. `git checkout main && git pull`.
 2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
    or nothing compiles. See "Build / project notes".
-3. `bundle exec fastlane test` — runs the localization lint, then the 195 tests.
+3. `bundle exec fastlane lint` — should say `clean`. For the 195 tests use
+   `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging"
+   -configuration "Staging Debug" -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+   CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES`:
+   the `fastlane test` lane passes `CODE_SIGNING_ALLOWED=NO` and the test host
+   crashes on launch without the iCloud entitlement (see phase 12's "watch out").
    Both should be clean before you touch anything.
 4. Pick the next task. **The only things standing between the app and a release
    are not code**: deploying the CloudKit production schema, the real API keys,
@@ -48,6 +53,7 @@ behind is in "What landed on `main`".
 | 9 | One way to compress (the old picker removed) |
 | 10 | Spanish, and the Italian long tail |
 | 11 | A localization lint, and the 27 strings it found |
+| 12 | The rest of the tool sheets on a wide window |
 
 ## Build / project notes (still true — save time)
 
@@ -819,3 +825,93 @@ an invisible hit area, now a `Color.clear` label.
 - The lint was tested against a probe file with three failing and three passing
   cases before being trusted; if you extend it, do that again. A lint that
   reports nothing looks identical to a clean codebase.
+
+## Phase 12 (2026-07-26) — the rest of the tool sheets on a wide window
+
+Phase 8 gave the iPad a shell and phase 9 bounded the Compress sheet. Every other
+tool sheet was still a phone layout at iPad size: a row of controls stretched
+across the whole window, a label a hand's width from its own switch, and two
+thirds of the glass empty. This phase applies the same treatment to all of them.
+
+### The rule, in one place
+
+`DS.Layout.readableWidth` (620pt, the same number the signature sheet already
+used) and `View.readableColumn(_:)` in `DesignSystem.swift`. It is a plain width
+cap plus a centring frame — deliberately **not** a size-class branch, because a
+phone never reaches the cap, so the phone layout is untouched by construction,
+and a window resized in Stage Manager crosses no threshold. Apply it to the
+content *before* the background, so the background still covers the window.
+
+`PdfCompressView` was rewritten to use it instead of its own `620` literal.
+
+### Where it went
+
+| Sheet | Note |
+|---|---|
+| `PdfCompareSetupView` | whole column |
+| `PdfCompareResultView` | the mode picker and the text diff. The **visual** diff is deliberately left full-width: reading it means telling two renderings of a page apart |
+| `PdfRedactEditorView` | the hint and the page controls only — the page itself keeps the window, because drawing a box over the right words is precision work |
+| `PdfPermissionsView` | whole column |
+| `PdfWatermarkView` | whole column |
+| `PdfPageNumberView` | whole column, plus the 3×2 position grid capped at 340pt **on regular width only** — the mock-ups are a picture of one page's corners and only read as that side by side, and a phone is already narrow enough to leave alone |
+| `PdfMetadataView` | whole column (form + footer button) |
+| `SuggestedFieldsFormView` | whole column |
+| `PdfMarkdownImportView` | whole column — Markdown is prose |
+| `PdfPageRangeEditorView` | whole column |
+| `PdfSortView` | whole column |
+| `PdfPageSelectionView` | capped at **420**, not 620: a row is a number and a thumbnail, so a wide one is mostly empty space with the selection highlight stretched across it |
+
+Left alone, on purpose: anything presented as an `alert` or through `formSheet`
+(the export format picker, the password prompt, the web-import prompt, the
+Convert and Stirling disclosures) — the system already bounds those on iPad — and
+the page-centric views (`PdfReaderView`, `PdfImageViewerView`, `PdfFillFormView`,
+`PdfFillWidgetView`, `PdfSignatureView`), where full width is the point.
+
+### Getting the screens on screen
+
+The sheets could not be inspected before because reaching them needs taps a
+simulator will not deliver. The debug hooks now cover them:
+
+- `debugRunTool` gained `redact`, `permissions`, `split` (opens the page-range
+  editor), `markdown`, `sort` (three copies of the test document stand in for a
+  multi-file pick) and `read`, alongside the existing `compress` / `compare`.
+- `debugEditorSheet` (`pageNumbers` / `watermark` / `metadata`) opens the
+  editor's own sheets, which otherwise sit behind the More menu.
+- `debugReaderSheet=pages` opens the reader's page picker.
+- `debugPremium` makes `StoreImpl` report a subscription, so the premium sheets
+  open instead of the paywall. It is honoured in `subscriptionStatusToIsPremium`,
+  which every path to `isPremium` goes through, and sent once in `init` because
+  the startup refresh can throw before publishing anything.
+
+All `#if DEBUG`. Set them with
+`xcrun simctl spawn booted defaults write <bundle-id> <key> …` — **not** as
+launch arguments: `debugInitialTab` is read with `object(forKey:) as? Int` and
+the argument domain hands back a string.
+
+### Verification
+
+Each of the twelve sheets was screenshotted on an iPad Pro 13" simulator
+(1032pt wide, portrait) and read back; permissions, page numbers and page
+selection were also shot on an iPhone 17 Pro to confirm the phone layout did not
+move. 195 unit tests green, localization lint clean.
+
+### Watch out
+
+- **`bundle exec fastlane test` fails in this environment** and it is not the
+  code: the lane passes `CODE_SIGNING_ALLOWED=NO`, which strips the iCloud
+  entitlement, and the test host crashes in `NSPersistentCloudKitContainer`
+  before the runner connects (the same trap phase 4 documented under "Build /
+  project notes"). Verified on a clean `main` too. The suite passes with
+  `xcodebuild test … CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES
+  CODE_SIGNING_ALLOWED=YES`. Fixing the lane is a one-line change nobody has
+  made yet, because it also affects CI.
+- **A CLI build rewrites `Localizable.xcstrings`** (Xcode's string extraction
+  reformats the file, adds the App Intents keys and a blank key). It looks like a
+  16k-line diff and turns the lint red. Discard it — `git checkout --
+  pdfexpert/Resources/Localizable.xcstrings` — unless you actually added strings.
+- Landscape was not shot: `osascript` cannot send the rotate keystroke without
+  Accessibility permission. A wider window only widens the margins — the cap has
+  no thresholds — but nobody has looked at it.
+- `PdfPageSelectionView` numbers its rows from **0** (`Text("\(index)")`) while
+  the reader says "1 of 3". Pre-existing, left alone: it is a one-line change but
+  a visible one, in three languages, and not what this phase was about.

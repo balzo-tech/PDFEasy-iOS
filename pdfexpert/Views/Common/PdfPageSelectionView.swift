@@ -52,6 +52,10 @@ struct PdfPageSelectionView: View {
                             reader.scrollTo(self.pageIndex, anchor: .center)
                         }
                     }
+                    // Narrower than the standard column: a row here is a number
+                    // and a thumbnail, so a wide one is mostly empty space with
+                    // the selection highlight stretched across it.
+                    .readableColumn(420)
                 }
                 .padding([.top, .bottom], 16)
                 .background(ColorPalette.primaryBG)

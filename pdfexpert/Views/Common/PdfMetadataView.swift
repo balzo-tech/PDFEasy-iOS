@@ -26,6 +26,7 @@ struct PdfMetadataView: View {
                 self.footerView
                     .ignoresSafeArea(.keyboard)
             }
+            .readableColumn()
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(String(localized: "Document info"))
             .background(ColorPalette.primaryBG)

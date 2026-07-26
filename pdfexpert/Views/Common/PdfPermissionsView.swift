@@ -68,6 +68,7 @@ struct PdfPermissionsView: ViewModifier {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .readableColumn()
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(String(localized: "PDF permissions"))

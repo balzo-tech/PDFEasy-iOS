@@ -42,6 +42,14 @@ enum DS {
         static let quickActionIcon: CGFloat = 54
     }
 
+    enum Layout {
+        /// Widest a single column of controls should get. Past this a form stops
+        /// reading as a form: the label ends up a hand's width from its own
+        /// switch, and the eye has to travel the whole window to pair them.
+        /// Same number as the signature sheet's iPad width.
+        static let readableWidth: CGFloat = 620
+    }
+
     enum Motion {
         /// Default for state changes the user triggers directly.
         static let snappy: Animation = .snappy(duration: 0.28, extraBounce: 0.04)
@@ -53,6 +61,23 @@ enum DS {
 }
 
 extension View {
+
+    /// Caps the content at one readable column and centres it in the window.
+    ///
+    /// A tool sheet laid out for a phone fills the screen because on a phone
+    /// there is nothing else to fill; the same stack on an iPad is a row of
+    /// controls stretched over two feet of glass with the window's other two
+    /// thirds empty. On a phone the cap is never reached, so the layout there is
+    /// untouched — which is why this is a plain width limit and not a size-class
+    /// branch.
+    ///
+    /// Apply it to the content, *before* the background, so the background still
+    /// covers the whole window.
+    func readableColumn(_ maxWidth: CGFloat = DS.Layout.readableWidth) -> some View {
+        self
+            .frame(maxWidth: maxWidth)
+            .frame(maxWidth: .infinity)
+    }
 
     /// Opaque content surface: cards, tiles and rows.
     func contentCard(radius: CGFloat = DS.Radius.tile,

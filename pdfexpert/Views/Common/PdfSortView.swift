@@ -39,6 +39,7 @@ struct PdfSortView: View {
             .padding([.leading, .trailing], 16)
             .padding(.top, 48)
             .padding(.bottom, 80)
+            .readableColumn()
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Drag and drop to sort your documents")
             .background(ColorPalette.primaryBG)

@@ -15,6 +15,8 @@ struct PdfPageNumberView: View {
     @StateObject var viewModel: PdfPageNumberViewModel
     @Environment(\.dismiss) var dismiss
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     private static let positionColumns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12),
@@ -36,6 +38,7 @@ struct PdfPageNumberView: View {
                 .padding([.leading, .trailing], 16)
                 .padding(.top, 24)
                 .padding(.bottom, 40)
+                .readableColumn()
             }
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
@@ -59,6 +62,12 @@ struct PdfPageNumberView: View {
                     .buttonStyle(.plain)
                 }
             }
+            // Three flexible columns would set the little page mock-ups a hand
+            // apart in the readable column: they are a picture of one page's
+            // corners, and they only read as that while they sit next to each
+            // other. A phone is already narrow enough to leave alone.
+            .frame(maxWidth: self.horizontalSizeClass == .regular ? 340 : .infinity,
+                   alignment: .leading)
         }
     }
 

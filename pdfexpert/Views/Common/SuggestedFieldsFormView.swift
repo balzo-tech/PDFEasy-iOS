@@ -23,6 +23,7 @@ struct SuggestedFieldsFormView: View {
                 self.footerView
                     .ignoresSafeArea(.keyboard)
             }
+            .readableColumn()
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Personal data")
             .background(ColorPalette.primaryBG)

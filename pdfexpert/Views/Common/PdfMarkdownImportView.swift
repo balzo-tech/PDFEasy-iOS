@@ -47,6 +47,9 @@ struct PdfMarkdownImportView: ViewModifier {
                 }
             }
             .padding(16)
+            // A text column, not a text field the width of the window: Markdown
+            // is prose, and prose is read one measure at a time.
+            .readableColumn()
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(String(localized: "Markdown to PDF"))

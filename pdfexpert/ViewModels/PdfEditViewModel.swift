@@ -220,9 +220,29 @@ class PdfEditViewModel: ObservableObject {
                 }
             }
             self.startAction = nil
+            #if DEBUG
+            self.openDebugSheetIfNeeded()
+            #endif
         }
     }
-    
+
+    #if DEBUG
+    /// Opens one of the editor's own tool sheets, which are otherwise behind a tap on
+    /// the More menu that a simulator cannot deliver:
+    ///   xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string watermark
+    /// Values: `pageNumbers`, `watermark`, `metadata`. The first two are premium, so
+    /// `debugPremium -bool YES` is needed too.
+    @MainActor
+    private func openDebugSheetIfNeeded() {
+        switch UserDefaults.standard.string(forKey: "debugEditorSheet") {
+        case "pageNumbers": self.startPageNumbers()
+        case "watermark": self.startWatermark()
+        case "metadata": self.activeSheet = .metadata
+        default: break
+        }
+    }
+    #endif
+
     func deleteCurrentPage() {
         guard self.pdfThumbnails.count == self.pdf.pdfDocument.pageCount else {
             assertionFailure("Inconsistency error: pdf thumbnails count doesn't match pdf pages count")

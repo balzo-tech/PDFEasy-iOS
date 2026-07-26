@@ -41,9 +41,6 @@ struct PdfCompressEditorView: View {
         NavigationStack {
             ZStack {
                 ColorPalette.background.ignoresSafeArea()
-                // Full-width rows read fine on a phone, where they fill the
-                // screen. On an iPad the same stack leaves two thirds of the
-                // window empty, so it is bounded and centred instead.
                 VStack(spacing: DS.Spacing.lg) {
                     if self.isWideLayout { Spacer(minLength: 0) }
                     self.preview
@@ -52,7 +49,7 @@ struct PdfCompressEditorView: View {
                     Spacer(minLength: 0)
                 }
                 .padding(DS.Spacing.md)
-                .frame(maxWidth: 620)
+                .readableColumn()
             }
             .navigationTitle("Compress PDF")
             .navigationBarTitleDisplayMode(.inline)

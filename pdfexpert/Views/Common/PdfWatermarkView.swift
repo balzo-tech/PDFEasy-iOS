@@ -33,6 +33,7 @@ struct PdfWatermarkView: View {
                 .padding([.leading, .trailing], 16)
                 .padding(.top, 24)
                 .padding(.bottom, 40)
+                .readableColumn()
             }
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)

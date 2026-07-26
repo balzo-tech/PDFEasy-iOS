@@ -66,6 +66,14 @@ final class StoreImpl: Store {
         //Start a transaction listener as close to app launch as possible so you don't miss any transactions.
         self.updateListenerTask = self.listenForTransactions()
 
+        #if DEBUG
+        // Sent here as well as honoured in subscriptionStatusToIsPremium, because
+        // the refresh below can throw before it ever gets to publish a status.
+        if Self.isDebugPremiumForced {
+            self.isPremium.send(true)
+        }
+        #endif
+
         Task {
             try await self.refreshAll()
 //            //During store initialization, request products from the App Store.
@@ -265,7 +273,20 @@ final class StoreImpl: Store {
         products.sorted(by: { return $0.price < $1.price })
     }
 
+    #if DEBUG
+    /// debugPremium=YES makes the app behave as if subscribed, so the premium tool
+    /// sheets can be inspected on a simulator — nothing can be bought there, and
+    /// the paywall otherwise stands in front of every one of them:
+    ///   xcrun simctl spawn booted defaults write <bundle-id> debugPremium -bool YES
+    nonisolated static var isDebugPremiumForced: Bool {
+        UserDefaults.standard.bool(forKey: "debugPremium")
+    }
+    #endif
+
     nonisolated private static func subscriptionStatusToIsPremium(subscriptionStatus: RenewalState?) -> Bool {
+        #if DEBUG
+        if Self.isDebugPremiumForced { return true }
+        #endif
         guard let state = subscriptionStatus else {
             return false
         }

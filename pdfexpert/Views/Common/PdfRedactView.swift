@@ -55,15 +55,22 @@ struct PdfRedactEditorView: View {
 
     var body: some View {
         NavigationStack {
+            // The page itself keeps the whole window — drawing a box over the
+            // right words is precision work and a bigger page is an easier
+            // target. It is the text and the controls around it that are bounded,
+            // so on an iPad the page navigation is not a screen-width apart from
+            // the undo button.
             VStack(spacing: 12) {
                 Text("Drag over the areas you want to black out.")
                     .font(forCategory: .caption1)
                     .foregroundColor(ColorPalette.thirdText)
                     .multilineTextAlignment(.center)
+                    .readableColumn()
 
                 self.pageView
 
                 self.pageControls
+                    .readableColumn()
             }
             .padding(16)
             .background(ColorPalette.primaryBG)

@@ -132,6 +132,14 @@ class PdfReaderViewModel: ObservableObject {
     
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.reader))
+        #if DEBUG
+        // debugReaderSheet=pages opens the page picker, which otherwise needs a tap
+        // in the reader's own menu:
+        //   xcrun simctl spawn booted defaults write <bundle-id> debugReaderSheet -string pages
+        if UserDefaults.standard.string(forKey: "debugReaderSheet") == "pages" {
+            DispatchQueue.main.async { self.presentPageSelection() }
+        }
+        #endif
     }
     
     func updatePages() {

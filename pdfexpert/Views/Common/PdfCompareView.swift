@@ -63,6 +63,7 @@ struct PdfCompareSetupView: View {
                     }
                 }
                 .padding(DS.Spacing.md)
+                .readableColumn()
             }
             .navigationTitle("Compare PDFs")
             .navigationBarTitleDisplayMode(.inline)
@@ -164,7 +165,11 @@ struct PdfCompareResultView: View {
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal, DS.Spacing.md)
+                        .readableColumn()
 
+                        // Only the text side is bounded: the visual diff wants
+                        // every pixel of a wide window, since reading it means
+                        // telling two renderings of the same page apart.
                         switch self.mode {
                         case .text: self.textResults
                         case .visual: self.visualResults
@@ -221,6 +226,7 @@ struct PdfCompareResultView: View {
                 }
             }
             .padding(DS.Spacing.md)
+            .readableColumn()
         }
     }
 

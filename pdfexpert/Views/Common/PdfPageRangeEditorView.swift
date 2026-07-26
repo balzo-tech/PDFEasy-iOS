@@ -28,6 +28,7 @@ struct PdfPageRangeEditorView: View {
                     .ignoresSafeArea(.keyboard)
             }
             .padding(.top, 48)
+            .readableColumn()
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Split pages into ranges")
             .background(ColorPalette.primaryBG)
