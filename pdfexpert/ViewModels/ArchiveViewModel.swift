@@ -111,6 +111,13 @@ class ArchiveViewModel: ObservableObject {
            let first = items.first {
             DispatchQueue.main.async { self.editItem(item: first) }
         }
+        // debugSelectDocument=YES previews the first document in the iPad
+        // detail column, which cannot otherwise be reached on a simulator.
+        if UserDefaults.standard.bool(forKey: "debugSelectDocument"),
+           case .data(let items) = self.asyncItems.status,
+           let first = items.first {
+            DispatchQueue.main.async { self.mainCoordinator.selectedDocumentId = first.documentId }
+        }
         #endif
     }
 
@@ -185,7 +192,7 @@ class ArchiveViewModel: ObservableObject {
         var thumbnails: [String: UIImage] = [:]
 
         for (index, pdf) in recents.enumerated() {
-            let identifier = pdf.storeId?.uriRepresentation().absoluteString ?? pdf.filename
+            let identifier = pdf.documentId
             var thumbnailName: String? = nil
             if let thumbnail = pdf.thumbnail {
                 // A widget never shows these bigger than a few hundred points.

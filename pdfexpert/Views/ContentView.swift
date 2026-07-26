@@ -47,7 +47,7 @@ struct ContentView: View {
                 }
             )
         case .main:
-            return AnyView(MainTabView())
+            return AnyView(RootShellView())
         }
     }
 }

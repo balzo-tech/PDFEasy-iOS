@@ -2,9 +2,10 @@
 //  MainTabView.swift
 //  PdfExpert
 //
-//  The app shell: documents first, then the tool catalog, ChatPDF, and a search
-//  tab that spans both. The tab bar is the system's Liquid Glass bar and pulls
-//  back as the user scrolls into content.
+//  The compact shell: documents first, then the tool catalog, ChatPDF, and a
+//  search tab that spans both. The tab bar is the system's Liquid Glass bar and
+//  pulls back as the user scrolls into content. `RootShellView` swaps it for
+//  `MainSplitView` as soon as the window is wide enough for columns.
 //
 
 import SwiftUI
@@ -12,7 +13,11 @@ import Factory
 
 struct MainTabView: View {
 
-    @InjectedObject(\.mainCoordinator) var mainCoordinator
+    @ObservedObject var archive: ArchiveViewModel
+    @ObservedObject var tools: HomeViewModel
+    @ObservedObject var chat: ChatPdfSelectionViewModel
+
+    @InjectedObject(\.mainCoordinator) private var mainCoordinator
 
     var body: some View {
         TabView(selection: self.$mainCoordinator.tab) {
@@ -43,17 +48,15 @@ struct MainTabView: View {
         }
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(ColorPalette.accent)
-        .pdfEditFlowView(pdfEditFlowData: self.$mainCoordinator.pdfEditFlowData)
-        .settingsView(showSettings: self.$mainCoordinator.settingsShow)
     }
 
     @MainActor @ViewBuilder private func rootView(for tab: MainTab) -> some View {
         NavigationStack {
             Group {
                 switch tab {
-                case .files: FilesView()
-                case .tools: ToolsView()
-                case .chat: ChatPdfSelectionView()
+                case .files: FilesView(viewModel: self.archive)
+                case .tools: ToolsView(viewModel: self.tools)
+                case .chat: ChatPdfSelectionView(viewModel: self.chat)
                 case .search: GlobalSearchView()
                 }
             }
@@ -65,31 +68,6 @@ struct MainTabView: View {
 }
 
 fileprivate extension View {
-
-    func pdfEditFlowView(pdfEditFlowData: Binding<PdfEditFlowData?>) -> some View {
-        self.fullScreenCover(item: pdfEditFlowData) { data in
-            PdfFlowView(
-                pdf: data.pdf,
-                startAction: data.startAction,
-                shouldShowCloseWarning: data.isNewPdf
-            )
-        }
-    }
-
-    func settingsView(showSettings: Binding<Bool>) -> some View {
-        self.sheet(isPresented: showSettings) {
-            NavigationStack {
-                SettingsView()
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationTitle("Settings")
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Done") { showSettings.wrappedValue = false }
-                        }
-                    }
-            }
-        }
-    }
 
     func settingsButton(showSettings: Binding<Bool>) -> some View {
         self.toolbar {
@@ -105,5 +83,7 @@ fileprivate extension View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(archive: Container.shared.archiveViewModel(),
+                tools: Container.shared.homeViewModel(),
+                chat: Container.shared.chatPdfSelectionViewModel())
 }

@@ -158,6 +158,14 @@ class ChatPdfSelectionViewModel: ObservableObject {
         self.pdfUnlockViewModel.unlockPdf(pdf: pdf)
     }
     
+    /// A document dropped onto the well from another app. It goes through the
+    /// same unlock step a picked file does, so a protected PDF still asks for
+    /// its password before anything is read out of it.
+    @MainActor
+    func importDroppedPdf(_ pdf: Pdf) {
+        self.pdfUnlockViewModel.unlockPdf(pdf: pdf)
+    }
+
     @MainActor
     private func convertFileByUrl(fileUrl: URL) {
         let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)

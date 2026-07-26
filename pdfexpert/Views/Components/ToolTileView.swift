@@ -15,6 +15,9 @@ struct ToolTileView: View {
     let systemImage: String
     let tint: Color
     var isPremium: Bool = false
+    /// Only ever true in the iPad split, where the tile marks the tool the
+    /// detail column is describing.
+    var isSelected: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -46,8 +49,11 @@ struct ToolTileView: View {
             .contentShape(.rect(cornerRadius: DS.Radius.tile, style: .continuous))
         }
         .buttonStyle(PressableTileButtonStyle())
+        .toolSelectionRing(self.isSelected, radius: DS.Radius.tile)
+        .hoverEffect(.lift)
         .accessibilityLabel(Text(self.title))
         .accessibilityHint(Text(self.subtitle))
+        .accessibilityAddTraits(self.isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 
@@ -59,6 +65,7 @@ struct ToolRowView: View {
     let systemImage: String
     let tint: Color
     var isPremium: Bool = false
+    var isSelected: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -87,8 +94,11 @@ struct ToolRowView: View {
             .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
         }
         .buttonStyle(PressableTileButtonStyle(radius: DS.Radius.control))
+        .toolSelectionRing(self.isSelected, radius: DS.Radius.control)
+        .hoverEffect(.highlight)
         .accessibilityLabel(Text(self.title))
         .accessibilityHint(Text(self.subtitle))
+        .accessibilityAddTraits(self.isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 
@@ -121,7 +131,23 @@ struct QuickActionView: View {
             .contentShape(.rect)
         }
         .buttonStyle(PressableTileButtonStyle(radius: DS.Radius.control, dimsBackground: false))
+        .hoverEffect(.lift)
         .accessibilityLabel(Text(self.title))
+    }
+}
+
+fileprivate extension View {
+
+    /// Marks the tile whose tool the detail column is describing. Same ring the
+    /// document cards use, so "selected" reads the same across both grids.
+    @ViewBuilder func toolSelectionRing(_ isSelected: Bool, radius: CGFloat) -> some View {
+        self.overlay {
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                .strokeBorder(ColorPalette.accent, lineWidth: 2.5)
+                .opacity(isSelected ? 1 : 0)
+                .allowsHitTesting(false)
+        }
+        .animation(DS.Motion.quick, value: isSelected)
     }
 }
 

@@ -68,6 +68,13 @@ class MainCoordinator: ObservableObject {
     @Published var path: [Route] = []
     @Published var pdfEditFlowData: PdfEditFlowData? = nil
     @Published var settingsShow: Bool = false
+    /// The document previewed in the iPad detail column, held as `Pdf.documentId`
+    /// rather than as a `Pdf`: the archive hands out fresh values on every
+    /// refresh and a stored struct would stop matching them.
+    @Published var selectedDocumentId: String? = nil
+    /// The tool described in the iPad detail column. Picking a tool there only
+    /// selects it — it runs when the user confirms.
+    @Published var selectedTool: PdfTool? = nil
     /// A tool requested from outside the Tools tab (the Files "New" button, the
     /// search results). The Tools screen owns every tool flow, so it picks this
     /// up and runs it once the tab is on screen.
@@ -114,6 +121,7 @@ class MainCoordinator: ObservableObject {
     /// Switches to the Tools tab and asks it to start `action`.
     func runTool(_ action: HomeAction) {
         self.tab = .tools
+        self.selectedTool = ToolCatalog.allTools.first { $0.action == action }
         self.pendingToolAction = action
     }
 
@@ -168,10 +176,11 @@ class MainCoordinator: ObservableObject {
     /// widget. Falls back to just showing the archive when the document is gone.
     private func openDocument(withId id: String) {
         guard let pdf = (try? self.repository.loadPdfs())?.first(where: {
-            $0.storeId?.uriRepresentation().absoluteString == id || $0.filename == id
+            $0.documentId == id || $0.filename == id
         }) else {
             return
         }
+        self.selectedDocumentId = pdf.documentId
         self.showPdfEditFlow(pdf: pdf, isNewPdf: false)
     }
 }

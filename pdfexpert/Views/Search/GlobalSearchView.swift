@@ -12,8 +12,15 @@ import Factory
 
 struct GlobalSearchView: View {
 
+    // Its own archive on purpose: this screen drives `searchText`, and sharing
+    // the instance with the Files grid would leave that grid filtered by
+    // whatever was last typed here.
     @InjectedObject(\.archiveViewModel) var viewModel
     @Injected(\.mainCoordinator) private var mainCoordinator
+
+    /// Bound by the split shell, where a result previews in the detail column
+    /// instead of opening the editor. See `FilesView`.
+    var selection: Binding<String?>? = nil
 
     @State private var query: String = ""
 
@@ -64,8 +71,9 @@ struct GlobalSearchView: View {
                 VStack(alignment: .leading, spacing: DS.Spacing.xs) {
                     SectionHeaderView(title: String(localized: "Documents"))
                     ForEach(self.matchingDocuments) { pdf in
-                        DocumentRowView(pdf: pdf) {
-                            self.viewModel.editItem(item: pdf)
+                        DocumentRowView(pdf: pdf,
+                                        isSelected: self.selection?.wrappedValue == pdf.documentId) {
+                            self.open(pdf)
                         }
                     }
                 }
@@ -108,8 +116,9 @@ struct GlobalSearchView: View {
                 VStack(alignment: .leading, spacing: DS.Spacing.xs) {
                     SectionHeaderView(title: String(localized: "Recent documents"))
                     ForEach(Array(items.sorted { $0.creationDate > $1.creationDate }.prefix(5))) { pdf in
-                        DocumentRowView(pdf: pdf) {
-                            self.viewModel.editItem(item: pdf)
+                        DocumentRowView(pdf: pdf,
+                                        isSelected: self.selection?.wrappedValue == pdf.documentId) {
+                            self.open(pdf)
                         }
                     }
                 }
@@ -121,6 +130,16 @@ struct GlobalSearchView: View {
     private func run(_ tool: PdfTool) {
         ToolUsageTracker.registerUse(of: tool.action)
         self.mainCoordinator.runTool(tool.action)
+    }
+
+    /// Same rule as the Files grid: preview where there is a pane for it, open
+    /// the editor where there is not.
+    private func open(_ pdf: Pdf) {
+        if let selection = self.selection {
+            selection.wrappedValue = pdf.documentId
+        } else {
+            self.viewModel.editItem(item: pdf)
+        }
     }
 }
 

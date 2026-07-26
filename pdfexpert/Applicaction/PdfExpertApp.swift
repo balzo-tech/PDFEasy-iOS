@@ -15,5 +15,6 @@ struct PdfExpertApp: App {
         WindowGroup {
             ContentView()
         }
+        .commands { PdfProCommands() }
     }
 }

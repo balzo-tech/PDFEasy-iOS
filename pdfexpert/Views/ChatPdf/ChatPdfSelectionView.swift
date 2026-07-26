@@ -9,9 +9,13 @@ import SwiftUI
 import Factory
 
 struct ChatPdfSelectionView: View {
-    
-    @InjectedObject(\.chatPdfSelectionViewModel) var viewModel
-    
+
+    @ObservedObject var viewModel: ChatPdfSelectionViewModel
+    /// Set by the iPad split, where the conversation is the detail column and
+    /// this screen stays visible beside it. On a phone the chat takes over the
+    /// screen instead.
+    var presentsChatInline: Bool = false
+
     var body: some View {
         VStack(spacing: DS.Spacing.lg) {
             Spacer()
@@ -56,7 +60,7 @@ struct ChatPdfSelectionView: View {
                 self.viewModel.convertScan(scannerResult: $0)
             })
         }
-        .fullScreenCover(item: self.$viewModel.chatPdfInitParams) { chatPdfInitParams in
+        .fullScreenCover(item: self.modalChatParams) { chatPdfInitParams in
             let parameters = ChatPdfViewModel.Parameters(chatPdfInitParams: chatPdfInitParams)
             ChatPdfView(viewModel: Container.shared.chatPdfViewModel(parameters))
         }
@@ -73,8 +77,15 @@ struct ChatPdfSelectionView: View {
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }
     
+    /// Nil while the split shell is showing the conversation in its own column,
+    /// so the same state does not drive two presentations at once.
+    private var modalChatParams: Binding<ChatPdfInitParams?> {
+        self.presentsChatInline ? .constant(nil) : self.$viewModel.chatPdfInitParams
+    }
+
     /// Drop target for the document: a dashed well, the way file pickers read
-    /// everywhere else.
+    /// everywhere else — and, since it says "drop your PDF here", one that
+    /// actually accepts a drop.
     @ViewBuilder var buttonView: some View {
         Button(action: self.viewModel.getPdfButtonPressed) {
             VStack(spacing: DS.Spacing.xs) {
@@ -99,6 +110,10 @@ struct ChatPdfSelectionView: View {
             .contentShape(.rect(cornerRadius: DS.Radius.tile, style: .continuous))
         }
         .buttonStyle(.plain)
+        .hoverEffect(.highlight)
+        .documentDropDestination { pdf in
+            self.viewModel.importDroppedPdf(pdf)
+        }
     }
 
     @ViewBuilder var warningView: some View {
@@ -116,6 +131,6 @@ struct ChatPdfSelectionView: View {
 
 struct ChatPdfSelectionView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatPdfSelectionView()
+        ChatPdfSelectionView(viewModel: Container.shared.chatPdfSelectionViewModel())
     }
 }

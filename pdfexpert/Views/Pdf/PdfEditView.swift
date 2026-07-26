@@ -9,6 +9,11 @@
 //  grouped menu away — the old flat list of fourteen options in a form sheet
 //  made them all look equally likely.
 //
+//  Given a wide window it reflows: the page thumbnails become a rail down the
+//  left where a dozen of them are visible at once instead of three, and the four
+//  frequent edits move up into the toolbar, since a bar floating over the page
+//  only makes sense when the page is the whole screen.
+//
 
 import SwiftUI
 import Factory
@@ -18,26 +23,51 @@ struct PdfEditView: View {
 
     fileprivate static let cellSide: CGFloat = 64.0
     fileprivate static let selectedCellBorderWidth: CGFloat = 3.0
+    /// Wide enough for a readable page preview plus its number, narrow enough to
+    /// leave the page itself the bulk of the window.
+    fileprivate static let railWidth: CGFloat = 116.0
+    fileprivate static let railCellSize = CGSize(width: 84, height: 110)
 
     @StateObject var viewModel: PdfEditViewModel
+
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State private var showingImageInputPicker = false
     @State private var showingDeleteConfermation = false
 
     @State private var draggedImage: UIImage? = nil
 
+    private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
+
+    private var hasPages: Bool { self.viewModel.pageImages.count > 0 }
+
     var body: some View {
         ZStack {
             ColorPalette.background.ignoresSafeArea()
-            VStack(spacing: 0) {
-                self.pdfView
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                if self.viewModel.pdfThumbnails.count > 1 {
-                    self.pageListView
+            if self.isWideLayout {
+                HStack(spacing: 0) {
+                    if self.viewModel.pdfThumbnails.count > 1 {
+                        self.pageRailView
+                        Divider()
+                    }
+                    self.pdfView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            } else {
+                VStack(spacing: 0) {
+                    self.pdfView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    if self.viewModel.pdfThumbnails.count > 1 {
+                        self.pageListView
+                    }
                 }
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if self.viewModel.pageImages.count > 0 {
+            // On a wide window these four live in the toolbar instead: a bar
+            // floating over the page only reads as "above the content" when the
+            // page is the whole screen.
+            if self.hasPages, !self.isWideLayout {
                 self.actionBar
             }
         }
@@ -45,6 +75,18 @@ struct PdfEditView: View {
         .navigationTitle(self.$viewModel.pdfFilename)
         .ignoresSafeArea(.keyboard)
         .toolbar {
+            if self.isWideLayout, self.hasPages {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    ForEach(PrimaryEdit.allCases) { edit in
+                        Button {
+                            self.perform(edit)
+                        } label: {
+                            Label(edit.title, systemImage: edit.systemImage)
+                        }
+                    }
+                }
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 self.moreMenu
             }
@@ -57,6 +99,7 @@ struct PdfEditView: View {
                 }
                 .buttonStyle(.glassProminent)
                 .tint(ColorPalette.accent)
+                .keyboardShortcut("s", modifiers: [.command])
             }
         }
         .onAppear(perform: self.viewModel.onAppear)
@@ -240,6 +283,45 @@ struct PdfEditView: View {
         }
     }
 
+    /// The wide-window counterpart of `pageListView`. Vertical, because pages
+    /// are taller than they are wide and a column of them shows a dozen at once
+    /// where the horizontal strip shows three.
+    var pageRailView: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack(spacing: DS.Spacing.xs) {
+                    ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
+                        Button(action: {
+                            withAnimation(DS.Motion.quick) {
+                                self.viewModel.pdfCurrentPageIndex = index
+                            }
+                        }) {
+                            VStack(spacing: 4) {
+                                self.getThumbnailCell(image: image)
+                                    .applyRailCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
+                                Text("\(index + 1)")
+                                    .font(forCategory: .caption2)
+                                    .foregroundStyle(index == self.viewModel.pdfCurrentPageIndex
+                                                     ? ColorPalette.accent
+                                                     : ColorPalette.textTertiary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .hoverEffect(.lift)
+                        .id(index)
+                    }
+                }
+                .padding(.vertical, DS.Spacing.sm)
+            }
+            .onChange(of: self.viewModel.pdfCurrentPageIndex) { _, index in
+                guard self.isScrollToAvailable else { return }
+                withAnimation(DS.Motion.quick) { proxy.scrollTo(index, anchor: .center) }
+            }
+        }
+        .frame(width: Self.railWidth)
+        .background(ColorPalette.surface)
+    }
+
     var pageListView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: DS.Spacing.xs) {
@@ -271,30 +353,62 @@ struct PdfEditView: View {
 
     // MARK: - Actions
 
-    /// The four edits people reach for constantly, floating over the page.
+    /// The four edits people reach for constantly. A glass bar over the page on
+    /// a phone, toolbar buttons on a wide window — same four either way.
+    enum PrimaryEdit: Int, CaseIterable, Identifiable {
+
+        case page
+        case signature
+        case text
+        case form
+
+        var id: Int { self.rawValue }
+
+        var title: String {
+            switch self {
+            case .page: return String(localized: "Page")
+            case .signature: return String(localized: "Signature")
+            case .text: return String(localized: "Add text")
+            case .form: return String(localized: "Fill Form")
+            }
+        }
+
+        var systemImage: String {
+            switch self {
+            case .page: return "plus.rectangle.on.rectangle"
+            case .signature: return "signature"
+            case .text: return "textformat"
+            case .form: return "list.bullet.rectangle.portrait"
+            }
+        }
+    }
+
+    private func perform(_ edit: PrimaryEdit) {
+        switch edit {
+        case .page: self.showingImageInputPicker = true
+        case .signature: self.viewModel.showAddSignature()
+        case .text: self.viewModel.showFillForm()
+        case .form: self.viewModel.showFillWidget()
+        }
+    }
+
     private var actionBar: some View {
         GlassEffectContainer(spacing: DS.Spacing.sm) {
             HStack(spacing: DS.Spacing.sm) {
-                self.actionButton(title: String(localized: "Page"),
-                                  systemImage: "plus.rectangle.on.rectangle") {
-                    self.showingImageInputPicker = true
-                }
-                self.actionButton(title: String(localized: "Signature"),
-                                  systemImage: "signature") {
-                    self.viewModel.showAddSignature()
-                }
-                self.actionButton(title: String(localized: "Add text"),
-                                  systemImage: "textformat") {
-                    self.viewModel.showFillForm()
-                }
-                self.actionButton(title: String(localized: "Fill Form"),
-                                  systemImage: "list.bullet.rectangle.portrait") {
-                    self.viewModel.showFillWidget()
+                ForEach(PrimaryEdit.allCases) { edit in
+                    self.actionButton(title: edit.title, systemImage: edit.systemImage) {
+                        self.perform(edit)
+                    }
                 }
             }
         }
         .padding(.horizontal, DS.Spacing.md)
         .padding(.bottom, DS.Spacing.xs)
+    }
+
+    private func goToPage(_ index: Int) {
+        guard index >= 0, index < self.viewModel.pageImages.count else { return }
+        withAnimation(DS.Motion.quick) { self.viewModel.pdfCurrentPageIndex = index }
     }
 
     private func actionButton(title: String,
@@ -323,6 +437,28 @@ struct PdfEditView: View {
     /// four short menus instead of one long one.
     private var moreMenu: some View {
         Menu {
+            // Page turning lives here so it carries a keyboard shortcut that is
+            // also discoverable: nothing else in the editor is a button a
+            // shortcut could sensibly hang off.
+            if self.viewModel.pageImages.count > 1 {
+                Section {
+                    Button {
+                        self.goToPage(self.viewModel.pdfCurrentPageIndex - 1)
+                    } label: {
+                        Label("Previous page", systemImage: "chevron.up")
+                    }
+                    .keyboardShortcut(.upArrow, modifiers: [.command])
+                    .disabled(self.viewModel.pdfCurrentPageIndex == 0)
+                    Button {
+                        self.goToPage(self.viewModel.pdfCurrentPageIndex + 1)
+                    } label: {
+                        Label("Next page", systemImage: "chevron.down")
+                    }
+                    .keyboardShortcut(.downArrow, modifiers: [.command])
+                    .disabled(self.viewModel.pdfCurrentPageIndex >= self.viewModel.pageImages.count - 1)
+                }
+            }
+
             if self.viewModel.pageImages.count > 0 {
                 Section {
                     Button {
@@ -439,6 +575,19 @@ fileprivate extension View {
     func applyCellStyle(highlight: Bool) -> some View {
         self
             .frame(width: PdfEditView.cellSide, height: PdfEditView.cellSide)
+            .clipShape(.rect(cornerRadius: 8, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(highlight ? ColorPalette.accent : ColorPalette.separator,
+                                  lineWidth: highlight ? PdfEditView.selectedCellBorderWidth : 0.5)
+            }
+    }
+
+    /// Same treatment as `applyCellStyle`, at page proportions: the rail has the
+    /// height to show a thumbnail that is actually recognisable.
+    func applyRailCellStyle(highlight: Bool) -> some View {
+        self
+            .frame(width: PdfEditView.railCellSize.width, height: PdfEditView.railCellSize.height)
             .clipShape(.rect(cornerRadius: 8, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)

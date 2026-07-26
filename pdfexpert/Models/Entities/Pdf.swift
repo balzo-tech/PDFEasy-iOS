@@ -138,6 +138,19 @@ extension Pdf: Hashable, Identifiable {
     var id: Self { return self }
 }
 
+extension Pdf {
+
+    /// Identity that survives a reload. The synthesized `Hashable` above follows
+    /// the `PDFDocument` instance, so a document re-read from the store never
+    /// equals the copy a view is still holding — no good for a selection that has
+    /// to outlive a refresh. The store URI does survive, and it is already what
+    /// the widget and the deeplinks use; a document not yet saved falls back to
+    /// its filename.
+    var documentId: String {
+        self.storeId?.uriRepresentation().absoluteString ?? self.filename
+    }
+}
+
 extension Pdf: Collection {
     
     typealias Index = Int

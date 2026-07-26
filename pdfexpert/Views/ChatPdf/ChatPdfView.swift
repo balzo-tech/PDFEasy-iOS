@@ -11,10 +11,14 @@ import Factory
 struct ChatPdfView: View {
     
     @StateObject var viewModel: ChatPdfViewModel
-    
+    /// Supplied by the iPad split, where the conversation is a column rather
+    /// than a modal and there is nothing to dismiss — closing means clearing the
+    /// selection instead.
+    var onClose: (() -> Void)? = nil
+
     @State var typingMessage: String = ""
     @Namespace var bottomID
-    
+
     @Environment(\.dismiss) var dismiss
 
     private var canSendMessage: Bool {
@@ -106,7 +110,13 @@ struct ChatPdfView: View {
             .background(ColorPalette.primaryBG)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Chat")
-            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: { self.dismiss() })
+            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
+                if let onClose = self.onClose {
+                    onClose()
+                } else {
+                    self.dismiss()
+                }
+            })
             .onAppear() {
                 self.viewModel.onAppear()
             }

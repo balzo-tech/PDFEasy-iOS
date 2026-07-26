@@ -2,9 +2,14 @@
 //  FilesView.swift
 //  PdfExpert
 //
-//  The documents the user has saved — now the app's home. Replaces the old
-//  Archive list: same data, but browsable as a grid, sortable, and with the
-//  document actions one long-press away.
+//  The documents the user has saved — the app's home. Replaces the old Archive
+//  list: same data, but browsable as a grid, sortable, and with the document
+//  actions one long-press away.
+//
+//  It is the whole screen in the tab shell and the middle column in the iPad
+//  split. The difference is `selection`: when it is bound, picking a document
+//  previews it in the detail column instead of opening the editor, and the
+//  folder and tag chips move to the sidebar.
 //
 
 import SwiftUI
@@ -58,23 +63,12 @@ enum FilesSort: String, CaseIterable, Identifiable {
     }
 }
 
-/// A folder or tag being created from a document's context menu.
-enum QuickLabelRequest: Identifiable {
-
-    case folder(pdf: Pdf)
-    case tag(pdf: Pdf)
-
-    var id: String {
-        switch self {
-        case .folder(let pdf): return "folder-\(pdf.filename)"
-        case .tag(let pdf): return "tag-\(pdf.filename)"
-        }
-    }
-}
-
 struct FilesView: View {
 
-    @InjectedObject(\.archiveViewModel) var viewModel
+    @ObservedObject var viewModel: ArchiveViewModel
+    /// Bound only by the split shell. See the note at the top of the file.
+    var selection: Binding<String?>? = nil
+
     @Injected(\.mainCoordinator) private var mainCoordinator
 
     @AppStorage("filesLayout") private var layout: FilesLayout = .grid
@@ -95,6 +89,10 @@ struct FilesView: View {
         GridItem(.adaptive(minimum: 104, maximum: 190), spacing: DS.Spacing.xs)
     ]
 
+    /// In the split layout the folders and tags live in the sidebar, so the chip
+    /// bar would be a second copy of the same controls.
+    private var showsFilterBar: Bool { self.selection == nil }
+
     var body: some View {
         ZStack {
             ColorPalette.background.ignoresSafeArea()
@@ -111,7 +109,7 @@ struct FilesView: View {
         }
         .safeAreaInset(edge: .top, spacing: 0) {
             // Only worth the vertical space once there is something to filter by.
-            if !self.viewModel.folders.isEmpty || !self.viewModel.tags.isEmpty {
+            if self.showsFilterBar, !self.viewModel.folders.isEmpty || !self.viewModel.tags.isEmpty {
                 FilesFilterBar(folders: self.viewModel.folders,
                                tags: self.viewModel.tags,
                                folderFilter: self.$viewModel.folderFilter,
@@ -122,6 +120,12 @@ struct FilesView: View {
         }
         .safeAreaInset(edge: .bottom) {
             self.newDocumentButton
+        }
+        // Dropping a file here imports it, the same as picking it from the
+        // "New" menu — on an iPad running two apps side by side that is the
+        // first thing people try.
+        .documentDropDestination(inset: DS.Spacing.xs) { pdf in
+            self.mainCoordinator.showPdfEditFlow(pdf: pdf, isNewPdf: true)
         }
         .onAppear() {
             self.viewModel.onAppear()
@@ -142,7 +146,7 @@ struct FilesView: View {
             ArchiveOrganizerView(viewModel: self.viewModel)
         }
         .sheet(item: self.$quickLabel) { request in
-            self.quickLabelEditor(for: request)
+            QuickLabelEditorView(viewModel: self.viewModel, request: request)
         }
         .sheet(item: self.$pdfForInfo) { pdf in
             let inputParameter = PdfMetadataViewModel
@@ -199,14 +203,18 @@ struct FilesView: View {
                     case .grid:
                         LazyVGrid(columns: Self.gridColumns, spacing: DS.Spacing.xs) {
                             ForEach(items) { item in
-                                DocumentCardView(pdf: item) { self.viewModel.editItem(item: item) }
+                                DocumentCardView(pdf: item,
+                                                 isSelected: self.isSelected(item),
+                                                 onOpen: { self.open(item) })
                                     .contextMenu { self.documentActions(for: item) }
                             }
                         }
                     case .list:
                         LazyVStack(spacing: DS.Spacing.xs) {
                             ForEach(items) { item in
-                                DocumentRowView(pdf: item) { self.viewModel.editItem(item: item) }
+                                DocumentRowView(pdf: item,
+                                                isSelected: self.isSelected(item),
+                                                onOpen: { self.open(item) })
                                     .contextMenu { self.documentActions(for: item) }
                             }
                         }
@@ -220,104 +228,26 @@ struct FilesView: View {
     }
 
     @ViewBuilder private func documentActions(for pdf: Pdf) -> some View {
-        Button {
+        DocumentActionsMenu(viewModel: self.viewModel,
+                            pdf: pdf,
+                            onInfo: { self.pdfForInfo = $0 },
+                            onDelete: { self.pdfToDelete = $0 },
+                            onQuickLabel: { self.quickLabel = $0 })
+    }
+
+    // MARK: - Selection
+
+    private func isSelected(_ pdf: Pdf) -> Bool {
+        self.selection?.wrappedValue == pdf.documentId
+    }
+
+    /// One tap means "show me this" where there is a pane to show it in, and
+    /// "open this" where there is not.
+    private func open(_ pdf: Pdf) {
+        if let selection = self.selection {
+            selection.wrappedValue = pdf.documentId
+        } else {
             self.viewModel.editItem(item: pdf)
-        } label: {
-            Label("Edit", systemImage: "pencil")
-        }
-        Button {
-            self.viewModel.shareItem(item: pdf)
-        } label: {
-            Label("Share pdf", systemImage: "square.and.arrow.up")
-        }
-        Button {
-            self.pdfForInfo = pdf
-        } label: {
-            Label("Document info", systemImage: "info.circle")
-        }
-        Divider()
-        self.folderMenu(for: pdf)
-        self.tagsMenu(for: pdf)
-        Divider()
-        Button(role: .destructive) {
-            self.pdfToDelete = pdf
-        } label: {
-            Label("Delete", systemImage: "trash")
-        }
-    }
-
-    /// Filing lives in the document's own menu: it is a property of that
-    /// document, not a mode the whole screen has to enter.
-    @ViewBuilder private func folderMenu(for pdf: Pdf) -> some View {
-        Menu {
-            ForEach(self.viewModel.folders) { folder in
-                Button {
-                    self.viewModel.setFolder(folder, for: pdf)
-                } label: {
-                    Label(folder.name, systemImage: pdf.folderId == folder.id ? "checkmark" : "folder")
-                }
-            }
-            if pdf.folder != nil {
-                Divider()
-                Button {
-                    self.viewModel.setFolder(nil, for: pdf)
-                } label: {
-                    Label("Remove from folder", systemImage: "tray")
-                }
-            }
-            Divider()
-            Button {
-                self.quickLabel = .folder(pdf: pdf)
-            } label: {
-                Label("New folder…", systemImage: "folder.badge.plus")
-            }
-        } label: {
-            Label("Move to", systemImage: "folder")
-        }
-    }
-
-    @ViewBuilder private func tagsMenu(for pdf: Pdf) -> some View {
-        Menu {
-            ForEach(self.viewModel.tags) { tag in
-                Button {
-                    self.viewModel.toggleTag(tag, for: pdf)
-                } label: {
-                    Label(tag.name, systemImage: pdf.tagIds.contains(tag.id) ? "checkmark" : "circle")
-                }
-            }
-            if !self.viewModel.tags.isEmpty {
-                Divider()
-            }
-            Button {
-                self.quickLabel = .tag(pdf: pdf)
-            } label: {
-                Label("New tag…", systemImage: "plus")
-            }
-        } label: {
-            Label("Tags", systemImage: "tag")
-        }
-    }
-
-    /// Creating a folder or tag from a document's menu also files that document
-    /// into it — otherwise the user has to go and repeat the assignment.
-    @ViewBuilder private func quickLabelEditor(for request: QuickLabelRequest) -> some View {
-        switch request {
-        case .folder(let pdf):
-            LabelEditorView(title: String(localized: "New folder"),
-                            placeholder: String(localized: "Folder name"),
-                            color: self.viewModel.suggestedFolderColor) { name, color in
-                if let folder = self.viewModel.createFolder(name: name, color: color) {
-                    self.viewModel.setFolder(folder, for: pdf)
-                }
-            }
-        case .tag(let pdf):
-            LabelEditorView(title: String(localized: "New tag"),
-                            placeholder: String(localized: "Tag name"),
-                            color: self.viewModel.suggestedTagColor) { name, color in
-                if let tag = self.viewModel.createTag(name: name, color: color) {
-                    self.viewModel.toggleTag(tag, for: pdf)
-                }
-            }
         }
     }
 
@@ -463,7 +393,7 @@ extension Pdf {
 
 #Preview {
     NavigationStack {
-        FilesView()
+        FilesView(viewModel: Container.shared.archiveViewModel())
             .navigationTitle("Files")
     }
 }

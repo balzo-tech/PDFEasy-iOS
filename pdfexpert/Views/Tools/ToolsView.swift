@@ -12,7 +12,12 @@ import PhotosUI
 
 struct ToolsView: View {
 
-    @InjectedObject(\.homeViewModel) var viewModel
+    @ObservedObject var viewModel: HomeViewModel
+    /// Bound by the split shell: there a tile only selects the tool, and the
+    /// detail column explains it and starts it. On a phone there is no room for
+    /// that step, so a tap runs the tool straight away.
+    var selection: Binding<PdfTool?>? = nil
+
     @InjectedObject(\.mainCoordinator) private var mainCoordinator
 
     @State private var searchText: String = ""
@@ -128,12 +133,24 @@ struct ToolsView: View {
                     VStack(alignment: .leading, spacing: DS.Spacing.sm) {
                         SectionHeaderView(title: category.title, subtitle: category.subtitle)
                             .padding(.horizontal, DS.Spacing.md)
-                        LazyVGrid(columns: Self.gridColumns, spacing: DS.Spacing.sm) {
-                            ForEach(tools) { tool in
-                                self.tile(for: tool)
+                        // A column narrow enough to hold one tile per row is a
+                        // list, not a grid: the tiles would be enormous and each
+                        // one would show a single tool.
+                        if self.selection != nil {
+                            VStack(spacing: DS.Spacing.xs) {
+                                ForEach(tools) { tool in
+                                    self.row(for: tool)
+                                }
                             }
+                            .padding(.horizontal, DS.Spacing.md)
+                        } else {
+                            LazyVGrid(columns: Self.gridColumns, spacing: DS.Spacing.sm) {
+                                ForEach(tools) { tool in
+                                    self.tile(for: tool)
+                                }
+                            }
+                            .padding(.horizontal, DS.Spacing.md)
                         }
-                        .padding(.horizontal, DS.Spacing.md)
                     }
                 }
             }
@@ -175,7 +192,8 @@ struct ToolsView: View {
                                 subtitle: tool.subtitle,
                                 systemImage: tool.systemImage,
                                 tint: tool.tint,
-                                isPremium: tool.isPremium) {
+                                isPremium: tool.isPremium,
+                                isSelected: self.selection?.wrappedValue == tool) {
                         self.perform(tool)
                     }
                 }
@@ -191,15 +209,31 @@ struct ToolsView: View {
                      subtitle: tool.subtitle,
                      systemImage: tool.systemImage,
                      tint: tool.tint,
-                     isPremium: tool.isPremium) {
+                     isPremium: tool.isPremium,
+                     isSelected: self.selection?.wrappedValue == tool) {
+            self.perform(tool)
+        }
+    }
+
+    private func row(for tool: PdfTool) -> some View {
+        ToolRowView(title: tool.title,
+                    subtitle: tool.subtitle,
+                    systemImage: tool.systemImage,
+                    tint: tool.tint,
+                    isPremium: tool.isPremium,
+                    isSelected: self.selection?.wrappedValue == tool) {
             self.perform(tool)
         }
     }
 
     private func perform(_ tool: PdfTool) {
-        ToolUsageTracker.registerUse(of: tool.action)
         self.searchText = ""
-        self.viewModel.performHomeAction(tool.action)
+        if let selection = self.selection {
+            selection.wrappedValue = tool
+        } else {
+            ToolUsageTracker.registerUse(of: tool.action)
+            self.viewModel.performHomeAction(tool.action)
+        }
     }
 
     /// Runs an action queued by another tab. Deferred to the next runloop so the
@@ -271,7 +305,7 @@ extension ImportOptionGroup: FormSheetItem {
 
 #Preview {
     NavigationStack {
-        ToolsView()
+        ToolsView(viewModel: Container.shared.homeViewModel())
             .navigationTitle("Tools")
     }
 }

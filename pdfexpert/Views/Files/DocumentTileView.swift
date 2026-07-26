@@ -12,6 +12,9 @@ import SwiftUI
 struct DocumentCardView: View {
 
     let pdf: Pdf
+    /// Only ever true in the iPad split, where the card marks what the detail
+    /// column is showing.
+    var isSelected: Bool = false
     let onOpen: () -> Void
 
     var body: some View {
@@ -58,8 +61,12 @@ struct DocumentCardView: View {
             .contentShape(.rect(cornerRadius: DS.Radius.tile, style: .continuous))
         }
         .buttonStyle(PressableTileButtonStyle())
+        .selectionRing(self.isSelected, radius: DS.Radius.tile)
+        .hoverEffect(.lift)
+        .draggable(PdfFileTransfer(pdf: self.pdf))
         .accessibilityLabel(Text(self.pdf.filename))
         .accessibilityValue(Text(self.pdf.metadataText))
+        .accessibilityAddTraits(self.isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 
@@ -67,6 +74,7 @@ struct DocumentCardView: View {
 struct DocumentRowView: View {
 
     let pdf: Pdf
+    var isSelected: Bool = false
     let onOpen: () -> Void
 
     var body: some View {
@@ -115,8 +123,28 @@ struct DocumentRowView: View {
             .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
         }
         .buttonStyle(PressableTileButtonStyle(radius: DS.Radius.control))
+        .selectionRing(self.isSelected, radius: DS.Radius.control)
+        .hoverEffect(.highlight)
+        .draggable(PdfFileTransfer(pdf: self.pdf))
         .accessibilityLabel(Text(self.pdf.filename))
         .accessibilityValue(Text(self.pdf.metadataText))
+        .accessibilityAddTraits(self.isSelected ? [.isButton, .isSelected] : .isButton)
+    }
+}
+
+fileprivate extension View {
+
+    /// Marks the card the detail column is currently showing. A ring rather than
+    /// a filled background: the page preview is the content, and tinting behind
+    /// it would fight with whatever the page itself looks like.
+    @ViewBuilder func selectionRing(_ isSelected: Bool, radius: CGFloat) -> some View {
+        self.overlay {
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                .strokeBorder(ColorPalette.accent, lineWidth: 2.5)
+                .opacity(isSelected ? 1 : 0)
+                .allowsHitTesting(false)
+        }
+        .animation(DS.Motion.quick, value: isSelected)
     }
 }
 

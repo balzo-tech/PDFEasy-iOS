@@ -482,3 +482,101 @@ enough alone:
   launch (compare uses two synthetic contracts and skips the paywall, since the
   file picker cannot be driven from the CLI), and `debugCompareMode -string
   visual` opens the result on the visual tab.
+
+## Phase 8 (2026-07-26) — dedicated iPad interface
+
+Until now the iPad shipped the phone UI at iPad size: the same four-tab bar, the
+same one-document-at-a-time flow, and three idiom workarounds (`FormSheet`,
+`FilePicker`, `actionDialog`) as the entire extent of the adaptation. This phase
+adds a real iPad shell, keeps the phone one untouched, and picks between them by
+size class so a window resized in Stage Manager or dropped into Slide Over gets
+the right one live.
+
+### The shell
+
+`RootShellView` is the new root under `.main`. It owns `archiveViewModel`,
+`homeViewModel` and `chatPdfSelectionViewModel` and hands them to whichever shell
+is on screen — deliberately, because crossing the size-class boundary rebuilds
+the shell, and view models living inside it would take the scroll position, the
+filters and any half-finished tool flow with them. It also carries the two
+app-wide modals (the editor cover, the settings sheet) that used to hang off
+`MainTabView`.
+
+- Compact → `MainTabView`, unchanged apart from taking the view models as
+  parameters.
+- Regular → `MainSplitView`, a three-column `NavigationSplitView`:
+  - **Sidebar** (`MainSidebarView`): the four sections, then the archive's own
+    structure. Folders are part of the `List` selection because picking one *is*
+    navigation; tags are toggle rows because several can be on at once. The
+    selection is derived from `(coordinator.tab, archive.folderFilter)` rather
+    than stored, so a filter cleared anywhere else is reflected without a second
+    source of truth.
+  - **Content**: Files grid / Tools list / ChatPDF picker / Search results.
+  - **Detail**: `DocumentDetailView`, `ToolDetailView`, or the ChatPDF
+    conversation.
+- Column widths are set narrow on purpose (sidebar 200–300, content 300+): with
+  the defaults the system dropped to two columns on an iPad held in portrait.
+
+`MainTab` stays the single source of truth for the section, so deeplinks,
+`runTool` and `goToArchive` work in both shells with no special casing.
+
+### What changed in the existing screens
+
+- `FilesView`, `ToolsView`, `ChatPdfSelectionView`, `GlobalSearchView` now take
+  their view model as an `@ObservedObject` instead of resolving it themselves,
+  and take an optional `selection` binding. Bound (split layout) means a tap
+  selects rather than opens, the folder/tag chip bar is dropped (the sidebar has
+  it), and the Tools catalog renders as rows — a column that fits one tile per
+  row is a list, not a grid.
+- Document actions were pulled out of `FilesView` into `DocumentActionsMenu`
+  (`DocumentActions.swift`), shared with the detail pane's toolbar menu.
+- `Pdf.documentId` is the new selection identity. `Pdf`'s synthesized `Hashable`
+  follows its `PDFDocument` instance, so a document re-read after a refresh never
+  equals the copy a view holds; the store URI does survive. It is the same string
+  the widget and the deeplinks already used.
+- `PdfEditView` reflows on regular width: thumbnails become a vertical rail
+  (`pageRailView`), and the four frequent edits move from the floating glass bar
+  into the toolbar. The phone layout is untouched.
+- The signature sheet is 620×560 on iPad (was 400×385 everywhere), the canvas
+  inside it 260pt tall, and `PencilKitView` gains an optional `PKToolPicker` plus
+  the `.default` drawing policy — which is what gives palm rejection while a
+  Pencil is paired.
+
+### Keyboard, drag and drop, pointer
+
+- `PdfProCommands` (attached to the `WindowGroup`) holds the app-wide shortcuts:
+  ⌘N / ⇧⌘S / ⇧⌘P / ⇧⌘I for new documents, ⌘1–⌘3 and ⌘F for the sections, ⌘, for
+  settings. All of them no-op during onboarding and while the editor is open, so
+  a shortcut never moves the ground behind a modal. Contextual ones live on the
+  control they belong to: ⌘S (save, editor), ⌘E (edit, detail pane), ⌘↑/⌘↓ (page
+  turning, in the editor's More menu so they are discoverable), ⌘↩ (start, tool
+  detail).
+- `DocumentDropDestination.swift` accepts PDFs and images dropped from other
+  apps, on the Files grid and on the ChatPDF well — which advertised "drop your
+  PDF here" without accepting a drop. One PDF is taken on its own; a batch of
+  images becomes one document with a page each. `PdfFileTransfer` handles the
+  other direction: dragging a card out produces the same file the share sheet
+  would.
+- Hover effects on document cards and rows, tool tiles and rows, quick actions,
+  the ChatPDF well and the editor's rail cells.
+
+### Watch out
+
+- **Nothing that needs a tap, a key or a drag has been exercised** — the
+  simulator takes no such input from the CLI, and the machine this was built on
+  has no accessibility permission to drive it. Everything below compiles and the
+  layouts around it are verified from screenshots, but a device or a manual
+  simulator session is still owed for: drag and drop in both directions, every
+  keyboard shortcut, the Pencil tool picker, and the sidebar's tag rows and
+  "Folders & Tags" row (they are `Button`s inside a `List(selection:)`, which is
+  the usual pattern for a non-selectable row but is worth a tap to confirm).
+- Same for **landscape**: everything below was checked on iPad Pro 13" in
+  portrait only, for the same reason. Portrait is the tighter case for a
+  three-column split, so landscape should be safe, but it is unverified.
+- The tool picker lets the user pick any ink colour, including one that will be
+  invisible on a white page. The default is still black.
+- `GlobalSearchView` deliberately keeps its own `ArchiveViewModel`: it drives
+  `searchText`, and sharing the instance would leave the Files grid filtered by
+  whatever was last typed into search.
+- New debug hook: `debugSelectDocument -bool YES` previews the first document in
+  the iPad detail column at launch, since the simulator cannot be tapped.
