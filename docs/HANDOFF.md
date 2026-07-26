@@ -38,7 +38,7 @@ In order:
 7. **EN/IT String Catalog** — `Localizable.xcstrings` + `it` known region, on the
    app and `ShareFileExtension`. **142 keys** at the time, all translated (incl.
    the long-tail extraction of static UI strings).
-   **Since phase 10**: EN / IT / ES, 572 keys, all three complete.
+   **Since phase 11**: EN / IT / ES, 582 keys, all three complete, checked by a lint.
 8. **A2/A2b/A2c (margins + compression)** — `applyPostProcess` draws margins into
    a PDF context so text stays vector, and only rasterizes/JPEG-compresses
    image-only or image-heavy pages (`pageIsImageHeavy`). Covered by
@@ -118,7 +118,7 @@ In order:
 - Extend the test suite: append paths, `PdfScanUtility` progress, `Pdf.shareData`.
 - A6: header cleanup + rename the misspelled `pdfexpert/Applicaction/` →
   `Application/`; async/await modernization (large, module by module).
-- A localization lint to flag raw string literals in new views.
+- ~~A localization lint to flag raw string literals in new views.~~ **Done in phase 11**: `pdfexpert/Scripts/localization_lint.py`, `bundle exec fastlane lint`.
 
 ### OCR follow-ups
 - ✅ **Word-level text layer** — done. The invisible layer is now placed per word
