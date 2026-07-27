@@ -4,7 +4,7 @@ Updated 2026-07-27. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Twenty-one phases of work sit on `main`. The app is feature-complete for the release
+Twenty-two phases of work sit on `main`. The app is feature-complete for the release
 that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 303 unit tests
 and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
@@ -64,6 +64,7 @@ behind is in "What landed on `main`".
 | 19 | The editor stops hoarding: page images are drawn on demand (A5) |
 | 20 | Branch removed: one analytics platform, no attribution SDK |
 | 21 | AppleAttribution in: Search Ads attribution, install id on the purchase |
+| 22 | Facebook removed: the last linked-but-idle SDK |
 
 ## Build / project notes (still true — save time)
 
@@ -1713,3 +1714,55 @@ reported as annual would overstate what a keyword earns.
   History / Product Interaction / Identifier still need declaring, and the
   privacy policy needs to cover attribution and purchase data. The SDK's README
   also flags GDPR as a separate legal question from Apple's policy.
+
+## Phase 22 (2026-07-27) — Facebook removed
+
+### Why
+
+The same sweep as phase 20, on the last SDK that was linked but did nothing.
+`FacebookCore` was initialized in `AppDelegate` on every launch, and the only
+thing the app ever asked of it — turning advertiser-ID collection on or off with
+the ATT answer — had been commented out:
+
+```swift
+private func updateFacebookAdvertiseTrackingSettings() {
+    let enableAdvertiserTracking = self.permissionGranted ?? false
+    #if FACEBOOK
+//        Settings.isAdvertiserIDCollectionEnabled = enableAdvertiserTracking
+    #endif
+}
+```
+
+The plists confirmed it: `FacebookAutoLogAppEventsEnabled = false`,
+`FacebookAdvertiserIDCollectionEnabled = false`. An SDK in the binary, an
+initializer at launch, a URL scheme in the Info.plist, and no data either way.
+
+### What went
+
+- `import FacebookCore` and the `ApplicationDelegate.shared.application(…)` call
+  in `AppDelegate`.
+- `updateFacebookAdvertiseTrackingSettings` in `AppTrackingTransparencyImpl`,
+  its two call sites, and the now-empty `init` that existed only to call it.
+- The `facebook-ios-sdk` package, out of `project.pbxproj` and
+  `Package.resolved`.
+- **The `FACEBOOK` compilation condition** from all four app configurations —
+  `OTHER_SWIFT_FLAGS` keeps `STAGING` / `PRODUCTION`, which is all it was ever
+  carrying besides.
+- The `fb735833828044207` URL scheme and the five `Facebook*` keys, from
+  `InfoTemplate.plist` **and from the two git-ignored `Info.plist` files** (they
+  are the ones the build actually reads; a copy of both was taken first). The
+  `pdfpro` / `pdfprostaging` schemes are untouched.
+
+### What this does not change
+
+ATT. The prompt, the `appTrackingTransparancyAuthorized` event and the whole
+`AppTrackingTransparency` service stay exactly as they were — the Facebook call
+was one line inside them, not the reason they exist.
+
+### Watch out
+
+- If Facebook ads are ever bought for this app, the SDK has to come back for the
+  install to be attributed. What is in the binary today attributes Apple Search
+  Ads only (phase 21).
+- The Facebook app id `735833828044207` still exists on Meta's side; nothing was
+  deleted there.

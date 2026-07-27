@@ -133,7 +133,6 @@
 		893E84A029D5944E00F6B99A /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849A29D5944E00F6B99A /* CameraService.swift */; };
 		893E84A129D5944E00F6B99A /* CameraService+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849B29D5944E00F6B99A /* CameraService+Extensions.swift */; };
 		893E84A629D5C5E200F6B99A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E84A529D5C5E200F6B99A /* ActivityViewController.swift */; };
-		893EB5012AA717B80066914E /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 893EB5002AA717B80066914E /* FacebookCore */; };
 		893EB5052AA722EF0066914E /* StoreKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB5042AA722EF0066914E /* StoreKit+Extensions.swift */; };
 		893EB5072AA723C80066914E /* AnalyticsDefaultParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB5062AA723C80066914E /* AnalyticsDefaultParameters.swift */; };
 		893ED9D02A6920F2004EE67C /* ChatPdfRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */; };
@@ -831,7 +830,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				893EB5012AA717B80066914E /* FacebookCore in Frameworks */,
 				89407EFA2AA8C4C400169801 /* Mantis in Frameworks */,
 				8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */,
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
@@ -1902,7 +1900,6 @@
 				891A07E829E028EE0002FA3A /* CloudKitSyncMonitor */,
 				8991485529E85DE500DD01F2 /* CombineExt */,
 				893BE52A2A6A7864004B05B9 /* CombineMoya */,
-				893EB5002AA717B80066914E /* FacebookCore */,
 				89407EF92AA8C4C400169801 /* Mantis */,
 			);
 			productName = PdfExpert;
@@ -1984,7 +1981,6 @@
 				891A07E729E028EE0002FA3A /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
 				8991485429E85DE500DD01F2 /* XCRemoteSwiftPackageReference "CombineExt" */,
 				893BE5292A6A7864004B05B9 /* XCRemoteSwiftPackageReference "Moya" */,
-				893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				89407EF82AA8C4C400169801 /* XCRemoteSwiftPackageReference "Mantis" */,
 			);
 			productRefGroup = 89CD7A9729D32855003F1C3A /* Products */;
@@ -2762,7 +2758,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"STAGING\"";
+				OTHER_SWIFT_FLAGS = " \"-D\" \"STAGING\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2888,7 +2884,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"STAGING\"";
+				OTHER_SWIFT_FLAGS = " \"-D\" \"STAGING\"";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3021,7 +3017,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"PRODUCTION\"";
+				OTHER_SWIFT_FLAGS = " \"-D\" \"PRODUCTION\"";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3077,7 +3073,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				OTHER_SWIFT_FLAGS = " \"-D\" \"FACEBOOK\" \"-D\" \"PRODUCTION\"";
+				OTHER_SWIFT_FLAGS = " \"-D\" \"PRODUCTION\"";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3413,14 +3409,6 @@
 				minimumVersion = 15.0.0;
 			};
 		};
-		893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 16.0.0;
-			};
-		};
 		89407EF82AA8C4C400169801 /* XCRemoteSwiftPackageReference "Mantis" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/guoyingtao/Mantis.git";
@@ -3497,11 +3485,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 893BE5292A6A7864004B05B9 /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = CombineMoya;
-		};
-		893EB5002AA717B80066914E /* FacebookCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 893EB4FF2AA717B80066914E /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookCore;
 		};
 		89407EF92AA8C4C400169801 /* Mantis */ = {
 			isa = XCSwiftPackageProductDependency;

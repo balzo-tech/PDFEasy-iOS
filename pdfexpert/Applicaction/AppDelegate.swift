@@ -7,7 +7,6 @@
 
 import UIKit
 import FirebaseCore
-import FacebookCore
 import AppleAttribution
 import Factory
 
@@ -16,8 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Firebase init
         FirebaseApp.configure()
-        // Facebook init
-        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 
         // ProjectInfo Validation
         ProjectInfo.validate()

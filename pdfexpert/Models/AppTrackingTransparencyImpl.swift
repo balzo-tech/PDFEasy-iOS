@@ -8,9 +8,6 @@
 
 import Foundation
 import AppTrackingTransparency
-#if FACEBOOK
-import FacebookCore
-#endif
 import Factory
 
 class AppTrackingTransparencyImpl: AppTrackingTransparency {
@@ -33,10 +30,6 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
     
     @Injected(\.analyticsManager) var analyticsManager
 
-    init() {
-        self.updateFacebookAdvertiseTrackingSettings()
-    }
-    
     func requestPermissionIfNeeded() async {
         // There is no advertising identifier on the simulator, so the prompt
         // would only sit in front of every screen during development.
@@ -52,7 +45,6 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
         if #available(iOS 14, *) {
             return await withCheckedContinuation({ continuation in
                 ATTrackingManager.requestTrackingAuthorization(completionHandler: { authorizationStatus in
-                    self.updateFacebookAdvertiseTrackingSettings()
                     self.trackAuthorizationEvent(authorizationStatus: authorizationStatus)
                     continuation.resume()
                 })
@@ -63,13 +55,6 @@ class AppTrackingTransparencyImpl: AppTrackingTransparency {
         #endif
     }
 
-    private func updateFacebookAdvertiseTrackingSettings() {
-        let enableAdvertiserTracking = self.permissionGranted ?? false
-        #if FACEBOOK
-//        Settings.isAdvertiserIDCollectionEnabled = enableAdvertiserTracking
-        #endif
-    }
-    
     private func trackAuthorizationEvent(authorizationStatus: ATTrackingManager.AuthorizationStatus) {
         switch authorizationStatus {
           case .authorized:
