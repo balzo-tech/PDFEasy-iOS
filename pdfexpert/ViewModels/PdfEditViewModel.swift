@@ -64,6 +64,9 @@ class PdfEditViewModel: ObservableObject {
     /// Bumped on every rebuild, so pages drawn for a document the editor has
     /// moved on from are dropped rather than appended to the new one.
     private var renderGeneration: Int = 0
+    /// An edit that arrived before the pages did, waiting for them. Only one is
+    /// ever queued: it comes from the start action, which runs once.
+    private var pendingPageAction: (() -> Void)?
 
     /// How many pages the document has, which is known immediately — unlike the
     /// images of them.
@@ -166,7 +169,6 @@ class PdfEditViewModel: ObservableObject {
     /// tools only ever differed in what runs after the purchase, and that is
     /// `pendingPremiumTool`.
     @Published var monetizationShow: Bool = false
-    @Published var rotateOptionsShow: Bool = false
 
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
@@ -237,7 +239,11 @@ class PdfEditViewModel: ObservableObject {
                 case .openOcr:
                     self.startOcr()
                 case .openRotate:
-                    self.rotateOptionsShow = true
+                    // The one start action that edits the document rather than
+                    // opening something, so it waits for the pages (see
+                    // `whenPagesAreReady`) instead of being dropped by the guard
+                    // in `rotateAllPages`.
+                    self.whenPagesAreReady { [weak self] in self?.run(.rotateAllPages) }
                 case .openPageNumbers:
                     self.startPageNumbers()
                 case .openWatermark:
@@ -437,7 +443,9 @@ class PdfEditViewModel: ObservableObject {
     }
 
     /// Rotates every page in the document, then does the full images+thumbnails refresh
-    /// (a per-page regeneration wouldn't be any cheaper here).
+    /// (a per-page regeneration wouldn't be any cheaper here). Reached from the tool
+    /// panel and from the Shortcuts "Rotate PDF" action; the bar under the page turns
+    /// the page in front of the user, this turns the document.
     @MainActor
     func rotateAllPages(clockwise: Bool) {
         guard self.canEditPages else { return }
@@ -449,6 +457,29 @@ class PdfEditViewModel: ObservableObject {
         self.refreshPages()
         self.shouldShowCloseWarning.wrappedValue = true
         self.analyticsManager.track(event: .pageRotated(rotationType: .all))
+    }
+
+    /// Runs an edit once every page has been drawn, or straight away if they are
+    /// already in. The page operations mutate the document that the render pass
+    /// is still reading on its own queue, which is why they all guard on
+    /// `canEditPages` — but a tool asked for before the editor even appeared (a
+    /// Shortcuts action) deserves to run late rather than not at all.
+    @MainActor
+    private func whenPagesAreReady(_ action: @escaping () -> Void) {
+        guard self.isPreparingPages else {
+            action()
+            return
+        }
+        self.pendingPageAction = action
+    }
+
+    /// The one place the drawing is declared finished, so anything waiting on the
+    /// pages runs here and nowhere else.
+    private func finishPreparingPages() {
+        self.isPreparingPages = false
+        guard let action = self.pendingPageAction else { return }
+        self.pendingPageAction = nil
+        action()
     }
 
     /// Regenerates the page image and thumbnail for a single page, replacing the
@@ -542,6 +573,7 @@ class PdfEditViewModel: ObservableObject {
         switch tool {
         case .rotateLeft: self.rotateCurrentPage(clockwise: false)
         case .rotateRight: self.rotateCurrentPage(clockwise: true)
+        case .rotateAllPages: self.rotateAllPages(clockwise: true)
         case .duplicatePage: self.duplicateCurrentPage()
         case .deletePage: break // the view asks first
         case .addPage: break    // the view asks where from
@@ -966,7 +998,7 @@ class PdfEditViewModel: ObservableObject {
         self.pageImages = []
         self.pdfThumbnails = []
         guard pageCount > 0 else {
-            self.isPreparingPages = false
+            self.finishPreparingPages()
             return
         }
         self.isPreparingPages = true
@@ -987,7 +1019,7 @@ class PdfEditViewModel: ObservableObject {
                     self.pageImages.append(pageImage)
                     self.pdfThumbnails.append(thumbnail)
                     if self.pageImages.count >= pageCount {
-                        self.isPreparingPages = false
+                        self.finishPreparingPages()
                     }
                 }
             }
@@ -995,7 +1027,7 @@ class PdfEditViewModel: ObservableObject {
                 guard generation == self.renderGeneration else { return }
                 // A page that failed to draw would otherwise leave the editor
                 // preparing for ever.
-                self.isPreparingPages = false
+                self.finishPreparingPages()
             }
         }
     }

@@ -108,7 +108,7 @@ final class EditorToolTests: XCTestCase {
         for tool in expectedAbsent {
             XCTAssertFalse(listed.contains(tool), "\(tool) belongs in a bar, not the panel")
         }
-        for tool in [EditorTool.split, .ocr, .watermark, .password, .compress, .share] {
+        for tool in [EditorTool.split, .ocr, .watermark, .password, .compress, .share, .rotateAllPages] {
             XCTAssertTrue(listed.contains(tool), "\(tool) is not reachable from the panel")
         }
     }
@@ -235,6 +235,53 @@ final class EditorToolTests: XCTestCase {
         viewModel.movePages(from: IndexSet(integer: 0), to: 3)
 
         XCTAssertEqual(viewModel.pdfCurrentPageIndex, 2)
+    }
+
+    // MARK: - Rotation
+
+    @MainActor
+    func testRotatingOnePageLeavesTheOthersAlone() {
+        let viewModel = self.makeViewModel(pageCount: 3)
+        viewModel.pdfCurrentPageIndex = 1
+
+        viewModel.run(.rotateRight)
+
+        XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 0)?.rotation, 0)
+        XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 1)?.rotation, 90)
+        XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 2)?.rotation, 0)
+    }
+
+    @MainActor
+    func testRotatingTheDocumentTurnsEveryPage() {
+        let viewModel = self.makeViewModel(pageCount: 3)
+
+        viewModel.run(.rotateAllPages)
+
+        for index in 0..<3 {
+            XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: index)?.rotation, 90,
+                           "page \(index) was left as it was")
+        }
+    }
+
+    /// The Shortcuts "Rotate PDF" action opens the editor and rotates — which
+    /// means it arrives before the pages have finished drawing, and every page
+    /// operation refuses to run until they are in. It used to do nothing at all.
+    @MainActor
+    func testTheRotateStartActionWaitsForThePages() {
+        let viewModel = self.makeViewModel(pageCount: 3,
+                                           startAction: .openRotate,
+                                           waitForPages: false)
+        XCTAssertTrue(viewModel.isPreparingPages, "this test needs the pages to still be arriving")
+
+        viewModel.onAppear()
+        self.waitForPages(viewModel)
+
+        for index in 0..<3 {
+            XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: index)?.rotation, 90,
+                           "page \(index) was left as it was")
+        }
+        // And the images the editor shows were redrawn from the rotated document.
+        XCTAssertEqual(viewModel.pageImages.count, 3)
     }
 
     // MARK: - The pushed flows
@@ -386,6 +433,7 @@ final class EditorToolTests: XCTestCase {
     /// cannot pump the main queue the way the wait below does.
     private func makeViewModel(pageCount: Int,
                                premium: Bool = false,
+                               startAction: PdfEditStartAction? = nil,
                                waitForPages: Bool = true) -> PdfEditViewModel {
         let store = StoreMock()
         store.isPremium.send(premium)
@@ -397,7 +445,7 @@ final class EditorToolTests: XCTestCase {
 
         let pdf = Pdf(pdfDocument: self.makeDocument(pageCount: pageCount))
         let parameter = PdfEditViewModel.InputParameter(pdf: pdf,
-                                                        startAction: nil,
+                                                        startAction: startAction,
                                                         shouldShowCloseWarning: .constant(false))
         let viewModel = PdfEditViewModel(inputParameter: parameter)
         if waitForPages { self.waitForPages(viewModel) }

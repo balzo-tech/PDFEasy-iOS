@@ -60,6 +60,7 @@ behind is in "What landed on `main`".
 | 16 | The last five tool flows pushed too, and one paywall for all of them |
 | 16b | A UI test bundle: the editor's tools and the back button, tapped |
 | 17 | The editor stops freezing: pages are drawn in the background |
+| 18 | Rotate the whole document — the Shortcuts action does something again |
 
 ## Build / project notes (still true — save time)
 
@@ -1460,3 +1461,53 @@ nine seconds.
 - Memory is untouched: a page image is about 2 MB, so a fifty-page document
   still holds ~100 MB of images. That is the next thing to look at, and it wants
   the page model unified first (backlog item A5).
+
+## Phase 18 (2026-07-27) — rotate the whole document
+
+### The problem
+
+The Shortcuts action "Rotate PDF" — and the catalog tool behind it — opened the
+editor and did nothing visible. `PdfEditStartAction.openRotate` raised
+`rotateOptionsShow`, a flag that since phase 15 no view was watching: the sheet
+of rotation options it used to present had been replaced by the two rotate
+buttons in the bar under the page. So the flag was set, nothing appeared, and
+`rotateAllPages(clockwise:)` sat in the view model with no caller at all.
+
+Two halves of the same tool, and only one of them was reachable: the bar turns
+*this page*, and nothing turned *the document*. The catalog kept promising both
+("Turn one page or all of them").
+
+### What changed
+
+- **`EditorTool.rotateAllPages`**, an `.immediate` tool, first in the "Organize
+  pages" group of the panel. It runs `rotateAllPages(clockwise: true)` — a
+  quarter turn right, the same direction the bar's right button turns, and three
+  taps gets you back where you started.
+- **`.openRotate` runs that tool** instead of raising a flag. `rotateOptionsShow`
+  is gone.
+- **The start action waits for the pages.** Every page operation guards on
+  `canEditPages`, which is false while the pages are still being drawn — and a
+  Shortcuts action arrives *before* they are. It would have been dropped on the
+  floor exactly as before. `whenPagesAreReady(_:)` holds it until the drawing
+  finishes; `finishPreparingPages()` is now the one place the drawing is declared
+  over, so there is one place for anything waiting on it to run.
+
+The name is the editor's own ("Rotate all pages", a key that was already in the
+catalog with its IT/ES translations), not the catalog entry's: `.rotatePdf`
+covers the whole of rotating, and this is only the half the page bar does not do.
+It borrows the catalog's `organize` tint so it sits with its neighbours.
+
+### Verification
+
+Three new tests (**294** unit, plus the 4 UI): rotating one page leaves the
+others alone, rotating the document turns every page, and the start action
+rotates a document whose pages have not finished drawing (that test fails against
+the old code by doing nothing at all).
+
+### Watch out
+
+- The rotation is 90° clockwise with no confirmation. It is undoable by tapping
+  three more times, but there is no undo *button* anywhere in the editor.
+- On a long scan the tool redraws every page afterwards (`refreshPages`), so the
+  strip repopulates over a few seconds. The pages themselves are correct
+  immediately.

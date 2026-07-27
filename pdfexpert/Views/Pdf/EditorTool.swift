@@ -46,6 +46,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
     case fillForm
 
     // Organize
+    case rotateAllPages
     case split
     case extractPages
     case removeBlankPages
@@ -91,8 +92,11 @@ enum EditorTool: String, CaseIterable, Identifiable {
         case .signature: return .sign
         case .addText: return .addText
         case .fillForm: return .formFill
-        case .rotateLeft, .rotateRight, .duplicatePage, .deletePage, .reorderPages,
-             .addPage, .password, .metadata, .share:
+        // `rotateAllPages` is deliberately not mapped to `.rotatePdf`: the catalog
+        // entry covers the whole of rotating — one page or all of them — while
+        // this is only the second half, next to a bar that already does the first.
+        case .rotateLeft, .rotateRight, .rotateAllPages, .duplicatePage, .deletePage,
+             .reorderPages, .addPage, .password, .metadata, .share:
             return nil
         }
     }
@@ -107,6 +111,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
         switch self {
         case .rotateLeft: return String(localized: "Rotate left")
         case .rotateRight: return String(localized: "Rotate right")
+        case .rotateAllPages: return String(localized: "Rotate all pages")
         case .duplicatePage: return String(localized: "Duplicate page")
         case .deletePage: return String(localized: "Delete page")
         case .reorderPages: return String(localized: "Reorder pages")
@@ -124,7 +129,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
         if let symbol = self.catalogTool?.systemImage { return symbol }
         switch self {
         case .rotateLeft: return "rotate.left"
-        case .rotateRight: return "rotate.right"
+        case .rotateRight, .rotateAllPages: return "rotate.right"
         case .duplicatePage: return "plus.rectangle.on.rectangle"
         case .deletePage: return "trash"
         case .reorderPages: return "arrow.up.arrow.down"
@@ -140,14 +145,19 @@ enum EditorTool: String, CaseIterable, Identifiable {
     /// model — this only sets the expectation before the user commits.
     var isPremium: Bool { self.catalogTool?.isPremium ?? false }
 
-    var category: ToolCategory? { self.catalogTool?.category }
+    var category: ToolCategory? {
+        if let category = self.catalogTool?.category { return category }
+        // Listed in the panel next to the catalog's own organize tools, so it is
+        // tinted like them rather than falling back to the accent color.
+        return self == .rotateAllPages ? .organize : nil
+    }
 
     var tint: Color { self.category?.tint ?? ColorPalette.accent }
 
     var presentation: EditorToolPresentation {
         switch self {
-        case .rotateLeft, .rotateRight, .duplicatePage, .removeBlankPages,
-             .invertColors, .flatten, .ocr:
+        case .rotateLeft, .rotateRight, .rotateAllPages, .duplicatePage,
+             .removeBlankPages, .invertColors, .flatten, .ocr:
             return .immediate
         // Split, extract, export, compress and permissions are longer than a
         // question — an import, a form, a second document, an alert — but only
@@ -210,7 +220,7 @@ struct EditorToolGroup: Identifiable {
         [
             EditorToolGroup(id: "pages",
                             title: String(localized: "Organize pages"),
-                            tools: [.reorderPages, .split, .extractPages, .removeBlankPages]),
+                            tools: [.rotateAllPages, .reorderPages, .split, .extractPages, .removeBlankPages]),
             EditorToolGroup(id: "content",
                             title: String(localized: "Edit content"),
                             tools: [.ocr, .pageNumbers, .watermark, .invertColors, .flatten]),
