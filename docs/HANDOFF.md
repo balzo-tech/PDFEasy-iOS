@@ -4,7 +4,7 @@ Updated 2026-07-27. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Nineteen phases of work sit on `main`. The app is feature-complete for the release
+Twenty phases of work sit on `main`. The app is feature-complete for the release
 that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 299 unit tests
 and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
@@ -62,6 +62,7 @@ behind is in "What landed on `main`".
 | 17 | The editor stops freezing: pages are drawn in the background |
 | 18 | Rotate the whole document — the Shortcuts action does something again |
 | 19 | The editor stops hoarding: page images are drawn on demand (A5) |
+| 20 | Branch removed: one analytics platform, no attribution SDK |
 
 ## Build / project notes (still true — save time)
 
@@ -223,7 +224,9 @@ In order:
   simply never been translated.
 - **`AppleAttribution` package** — the old branch added it as an *unused*
   dependency; re-adding it as dead weight was skipped. If attribution is actually
-  wanted it needs a real integration (init + config in `AppDelegate`).
+  wanted it needs a real integration (init + config in `AppDelegate`). **Phase 20
+  makes this the only open question about attribution**: with Branch gone, the app
+  has no attribution SDK at all.
 
 ### Backlog (from the old `NEXT_TASKS.md`)
 - Extend the test suite: append paths, `PdfScanUtility` progress, `Pdf.shareData`.
@@ -1580,3 +1583,60 @@ it moves; and the reorder swap agrees with the document.
   comes up again.
 - `EditorPage` lives in `PdfEditViewModel.swift` rather than its own file, to
   avoid a `project.pbxproj` edit for one struct.
+
+## Phase 20 (2026-07-27) — Branch removed
+
+### Why
+
+Branch was one of the two analytics platforms (`AnalyticsManagerImpl` fans every
+event out to a list of them) and the only attribution SDK. It was also, in this
+codebase, not working: there is no `branch_key` in the Info.plist of either
+environment, so every launch logged
+
+```
+[branch.io] Branch.m(346) Error: Branch init error: The Branch user session has not been initialized.
+```
+
+and nothing was ever attributed. Removing it on request.
+
+### What went
+
+- `BranchAnalyticsPlatform.swift` — the platform, including the one event it
+  treated specially: `checkoutCompleted` became Branch's standard `.subscribe` /
+  `.startTrial` with price, currency and product name.
+- `AttributionManager` **and its implementation** — Branch was the whole of it.
+  Its three call sites went with it: `onAppDidFinishLaunching` in `AppDelegate`
+  (which called `initSession`), `onOpenUrl` in `ContentView`, and
+  `onHandleATTAuthorizationStatus` in `AppTrackingTransparencyImpl`.
+- The `BranchSDK` package (`ios-branch-sdk-spm`), out of `project.pbxproj` and
+  `Package.resolved`.
+
+### What stayed
+
+- **Firebase Analytics keeps every event**, `checkoutCompleted` included — it was
+  always sent to both. Nothing that was measured in Firebase changed.
+- **Deeplinks still work.** Branch's own `initSession` callback was a `print` and
+  a `// TODO: Implement Deeplink from here`; the app's real URL handling is
+  `MainCoordinator.handleOpenUrl`, which `ContentView.onOpenURL` still calls.
+- **ATT still runs.** The prompt, the `appTrackingTransparancyAuthorized` event
+  and the Facebook advertiser-tracking hook are untouched; only the line handing
+  the status to Branch is gone.
+
+### What was lost, on purpose
+
+Campaign attribution. Nothing now connects an install or a subscription to the
+campaign that produced it — no Branch, no AppsFlyer, no Adjust, and
+`AppleAttribution` was never integrated (see "Intentionally deferred"). If paid
+acquisition is planned before release, this is the gap.
+
+### Watch out
+
+- If the local, git-ignored `Info.plist` files of either environment carry a
+  `branch_key` or `branch_universal_link_domains`, they are now dead keys and can
+  go. The tracked template (`pdfexpert/Resources/InfoTemplate.plist`) never had
+  them.
+- Any Branch link already in the wild (an email campaign, an ad) will still open
+  the App Store, but the app will no longer read the parameters behind it.
+- The Facebook SDK is still linked and still initialized in `AppDelegate`, with
+  advertiser-ID collection commented out. It is the next piece of dead weight, if
+  the same sweep continues.
