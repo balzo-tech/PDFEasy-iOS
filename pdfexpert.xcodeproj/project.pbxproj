@@ -1315,7 +1315,8 @@
 				89CD7AAD29D329B1003F1C3A /* Resources */,
 				89CD7A9F29D32856003F1C3A /* Preview Content */,
 			);
-			path = PdfExpert;
+			name = PdfExpert;
+			path = pdfexpert;
 			sourceTree = "<group>";
 		};
 		89CD7A9F29D32856003F1C3A /* Preview Content */ = {
