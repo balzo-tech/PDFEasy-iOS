@@ -1,6 +1,6 @@
 //
 //  ProjectInfo.swift
-//  FastCheckIn
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 03/07/23.
 //

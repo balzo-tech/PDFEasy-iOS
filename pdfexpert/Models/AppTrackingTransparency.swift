@@ -1,9 +1,8 @@
 //
 //  AppTrackingTransparency.swift
-//  FourBooks
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 03/05/21.
-//  Copyright © 2021 4Books. All rights reserved.
 //
 
 import Foundation

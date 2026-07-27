@@ -1,6 +1,6 @@
 //
 //  SharedLocalizedError.swift
-//  StoryKidsAI
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 07/03/23.
 //

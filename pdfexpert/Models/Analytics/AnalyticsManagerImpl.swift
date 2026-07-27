@@ -1,6 +1,6 @@
 //
 //  AnalyticsManagerImpl.swift
-//  ForYouAndMe
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 10/07/2020.
 //

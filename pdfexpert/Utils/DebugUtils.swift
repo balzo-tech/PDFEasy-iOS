@@ -1,9 +1,8 @@
 //
 //  DebugUtils.swift
-//  FourBooks
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 15/06/2020.
-//  Copyright © 2020 4Books. All rights reserved.
 //
 
 import Foundation

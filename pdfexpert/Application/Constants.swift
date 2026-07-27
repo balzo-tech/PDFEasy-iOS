@@ -1,6 +1,6 @@
 //
 //  Constants.swift
-//  ChatAI
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 23/02/23.
 //

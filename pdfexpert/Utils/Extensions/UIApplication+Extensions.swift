@@ -1,6 +1,6 @@
 //
 //  UIApplication+Extensions.swift
-//  ChatAI
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 02/03/23.
 //

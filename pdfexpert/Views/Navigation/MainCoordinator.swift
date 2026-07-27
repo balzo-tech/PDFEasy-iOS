@@ -1,6 +1,6 @@
 //
 //  MainCoordinator.swift
-//  ChatAI
+//  PdfExpert
 //
 //  Created by Leonardo Passeri on 24/02/23.
 //

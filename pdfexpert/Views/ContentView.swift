@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  OpenAI chat-dalle
+//  PdfExpert
 //
 //  Created by kz on 07/02/2023.
 //

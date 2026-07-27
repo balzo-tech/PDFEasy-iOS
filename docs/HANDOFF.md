@@ -4,8 +4,8 @@ Updated 2026-07-27. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Twenty-two phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 303 unit tests
+Twenty-three phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 315 unit tests
 and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -65,6 +65,7 @@ behind is in "What landed on `main`".
 | 20 | Branch removed: one analytics platform, no attribution SDK |
 | 21 | AppleAttribution in: Search Ads attribution, install id on the purchase |
 | 22 | Facebook removed: the last linked-but-idle SDK |
+| 23 | A6: the folder spelled right, 39 headers, and the three missing tests |
 
 ## Build / project notes (still true — save time)
 
@@ -232,8 +233,9 @@ In order:
 
 ### Backlog (from the old `NEXT_TASKS.md`)
 - Extend the test suite: append paths, `PdfScanUtility` progress, `Pdf.shareData`.
-- A6: header cleanup + rename the misspelled `pdfexpert/Applicaction/` →
-  `Application/`; async/await modernization (large, module by module).
+- ~~A6: header cleanup + rename the misspelled `pdfexpert/Applicaction/` →
+  `Application/`~~ **done in phase 23**, tests included. What is left of A6 is the
+  async/await modernization, deliberately not done — see that phase.
 - ~~A localization lint to flag raw string literals in new views.~~ **Done in phase 11**: `pdfexpert/Scripts/localization_lint.py`, `bundle exec fastlane lint`.
 
 ### OCR follow-ups
@@ -1766,3 +1768,62 @@ was one line inside them, not the reason they exist.
   Ads only (phase 21).
 - The Facebook app id `735833828044207` still exists on Meta's side; nothing was
   deleted there.
+
+## Phase 23 (2026-07-27) — A6, minus the part that was not worth doing
+
+A6 was one backlog line covering four jobs of very different size. Three of them
+are done here; the fourth is deliberately left, with a reason.
+
+### The folder
+
+`pdfexpert/Applicaction/` — misspelled since the beginning — is now
+`pdfexpert/Application/`. Four files, and the group in `project.pbxproj` with it.
+
+### The headers
+
+Thirty-nine files carried the name of the project they were copied from:
+`ChatAI` (15), `StoryKidsAI` (11), `SwiftCamera` (5), `FourBooks` (3),
+`ForYouAndMe` (3), `FastCheckIn`, `OpenAI chat-dalle`. They now say `PdfExpert`
+(or `PdfExpertTests`). Four `Copyright © … 4Books` / `dPro` lines were dropped
+rather than rewritten: this app is not theirs, and inventing a new copyright line
+is not a header fix. The `Created by` attributions are untouched — they are true.
+
+### The tests
+
+`PdfAppendAndShareTests`, twelve of them, over the three areas the old
+`NEXT_TASKS.md` had been asking for. They share a theme: each is a place where
+the document the user ends up with can quietly differ from the one they were
+looking at.
+
+- **Appending.** A page added to the editor keeps the strip in step with the
+  document, whether it arrives as an image or as another PDF — and, the case the
+  code comments warn about, a page that arrives *while the editor is still
+  drawing* is not counted twice.
+- **Scan progress.** `makeDocument` reports once per page, in order, ending on
+  the total — including for a page that fails to render, because a bar that stops
+  short of the end reads as a hang. `convertScan` starts determinate (the page
+  count is known before anything is rendered) and a scan of nothing reports an
+  error rather than an empty document.
+- **Sharing.** What comes out of the share sheet is the document as it was saved,
+  page text included — the promise phase 9 made when it stopped re-processing on
+  the way out. A protected document goes out protected, and the temporary file is
+  cleaned up afterwards.
+
+Two of those tests needed `currentAnalyticsPdfInputType` set first: the append
+path asserts on it, and in the app the picker always sets it on the way in.
+
+### What was left, and why
+
+**The async/await modernization.** There are 98 `DispatchQueue` calls in the app
+and most of them are deliberate: the page rendering of phase 19, and the
+one-runloop deferrals that let a sheet finish dismissing before the next thing is
+presented (they replaced fixed `Task.sleep` delays, which is a fix worth
+keeping). Converting them buys nothing visible and risks timing regressions that
+no test would catch. The 18 completion-handler APIs are a more defensible target,
+but that is a change with its own verification burden and it can be done where it
+actually helps, one flow at a time.
+
+### Verification
+
+**315** unit tests (12 new), plus the 4 UI tests. Build and localization lint
+clean.
