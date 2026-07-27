@@ -45,7 +45,7 @@ struct PdfEditView: View {
     @State private var showingImageInputPicker = false
     @State private var showingDeleteConfermation = false
 
-    @State private var draggedImage: UIImage? = nil
+    @State private var draggedPageId: EditorPage.ID? = nil
 
     private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
 
@@ -68,7 +68,7 @@ struct PdfEditView: View {
             ColorPalette.background.ignoresSafeArea()
             if self.isWideLayout {
                 HStack(spacing: 0) {
-                    if self.viewModel.pdfThumbnails.count > 1 {
+                    if self.viewModel.pages.count > 1 {
                         self.pageRailView
                         Divider()
                     }
@@ -79,7 +79,7 @@ struct PdfEditView: View {
                 VStack(spacing: 0) {
                     self.pdfView
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    if self.viewModel.pdfThumbnails.count > 1 {
+                    if self.viewModel.pages.count > 1 {
                         self.pageListView
                     }
                 }
@@ -199,16 +199,16 @@ struct PdfEditView: View {
     // MARK: - Pages
 
     @ViewBuilder var pdfView: some View {
-        if self.viewModel.pageImages.isEmpty, self.viewModel.isPreparingPages {
+        if self.viewModel.pages.isEmpty, self.viewModel.isPreparingPages {
             self.preparingView
-        } else if self.viewModel.pageImages.count > 0 {
+        } else if self.viewModel.pages.count > 0 {
             TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
-                ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, pageImage) in
-                    Image(uiImage: pageImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .clipShape(.rect(cornerRadius: DS.Radius.thumbnail, style: .continuous))
-                        .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
+                ForEach(Array(self.viewModel.pages.enumerated()), id: \.element.id) { (pageIndex, page) in
+                    // Full size if it has been drawn, the thumbnail scaled up if
+                    // not: only the pages around this one are kept at full size,
+                    // so a fast swipe can outrun the drawing by a moment.
+                    let drawn = self.viewModel.pageImage(at: pageIndex)
+                    PageImage(image: drawn ?? page.thumbnail, isSharp: drawn != nil)
                         .padding(.horizontal, DS.Spacing.md)
                         .padding(.vertical, DS.Spacing.xs)
                         .tag(pageIndex)
@@ -267,14 +267,14 @@ struct PdfEditView: View {
         ScrollViewReader { proxy in
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(spacing: DS.Spacing.xs) {
-                    ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
+                    ForEach(Array(self.viewModel.pages.enumerated()), id: \.element.id) { index, page in
                         Button(action: {
                             withAnimation(DS.Motion.quick) {
                                 self.viewModel.pdfCurrentPageIndex = index
                             }
                         }) {
                             VStack(spacing: 4) {
-                                self.getThumbnailCell(image: image)
+                                self.getThumbnailCell(page: page)
                                     .applyRailCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
                                 Text("\(index + 1)")
                                     .font(forCategory: .caption2)
@@ -302,14 +302,14 @@ struct PdfEditView: View {
     var pageListView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: DS.Spacing.xs) {
-                ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, image in
+                ForEach(Array(self.viewModel.pages.enumerated()), id: \.element.id) { index, page in
                     Button(action: {
                         withAnimation(DS.Motion.quick) {
                             self.viewModel.pdfCurrentPageIndex = index
                         }
                     }) {
                         VStack(spacing: 4) {
-                            self.getThumbnailCell(image: image)
+                            self.getThumbnailCell(page: page)
                                 .applyCellStyle(highlight: index == self.viewModel.pdfCurrentPageIndex)
                             Text("\(index + 1)")
                                 .font(forCategory: .caption2)
@@ -391,7 +391,7 @@ struct PdfEditView: View {
     }
 
     private func goToPage(_ index: Int) {
-        guard index >= 0, index < self.viewModel.pageImages.count else { return }
+        guard index >= 0, index < self.viewModel.pages.count else { return }
         withAnimation(DS.Motion.quick) { self.viewModel.pdfCurrentPageIndex = index }
     }
 
@@ -453,18 +453,62 @@ struct PdfEditView: View {
         .transition(.move(edge: .top).combined(with: .opacity))
     }
 
-    func getThumbnailCell(image: UIImage) -> some View {
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
+    func getThumbnailCell(page: EditorPage) -> some View {
+        PageThumbnail(image: page.thumbnail)
             .onDrag {
-                self.draggedImage = image
+                self.draggedPageId = page.id
                 return NSItemProvider()
             }
             .onDrop(of: [.image],
-                    delegate: PdfEditDropViewDelegate(destinationItem: image,
-                                                      draggedItem: self.$draggedImage,
+                    delegate: PdfEditDropViewDelegate(destinationId: page.id,
+                                                      draggedId: self.$draggedPageId,
                                                       viewModel: self.viewModel))
+    }
+}
+
+/// A page's small image, or a placeholder for a page that would not draw. The
+/// thumbnails arrive one at a time and a page that fails to draw still gets an
+/// entry, so "no image" is a state the strip has to be able to show.
+struct PageThumbnail: View {
+
+    let image: UIImage?
+
+    var body: some View {
+        if let image = self.image {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        } else {
+            ColorPalette.surface
+                .overlay {
+                    Image(systemName: "doc")
+                        .font(.system(size: 15))
+                        .foregroundStyle(ColorPalette.textTertiary)
+                }
+        }
+    }
+}
+
+/// The page in the pager: the full-size drawing when there is one, the thumbnail
+/// stretched to fill the same space when there is not. Same frame either way, so
+/// the page does not jump when the sharp version arrives.
+struct PageImage: View {
+
+    let image: UIImage?
+    let isSharp: Bool
+
+    var body: some View {
+        if let image = self.image {
+            Image(uiImage: image)
+                .resizable()
+                .interpolation(self.isSharp ? .high : .medium)
+                .aspectRatio(contentMode: .fit)
+                .clipShape(.rect(cornerRadius: DS.Radius.thumbnail, style: .continuous))
+                .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
+        } else {
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
 }
 
@@ -512,8 +556,8 @@ struct PdfEditView_Previews: PreviewProvider {
 
 fileprivate struct PdfEditDropViewDelegate: DropDelegate {
 
-    let destinationItem: UIImage
-    @Binding var draggedItem: UIImage?
+    let destinationId: EditorPage.ID
+    @Binding var draggedId: EditorPage.ID?
     var viewModel: PdfEditViewModel
 
     func dropUpdated(info: DropInfo) -> DropProposal? {
@@ -521,20 +565,19 @@ fileprivate struct PdfEditDropViewDelegate: DropDelegate {
     }
 
     func performDrop(info: DropInfo) -> Bool {
-        self.draggedItem = nil
+        self.draggedId = nil
         return true
     }
 
     func dropEntered(info: DropInfo) {
-        // Swap Items
-        if let draggedItem {
-            let fromIndex = self.viewModel.pdfThumbnails.firstIndex(of: draggedItem)
-            if let fromIndex {
-                let toIndex = self.viewModel.pdfThumbnails.firstIndex(of: self.destinationItem)
-                if let toIndex, fromIndex != toIndex {
-                    self.viewModel.handlePageReordering(fromIndex: fromIndex, toIndex: toIndex)
-                }
-            }
+        // Swap Items. By page identity: two pages of a scan can be the same
+        // picture, and looking them up by image found whichever came first.
+        guard let draggedId = self.draggedId,
+              let fromIndex = self.viewModel.pages.firstIndex(where: { $0.id == draggedId }),
+              let toIndex = self.viewModel.pages.firstIndex(where: { $0.id == self.destinationId }),
+              fromIndex != toIndex else {
+            return
         }
+        self.viewModel.handlePageReordering(fromIndex: fromIndex, toIndex: toIndex)
     }
 }

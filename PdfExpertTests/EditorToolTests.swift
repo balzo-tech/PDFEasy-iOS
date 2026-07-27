@@ -9,9 +9,8 @@
 //  read its names and symbols from `ToolCatalog` rather than carrying a second
 //  copy — that was the whole point of the restructure, and a hard-coded string
 //  slipping back in would be invisible until a translator noticed. Second, the
-//  page maths: duplicating, deleting and moving all edit three parallel arrays
-//  (the document, the page images, the thumbnails), and any of them drifting out
-//  of step shows the user the wrong page.
+//  page maths: duplicating, deleting and moving edit the document and the page
+//  list in step, and the two drifting apart shows the user the wrong page.
 //
 
 import XCTest
@@ -152,8 +151,7 @@ final class EditorToolTests: XCTestCase {
         viewModel.duplicateCurrentPage()
 
         XCTAssertEqual(viewModel.pdf.pdfDocument.pageCount, 4)
-        XCTAssertEqual(viewModel.pageImages.count, 4)
-        XCTAssertEqual(viewModel.pdfThumbnails.count, 4)
+        XCTAssertEqual(viewModel.pages.count, 4)
         // The copy is selected, so whatever the user does next happens to it.
         XCTAssertEqual(viewModel.pdfCurrentPageIndex, 2)
     }
@@ -193,7 +191,7 @@ final class EditorToolTests: XCTestCase {
     }
 
     @MainActor
-    func testMovingAPageDownReordersEveryParallelArray() {
+    func testMovingAPageDownReordersTheDocumentAndTheList() {
         let viewModel = self.makeViewModel(pageCount: 3)
         let firstPageText = viewModel.pdf.pdfDocument.page(at: 0)?.string
 
@@ -201,8 +199,7 @@ final class EditorToolTests: XCTestCase {
         viewModel.movePages(from: IndexSet(integer: 0), to: 2)
 
         XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 1)?.string, firstPageText)
-        XCTAssertEqual(viewModel.pageImages.count, 3)
-        XCTAssertEqual(viewModel.pdfThumbnails.count, 3)
+        XCTAssertEqual(viewModel.pages.count, 3)
     }
 
     @MainActor
@@ -213,6 +210,23 @@ final class EditorToolTests: XCTestCase {
         viewModel.movePages(from: IndexSet(integer: 2), to: 0)
 
         XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 0)?.string, lastPageText)
+    }
+
+    /// The strip's drag is a swap, and the document and the page list have to
+    /// swap the same way. They did not: the list moved while the document
+    /// swapped, which agree only for pages next to each other.
+    @MainActor
+    func testDraggingAThumbnailTwoPlacesAlongSwapsBoth() {
+        let viewModel = self.makeViewModel(pageCount: 4)
+        let texts = (0..<4).map { viewModel.pdf.pdfDocument.page(at: $0)?.string }
+        let pageIds = viewModel.pages.map(\.id)
+
+        viewModel.handlePageReordering(fromIndex: 0, toIndex: 3)
+
+        XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 0)?.string, texts[3])
+        XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 3)?.string, texts[0])
+        // And the strip says the same thing the document does.
+        XCTAssertEqual(viewModel.pages.map(\.id), [pageIds[3], pageIds[1], pageIds[2], pageIds[0]])
     }
 
     @MainActor
@@ -280,8 +294,8 @@ final class EditorToolTests: XCTestCase {
             XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: index)?.rotation, 90,
                            "page \(index) was left as it was")
         }
-        // And the images the editor shows were redrawn from the rotated document.
-        XCTAssertEqual(viewModel.pageImages.count, 3)
+        // And the pages the editor shows were redrawn from the rotated document.
+        XCTAssertEqual(viewModel.pages.count, 3)
     }
 
     // MARK: - The pushed flows
@@ -463,7 +477,7 @@ final class EditorToolTests: XCTestCase {
             RunLoop.current.run(until: Date().addingTimeInterval(0.01))
         }
         XCTAssertFalse(viewModel.isPreparingPages, "the pages never finished drawing")
-        XCTAssertEqual(viewModel.pageImages.count, viewModel.pageCount)
+        XCTAssertEqual(viewModel.pages.count, viewModel.pageCount)
     }
 }
 

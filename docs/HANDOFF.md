@@ -1,11 +1,11 @@
 # Handoff — PdfExpert / PDF Easy
 
-Updated 2026-07-26. Read this first when picking the work up in a fresh session.
+Updated 2026-07-27. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Sixteen phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 291 unit tests
+Nineteen phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 299 unit tests
 and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -61,6 +61,7 @@ behind is in "What landed on `main`".
 | 16b | A UI test bundle: the editor's tools and the back button, tapped |
 | 17 | The editor stops freezing: pages are drawn in the background |
 | 18 | Rotate the whole document — the Shortcuts action does something again |
+| 19 | The editor stops hoarding: page images are drawn on demand (A5) |
 
 ## Build / project notes (still true — save time)
 
@@ -212,10 +213,10 @@ In order:
   creates it automatically, production does not. Verify iCloud sync still works.
 
 ### Intentionally deferred
-- **A5 page-model unification** — `pageImages` + `pdfThumbnails` →
-  `pages: [PdfPagePreview]` with background preview generation. Riskier
-  data-model refactor (page display/reorder/delete), not headless-verifiable.
-  Only the state-machine part of A5 was done.
+- ~~**A5 page-model unification**~~ — **done in phase 19**: `pageImages` +
+  `pdfThumbnails` became one `pages: [EditorPage]`, and the full-size images are
+  drawn on demand around the page on screen. Still wants a device run on a real
+  scan (see the phase's "watch out").
 - ~~**Localization interpolated strings**~~ — **done in phase 10.** No Xcode
   extraction pass was needed in the end: the keys were already in the catalog
   (`Page %lld`, `%lld of %lld`, `Welcome in %@:\nConvert & Edit`, …), they had
@@ -1511,3 +1512,71 @@ the old code by doing nothing at all).
 - On a long scan the tool redraws every page afterwards (`refreshPages`), so the
   strip repopulates over a few seconds. The pages themselves are correct
   immediately.
+
+## Phase 19 (2026-07-27) — the editor stops hoarding (A5)
+
+### The problem
+
+Phase 17 stopped the editor freezing; it left the other half of the same story
+alone, and said so. The editor held **two images for every page, for the whole
+session**: `pageImages` (the page at its own size, ~2 MB) and `pdfThumbnails`
+(the strip, 80×80). Fifty pages of scan meant ~100 MB of pictures — and the pager
+shows one page at a time, so about 96 MB of it was pages nobody was looking at.
+
+Two parallel arrays plus the document is also three lists that every page
+operation had to edit in step, and each of them had its own way of going wrong.
+The drag in the thumbnail strip found the page being dragged by comparing
+`UIImage`s, which for two identical scanned pages finds whichever came first.
+
+### What changed
+
+**One list, with identity.** `pageImages` + `pdfThumbnails` became
+`pages: [EditorPage]`, one entry per page, carrying the thumbnail and a `UUID`.
+The identity is the point: pages get moved, copied and deleted, and an index is
+not a name.
+
+**The full-size images are drawn on demand**, keyed by that identity, and only
+for the page on screen and its two neighbours (`loadedPageImages`,
+`pageImageWindow = 1`). Two `didSet`s drive it — the page being looked at, and
+the list of pages — so there is no way to change either and forget to update what
+is drawn. A page that moves keeps its image; a page that scrolls away loses it.
+
+**The renders are safe against edits.** A page is copied on the main thread and
+the *copy* is drawn in the background, so deleting or rotating a page while its
+image is being drawn cannot pull the document out from under the render. Each
+render carries a token; a page edited mid-render invalidates the token, and the
+picture of the page as it was is thrown away instead of landing on top of the
+edit.
+
+**Opening got cheaper too**, as a side effect: the preparation pass now draws
+only the thumbnails, so the photograph inside each page of a scan is decoded once
+instead of twice — half of phase 17's measured 0.9s per page.
+
+**One bug fell out of it.** `handlePageReordering` swapped two pages in the
+document but *moved* the entry in the arrays. Those agree only for neighbouring
+pages, so dragging a thumbnail two places along in one go showed one order and
+saved another. Both are swaps now.
+
+### Verification
+
+Five new tests (**299** unit, plus the 4 UI): a 40-page document keeps at most
+three page images drawn; walking all 40 pages ends holding three, not forty, with
+the first page dropped; the neighbours of the page on screen are drawn ahead of
+being reached and the page beyond them is not; a page keeps its drawn image when
+it moves; and the reorder swap agrees with the document.
+
+### Watch out
+
+- **Not tried on a device.** The thing to try is the same scan phase 17 wants: a
+  real twenty-page scan, swiped end to end (the pager should stay sharp, with at
+  most a moment of thumbnail while a page is drawn), then reordered by dragging a
+  thumbnail several places along, then rotated.
+- A page whose full-size image has not arrived shows **its thumbnail stretched**,
+  which is legible but visibly soft. On a text document this is imperceptible; on
+  a scan it is a moment. If it reads badly on the device, the answer is a bigger
+  thumbnail (`K.Misc.ThumbnailEditSize`), not a bigger window.
+- The strip still holds a thumbnail per page — 80×80 at native scale is ~230 KB,
+  so a fifty-page document keeps ~11 MB. That is the next thing, if memory ever
+  comes up again.
+- `EditorPage` lives in `PdfEditViewModel.swift` rather than its own file, to
+  avoid a `project.pbxproj` edit for one struct.

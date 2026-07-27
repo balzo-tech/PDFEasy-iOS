@@ -2,19 +2,23 @@
 //  EditorOpeningCostTests.swift
 //  PdfExpertTests
 //
-//  What it costs to open a document in the editor.
+//  What it costs to open a document in the editor — in time, and in memory.
 //
-//  Opening builds two images per page — one for the pager, one for the strip —
-//  and it used to build all of them synchronously inside `init`, and again after
-//  every tool. On a text document that is free. On a scan it is not: the cost is
-//  decoding the photograph inside each page, it is paid twice per page whatever
-//  size comes out, and it measured **0.9s per page on a Mac**. A twenty-page
-//  scan therefore froze the editor for eighteen seconds before it drew anything
-//  — which from the outside is indistinguishable from an editor whose buttons do
-//  not work, because for those eighteen seconds they do not.
+//  Opening used to build two images per page synchronously inside `init`, and
+//  again after every tool. On a text document that is free. On a scan it is not:
+//  the cost is decoding the photograph inside each page, it was paid twice per
+//  page whatever size comes out, and it measured **0.9s per page on a Mac**. A
+//  twenty-page scan therefore froze the editor for eighteen seconds before it
+//  drew anything — which from the outside is indistinguishable from an editor
+//  whose buttons do not work, because for those eighteen seconds they do not.
 //
-//  These tests hold the line: opening returns immediately, and the pages arrive
-//  afterwards.
+//  The second half of the same story is memory: one full-size image per page is
+//  about 2 MB, so the editor sat on ~100 MB for a fifty-page scan, nearly all of
+//  it pages nobody was looking at. Now only the page on screen and its
+//  neighbours are kept drawn.
+//
+//  These tests hold both lines: opening returns immediately, the pages arrive
+//  afterwards, and what is held stays bounded however long the document is.
 //
 
 import XCTest
@@ -59,11 +63,9 @@ final class EditorOpeningCostTests: XCTestCase {
 
         // The first page is what the reader is looking at, and it should not
         // wait for the tenth.
-        let firstPageArrived = self.wait(upTo: 20) { viewModel.pageImages.count >= 1 }
+        let firstPageArrived = self.wait(upTo: 20) { viewModel.pages.count >= 1 }
 
         XCTAssertTrue(firstPageArrived, "no page was drawn")
-        XCTAssertEqual(viewModel.pdfThumbnails.count, viewModel.pageImages.count,
-                       "the pager and the strip drifted apart")
         // Until every page is in, nothing is allowed to reorder or delete them.
         XCTAssertEqual(viewModel.canEditPages, !viewModel.isPreparingPages)
     }
@@ -73,8 +75,72 @@ final class EditorOpeningCostTests: XCTestCase {
         let viewModel = self.makeViewModel(pdf: Pdf(pdfDocument: self.makeTextDocument(pageCount: 3)))
 
         XCTAssertTrue(self.wait(upTo: 10) { !viewModel.isPreparingPages })
-        XCTAssertEqual(viewModel.pageImages.count, 3)
+        XCTAssertEqual(viewModel.pages.count, 3)
         XCTAssertTrue(viewModel.canEditPages)
+    }
+
+    // MARK: - What is kept in memory
+
+    /// The point of the whole arrangement: a long document does not mean a long
+    /// list of full-size images.
+    @MainActor
+    func testALongDocumentOnlyKeepsAFewPagesDrawn() {
+        let viewModel = self.makeViewModel(pdf: Pdf(pdfDocument: self.makeTextDocument(pageCount: 40)))
+
+        XCTAssertTrue(self.wait(upTo: 20) { !viewModel.isPreparingPages })
+        XCTAssertTrue(self.wait(upTo: 10) { viewModel.pageImage(at: 0) != nil },
+                      "the page being looked at was never drawn")
+
+        XCTAssertEqual(viewModel.pages.count, 40)
+        XCTAssertLessThanOrEqual(viewModel.loadedPageImages.count, 3,
+                                 "the editor is holding \(viewModel.loadedPageImages.count) page images")
+    }
+
+    /// Turning pages moves the window: what is behind you is dropped, so a walk
+    /// through a long document costs the same as sitting on page one.
+    @MainActor
+    func testTurningPagesDropsTheOnesLeftBehind() {
+        let viewModel = self.makeViewModel(pdf: Pdf(pdfDocument: self.makeTextDocument(pageCount: 40)))
+        XCTAssertTrue(self.wait(upTo: 20) { !viewModel.isPreparingPages })
+        XCTAssertTrue(self.wait(upTo: 10) { viewModel.pageImage(at: 0) != nil })
+
+        for index in 1..<40 {
+            viewModel.pdfCurrentPageIndex = index
+            _ = self.wait(upTo: 5) { viewModel.pageImage(at: index) != nil }
+        }
+
+        XCTAssertNotNil(viewModel.pageImage(at: 39), "the page on screen is not drawn")
+        XCTAssertNil(viewModel.pageImage(at: 0), "the first page is still being held")
+        XCTAssertLessThanOrEqual(viewModel.loadedPageImages.count, 3,
+                                 "the editor is holding \(viewModel.loadedPageImages.count) page images")
+    }
+
+    /// The pages either side are drawn too, so a swipe does not wait for a render.
+    @MainActor
+    func testTheNeighbouringPagesAreDrawnAhead() {
+        let viewModel = self.makeViewModel(pdf: Pdf(pdfDocument: self.makeTextDocument(pageCount: 10)))
+        XCTAssertTrue(self.wait(upTo: 20) { !viewModel.isPreparingPages })
+
+        viewModel.pdfCurrentPageIndex = 5
+        XCTAssertTrue(self.wait(upTo: 10) { viewModel.pageImage(at: 6) != nil },
+                      "the next page was not drawn ahead of being reached")
+        XCTAssertNotNil(viewModel.pageImage(at: 4))
+        XCTAssertNil(viewModel.pageImage(at: 7))
+    }
+
+    /// A page keeps its drawn image when it moves: the images are keyed by the
+    /// page's own identity, not by where it happens to sit.
+    @MainActor
+    func testAPageKeepsItsImageWhenItMoves() {
+        let viewModel = self.makeViewModel(pdf: Pdf(pdfDocument: self.makeTextDocument(pageCount: 4)))
+        XCTAssertTrue(self.wait(upTo: 20) { !viewModel.isPreparingPages })
+        XCTAssertTrue(self.wait(upTo: 10) { viewModel.pageImage(at: 0) != nil })
+        let firstPageImage = viewModel.pageImage(at: 0)
+
+        viewModel.movePages(from: IndexSet(integer: 0), to: 2)
+
+        XCTAssertEqual(viewModel.pageImage(at: 1), firstPageImage,
+                       "the page was drawn again just for having moved")
     }
 
     // MARK: - Fixtures

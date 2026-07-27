@@ -119,16 +119,23 @@ class PDFUtility {
             let nativeSize = CGSize(width: size.width * nativeScale, height: size.height * nativeScale)
             return pdfDocumentPage.thumbnail(of: nativeSize, for: PDFDisplayBox.trimBox)
         } else {
-            // A page rotated by a quarter turn (90°/270°) renders with its width and
-            // height swapped; size the target box to the rotation-adjusted bounds so the
-            // thumbnail keeps the correct aspect instead of being squeezed into the
-            // unrotated media box.
-            let mediaBoxSize = pdfDocumentPage.bounds(for: .mediaBox).size
-            let targetSize = (pdfDocumentPage.rotation % 180 != 0)
-                ? CGSize(width: mediaBoxSize.height, height: mediaBoxSize.width)
-                : mediaBoxSize
-            return pdfDocumentPage.thumbnail(of: targetSize, for: .mediaBox)
+            return self.generatePageImage(pdfDocumentPage)
         }
+    }
+
+    /// A page drawn at its own size. Takes the page rather than a document and an
+    /// index, so a *copy* of the page can be drawn on a background queue while the
+    /// document it came from is being edited — see `PdfEditViewModel.drawPageImage`.
+    static func generatePageImage(_ page: PDFPage) -> UIImage {
+        // A page rotated by a quarter turn (90°/270°) renders with its width and
+        // height swapped; size the target box to the rotation-adjusted bounds so the
+        // image keeps the correct aspect instead of being squeezed into the
+        // unrotated media box.
+        let mediaBoxSize = page.bounds(for: .mediaBox).size
+        let targetSize = (page.rotation % 180 != 0)
+            ? CGSize(width: mediaBoxSize.height, height: mediaBoxSize.width)
+            : mediaBoxSize
+        return page.thumbnail(of: targetSize, for: .mediaBox)
     }
     
     /// Returns true when a page is dominated by a high-resolution embedded image

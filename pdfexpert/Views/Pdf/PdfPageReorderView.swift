@@ -22,11 +22,9 @@ struct PdfPageReorderView: View {
     var body: some View {
         ToolScreen(title: String(localized: "Reorder pages")) {
             List {
-                ForEach(Array(self.viewModel.pdfThumbnails.enumerated()), id: \.offset) { index, thumbnail in
+                ForEach(Array(self.viewModel.pages.enumerated()), id: \.element.id) { index, page in
                     HStack(spacing: DS.Spacing.sm) {
-                        Image(uiImage: thumbnail)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
+                        PageThumbnail(image: page.thumbnail)
                             .frame(width: 44, height: 58)
                             .clipShape(.rect(cornerRadius: 6, style: .continuous))
                             .overlay {
