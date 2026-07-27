@@ -22,8 +22,8 @@ import PDFKit
 
 final class EditorToolTests: XCTestCase {
 
-    /// The store the editor under test is looking at, so a test can grant
-    /// premium mid-flow — which is what a purchase looks like from here.
+    /// Kept alive for the duration of a test: the flows the editor owns resolve
+    /// it eagerly through `@Injected`.
     private var store: StoreMock!
 
     override func tearDown() {
@@ -45,7 +45,6 @@ final class EditorToolTests: XCTestCase {
             }
             XCTAssertEqual(tool.title, catalogTool.title, "\(tool) drifted from the catalog")
             XCTAssertEqual(tool.systemImage, catalogTool.systemImage, "\(tool) drifted from the catalog")
-            XCTAssertEqual(tool.isPremium, catalogTool.isPremium, "\(tool) drifted from the catalog")
         }
     }
 
@@ -89,12 +88,6 @@ final class EditorToolTests: XCTestCase {
         for tool in [EditorTool.signature, .addText, .fillForm, .redact] {
             XCTAssertEqual(tool.presentation, .flow, "\(tool) should stay full screen")
         }
-    }
-
-    func testPremiumBadgesMatchTheCatalog() {
-        XCTAssertTrue(EditorTool.ocr.isPremium)
-        XCTAssertTrue(EditorTool.watermark.isPremium)
-        XCTAssertFalse(EditorTool.reorderPages.isPremium)
     }
 
     // MARK: - The panel
@@ -349,14 +342,13 @@ final class EditorToolTests: XCTestCase {
 
     @MainActor
     func testExportingPushesTheFormatListForEveryone() {
-        // Export is premium per format, so the list itself opens without a gate.
+        // The gate is on the export itself — the format list opens for anyone.
         let viewModel = self.makeViewModel(pageCount: 2)
 
         viewModel.run(.export)
 
         XCTAssertEqual(viewModel.path, [.export])
         XCTAssertTrue(viewModel.pdfExportViewModel.formatPickerShow)
-        XCTAssertFalse(viewModel.monetizationShow)
     }
 
     @MainActor
@@ -369,56 +361,43 @@ final class EditorToolTests: XCTestCase {
         XCTAssertTrue(viewModel.pdfCompressViewModel.editorShow)
     }
 
-    // MARK: - The paywall
+    // MARK: - No paywall inside the editor
+    //
+    // The editor's own tools all run on device and leave the result in the
+    // document, so none of them gates: the paywall is met once, on the way out
+    // (`PdfShareCoordinator`, and the export, which hands the file to the share
+    // sheet). These four used to stop a non-subscriber at the door.
 
     @MainActor
-    func testAGatedToolShowsThePaywallInsteadOfItsScreen() {
+    func testPermissionsOpensForANonSubscriber() {
         let viewModel = self.makeViewModel(pageCount: 2)
 
         viewModel.run(.permissions)
 
-        XCTAssertTrue(viewModel.monetizationShow)
-        XCTAssertTrue(viewModel.path.isEmpty)
-        XCTAssertFalse(viewModel.pdfPermissionsViewModel.formShow)
-    }
-
-    @MainActor
-    func testAGatedToolOpensStraightAwayForASubscriber() {
-        let viewModel = self.makeViewModel(pageCount: 2, premium: true)
-
-        viewModel.run(.permissions)
-
-        XCTAssertFalse(viewModel.monetizationShow)
         XCTAssertEqual(viewModel.path, [.permissions])
         XCTAssertTrue(viewModel.pdfPermissionsViewModel.formShow)
     }
 
     @MainActor
-    func testAPurchaseCarriesOnIntoTheToolItGated() async throws {
-        let viewModel = self.makeViewModel(pageCount: 2, waitForPages: false)
-        viewModel.run(.permissions)
+    func testPageNumbersAndWatermarkOpenForANonSubscriber() {
+        let viewModel = self.makeViewModel(pageCount: 2)
 
-        self.store.isPremium.send(true)
-        viewModel.onMonetizationClose()
-        // The tool opens a runloop later, so the paywall is off screen first.
-        try await Task.sleep(nanoseconds: 100_000_000)
+        viewModel.run(.pageNumbers)
+        XCTAssertEqual(viewModel.path, [.pageNumbers])
 
-        XCTAssertEqual(viewModel.path, [.permissions])
+        viewModel.run(.watermark)
+        XCTAssertEqual(viewModel.path, [.pageNumbers, .watermark])
     }
 
     @MainActor
-    func testADismissedPaywallOpensNothing() async throws {
-        let viewModel = self.makeViewModel(pageCount: 2, waitForPages: false)
-        viewModel.run(.permissions)
+    func testRedactOpensForANonSubscriber() {
+        let viewModel = self.makeViewModel(pageCount: 2)
 
-        viewModel.onMonetizationClose()
-        try await Task.sleep(nanoseconds: 100_000_000)
+        viewModel.run(.redact)
+        // The flow tools open a runloop later, so the panel can dismiss first.
+        RunLoop.current.run(until: Date().addingTimeInterval(0.05))
 
-        XCTAssertTrue(viewModel.path.isEmpty)
-        // And it does not fire later either: the tool is forgotten, not queued.
-        viewModel.onMonetizationClose()
-        try await Task.sleep(nanoseconds: 100_000_000)
-        XCTAssertTrue(viewModel.path.isEmpty)
+        XCTAssertTrue(viewModel.pdfRedactViewModel.editorShow)
     }
 
     // MARK: - Fixtures
@@ -439,18 +418,14 @@ final class EditorToolTests: XCTestCase {
     }
 
     /// `@Injected` resolves eagerly in this view model, so the mocks go in first.
-    /// The store is registered as one shared instance, not a new one per
-    /// resolution, so a test can grant premium and have the editor see it.
+    /// The editor itself no longer reads the store, but the flows it owns do
+    /// (the export hands its files to the share sheet), so it is still registered.
     @MainActor
-    /// `waitForPages: false` for the tests that never look at a page — the
-    /// paywall does not care what the document looks like, and an `async` test
-    /// cannot pump the main queue the way the wait below does.
+    /// `waitForPages: false` for the tests that never look at a page.
     private func makeViewModel(pageCount: Int,
-                               premium: Bool = false,
                                startAction: PdfEditStartAction? = nil,
                                waitForPages: Bool = true) -> PdfEditViewModel {
         let store = StoreMock()
-        store.isPremium.send(premium)
         self.store = store
 
         Container.shared.repository.register { RepositoryMock() }

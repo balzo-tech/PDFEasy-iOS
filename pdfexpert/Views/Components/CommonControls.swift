@@ -115,29 +115,6 @@ struct GlassIconButton: View {
     }
 }
 
-/// "PRO" pill marking a premium-gated feature.
-struct PremiumBadge: View {
-
-    var compact: Bool = false
-
-    var body: some View {
-        HStack(spacing: 3) {
-            Image(systemName: "sparkles")
-                .font(.system(size: self.compact ? 9 : 10, weight: .bold))
-            if !self.compact {
-                Text("PRO")
-                    .font(.system(size: 10, weight: .bold))
-                    .textCase(.uppercase)
-            }
-        }
-        .foregroundStyle(ColorPalette.premium)
-        .padding(.horizontal, self.compact ? 5 : 7)
-        .padding(.vertical, 3)
-        .background(ColorPalette.premium.opacity(0.15), in: .capsule)
-        .accessibilityLabel(Text("Premium feature"))
-    }
-}
-
 #Preview("Controls") {
     VStack(spacing: DS.Spacing.lg) {
         SectionHeaderView(title: "Organize", subtitle: "Pages and documents")
@@ -145,7 +122,6 @@ struct PremiumBadge: View {
         HStack {
             SecondaryActionButton(title: "Share", systemImage: "square.and.arrow.up") {}
             GlassIconButton(systemImage: "trash", accessibilityLabel: "Delete") {}
-            PremiumBadge()
         }
     }
     .padding()

@@ -14,7 +14,6 @@ struct ToolTileView: View {
     let subtitle: String
     let systemImage: String
     let tint: Color
-    var isPremium: Bool = false
     /// Only ever true in the iPad split, where the tile marks the tool the
     /// detail column is describing.
     var isSelected: Bool = false
@@ -26,9 +25,6 @@ struct ToolTileView: View {
                 HStack(alignment: .top) {
                     ToolIcon(systemImage: self.systemImage, tint: self.tint)
                     Spacer(minLength: 0)
-                    if self.isPremium {
-                        PremiumBadge(compact: true)
-                    }
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(self.title)
@@ -64,7 +60,6 @@ struct ToolRowView: View {
     let subtitle: String
     let systemImage: String
     let tint: Color
-    var isPremium: Bool = false
     var isSelected: Bool = false
     let action: () -> Void
 
@@ -83,9 +78,6 @@ struct ToolRowView: View {
                         .lineLimit(2)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                if self.isPremium {
-                    PremiumBadge(compact: true)
-                }
                 Image(systemName: "chevron.right")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(ColorPalette.textTertiary)
@@ -206,8 +198,7 @@ struct PressableTileButtonStyle: ButtonStyle {
                 ToolTileView(title: "Redact PDF",
                              subtitle: "Permanently black out content",
                              systemImage: "eye.slash",
-                             tint: ColorPalette.categoryProtect,
-                             isPremium: true) {}
+                             tint: ColorPalette.categoryProtect) {}
             }
             ToolRowView(title: "Word to PDF",
                         subtitle: "Make DOC files easy to read",

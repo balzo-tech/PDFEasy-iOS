@@ -19,8 +19,6 @@ struct PdfPermissionsView: ViewModifier {
             .fullScreenCover(isPresented: self.$viewModel.formShow) {
                 self.formView
             }
-            .showSubscriptionView(self.$viewModel.monetizationShow,
-                                  onComplete: { self.viewModel.onMonetizationClose() })
     }
 
     private var formView: some View {
@@ -28,9 +26,7 @@ struct PdfPermissionsView: ViewModifier {
     }
 }
 
-/// The loader and the "it was saved" alert. Not the form — the editor pushes
-/// that — and not the paywall: a host that pushes the form gates it before
-/// pushing, so this flow's own paywall never comes up there.
+/// The loader and the "it was saved" alert. Not the form — the editor pushes that.
 struct PdfPermissionsOutcomes: ViewModifier {
 
     @ObservedObject var viewModel: PdfPermissionsViewModel

@@ -47,10 +47,6 @@ struct ToolDetailView: View {
                     .font(forCategory: .body2)
                     .foregroundStyle(ColorPalette.textSecondary)
                     .multilineTextAlignment(.center)
-                if tool.isPremium {
-                    PremiumBadge()
-                        .padding(.top, DS.Spacing.xxs)
-                }
             }
 
             // Not "Start": that key belongs to the onboarding's Get-started

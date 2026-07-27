@@ -57,11 +57,6 @@ struct PdfEditAlerts: ViewModifier {
             .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
             .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
 
-            // One paywall for every gated tool: which tool it was gating is the
-            // view model's business, and it is what runs after a purchase.
-            .showSubscriptionView(self.$viewModel.monetizationShow,
-                                  onComplete: { self.viewModel.onMonetizationClose() })
-
             // Passwords.
             .removePasswordView(show: self.$viewModel.removePasswordAlertShow,
                                 removePasswordCallback: self.viewModel.removePassword)

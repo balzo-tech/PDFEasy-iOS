@@ -41,8 +41,6 @@ struct PdfRedactView: ViewModifier {
             }, message: {
                 Text("A redacted copy has been saved to your archive.")
             })
-            .showSubscriptionView(self.$viewModel.monetizationShow,
-                                  onComplete: { self.viewModel.onMonetizationClose() })
     }
 }
 

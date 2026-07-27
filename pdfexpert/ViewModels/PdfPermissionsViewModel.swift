@@ -26,7 +26,6 @@ extension Container {
 
 class PdfPermissionsViewModel: ObservableObject {
 
-    @Published var monetizationShow: Bool = false
     /// The owner-password + toggles form. True while it is on screen, cover or
     /// pushed screen; confirming or cancelling lowers it, and that is what takes
     /// the screen away either way.
@@ -53,7 +52,6 @@ class PdfPermissionsViewModel: ObservableObject {
     }
 
     @Injected(\.analyticsManager) private var analyticsManager
-    @Injected(\.store) private var store
     @Injected(\.repository) private var repository
 
     lazy var pdfImportViewModel: PdfImportViewModel = {
@@ -100,30 +98,10 @@ class PdfPermissionsViewModel: ObservableObject {
         }
         self.toBeProcessedPdf = pdf
         self.analyticsManager.track(event: .reportScreen(.permissions))
-        // Defer so any import sheet finishes dismissing before the paywall / form.
+        // Defer so any import sheet finishes dismissing before the form.
         DispatchQueue.main.async {
-            self.startFlow()
-        }
-    }
-
-    // MARK: - Premium gate
-
-    @MainActor
-    private func startFlow() {
-        if self.store.isPremium.value {
             self.presentForm()
-        } else {
-            self.monetizationShow = true
         }
-    }
-
-    @MainActor
-    func onMonetizationClose() {
-        guard self.store.isPremium.value else {
-            self.toBeProcessedPdf = nil
-            return
-        }
-        self.presentForm()
     }
 
     @MainActor

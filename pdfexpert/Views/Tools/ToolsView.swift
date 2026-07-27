@@ -192,7 +192,6 @@ struct ToolsView: View {
                                 subtitle: tool.subtitle,
                                 systemImage: tool.systemImage,
                                 tint: tool.tint,
-                                isPremium: tool.isPremium,
                                 isSelected: self.selection?.wrappedValue == tool) {
                         self.perform(tool)
                     }
@@ -209,7 +208,6 @@ struct ToolsView: View {
                      subtitle: tool.subtitle,
                      systemImage: tool.systemImage,
                      tint: tool.tint,
-                     isPremium: tool.isPremium,
                      isSelected: self.selection?.wrappedValue == tool) {
             self.perform(tool)
         }
@@ -220,7 +218,6 @@ struct ToolsView: View {
                     subtitle: tool.subtitle,
                     systemImage: tool.systemImage,
                     tint: tool.tint,
-                    isPremium: tool.isPremium,
                     isSelected: self.selection?.wrappedValue == tool) {
             self.perform(tool)
         }

@@ -10835,6 +10835,28 @@
         }
       }
     },
+    "With the yearly plan, we let you know before it expires.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "With the yearly plan, we let you know before it expires."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Con el plan anual te avisamos antes de que caduque."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Con il piano annuale ti avvisiamo prima della scadenza."
+          }
+        }
+      }
+    },
     "Word to PDF": {
       "localizations": {
         "en": {

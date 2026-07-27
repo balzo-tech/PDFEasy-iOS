@@ -22,7 +22,6 @@ extension Container {
 
 class PdfRedactViewModel: ObservableObject {
 
-    @Published var monetizationShow: Bool = false
     @Published var editorShow: Bool = false
     /// "The redacted pages become images" warning, shown before anything is applied.
     @Published var confirmAlertShow: Bool = false
@@ -47,7 +46,6 @@ class PdfRedactViewModel: ObservableObject {
     var currentPageBoxes: [RedactionBox] { self.boxes.filter { $0.pageIndex == self.pageIndex } }
 
     @Injected(\.analyticsManager) private var analyticsManager
-    @Injected(\.store) private var store
     @Injected(\.repository) private var repository
 
     lazy var pdfImportViewModel: PdfImportViewModel = {
@@ -81,23 +79,8 @@ class PdfRedactViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Premium gate
-
     @MainActor
     private func startFlow(pdf: Pdf) {
-        if self.store.isPremium.value {
-            self.presentEditor(pdf: pdf)
-        } else {
-            self.monetizationShow = true
-        }
-    }
-
-    @MainActor
-    func onMonetizationClose() {
-        guard let pdf = self.toBeRedactedPdf, self.store.isPremium.value else {
-            self.toBeRedactedPdf = nil
-            return
-        }
         self.presentEditor(pdf: pdf)
     }
 

@@ -124,20 +124,35 @@ final class EditorNavigationUITests: XCTestCase {
         }
     }
 
-    /// Without a subscription a gated tool must show the paywall and nothing
-    /// else, and closing the paywall must leave the document exactly as it was —
-    /// not a dead screen, which is what a tool "doing nothing" looks like.
-    func testAGatedToolShowsThePaywallAndClosesBackToTheDocument() {
+    /// The editor's tools no longer stop a non-subscriber at the door: they run
+    /// on device and leave the result in the document. Watermark is the one that
+    /// used to gate here.
+    func testAToolThatUsedToGateOpensWithoutASubscription() {
         self.launch(premium: false)
         self.openTheFirstDocument()
 
         self.openFromPanel("watermark")
 
+        XCTAssertTrue(self.app.navigationBars["Watermark"].waitForExistence(timeout: 10),
+                      "the tool did not open for a non-subscriber")
+        XCTAssertFalse(self.app.buttons["Continue"].firstMatch.exists,
+                       "the paywall is still in front of the tool")
+    }
+
+    /// Where the paywall lives now: on the way out. Sharing is what takes the
+    /// document off the device, and it is the one thing a non-subscriber cannot
+    /// do — with the yearly plan's renewal notice on the paywall it opens.
+    func testSharingShowsThePaywallCarryingTheRenewalNotice() {
+        self.launch(premium: false)
+        self.openTheFirstDocument()
+
+        self.openFromPanelBySearching("share", query: "Share")
+
         let paywall = self.app.buttons["Continue"].firstMatch
         XCTAssertTrue(paywall.waitForExistence(timeout: 15),
-                      "the watermark paywall never appeared")
-        XCTAssertFalse(self.app.navigationBars["Watermark"].exists,
-                       "the tool opened without a subscription")
+                      "sharing did not show the paywall")
+        XCTAssertTrue(self.app.staticTexts["With the yearly plan, we let you know before it expires."].exists,
+                      "the renewal notice is not on the paywall")
 
         let close = self.app.buttons["Close"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 10), "the paywall cannot be closed")
@@ -184,6 +199,28 @@ final class EditorNavigationUITests: XCTestCase {
             let end = self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4))
             start.press(forDuration: 0.05, thenDragTo: end)
             attempts += 1
+        }
+        self.tap(tile)
+    }
+
+    /// The panel's grid is lazy, so the tools at the bottom of it — Share is the
+    /// last one — do not exist in the tree until something brings them up. The
+    /// panel's own search is that something, and it is also how a person with a
+    /// long list finds a tool.
+    private func openFromPanelBySearching(_ tool: String, query: String) {
+        let wrench = self.editorBar.buttons["Tools"]
+        XCTAssertTrue(wrench.waitForExistence(timeout: 10), "the tool panel button is missing")
+        self.tap(wrench)
+
+        let search = self.app.searchFields["Search tools"]
+        XCTAssertTrue(search.waitForExistence(timeout: 10), "the tool panel did not open")
+        self.tap(search)
+        search.typeText(query)
+
+        let tile = self.app.buttons["editorTool.\(tool)"]
+        guard tile.waitForExistence(timeout: 10) else {
+            print("UITREE-BEGIN\n\(self.app.debugDescription)\nUITREE-END")
+            return XCTFail("searching for \(query) did not find \(tool)")
         }
         self.tap(tile)
     }

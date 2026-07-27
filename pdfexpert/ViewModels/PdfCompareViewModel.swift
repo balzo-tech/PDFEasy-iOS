@@ -27,7 +27,6 @@ enum CompareSlot {
 class PdfCompareViewModel: ObservableObject {
 
     @Published var setupShow: Bool = false
-    @Published var monetizationShow: Bool = false
     @Published var resultShow: Bool = false
 
     @Published private(set) var leftPdf: Pdf? = nil
@@ -49,7 +48,6 @@ class PdfCompareViewModel: ObservableObject {
     var canCompare: Bool { self.leftPdf != nil && self.rightPdf != nil && !self.isComparing }
 
     @Injected(\.analyticsManager) private var analyticsManager
-    @Injected(\.store) private var store
 
     lazy var pdfImportViewModel: PdfImportViewModel = {
         Container.shared.pdfImportViewModel(PdfImportViewModel.Params(asyncPdf: self.asyncSubject(\.asyncImportedPdf)))
@@ -87,21 +85,9 @@ class PdfCompareViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Premium gate
-
     @MainActor
     func requestCompare() {
         guard self.canCompare else { return }
-        if self.store.isPremium.value {
-            self.compare()
-        } else {
-            self.monetizationShow = true
-        }
-    }
-
-    @MainActor
-    func onMonetizationClose() {
-        guard self.store.isPremium.value else { return }
         self.compare()
     }
 

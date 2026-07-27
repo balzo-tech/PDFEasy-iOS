@@ -217,6 +217,7 @@
 		896CCF6D2A28910B008F268E /* SizePrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6C2A28910B008F268E /* SizePrinter.swift */; };
 		896CCF6F2A28AEAC008F268E /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */; };
 		897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */; };
+		A3CA268EF1354A6EA365114C /* SubscriptionRenewalNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67766B42712040628D80734E /* SubscriptionRenewalNoticeView.swift */; };
 		897911EF29E70558008B7088 /* SubscriptionVerticalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */; };
 		897967862A73E59B00E91F8E /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897967852A73E59B00E91F8E /* URL+Extensions.swift */; };
 		89851B5E2A13DB1A00ABF58F /* ImageResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89851B5D2A13DB1A00ABF58F /* ImageResizableView.swift */; };
@@ -626,6 +627,7 @@
 		896CCF6C2A28910B008F268E /* SizePrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizePrinter.swift; sourceTree = "<group>"; };
 		896CCF6E2A28AEAC008F268E /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		897911EC29E70541008B7088 /* SubscriptionVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalView.swift; sourceTree = "<group>"; };
+		67766B42712040628D80734E /* SubscriptionRenewalNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionRenewalNoticeView.swift; sourceTree = "<group>"; };
 		897911EE29E70558008B7088 /* SubscriptionVerticalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVerticalItemView.swift; sourceTree = "<group>"; };
 		897967852A73E59B00E91F8E /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		89847AE02A1BA947000EC14B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -1172,6 +1174,7 @@
 				89EBC9062A83D0DB00BDBBD4 /* SubscriptionPickerPlanView.swift */,
 				89D1FE7D2A84D428009AC57C /* SubscriptionPickerPlanListView.swift */,
 				89EBC9042A83CC3000BDBBD4 /* SubscriptionFreeTrialToggleView.swift */,
+				67766B42712040628D80734E /* SubscriptionRenewalNoticeView.swift */,
 			);
 			path = Subscription;
 			sourceTree = "<group>";
@@ -2293,6 +2296,7 @@
 				894C4A722AA0DB9A0001F51E /* PreReviewPopupLowRateView.swift in Sources */,
 				89CD7B5429D329B1003F1C3A /* Color+Extensions.swift in Sources */,
 				897911ED29E70541008B7088 /* SubscriptionVerticalView.swift in Sources */,
+				A3CA268EF1354A6EA365114C /* SubscriptionRenewalNoticeView.swift in Sources */,
 				8936AA442A684128005F6C73 /* ChatPdfViewModel.swift in Sources */,
 				89CD7B4D29D329B1003F1C3A /* UnderlyingError.swift in Sources */,
 				89436D212A93B97E000868B5 /* NSAttributedString+Extensions.swift in Sources */,

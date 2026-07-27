@@ -180,17 +180,6 @@ struct PdfEditToolPanel: View {
             .padding(DS.Spacing.sm)
             .frame(maxWidth: .infinity, minHeight: 96, alignment: .topLeading)
             .contentCard()
-            .overlay(alignment: .topTrailing) {
-                if tool.isPremium {
-                    Text("PRO")
-                        .font(.system(size: 9, weight: .heavy))
-                        .foregroundStyle(ColorPalette.premium)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(ColorPalette.premium.opacity(0.15), in: .capsule)
-                        .padding(DS.Spacing.xs)
-                }
-            }
         }
         .buttonStyle(PressableTileButtonStyle())
         .hoverEffect(.lift)

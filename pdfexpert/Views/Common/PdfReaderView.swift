@@ -50,8 +50,6 @@ struct PdfReaderView: View {
             }, message: {
                 Text("The annotations could not be saved.")
             })
-            .showSubscriptionView(self.$viewModel.monetizationShow,
-                                  onComplete: { self.viewModel.onMonetizationClose() })
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

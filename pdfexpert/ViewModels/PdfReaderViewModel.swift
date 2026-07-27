@@ -86,14 +86,12 @@ class PdfReaderViewModel: ObservableObject {
     @Published var annotationType: PdfAnnotationType = .highlight
     @Published var annotationColor: Color = PdfReaderViewModel.annotationColors[0]
     @Published private(set) var hasUnsavedAnnotations: Bool = false
-    @Published var monetizationShow: Bool = false
     @Published var unsavedChangesAlertShow: Bool = false
     @Published var saveErrorShow: Bool = false
 
     static let annotationColors: [Color] = [.yellow, .green, .blue, .pink]
 
     @Injected(\.analyticsManager) private var analyticsManager
-    @Injected(\.store) private var store
     @Injected(\.repository) private var repository
 
     var filename: String { self.pdf.filename }
@@ -201,26 +199,9 @@ class PdfReaderViewModel: ObservableObject {
 
     // MARK: - Annotation mode
 
-    /// Premium-gated on entry (pattern shared with OCR): nobody should annotate for ten
-    /// minutes and only then meet the paywall.
     @MainActor
     func toggleAnnotationMode() {
-        if self.annotationMode {
-            self.setAnnotationMode(false)
-            return
-        }
-        if self.store.isPremium.value {
-            self.setAnnotationMode(true)
-        } else {
-            self.monetizationShow = true
-        }
-    }
-
-    @MainActor
-    func onMonetizationClose() {
-        if self.store.isPremium.value {
-            self.setAnnotationMode(true)
-        }
+        self.setAnnotationMode(!self.annotationMode)
     }
 
     @MainActor

@@ -198,16 +198,11 @@ class PdfEditViewModel: ObservableObject {
     @Published var removePasswordAlertShow: Bool = false
     @Published var splitSuccessAlertShow: Bool = false
     @Published var extractSuccessAlertShow: Bool = false
-    /// The paywall in front of a premium tool. One flag, not one per tool: the
-    /// tools only ever differed in what runs after the purchase, and that is
-    /// `pendingPremiumTool`.
-    @Published var monetizationShow: Bool = false
 
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfCoordinator) private var pdfCoordinator
     @Injected(\.analyticsManager) private var analyticsManager
-    @Injected(\.store) private var store
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     @Injected(\.pdfSplitViewModel) var pdfSplitViewModel
     @Injected(\.pdfExtractViewModel) var pdfExtractViewModel
@@ -237,9 +232,6 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
-    /// The tool waiting behind the paywall, so it runs after a successful
-    /// purchase and nothing happens after a dismissed one.
-    private var pendingPremiumTool: EditorTool? = nil
     #if DEBUG
     private var debugSheetOpened: Bool = false
     #endif
@@ -763,38 +755,8 @@ class PdfEditViewModel: ObservableObject {
 
     @MainActor
     func startPermissions() {
-        self.requirePremium(for: .permissions) {
-            if self.pdfPermissionsViewModel.prepare(pdf: self.pdf, onCompleted: nil) {
-                self.push(.permissions)
-            }
-        }
-    }
-
-    // MARK: - The paywall
-
-    /// Runs the tool for a subscriber, and shows the paywall to everyone else —
-    /// with the tool remembered, so a purchase carries on into the thing the
-    /// user was reaching for rather than dropping them back on the page.
-    @MainActor
-    private func requirePremium(for tool: EditorTool, then run: () -> Void) {
-        guard self.store.isPremium.value else {
-            self.pendingPremiumTool = tool
-            self.monetizationShow = true
-            return
-        }
-        run()
-    }
-
-    @MainActor
-    func onMonetizationClose() {
-        guard let tool = self.pendingPremiumTool else { return }
-        self.pendingPremiumTool = nil
-        guard self.store.isPremium.value else { return }
-        // Defer so the paywall cover finishes dismissing before the tool opens:
-        // pushing or presenting under a cover that is still on screen loses the
-        // animation.
-        DispatchQueue.main.async {
-            self.run(tool)
+        if self.pdfPermissionsViewModel.prepare(pdf: self.pdf, onCompleted: nil) {
+            self.push(.permissions)
         }
     }
 
@@ -807,12 +769,12 @@ class PdfEditViewModel: ObservableObject {
         self.shouldShowCloseWarning.wrappedValue = true
     }
 
-    /// Entry point for the OCR / searchable-PDF tool. OCR is a premium feature:
-    /// non-subscribers see the paywall first and the OCR runs after a successful
-    /// purchase (see `onMonetizationClose`).
+    /// Entry point for the OCR / searchable-PDF tool. Runs on device and stays in
+    /// the document, so it is free like the rest of the editor: the paywall is met
+    /// once, on the way out (see `PdfShareCoordinator`).
     @MainActor
     func startOcr() {
-        self.requirePremium(for: .ocr) { self.performOcr() }
+        self.performOcr()
     }
 
     @MainActor
@@ -849,18 +811,14 @@ class PdfEditViewModel: ObservableObject {
         })
     }
 
-    /// Entry point for the page-number tool. Premium-gated exactly like OCR: the
-    /// screen opens immediately for subscribers, otherwise the paywall is shown
-    /// and it opens after a successful purchase (see `onMonetizationClose`).
     @MainActor
     func startPageNumbers() {
-        self.requirePremium(for: .pageNumbers) { self.push(.pageNumbers) }
+        self.push(.pageNumbers)
     }
 
-    /// Entry point for the watermark tool. Same premium gate as the page-number tool.
     @MainActor
     func startWatermark() {
-        self.requirePremium(for: .watermark) { self.push(.watermark) }
+        self.push(.watermark)
     }
 
     func setPassword(_ password: String) {

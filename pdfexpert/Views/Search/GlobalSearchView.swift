@@ -85,8 +85,7 @@ struct GlobalSearchView: View {
                         ToolRowView(title: tool.title,
                                     subtitle: tool.subtitle,
                                     systemImage: tool.systemImage,
-                                    tint: tool.tint,
-                                    isPremium: tool.isPremium) {
+                                    tint: tool.tint) {
                             self.run(tool)
                         }
                     }
@@ -106,8 +105,7 @@ struct GlobalSearchView: View {
                     ToolRowView(title: tool.title,
                                 subtitle: tool.subtitle,
                                 systemImage: tool.systemImage,
-                                tint: tool.tint,
-                                isPremium: tool.isPremium) {
+                                tint: tool.tint) {
                         self.run(tool)
                     }
                 }

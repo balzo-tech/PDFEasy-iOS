@@ -141,10 +141,6 @@ enum EditorTool: String, CaseIterable, Identifiable {
         }
     }
 
-    /// The badge in the tool panel. The real gate stays in each flow's view
-    /// model — this only sets the expectation before the user commits.
-    var isPremium: Bool { self.catalogTool?.isPremium ?? false }
-
     var category: ToolCategory? {
         if let category = self.catalogTool?.category { return category }
         // Listed in the panel next to the catalog's own organize tools, so it is

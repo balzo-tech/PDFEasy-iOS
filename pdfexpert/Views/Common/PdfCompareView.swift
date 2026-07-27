@@ -23,8 +23,6 @@ struct PdfCompareView: ViewModifier {
                 PdfCompareResultView(viewModel: self.viewModel)
             }
             .asyncView(asyncItem: self.$viewModel.asyncCompare)
-            .showSubscriptionView(self.$viewModel.monetizationShow,
-                                  onComplete: { self.viewModel.onMonetizationClose() })
     }
 }
 
