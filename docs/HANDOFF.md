@@ -6,7 +6,7 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
 Sixteen phases of work sit on `main`. The app is feature-complete for the release
 that is planned: iPhone and iPad, EN / IT / ES, 636 catalog keys, 288 unit tests
-green, and a localization lint in CI. Every phase below was built and tested on
+and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
 
@@ -24,7 +24,7 @@ or a real purchase is unverified. The accumulated checklist is the memory note
 1. `git checkout main && git pull`.
 2. Drop a real (or placeholder) `pdfexpert/Resources/ProjectInfo.plist` in place,
    or nothing compiles. See "Build / project notes".
-3. `bundle exec fastlane lint` — should say `clean`. For the 276 tests use
+3. `bundle exec fastlane lint` — should say `clean`. For the tests use
    `xcodebuild test -project pdfexpert.xcodeproj -scheme "PdfExpert Staging"
    -configuration "Staging Debug" -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
    CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES`:
@@ -58,6 +58,7 @@ behind is in "What landed on `main`".
 | 14 | A scanner of our own: camera, review, Scanner tab, Shortcuts |
 | 15 | The editor restructured: one tool list, a page bar, pushed tools |
 | 16 | The last five tool flows pushed too, and one paywall for all of them |
+| 16b | A UI test bundle: the editor's tools and the back button, tapped |
 
 ## Build / project notes (still true — save time)
 
@@ -1340,3 +1341,55 @@ xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string sp
   presented since phase 15 removed the rotate sheet. The Shortcuts "rotate"
   action therefore opens the editor and does nothing visible. Pre-existing, not
   touched here, and worth a decision: the page bar rotates in one tap now.
+
+
+## Phase 16b (2026-07-27) — a bundle that taps
+
+Every phase in this document ends with "nothing here was tapped on a device",
+and the reason was structural: a simulator takes screenshots, and a screenshot
+is taken by something that never touched anything. `PdfExpertUITests` closes
+that gap for the editor, which is where it mattered most — a tool is chosen in a
+sheet that dismisses while the screen it asked for is pushed underneath it, and
+that is two presentations in one turn.
+
+Four tests, run by the same `PdfExpert Staging` scheme as the unit suite:
+
+- every one of the nine pushed tools opens from the panel, **and the system back
+  button returns to the document** — nine screens, eighteen taps;
+- the immediate tools (invert colours, remove blank pages) report back and their
+  alert closes;
+- a tool opened and abandoned twice in a row leaves nothing behind;
+- without a subscription a gated tool shows the paywall instead of itself, and
+  closing the paywall leaves the document where it was.
+
+All four pass. The tools work, and so does the back button.
+
+### Three things to know before writing another one
+
+- **`XCUIElement.tap()` does not work in this app.** XCTest reports our SwiftUI
+  buttons as `isHittable == false` while `isEnabled` is true, and `tap()` waits
+  for hittability and gives up. A synthesized touch at the same point lands
+  correctly — the archive opens the editor from a coordinate tap and not from
+  `tap()`. Everything goes through the file's own `tap(_:)`, which taps the
+  centre of the frame.
+- **A UI test bundle installs the app fresh**, so onboarding is waiting on the
+  other side of every launch and the archive is empty. Hence
+  `-onboardingShown YES -debugSeedArchive YES` as launch arguments; those *do*
+  reach `UserDefaults`, unlike what the older debug notes suggest.
+- **Three navigation bars are in the tree at once** — the archive's behind the
+  editor cover, the editor's, and the tool's. `navigationBars.buttons["…"]`
+  matches across all of them, and `element(boundBy: 0)` picks whichever the tree
+  lists first, which is not the one on screen. Scope every query by bar title.
+  The panel's tiles carry `editorTool.<rawValue>` identifiers for the same
+  reason: half of them share a title with a button in the bar under the page.
+
+### Watch out
+
+- The suite now runs unit *and* UI tests: about four minutes rather than twenty
+  seconds. `-only-testing:PdfExpertTests` keeps the fast loop.
+- The UI tests are pinned to English (`-AppleLanguages (en)`) because they
+  recognise screens by their titles.
+- `PdfEditViewModel.onAppear` runs **again every time a pushed tool is popped**.
+  Harmless today — the start action is consumed on first use — but anything
+  added there has to be idempotent. The debug sheet hook now guards against it;
+  without the guard the tool reopened itself and there was no way back.

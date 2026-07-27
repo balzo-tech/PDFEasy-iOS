@@ -189,6 +189,9 @@ class PdfEditViewModel: ObservableObject {
     /// The tool waiting behind the paywall, so it runs after a successful
     /// purchase and nothing happens after a dismissed one.
     private var pendingPremiumTool: EditorTool? = nil
+    #if DEBUG
+    private var debugSheetOpened: Bool = false
+    #endif
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
@@ -280,6 +283,10 @@ class PdfEditViewModel: ObservableObject {
     /// extract need a document of more than one page.
     @MainActor
     private func openDebugSheetIfNeeded() {
+        // The editor's `onAppear` runs again every time a pushed tool is popped,
+        // so without this the tool reopens itself and there is no way back.
+        guard !self.debugSheetOpened else { return }
+        self.debugSheetOpened = true
         switch UserDefaults.standard.string(forKey: "debugEditorSheet") {
         case "pageNumbers": self.startPageNumbers()
         case "watermark": self.startWatermark()

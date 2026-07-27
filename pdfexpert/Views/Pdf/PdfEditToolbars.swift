@@ -110,6 +110,10 @@ struct PdfEditToolPanel: View {
 
     private static let columns = [GridItem(.adaptive(minimum: 104, maximum: 200), spacing: DS.Spacing.xs)]
 
+    /// How a tool's tile is addressed from a UI test. Independent of the
+    /// language the app is running in, unlike its title.
+    static func tileIdentifier(for tool: EditorTool) -> String { "editorTool.\(tool.rawValue)" }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -192,6 +196,10 @@ struct PdfEditToolPanel: View {
         .hoverEffect(.lift)
         .disabled(self.isDisabled(tool))
         .opacity(self.isDisabled(tool) ? 0.4 : 1)
+        // Named, because half these tools also have a button in the bar under
+        // the page carrying the same title: a UI test asking for "Reorder pages"
+        // otherwise gets the one behind the sheet and taps the sheet instead.
+        .accessibilityIdentifier(Self.tileIdentifier(for: tool))
     }
 
     /// The password entry says what it will do, which depends on the document.

@@ -39,6 +39,16 @@
                ReferencedContainer = "container:pdfexpert.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C071D6F9116F6F45438D3E53"
+               BuildableName = "PdfExpertUITests.xctest"
+               BlueprintName = "PdfExpertUITests"
+               ReferencedContainer = "container:pdfexpert.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
