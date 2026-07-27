@@ -334,7 +334,7 @@ final class EditorToolTests: XCTestCase {
 
     @MainActor
     func testAPurchaseCarriesOnIntoTheToolItGated() async throws {
-        let viewModel = self.makeViewModel(pageCount: 2)
+        let viewModel = self.makeViewModel(pageCount: 2, waitForPages: false)
         viewModel.run(.permissions)
 
         self.store.isPremium.send(true)
@@ -347,7 +347,7 @@ final class EditorToolTests: XCTestCase {
 
     @MainActor
     func testADismissedPaywallOpensNothing() async throws {
-        let viewModel = self.makeViewModel(pageCount: 2)
+        let viewModel = self.makeViewModel(pageCount: 2, waitForPages: false)
         viewModel.run(.permissions)
 
         viewModel.onMonetizationClose()
@@ -381,7 +381,12 @@ final class EditorToolTests: XCTestCase {
     /// The store is registered as one shared instance, not a new one per
     /// resolution, so a test can grant premium and have the editor see it.
     @MainActor
-    private func makeViewModel(pageCount: Int, premium: Bool = false) -> PdfEditViewModel {
+    /// `waitForPages: false` for the tests that never look at a page — the
+    /// paywall does not care what the document looks like, and an `async` test
+    /// cannot pump the main queue the way the wait below does.
+    private func makeViewModel(pageCount: Int,
+                               premium: Bool = false,
+                               waitForPages: Bool = true) -> PdfEditViewModel {
         let store = StoreMock()
         store.isPremium.send(premium)
         self.store = store
@@ -394,7 +399,23 @@ final class EditorToolTests: XCTestCase {
         let parameter = PdfEditViewModel.InputParameter(pdf: pdf,
                                                         startAction: nil,
                                                         shouldShowCloseWarning: .constant(false))
-        return PdfEditViewModel(inputParameter: parameter)
+        let viewModel = PdfEditViewModel(inputParameter: parameter)
+        if waitForPages { self.waitForPages(viewModel) }
+        return viewModel
+    }
+
+    /// The pages are drawn on a background queue and arrive one at a time, so a
+    /// view model is not ready to be edited the instant it exists. Everything
+    /// that touches the page lists waits for them here — which is also what the
+    /// editor's own bars do, by staying disabled.
+    @MainActor
+    private func waitForPages(_ viewModel: PdfEditViewModel) {
+        let deadline = Date().addingTimeInterval(20)
+        while viewModel.isPreparingPages, Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+        }
+        XCTAssertFalse(viewModel.isPreparingPages, "the pages never finished drawing")
+        XCTAssertEqual(viewModel.pageImages.count, viewModel.pageCount)
     }
 }
 

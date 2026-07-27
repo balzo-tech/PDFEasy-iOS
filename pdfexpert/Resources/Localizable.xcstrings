@@ -7221,6 +7221,28 @@
         }
       }
     },
+    "Preparing your pages…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing your pages…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparando tus páginas…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparazione delle pagine…"
+          }
+        }
+      }
+    },
     "Preview of the compressed document": {
       "localizations": {
         "en": {

@@ -49,7 +49,10 @@ struct PdfEditView: View {
 
     private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
 
-    private var hasPages: Bool { self.viewModel.pageImages.count > 0 }
+    /// Asked of the document, not of the images of it: the pages are drawn in
+    /// the background and arrive one at a time, so "how many pages" is known
+    /// well before "what do they look like".
+    private var hasPages: Bool { self.viewModel.pageCount > 0 }
 
     var body: some View {
         NavigationStack(path: self.$viewModel.path) {
@@ -99,7 +102,7 @@ struct PdfEditView: View {
         .onAppear(perform: self.viewModel.onAppear)
         .sheet(isPresented: self.$viewModel.toolPanelShow) {
             PdfEditToolPanel(isPasswordSet: self.viewModel.pdf.password != nil,
-                             pageCount: self.viewModel.pageImages.count,
+                             pageCount: self.viewModel.pageCount,
                              onTool: { self.perform($0) })
         }
         .filePicker(isPresented: self.$viewModel.filePickerShow,
@@ -196,7 +199,9 @@ struct PdfEditView: View {
     // MARK: - Pages
 
     @ViewBuilder var pdfView: some View {
-        if self.viewModel.pageImages.count > 0 {
+        if self.viewModel.pageImages.isEmpty, self.viewModel.isPreparingPages {
+            self.preparingView
+        } else if self.viewModel.pageImages.count > 0 {
             TabView(selection: self.$viewModel.pdfCurrentPageIndex) {
                 ForEach(Array(self.viewModel.pageImages.enumerated()), id:\.offset) { (pageIndex, pageImage) in
                     Image(uiImage: pageImage)
@@ -219,7 +224,7 @@ struct PdfEditView: View {
     }
 
     private var pageCounterBadge: some View {
-        Text("\(self.viewModel.pdfCurrentPageIndex + 1) of \(self.viewModel.pageImages.count)")
+        Text("\(self.viewModel.pdfCurrentPageIndex + 1) of \(self.viewModel.pageCount)")
             .font(forCategory: .caption1)
             .foregroundStyle(ColorPalette.textPrimary)
             .padding(.horizontal, DS.Spacing.sm)
@@ -227,6 +232,19 @@ struct PdfEditView: View {
             .floatingGlassCapsule(interactive: false)
             .padding(.top, DS.Spacing.xs)
             .animation(DS.Motion.quick, value: self.viewModel.pdfCurrentPageIndex)
+    }
+
+    /// The first moments on a long document: the pages are being drawn, and the
+    /// editor says so instead of showing the "you have no pages" screen, which
+    /// is what an empty list used to mean.
+    private var preparingView: some View {
+        VStack(spacing: DS.Spacing.md) {
+            ProgressView()
+            Text("Preparing your pages…")
+                .font(forCategory: .body3)
+                .foregroundStyle(ColorPalette.textSecondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     var emptyView: some View {
@@ -316,7 +334,7 @@ struct PdfEditView: View {
     /// the page, the more it is about that page.
     @ViewBuilder private var bottomBars: some View {
         VStack(spacing: DS.Spacing.xs) {
-            PdfEditPageBar(canReorder: self.viewModel.pageImages.count > 1,
+            PdfEditPageBar(canReorder: self.viewModel.pageCount > 1,
                            onTool: { self.perform($0) })
             if !self.isWideLayout {
                 PdfEditPrimaryBar(onTool: { self.perform($0) })
@@ -325,6 +343,10 @@ struct PdfEditView: View {
         .padding(.horizontal, DS.Spacing.md)
         .padding(.bottom, DS.Spacing.xs)
         .readableColumn()
+        // Every one of these edits the document and the two lists of images in
+        // step, so none of them can run until there is one image per page.
+        .disabled(!self.viewModel.canEditPages)
+        .opacity(self.viewModel.canEditPages ? 1 : 0.5)
     }
 
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
@@ -343,6 +365,7 @@ struct PdfEditView: View {
                     } label: {
                         Label(tool.title, systemImage: tool.systemImage)
                     }
+                    .disabled(!self.viewModel.canEditPages)
                 }
             }
             ToolbarSpacer(.fixed, placement: .topBarTrailing)

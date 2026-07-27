@@ -57,6 +57,22 @@ class PdfEditViewModel: ObservableObject {
     @Published var pdfCurrentPageIndex: Int = 0
     @Published var pageImages: [UIImage] = []
     @Published var pdfThumbnails: [UIImage] = []
+    /// True while the pages are still being drawn. They arrive one at a time
+    /// from a background queue (see `refreshPages`), so for a moment the editor
+    /// knows how many pages the document has but not yet what they look like.
+    @Published private(set) var isPreparingPages: Bool = false
+    /// Bumped on every rebuild, so pages drawn for a document the editor has
+    /// moved on from are dropped rather than appended to the new one.
+    private var renderGeneration: Int = 0
+
+    /// How many pages the document has, which is known immediately — unlike the
+    /// images of them.
+    var pageCount: Int { self.pdf.pdfDocument.pageCount }
+
+    /// Whether the page operations can run. They all edit three lists in step —
+    /// the document, the page images, the thumbnails — so they have to wait
+    /// until there is one entry per page to edit.
+    var canEditPages: Bool { !self.isPreparingPages }
     @Published var pdfSaveError: PdfEditSaveError? = nil
     @Published var filePickerShow: Bool = false
     @Published var imagePickerShow: Bool = false
@@ -198,8 +214,7 @@ class PdfEditViewModel: ObservableObject {
         self.pdfFilename = inputParameter.pdf.filename
         self.startAction = inputParameter.startAction
         self.shouldShowCloseWarning = inputParameter.shouldShowCloseWarning
-        self.refreshImages()
-        self.refreshThumbnails()
+        self.refreshPages()
     }
     
     @MainActor
@@ -304,6 +319,9 @@ class PdfEditViewModel: ObservableObject {
     #endif
 
     func deleteCurrentPage() {
+        // Not an inconsistency while the pages are still arriving — just too
+        // early. The bar that calls this is disabled until they are all in.
+        guard self.canEditPages else { return }
         guard self.pdfThumbnails.count == self.pdf.pdfDocument.pageCount else {
             assertionFailure("Inconsistency error: pdf thumbnails count doesn't match pdf pages count")
             return
@@ -354,6 +372,7 @@ class PdfEditViewModel: ObservableObject {
     /// the same form twice.
     @MainActor
     func duplicateCurrentPage() {
+        guard self.canEditPages else { return }
         guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
               let copy = page.copy() as? PDFPage else {
             return
@@ -372,8 +391,7 @@ class PdfEditViewModel: ObservableObject {
         } else {
             // Rebuilding everything is the slow path, but a document whose page
             // list disagrees with its thumbnails is worse than a pause.
-            self.refreshImages()
-            self.refreshThumbnails()
+            self.refreshPages()
         }
 
         self.pdfCurrentPageIndex = destination
@@ -386,7 +404,7 @@ class PdfEditViewModel: ObservableObject {
     /// `handlePageReordering` performs.
     @MainActor
     func movePages(from source: IndexSet, to destination: Int) {
-        guard let from = source.first else { return }
+        guard self.canEditPages, let from = source.first else { return }
         // A move to a later position counts the moving page itself, so the
         // landing index is one past where it ends up.
         let to = destination > from ? destination - 1 : destination
@@ -405,11 +423,11 @@ class PdfEditViewModel: ObservableObject {
     }
 
     /// Rotates only the currently displayed page. Regenerates just that page's image
-    /// and thumbnail (the full `refreshImages()`/`refreshThumbnails()` rebuilds every
-    /// page and is a known perf problem on large documents).
+    /// and thumbnail (the full `refreshPages()` redraws every page).
     @MainActor
     func rotateCurrentPage(clockwise: Bool) {
-        guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
+        guard self.canEditPages,
+              let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
             return
         }
         PDFUtility.rotatePage(page, clockwise: clockwise)
@@ -422,13 +440,13 @@ class PdfEditViewModel: ObservableObject {
     /// (a per-page regeneration wouldn't be any cheaper here).
     @MainActor
     func rotateAllPages(clockwise: Bool) {
+        guard self.canEditPages else { return }
         for index in 0..<self.pdf.pdfDocument.pageCount {
             if let page = self.pdf.pdfDocument.page(at: index) {
                 PDFUtility.rotatePage(page, clockwise: clockwise)
             }
         }
-        self.refreshImages()
-        self.refreshThumbnails()
+        self.refreshPages()
         self.shouldShowCloseWarning.wrappedValue = true
         self.analyticsManager.track(event: .pageRotated(rotationType: .all))
     }
@@ -660,7 +678,7 @@ class PdfEditViewModel: ObservableObject {
 
     /// Applies edited metadata coming back from the metadata editor. Metadata never
     /// affects rendering, so this deliberately avoids the heavy
-    /// `refreshImages()`/`refreshThumbnails()` full rebuild that `updatePdf(pdf:)`
+    /// `refreshPages()` full rebuild that `updatePdf(pdf:)`
     /// does; it only swaps in the updated `Pdf` and marks the document dirty.
     func applyMetadata(pdf: Pdf) {
         self.pdf = pdf
@@ -753,12 +771,12 @@ class PdfEditViewModel: ObservableObject {
         // TODO: Update thumbnails only for changed pages
         self.pdf = pdf
         self.shouldShowCloseWarning.wrappedValue = true
-        self.refreshThumbnails()
-        self.refreshImages()
+        self.refreshPages()
         self.refreshFilenameSuggestion()
     }
     
     func handlePageReordering(fromIndex: Int, toIndex: Int) {
+        guard self.canEditPages else { return }
         if fromIndex != toIndex {
             // exchangePage throws an exception if used after pages are added. Apparently it doesn't update its internal indices when adding pages,
             // which it relies upon to perform the swap. A manual workaround using removePage and insert methods seems to work fine, though.
@@ -866,6 +884,15 @@ class PdfEditViewModel: ObservableObject {
     
     private func appendUiImageToPdf(uiImage: UIImage) {
         PDFUtility.appendImageToPdfDocument(pdfDocument: self.pdf.pdfDocument, uiImage: uiImage)
+        // A page arriving mid-draw would be appended twice — once here, once by
+        // the render still walking the document — so that render is abandoned
+        // and the document is drawn again, new page included.
+        guard !self.isPreparingPages else {
+            self.shouldShowCloseWarning.wrappedValue = true
+            self.trackPageAddedEvent()
+            self.refreshPages()
+            return
+        }
         let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: self.pdf.pdfDocument,
                                                         size: nil,
                                                         forPageIndex: self.pdf.pdfDocument.pageCount - 1)
@@ -882,6 +909,13 @@ class PdfEditViewModel: ObservableObject {
     
     private func appendPdfToPdf(pdf: Pdf) {
         PDFUtility.appendPdfDocument(pdf.pdfDocument, toPdfDocument: self.pdf.pdfDocument)
+        guard !self.isPreparingPages else {
+            self.shouldShowCloseWarning.wrappedValue = true
+            self.refreshFilenameSuggestion()
+            self.trackPageAddedEvent()
+            self.refreshPages()
+            return
+        }
         let pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: pdf.pdfDocument, size: nil).compactMap { $0 }
         self.pageImages.append(contentsOf: pageImages)
         let thumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: pdf.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
@@ -908,12 +942,62 @@ class PdfEditViewModel: ObservableObject {
         }
     }
     
-    private func refreshImages() {
-        self.pageImages = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdf.pdfDocument, size: nil).compactMap { $0 }
-    }
-    
-    private func refreshThumbnails() {
-        self.pdfThumbnails = PDFUtility.generatePdfThumbnails(pdfDocument: self.pdf.pdfDocument, size: K.Misc.ThumbnailEditSize).compactMap { $0 }
+    /// Builds the two images every page needs — the one the pager shows and the
+    /// one the strip shows — off the main thread, a page at a time.
+    ///
+    /// This used to be two synchronous passes over the whole document inside
+    /// `init`, and again after every tool. On a text document that is free; on a
+    /// scan it is not, because the cost is decoding the photograph inside each
+    /// page and it is paid twice per page whatever size comes out: measured at
+    /// **0.9s per page on a Mac**, so a twenty-page scan froze the editor for
+    /// eighteen seconds before it drew anything, and again after every edit.
+    /// Nothing was broken — the app was busy — but a frozen editor and a broken
+    /// one are the same thing to the person holding the phone.
+    ///
+    /// Now the pages arrive as they are drawn, starting with the one being
+    /// looked at. `renderGeneration` drops the results of a render the document
+    /// has moved on from.
+    private func refreshPages() {
+        self.renderGeneration += 1
+        let generation = self.renderGeneration
+        let document = self.pdf.pdfDocument
+        let pageCount = document.pageCount
+
+        self.pageImages = []
+        self.pdfThumbnails = []
+        guard pageCount > 0 else {
+            self.isPreparingPages = false
+            return
+        }
+        self.isPreparingPages = true
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            for index in 0..<pageCount {
+                // The document is only mutated once every page is in, so this
+                // walks a document nobody else is touching (see `canEditPages`).
+                let pageImage = PDFUtility.generatePdfThumbnail(pdfDocument: document,
+                                                                size: nil,
+                                                                forPageIndex: index)
+                let thumbnail = PDFUtility.generatePdfThumbnail(pdfDocument: document,
+                                                                size: K.Misc.ThumbnailEditSize,
+                                                                forPageIndex: index)
+                guard let pageImage = pageImage, let thumbnail = thumbnail else { continue }
+                DispatchQueue.main.async {
+                    guard generation == self.renderGeneration else { return }
+                    self.pageImages.append(pageImage)
+                    self.pdfThumbnails.append(thumbnail)
+                    if self.pageImages.count >= pageCount {
+                        self.isPreparingPages = false
+                    }
+                }
+            }
+            DispatchQueue.main.async {
+                guard generation == self.renderGeneration else { return }
+                // A page that failed to draw would otherwise leave the editor
+                // preparing for ever.
+                self.isPreparingPages = false
+            }
+        }
     }
     
     private func trackPageAddedEvent() {

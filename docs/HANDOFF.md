@@ -5,7 +5,7 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 ## Where things stand
 
 Sixteen phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 636 catalog keys, 288 unit tests
+that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 291 unit tests
 and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -59,6 +59,7 @@ behind is in "What landed on `main`".
 | 15 | The editor restructured: one tool list, a page bar, pushed tools |
 | 16 | The last five tool flows pushed too, and one paywall for all of them |
 | 16b | A UI test bundle: the editor's tools and the back button, tapped |
+| 17 | The editor stops freezing: pages are drawn in the background |
 
 ## Build / project notes (still true — save time)
 
@@ -1393,3 +1394,69 @@ All four pass. The tools work, and so does the back button.
   Harmless today — the start action is consumed on first use — but anything
   added there has to be idempotent. The debug sheet hook now guards against it;
   without the guard the tool reopened itself and there was no way back.
+
+
+## Phase 17 (2026-07-27) — the editor stops freezing
+
+The report was "the tools don't work, and neither does the back button", on an
+iPhone, on a real document. The UI tests said otherwise, and they were right:
+nothing was broken. The editor was busy.
+
+Opening a document built two images for every page — one for the pager, one for
+the strip — synchronously, inside `init`. On a text document that is free. On a
+scan it is not, and the measurement is the whole story:
+
+| | full-size pass | thumbnail pass | one page |
+|---|---|---|---|
+| 20-page scan | 9.5s | 9.3s | 0.45s |
+
+**0.9s per page, on a Mac.** The cost is decoding the photograph inside each
+page, and it is paid twice per page whatever size comes out — a thumbnail is as
+expensive as the page. So a twenty-page scan froze the editor for eighteen
+seconds before it drew anything, and `updatePdf` ran the same two passes again
+after every tool that changes the document. To the person holding the phone,
+an editor that ignores taps for eighteen seconds and an editor that is broken
+are the same editor.
+
+### What changed
+
+`refreshImages()` + `refreshThumbnails()` became one `refreshPages()` that draws
+on a background queue and publishes a page at a time. The editor now opens
+immediately on any document, and the pages fill in as they are drawn.
+
+Three things had to come with it:
+
+- **`pageCount` comes from the document, not from the images of it.** The page
+  bar, the tool panel and the page counter used `pageImages.count`, which is now
+  zero for a moment; they would have said "you have no pages" to someone holding
+  a fifty-page scan.
+- **The page operations wait.** Delete, duplicate, move, rotate-all and the strip
+  drag each edit three lists in step, so `canEditPages` holds them until there is
+  one image per page, and the bars are disabled and dimmed until then. A page
+  added mid-draw abandons the render and starts it again rather than appending
+  twice.
+- **`renderGeneration`** drops the results of a render whose document has since
+  been replaced — which is what every tool does.
+
+### Verification
+
+Three new tests (**291** unit, plus the 4 UI): opening a ten-page scan returns in
+under a second and reports itself as still preparing; the first page arrives
+without waiting for the tenth, with the pager and the strip in step; a short
+document is ready immediately. Before the change the first of those took about
+nine seconds.
+
+### Watch out
+
+- **This has still not been done on a device**, which is where the original
+  report came from. It is the same document that should be tried: a real scan of
+  twenty-odd pages, opened, edited with a tool, and reordered.
+- The background render walks a `PDFDocument` that the main thread must not
+  mutate at the same time. Nothing does today — the mutators wait on
+  `canEditPages` and the tools replace the document rather than editing it — but
+  that is an invariant held by convention, not by the type system.
+- Rotating a *single* page still redraws it synchronously (0.45s on a scan page).
+  That is a hitch on one tap, not a freeze, and it was left alone.
+- Memory is untouched: a page image is about 2 MB, so a fifty-page document
+  still holds ~100 MB of images. That is the next thing to look at, and it wants
+  the page model unified first (backlog item A5).
