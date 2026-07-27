@@ -24,11 +24,18 @@ class ProjectInfo {
 
     static var stirlingApiKey: String { ObfuscatedSecrets.stirlingApiKey.value }
 
+    /// Apple Search Ads attribution (see `AppleAttributionPlatform`). Empty when
+    /// the plist has no key, which is how the SDK stays switched off rather than
+    /// being configured with nothing — `configure` is idempotent and cannot be
+    /// undone.
+    static var appleAttributionApiKey: String { ObfuscatedSecrets.appleAttributionApiKey.value }
+
     /// Kept for call-site compatibility (invoked from `AppDelegate`). The secrets
     /// are resolved from generated code rather than a bundled plist, so this simply
     /// forces them to be evaluated once at launch.
     static func validate() {
         _ = Self.openAiApiKey
         _ = Self.stirlingApiKey
+        _ = Self.appleAttributionApiKey
     }
 }

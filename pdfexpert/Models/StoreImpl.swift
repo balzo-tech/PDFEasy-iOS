@@ -8,6 +8,7 @@ The store class is responsible for requesting products from the App Store and st
 import Foundation
 import StoreKit
 import Combine
+import AppleAttribution
 import Factory
 
 typealias Transaction = StoreKit.Transaction
@@ -164,7 +165,16 @@ final class StoreImpl: Store {
     @MainActor
     func purchase(_ product: Product) async throws -> Transaction? {
         //Begin purchasing the `Product` the user selects.
-        let result = try await product.purchase()
+        // The install id rides along as the purchase's `appAccountToken`: Apple
+        // echoes it in every later transaction and in the server notifications,
+        // which is the only way the events raised with the app closed — a renewal,
+        // a trial converting — can be tied back to the install that was
+        // attributed. It is an anonymous UUID, so it carries no personal data.
+        var options: Set<Product.PurchaseOption> = []
+        if let installId = AppleAttribution.installId, let token = UUID(uuidString: installId) {
+            options.insert(.appAccountToken(token))
+        }
+        let result = try await product.purchase(options: options)
 
         switch result {
         case .success(let verification):

@@ -4,8 +4,8 @@ Updated 2026-07-27. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Twenty phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 299 unit tests
+Twenty-one phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 637 catalog keys, 303 unit tests
 and 4 UI tests green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -63,6 +63,7 @@ behind is in "What landed on `main`".
 | 18 | Rotate the whole document — the Shortcuts action does something again |
 | 19 | The editor stops hoarding: page images are drawn on demand (A5) |
 | 20 | Branch removed: one analytics platform, no attribution SDK |
+| 21 | AppleAttribution in: Search Ads attribution, install id on the purchase |
 
 ## Build / project notes (still true — save time)
 
@@ -222,11 +223,11 @@ In order:
   extraction pass was needed in the end: the keys were already in the catalog
   (`Page %lld`, `%lld of %lld`, `Welcome in %@:\nConvert & Edit`, …), they had
   simply never been translated.
-- **`AppleAttribution` package** — the old branch added it as an *unused*
-  dependency; re-adding it as dead weight was skipped. If attribution is actually
-  wanted it needs a real integration (init + config in `AppDelegate`). **Phase 20
-  makes this the only open question about attribution**: with Branch gone, the app
-  has no attribution SDK at all.
+- ~~**`AppleAttribution` package**~~ — **done in phase 21**, and as the real
+  integration this entry always asked for rather than the unused dependency the
+  old branch added: configured in `AppDelegate`, purchases forwarded, install id
+  on the transaction. It needs `APPLE_ATTRIBUTION_API_KEY` in `ProjectInfo.plist`
+  to do anything — see the phase's "watch out".
 
 ### Backlog (from the old `NEXT_TASKS.md`)
 - Extend the test suite: append paths, `PdfScanUtility` progress, `Pdf.shareData`.
@@ -1640,3 +1641,75 @@ acquisition is planned before release, this is the gap.
 - The Facebook SDK is still linked and still initialized in `AppDelegate`, with
   advertiser-ID collection commented out. It is the next piece of dead weight, if
   the same sweep continues.
+
+## Phase 21 (2026-07-27) — AppleAttribution in Branch's place
+
+### What it is
+
+`AppleAttribution` (Jedisoft's `grogu-ios` SDK, SPM, iOS 13+, pinned to **0.3.0**
+from `github.com/jedisoft-srl/grogu-ios`). It captures the AdServices token at
+install and reports purchases, so revenue can be traced back to the Apple Search
+Ads campaign and **keyword** that produced the install. No IDFA, no ATT prompt —
+AdServices is exempt by design and the identifier is a per-install anonymous UUID.
+
+Phase 20 left the app with no attribution at all; this fills that hole with the
+package the backlog had been holding open since the beginning.
+
+### How it is wired
+
+- **`AppleAttributionPlatform`** — an `AnalyticsPlatform` like the Firebase one,
+  registered alongside it in `AnalyticsManagerImpl`. It forwards only
+  `checkoutCompleted`: `.trialStarted` when the product carries a free trial,
+  `.subscribed` with revenue and currency otherwise, `.purchase` for a
+  consumable. The SDK's event set is closed and the rest of the app's ninety
+  events have no counterpart in it — no account to sign up for, and renewals do
+  not come from the client at all.
+- **`AppDelegate`** — `configure(apiKey:)` at launch, *only* if the key is
+  non-empty: `configure` is idempotent and cannot be undone, so an empty key
+  would leave the SDK running against nothing for the session.
+- **`StoreImpl.purchase`** — the install id now rides along as the purchase's
+  `appAccountToken`. This is the half that makes server-side attribution work:
+  Apple echoes that UUID in every later transaction and in the App Store Server
+  Notifications, so a renewal or a trial converting — both of which happen with
+  the app closed — can be tied back to the install that was attributed. Set once,
+  on the first purchase; Apple inherits it for the life of the subscription.
+- **`APPLE_ATTRIBUTION_API_KEY`** — a third secret, through the same XOR path as
+  the OpenAI and Stirling keys (`generate_secrets.sh` → `ObfuscatedSecrets` →
+  `ProjectInfo`).
+
+### One thing that reads oddly, and why
+
+`AppleAttributionPlatform` never names the SDK's `SubscriptionPlan` type. It
+cannot: the app has a `SubscriptionPlan` protocol of its own that wins the name
+lookup, and qualifying it as `AppleAttribution.SubscriptionPlan` does not resolve
+either, because the SDK's module name is shadowed by its own facade enum of the
+same name. So the plan is built by inference — `.init` from the event case, the
+period from `.init` — which is why the period is spelled out in each branch of
+the switch rather than passed as a value.
+
+### Verification
+
+Four new tests (**303** unit, plus the 4 UI) on the one piece of judgement in the
+mapping: StoreKit reports a weekly plan as either "1 week" or "7 days" and the
+SDK has three buckets, so every spelling of week, month and year is pinned, and
+the in-between periods (two months, two weeks) round *down* — a two-month plan
+reported as annual would overstate what a keyword earns.
+
+### Watch out
+
+- **Nothing is sent until `APPLE_ATTRIBUTION_API_KEY` is in the git-ignored
+  `pdfexpert/Resources/ProjectInfo.plist`.** It is not there today, so the build
+  prints `warning: APPLE_ATTRIBUTION_API_KEY missing from ProjectInfo.plist` and
+  the SDK stays switched off. That is the intended default, not a failure.
+- **Only reproducible on a device**, and only against a real Search Ads campaign:
+  AdServices returns no token on the simulator.
+- The `appAccountToken` is set at purchase time. Subscriptions bought *before*
+  this ships carry no token and cannot be attributed retroactively.
+- Xcode rewrote `Package.resolved` into its current format (v3, with
+  `originHash`) while resolving the new package — hence the large diff on a file
+  that only gained one pin.
+- App Store Connect privacy labels are the app's job, not the SDK's: it ships its
+  own `PrivacyInfo.xcprivacy` with `NSPrivacyTracking = false`, but Purchase
+  History / Product Interaction / Identifier still need declaring, and the
+  privacy policy needs to cover attribution and purchase data. The SDK's README
+  also flags GDPR as a separate legal question from Apple's policy.

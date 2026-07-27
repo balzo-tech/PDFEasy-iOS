@@ -57,6 +57,7 @@
 		58B07D293F5644CB3D2E3014 /* CDFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9174E633BB07ACAF38D957F /* CDFolder.swift */; };
 		5D1133CFF416761B8269105B /* PdfProCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAFD3A0352EF7AFBDD1F7FF /* PdfProCommands.swift */; };
 		5EF19A59B2443E9D1488854C /* EditorToolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE74F79E52A4160AB0E3DC /* EditorToolTests.swift */; };
+		8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */; };
 		5FB784C183156FB295411832 /* Folder+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7ECBFF6B0754689D031066 /* Folder+Persistable.swift */; };
 		60EBDB7251CED824ADE01D33 /* PdfProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FAB5AB0963B3746F42B50E /* PdfProWidgetBundle.swift */; };
 		61B1451DD20E9FF7531DCE77 /* PdfCleanupUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8182CA141142B57D9B63CE37 /* PdfCleanupUtilityTests.swift */; };
@@ -275,6 +276,8 @@
 		89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BA429D32C52003F1C3A /* Lottie */; };
 		89CD7BA829D32C72003F1C3A /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BA729D32C72003F1C3A /* Factory */; };
 		89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */; };
+		8A11AT0100000000000001 /* AppleAttribution in Frameworks */ = {isa = PBXBuildFile; productRef = 8A11AT0100000000000002 /* AppleAttribution */; };
+		8A11AT0100000000000004 /* AppleAttributionPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000005 /* AppleAttributionPlatform.swift */; };
 		89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */; };
 		89CD7BB629D32E69003F1C3A /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BB429D32E69003F1C3A /* MainCoordinator.swift */; };
 		89CD7BBD29D331AA003F1C3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD7BBC29D331AA003F1C3A /* AppDelegate.swift */; };
@@ -709,6 +712,7 @@
 		89D79DF72A654DC80086A8E5 /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		89E55BD829DC64840073F268 /* AnalyticsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		89E55BDA29DC64840073F268 /* FirebaseAnalyticsPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAnalyticsPlatform.swift; sourceTree = "<group>"; };
+		8A11AT0100000000000005 /* AppleAttributionPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleAttributionPlatform.swift; sourceTree = "<group>"; };
 		89E55BDB29DC64840073F268 /* AnalyticsManagerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsManagerImpl.swift; sourceTree = "<group>"; };
 		89E55BE129DC66240073F268 /* AnalyticsPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsPlatform.swift; sourceTree = "<group>"; };
 		89E601612A829556009492DA /* SubscriptionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPickerView.swift; sourceTree = "<group>"; };
@@ -730,6 +734,7 @@
 		9B4AFD22DD157CBABC095FBB /* ToolDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolDetailView.swift; sourceTree = "<group>"; };
 		9B74D4690C1D855C28282544 /* EditorOpeningCostTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorOpeningCostTests.swift; sourceTree = "<group>"; };
 		9CCE74F79E52A4160AB0E3DC /* EditorToolTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorToolTests.swift; sourceTree = "<group>"; };
+		8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleAttributionPlatformTests.swift; sourceTree = "<group>"; };
 		A130C45F0AE3DB1011B31E35 /* Tag+Persistable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Tag+Persistable.swift"; sourceTree = "<group>"; };
 		A14FF9709A641E3F5C6DED28 /* PdfAnnotationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfAnnotationTests.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F600000000A001 /* ObfuscatedSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObfuscatedSecret.swift; sourceTree = "<group>"; };
@@ -831,6 +836,7 @@
 				8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */,
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
+				8A11AT0100000000000001 /* AppleAttribution in Frameworks */,
 				8991485629E85DE500DD01F2 /* CombineExt in Frameworks */,
 				89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */,
 				891A07E929E028EE0002FA3A /* CloudKitSyncMonitor in Frameworks */,
@@ -1630,6 +1636,7 @@
 				89E55BDB29DC64840073F268 /* AnalyticsManagerImpl.swift */,
 				89E55BD829DC64840073F268 /* AnalyticsManager.swift */,
 				89E55BDA29DC64840073F268 /* FirebaseAnalyticsPlatform.swift */,
+				8A11AT0100000000000005 /* AppleAttributionPlatform.swift */,
 				89E55BE129DC66240073F268 /* AnalyticsPlatform.swift */,
 				893EB5062AA723C80066914E /* AnalyticsDefaultParameters.swift */,
 			);
@@ -1785,6 +1792,7 @@
 				3DABE1700A4543531088792D /* ScanGeometryTests.swift */,
 				70736180CA61F13C8AD9D616 /* ScanImageProcessorTests.swift */,
 				9CCE74F79E52A4160AB0E3DC /* EditorToolTests.swift */,
+				8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */,
 				9B74D4690C1D855C28282544 /* EditorOpeningCostTests.swift */,
 			);
 			name = PdfExpertTests;
@@ -1882,6 +1890,7 @@
 			);
 			name = PdfExpert;
 			packageProductDependencies = (
+				8A11AT0100000000000002 /* AppleAttribution */,
 				89CD7BA429D32C52003F1C3A /* Lottie */,
 				89CD7BA729D32C72003F1C3A /* Factory */,
 				89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */,
@@ -1966,6 +1975,7 @@
 			);
 			mainGroup = 89CD7A8D29D32855003F1C3A;
 			packageReferences = (
+				8A11AT0100000000000003 /* XCRemoteSwiftPackageReference "grogu-ios" */,
 				89CD7BA329D32C52003F1C3A /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				89CD7BA629D32C72003F1C3A /* XCRemoteSwiftPackageReference "Factory" */,
 				89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
@@ -2247,6 +2257,7 @@
 				893C8FCB29DED1AF000E35BD /* ArchiveViewModel.swift in Sources */,
 				89407EF52AA8BDE600169801 /* CameraImageProviderFlow.swift in Sources */,
 				89E55BDE29DC64840073F268 /* FirebaseAnalyticsPlatform.swift in Sources */,
+				8A11AT0100000000000004 /* AppleAttributionPlatform.swift in Sources */,
 				89CD7B4E29D329B1003F1C3A /* LottieView.swift in Sources */,
 				8991485329E851BD00DD01F2 /* RemoteConfigManager.swift in Sources */,
 				893875012A7BDD3B00267AFD /* LoadingView.swift in Sources */,
@@ -2467,6 +2478,7 @@
 				B7C16F592296D1A34B85BF8D /* ScanGeometryTests.swift in Sources */,
 				0DEF9EB225D554D91A8CA034 /* ScanImageProcessorTests.swift in Sources */,
 				5EF19A59B2443E9D1488854C /* EditorToolTests.swift in Sources */,
+				8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */,
 				50D3963EB3588AC7DAC2C955 /* EditorOpeningCostTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3433,6 +3445,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		8A11AT0100000000000003 /* XCRemoteSwiftPackageReference "grogu-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jedisoft-srl/grogu-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
 		8991485429E85DE500DD01F2 /* XCRemoteSwiftPackageReference "CombineExt" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CombineCommunity/CombineExt.git";
@@ -3497,6 +3517,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 895FE2CE29D7392E00A99D5B /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = Collections;
+		};
+		8A11AT0100000000000002 /* AppleAttribution */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A11AT0100000000000003 /* XCRemoteSwiftPackageReference "grogu-ios" */;
+			productName = AppleAttribution;
 		};
 		895FE2D129D7392F00A99D5B /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;

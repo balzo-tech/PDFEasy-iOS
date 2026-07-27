@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseCore
 import FacebookCore
+import AppleAttribution
 import Factory
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // ProjectInfo Validation
         ProjectInfo.validate()
+
+        // Apple Search Ads attribution. Started only with a real key: `configure`
+        // is idempotent and cannot be undone, so an empty one would leave the SDK
+        // running against nothing for the rest of the session. It captures the
+        // AdServices token by itself from here; no ATT prompt is involved.
+        if !ProjectInfo.appleAttributionApiKey.isEmpty {
+            AppleAttribution.configure(apiKey: ProjectInfo.appleAttributionApiKey)
+        }
         
         self.setupAppearance()
         
