@@ -19,6 +19,8 @@ typealias ExtractCompletedCallback = (() -> ())
 
 class PdfExtractViewModel: ObservableObject {
 
+    /// True while the range editor is on screen, cover or pushed screen — see
+    /// the same flag on `PdfSplitViewModel`.
     @Published var showPageRangeEditor: Bool = false
     @Published var asyncImportedPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
         didSet {
@@ -52,6 +54,15 @@ class PdfExtractViewModel: ObservableObject {
         }
     }
 
+    /// Prepares the ranges for a document the caller already has and leaves the
+    /// presenting to it — the editor pushes the range editor. Same contract as
+    /// `PdfSplitViewModel.prepare`.
+    @discardableResult
+    func prepare(pdf: Pdf, onExtractCompleted: ExtractCompletedCallback?) -> Bool {
+        self.onExtractCompleted = onExtractCompleted
+        return self.prepareRanges(for: pdf)
+    }
+
     func onPageRangeEditingCancelled() {
         self.toBeExtractedPdf = nil
         self.showPageRangeEditor = false
@@ -67,18 +78,24 @@ class PdfExtractViewModel: ObservableObject {
     }
 
     private func onImportCompleted(pdf: Pdf) {
+        self.prepareRanges(for: pdf)
+    }
+
+    @discardableResult
+    private func prepareRanges(for pdf: Pdf) -> Bool {
         guard pdf.pageCount > 0 else {
             self.asyncExtract = .error(.pdfNoPage)
-            return
+            return false
         }
         guard pdf.pageCount > 1 else {
             self.asyncExtract = .error(.pdfSinglePage)
-            return
+            return false
         }
         self.toBeExtractedPdf = pdf
         self.pageRanges = [0...pdf.pageCount - 1]
         self.totalPages = pdf.pageCount
         self.showPageRangeEditor = true
+        return true
     }
 
     @MainActor

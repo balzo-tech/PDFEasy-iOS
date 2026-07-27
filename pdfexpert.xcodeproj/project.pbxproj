@@ -28,6 +28,7 @@
 		29FE9504A3F58952463549AB /* PdfCompressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFA51296A73FDFA9F94E741 /* PdfCompressView.swift */; };
 		2E8335470DCB20BE2EBD1B40 /* PdfCleanupUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6122CD802552BE96019419CD /* PdfCleanupUtility.swift */; };
 		2E83C7993BC8C89DA052909F /* EditorRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9F8F0B969538C08FAED7E7 /* EditorRoute.swift */; };
+		4B21D7E0C0A34F1188E6A3D2 /* EditorToolScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5C0A93B14D46A2A0F1C8B7 /* EditorToolScreens.swift */; };
 		2F1743C48BC2401A8B242C54 /* PdfPermissionsUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFCD3B9E018C23C99E6EF738 /* PdfPermissionsUtility.swift */; };
 		3165F92A7BF1AFEE39FC1509 /* SharedDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC23C6D694EBBF58C9441D7 /* SharedDocumentStore.swift */; };
 		3440EB15072B89E2823AA249 /* PdfCompareUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BEE9FC9379E84E9F6B8184 /* PdfCompareUtilityTests.swift */; };
@@ -442,6 +443,7 @@
 		3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageNumberViewModel.swift; sourceTree = "<group>"; };
 		3AEC26104F59A1229C145C29 /* PdfExtractView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExtractView.swift; sourceTree = "<group>"; };
 		3C9F8F0B969538C08FAED7E7 /* EditorRoute.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorRoute.swift; sourceTree = "<group>"; };
+		7E5C0A93B14D46A2A0F1C8B7 /* EditorToolScreens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorToolScreens.swift; sourceTree = "<group>"; };
 		3CE9B8BA6CA858E0E790D321 /* PdfAdvancedToolViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolViewModelTests.swift; sourceTree = "<group>"; };
 		3DABE1700A4543531088792D /* ScanGeometryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanGeometryTests.swift; sourceTree = "<group>"; };
 		3F9B9BF13B20A579E20B3AA3 /* PdfConvertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertViewModel.swift; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 			children = (
 				D5DE17116539594FB0A55520 /* EditorTool.swift */,
 				3C9F8F0B969538C08FAED7E7 /* EditorRoute.swift */,
+				7E5C0A93B14D46A2A0F1C8B7 /* EditorToolScreens.swift */,
 				E59873EC4BAF39378788F6B6 /* ToolScreen.swift */,
 				9A8E8C949219CEBCDA1E856F /* PdfEditToolbars.swift */,
 				608C4DDAAB480C6A5BE8315D /* PdfEditAlerts.swift */,
@@ -2377,6 +2380,7 @@
 				E6BFEFEAA0A876DCBFF77701 /* ScanIntents.swift in Sources */,
 				A8972D22FF4DBD88AB3AF1D5 /* EditorTool.swift in Sources */,
 				2E83C7993BC8C89DA052909F /* EditorRoute.swift in Sources */,
+				4B21D7E0C0A34F1188E6A3D2 /* EditorToolScreens.swift in Sources */,
 				3780EF9FB229A25158F2EEBD /* ToolScreen.swift in Sources */,
 				C7CE88087170FECAB05C82D1 /* PdfEditToolbars.swift in Sources */,
 				16F40C137D04793DA6A54123 /* PdfEditAlerts.swift in Sources */,

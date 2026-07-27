@@ -4,8 +4,8 @@ Updated 2026-07-26. Read this first when picking the work up in a fresh session.
 
 ## Where things stand
 
-Fifteen phases of work sit on `main`. The app is feature-complete for the release
-that is planned: iPhone and iPad, EN / IT / ES, 636 catalog keys, 276 unit tests
+Sixteen phases of work sit on `main`. The app is feature-complete for the release
+that is planned: iPhone and iPad, EN / IT / ES, 636 catalog keys, 288 unit tests
 green, and a localization lint in CI. Every phase below was built and tested on
 **Xcode 26.6 / iOS 26 SDK** (`Staging Debug`, iPhone 17 Pro and iPad Pro 13"
 simulators).
@@ -57,6 +57,7 @@ behind is in "What landed on `main`".
 | 13 | The document proposes its own name |
 | 14 | A scanner of our own: camera, review, Scanner tab, Shortcuts |
 | 15 | The editor restructured: one tool list, a page bar, pushed tools |
+| 16 | The last five tool flows pushed too, and one paywall for all of them |
 
 ## Build / project notes (still true — save time)
 
@@ -1176,7 +1177,8 @@ extract, export, compress, permissions, redact — each of which is an import, a
 form, a saved second document and an alert. Signing and form filling are also
 `.flow`: they are direct manipulation of the page, and a navigation bar over the
 canvas would be in the way. **Those flows were not converted**; that is the
-obvious next slice.
+obvious next slice. *(Phase 16 converted five of the six — everything but
+redaction.)*
 
 **Pushing works because of `ToolScreen`.** Every tool form used to hard-code its
 own `NavigationStack` plus a close button, which is precisely why the editor
@@ -1238,3 +1240,103 @@ xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string re
   used to have "Cancel".
 - `EditAction` still exists, now private to `PdfEditViewModel` — the dispatcher's
   internal vocabulary. It is not a second public list, but it is still a list.
+
+
+## Phase 16 (2026-07-27) — the last five flows became screens
+
+Phase 15 left five tools covering the editor instead of being pushed onto it —
+split, extract pages, export, compress and PDF permissions — and named the reason
+in its own "watch out": each is more than a question, and its view model owned
+where its form appeared. This is that slice.
+
+### The one idea
+
+Each flow's entry point was doing two things at once: *prepare* — take the
+document, validate it, work out what the form starts from — and *present* — raise
+the flag its own `show*View` modifier binds a cover to. Splitting them in two is
+the whole change:
+
+```swift
+// what the Tools tab calls: import, then prepare + present
+func split(pdf: Pdf?, onSplitCompleted: SplitCompletedCallback?)
+// what the editor calls: prepare only, synchronously, and say if there is
+// anything to show
+@discardableResult
+func prepare(pdf: Pdf, onSplitCompleted: SplitCompletedCallback?) -> Bool
+```
+
+The editor pushes only when `prepare` says yes, so **splitting a one-page
+document now reports that instead of opening a screen with nothing on it** — it
+used to present the range editor and then fail.
+
+Coming back is the mirror image. Each flow already had a flag meaning "the form
+is up" (`showPageRangeEditor`, `formatPickerShow`, `editorShow`, `formShow`); the
+Tools tab binds it to a cover, and the editor watches it and pops:
+
+```swift
+.popWhenFormCloses(self.viewModel.editorShow)   // Views/Pdf/EditorToolScreens.swift
+```
+
+Nothing in the flows had to learn which host they got. `save()`, `cancel()`,
+`confirm()` and `onFormatSelected()` are untouched.
+
+### What landed
+
+- **`EditorRoute` +5 cases**, `EditorTool.presentation` `.flow` → `.push` for the
+  five, and `EditorRoute` is now `CaseIterable` so the "every route is reachable"
+  test maintains itself.
+- **`EditorToolScreens.swift`** (new): `popWhenFormCloses`, plus the five pushed
+  screens. Split and extract share one generic screen over a `PageRangeFlow`
+  protocol, because they are the same screen — the range editor's own view model
+  is a `@StateObject` there, so a redraw cannot throw away half-typed bounds.
+- **Export got a screen** rather than a sheet, and `PdfExportFormat` now carries
+  its own title and symbol so both hosts describe a format the same way.
+- **The page-range editor stopped saying "Split"** to someone extracting pages:
+  its title and its button arrive from the caller. It also went through
+  `ToolScreen`, which is what lets it be pushed at all.
+- **One paywall in the editor**, not one per tool. `ocrMonetizationShow`,
+  `pageNumbersMonetizationShow` and `watermarkMonetizationShow` — each with its
+  own pending flag and its own `onXMonetizationClose` — are a single
+  `monetizationShow` plus `pendingPremiumTool`, and a purchase resumes by
+  re-running `run(tool)`. Permissions joined them for free.
+- **Each flow's modifier split in two**: `show*View` (import + form + outcomes,
+  for the Tools tab) and `*Outcomes` (loader, errors, success alert, and for
+  export the share sheet and paywall). The editor applies only the second — the
+  first would put the same form on screen twice.
+- `EditAction` lost eight of its fourteen cases, three of which were already
+  unreachable; `editOptionListShow` was write-only and is gone.
+
+### Verification
+
+12 new tests (**288** total): that the five are pushed and that signing, form
+filling and redaction are not; that splitting or extracting from a one-page
+document pushes nothing and reports the error; that export opens for everyone and
+permissions only for a subscriber; and that a purchase carries on into the tool it
+gated while a dismissed paywall opens nothing, ever. Lint clean, catalog
+unchanged at 636 keys — every string this needed already existed.
+
+Seen on an iPhone 17 Pro and an iPad Pro 13" simulator, both presentations. Five
+new debug hooks:
+
+```
+xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string split|extract|export|compress|permissions
+```
+
+### Watch out
+
+- **Nothing here was tapped on a device**, and the interesting half is the half a
+  screenshot cannot show: confirm → pop → work → alert. Worth walking through all
+  five, plus the back button mid-form.
+- Leaving a pushed tool by the back button is a cancellation, wired to
+  `onDisappear`. It is deliberately safe to run after a *confirmed* one too,
+  because by then the work holds its own copy of the document — but that is an
+  ordering argument, not something the type system enforces. Changing the order
+  of the work inside `confirm()` / `save()` could break it quietly.
+- Export is the exception on both counts: it gates on the format, so its paywall
+  belongs to the flow rather than to the editor, and nothing is released when its
+  screen goes away — the work starts after the screen is gone and reads the
+  document then.
+- `PdfEditStartAction.openRotate` sets `rotateOptionsShow`, which nothing has
+  presented since phase 15 removed the rotate sheet. The Shortcuts "rotate"
+  action therefore opens the editor and does nothing visible. Pre-existing, not
+  touched here, and worth a decision: the page bar rotates in one tap now.

@@ -40,24 +40,27 @@ struct PdfEditAlerts: ViewModifier {
             .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                        loadingView: { AnimationType.pdf.view })
 
-            // The tool flows that own their own presentation.
-            .showCompressView(viewModel: self.viewModel.pdfCompressViewModel)
+            // The flows whose form the editor pushes: what is left of them here
+            // is what they say back — the loader, the errors, the alert that a
+            // copy was saved. Their forms are screens on the stack, so the full
+            // `show*View` modifiers, which also present them, must not be here:
+            // that would put the same form on screen twice.
+            .compressOutcomes(viewModel: self.viewModel.pdfCompressViewModel)
+            .splitOutcomes(viewModel: self.viewModel.pdfSplitViewModel)
+            .extractOutcomes(viewModel: self.viewModel.pdfExtractViewModel)
+            .exportOutcomes(viewModel: self.viewModel.pdfExportViewModel)
+            .permissionsOutcomes(viewModel: self.viewModel.pdfPermissionsViewModel)
+
+            // The flows that still own their own presentation.
             .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
-            .showSplitView(viewModel: self.viewModel.pdfSplitViewModel)
-            .showExtractView(viewModel: self.viewModel.pdfExtractViewModel)
-            .showExportView(viewModel: self.viewModel.pdfExportViewModel)
-            .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)
             .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
             .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
             .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
 
-            // Paywalls, one per gated tool so the tool can resume after a purchase.
-            .showSubscriptionView(self.$viewModel.ocrMonetizationShow,
-                                  onComplete: { self.viewModel.onOcrMonetizationClose() })
-            .showSubscriptionView(self.$viewModel.pageNumbersMonetizationShow,
-                                  onComplete: { self.viewModel.onPageNumbersMonetizationClose() })
-            .showSubscriptionView(self.$viewModel.watermarkMonetizationShow,
-                                  onComplete: { self.viewModel.onWatermarkMonetizationClose() })
+            // One paywall for every gated tool: which tool it was gating is the
+            // view model's business, and it is what runs after a purchase.
+            .showSubscriptionView(self.$viewModel.monetizationShow,
+                                  onComplete: { self.viewModel.onMonetizationClose() })
 
             // Passwords.
             .removePasswordView(show: self.$viewModel.removePasswordAlertShow,

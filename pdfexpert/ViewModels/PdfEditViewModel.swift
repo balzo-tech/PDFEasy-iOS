@@ -31,24 +31,18 @@ enum PdfEditStartAction {
     case openInvertColors
 }
 
-/// The editor's internal vocabulary for "run this". The vocabulary the rest of
-/// the app speaks is `EditorTool`, which `run(_:)` translates from; this stays
-/// here so there is one public list of what the editor can do, not two.
+/// The editor's internal vocabulary for "run this, once the panel has finished
+/// closing". The vocabulary the rest of the app speaks is `EditorTool`, which
+/// `run(_:)` translates from; what is left here is only the tools that answer
+/// with an alert or a cover rather than a screen — everything that pushes goes
+/// straight through `push(_:)`.
 private enum EditAction: CaseIterable {
     case password
-    case compression
-    case split
-    case extract
-    case export
     case ocr
-    case pageNumbers
-    case watermark
     case removeBlankPages
     case flatten
     case invertColors
-    case permissions
     case redact
-    case metadata
 }
 
 class PdfEditViewModel: ObservableObject {
@@ -148,14 +142,14 @@ class PdfEditViewModel: ObservableObject {
     /// document.
     @Published var toolPanelShow: Bool = false
 
-    @Published var editOptionListShow: Bool = false
     @Published var passwordTextFieldShow: Bool = false
     @Published var removePasswordAlertShow: Bool = false
     @Published var splitSuccessAlertShow: Bool = false
     @Published var extractSuccessAlertShow: Bool = false
-    @Published var ocrMonetizationShow: Bool = false
-    @Published var pageNumbersMonetizationShow: Bool = false
-    @Published var watermarkMonetizationShow: Bool = false
+    /// The paywall in front of a premium tool. One flag, not one per tool: the
+    /// tools only ever differed in what runs after the purchase, and that is
+    /// `pendingPremiumTool`.
+    @Published var monetizationShow: Bool = false
     @Published var rotateOptionsShow: Bool = false
 
     @Injected(\.repository) private var repository
@@ -192,12 +186,9 @@ class PdfEditViewModel: ObservableObject {
     var currentAnalyticsPdfInputType: AnalyticsPdfInputType? = nil
     var currentAnalyticsInputFileExtension: String? = nil
     var startAction: PdfEditStartAction? = nil
-    // Set when OCR is gated behind the paywall, so it runs after a successful purchase.
-    private var ocrPending: Bool = false
-    // Same per-feature paywall flags for the page-number and watermark tools: the
-    // tool opens after a successful purchase (see the respective monetization-close).
-    private var pageNumbersPending: Bool = false
-    private var watermarkPending: Bool = false
+    /// The tool waiting behind the paywall, so it runs after a successful
+    /// purchase and nothing happens after a dismissed one.
+    private var pendingPremiumTool: EditorTool? = nil
     
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
@@ -280,11 +271,13 @@ class PdfEditViewModel: ObservableObject {
     }
 
     #if DEBUG
-    /// Opens one of the editor's own tool sheets, which are otherwise behind a tap on
-    /// the More menu that a simulator cannot deliver:
+    /// Opens one of the editor's own tool screens, which are otherwise behind a tap
+    /// in the tool panel that a simulator cannot deliver:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string watermark
-    /// Values: `pageNumbers`, `watermark`, `metadata`. The first two are premium, so
-    /// `debugPremium -bool YES` is needed too.
+    /// Values: `pageNumbers`, `watermark`, `metadata`, `tools`, `reorder`, `split`,
+    /// `extract`, `export`, `compress`, `permissions`. Page numbers, watermark and
+    /// permissions are premium, so `debugPremium -bool YES` is needed too; split and
+    /// extract need a document of more than one page.
     @MainActor
     private func openDebugSheetIfNeeded() {
         switch UserDefaults.standard.string(forKey: "debugEditorSheet") {
@@ -293,6 +286,11 @@ class PdfEditViewModel: ObservableObject {
         case "metadata": self.push(.metadata)
         case "tools": self.toolPanelShow = true
         case "reorder": self.push(.reorderPages)
+        case "split": self.startSplit()
+        case "extract": self.startExtract()
+        case "export": self.startExport()
+        case "compress": self.startCompress()
+        case "permissions": self.startPermissions()
         default: break
         }
     }
@@ -526,8 +524,8 @@ class PdfEditViewModel: ObservableObject {
         case .signature: self.showAddSignature()
         case .addText: self.showFillForm()
         case .fillForm: self.showFillWidget()
-        case .split: self.handleEditAction(.split)
-        case .extractPages: self.handleEditAction(.extract)
+        case .split: self.startSplit()
+        case .extractPages: self.startExtract()
         case .removeBlankPages: self.handleEditAction(.removeBlankPages)
         case .ocr: self.handleEditAction(.ocr)
         case .pageNumbers: self.startPageNumbers()
@@ -535,10 +533,10 @@ class PdfEditViewModel: ObservableObject {
         case .invertColors: self.handleEditAction(.invertColors)
         case .flatten: self.handleEditAction(.flatten)
         case .password: self.handleEditAction(.password)
-        case .permissions: self.handleEditAction(.permissions)
+        case .permissions: self.startPermissions()
         case .redact: self.handleEditAction(.redact)
-        case .compress: self.handleEditAction(.compression)
-        case .export: self.handleEditAction(.export)
+        case .compress: self.startCompress()
+        case .export: self.startExport()
         case .metadata: self.push(.metadata)
         case .share: self.share()
         }
@@ -551,11 +549,8 @@ class PdfEditViewModel: ObservableObject {
 
     @MainActor
     private func handleEditAction(_ action: EditAction) {
-        
-        self.editOptionListShow = false
-
-        // Defer to the next runloop so the edit-options sheet finishes dismissing
-        // before the follow-up modal/alert is presented (replaces a fixed Task.sleep).
+        // Defer to the next runloop so the tool panel finishes dismissing before
+        // the follow-up modal/alert is presented (replaces a fixed Task.sleep).
         DispatchQueue.main.async {
             switch action {
             case .password:
@@ -564,40 +559,95 @@ class PdfEditViewModel: ObservableObject {
                 } else {
                     self.passwordTextFieldShow = true
                 }
-            case .compression:
-                // The Compress tool, the same one the catalog offers: it reports
-                // what the compression actually costs instead of storing a
-                // preference whose effect the archive never shows.
-                self.pdfCompressViewModel.run(pdf: self.pdf, onCompleted: nil)
-            case .split:
-                self.pdfSplitViewModel.split(pdf: self.pdf, onSplitCompleted: { [weak self] in
-                    self?.splitSuccessAlertShow = true
-                })
-            case .extract:
-                self.pdfExtractViewModel.extract(pdf: self.pdf, onExtractCompleted: { [weak self] in
-                    self?.extractSuccessAlertShow = true
-                })
-            case .export:
-                self.pdfExportViewModel.export(pdf: self.pdf)
             case .ocr:
                 self.startOcr()
-            case .pageNumbers:
-                self.startPageNumbers()
-            case .watermark:
-                self.startWatermark()
             case .removeBlankPages:
                 self.runCleanup(.removeBlankPages)
             case .flatten:
                 self.runCleanup(.flatten)
             case .invertColors:
                 self.runCleanup(.invertColors)
-            case .permissions:
-                self.pdfPermissionsViewModel.run(pdf: self.pdf, onCompleted: nil)
             case .redact:
                 self.pdfRedactViewModel.run(pdf: self.pdf, onCompleted: nil)
-            case .metadata:
-                self.push(.metadata)
             }
+        }
+    }
+
+    // MARK: - The pushed flows
+    //
+    // Each of these hands the open document to the tool's own view model and
+    // pushes its form. `prepare` is the half of the flow's entry point that
+    // stops short of presenting: it is synchronous and says whether there is
+    // anything to show, so a document that cannot be split — one page — reports
+    // that instead of getting a screen with nothing on it. From there the flow
+    // runs as it always did; the form comes back off the stack when the flow
+    // lowers its own flag (see `popWhenFormCloses`).
+
+    @MainActor
+    func startSplit() {
+        let opened = self.pdfSplitViewModel.prepare(pdf: self.pdf, onSplitCompleted: { [weak self] in
+            self?.splitSuccessAlertShow = true
+        })
+        if opened { self.push(.split) }
+    }
+
+    @MainActor
+    func startExtract() {
+        let opened = self.pdfExtractViewModel.prepare(pdf: self.pdf, onExtractCompleted: { [weak self] in
+            self?.extractSuccessAlertShow = true
+        })
+        if opened { self.push(.extractPages) }
+    }
+
+    /// Free to open: export is premium per *format*, and that gate lives in the
+    /// flow, after the choice has been made.
+    @MainActor
+    func startExport() {
+        if self.pdfExportViewModel.prepare(pdf: self.pdf) { self.push(.export) }
+    }
+
+    /// The Compress tool, the same one the catalog offers: it reports what the
+    /// compression actually costs instead of storing a preference whose effect
+    /// the archive never shows.
+    @MainActor
+    func startCompress() {
+        if self.pdfCompressViewModel.prepare(pdf: self.pdf, onCompleted: nil) { self.push(.compress) }
+    }
+
+    @MainActor
+    func startPermissions() {
+        self.requirePremium(for: .permissions) {
+            if self.pdfPermissionsViewModel.prepare(pdf: self.pdf, onCompleted: nil) {
+                self.push(.permissions)
+            }
+        }
+    }
+
+    // MARK: - The paywall
+
+    /// Runs the tool for a subscriber, and shows the paywall to everyone else —
+    /// with the tool remembered, so a purchase carries on into the thing the
+    /// user was reaching for rather than dropping them back on the page.
+    @MainActor
+    private func requirePremium(for tool: EditorTool, then run: () -> Void) {
+        guard self.store.isPremium.value else {
+            self.pendingPremiumTool = tool
+            self.monetizationShow = true
+            return
+        }
+        run()
+    }
+
+    @MainActor
+    func onMonetizationClose() {
+        guard let tool = self.pendingPremiumTool else { return }
+        self.pendingPremiumTool = nil
+        guard self.store.isPremium.value else { return }
+        // Defer so the paywall cover finishes dismissing before the tool opens:
+        // pushing or presenting under a cover that is still on screen loses the
+        // animation.
+        DispatchQueue.main.async {
+            self.run(tool)
         }
     }
 
@@ -612,24 +662,10 @@ class PdfEditViewModel: ObservableObject {
 
     /// Entry point for the OCR / searchable-PDF tool. OCR is a premium feature:
     /// non-subscribers see the paywall first and the OCR runs after a successful
-    /// purchase (see `onOcrMonetizationClose`).
+    /// purchase (see `onMonetizationClose`).
     @MainActor
     func startOcr() {
-        if self.store.isPremium.value {
-            self.performOcr()
-        } else {
-            self.ocrPending = true
-            self.ocrMonetizationShow = true
-        }
-    }
-
-    @MainActor
-    func onOcrMonetizationClose() {
-        let shouldRun = self.ocrPending && self.store.isPremium.value
-        self.ocrPending = false
-        if shouldRun {
-            self.performOcr()
-        }
+        self.requirePremium(for: .ocr) { self.performOcr() }
     }
 
     @MainActor
@@ -667,53 +703,19 @@ class PdfEditViewModel: ObservableObject {
     }
 
     /// Entry point for the page-number tool. Premium-gated exactly like OCR: the
-    /// tool sheet opens immediately for subscribers, otherwise the paywall is shown
-    /// and the sheet opens after a successful purchase (see `onPageNumbersMonetizationClose`).
+    /// screen opens immediately for subscribers, otherwise the paywall is shown
+    /// and it opens after a successful purchase (see `onMonetizationClose`).
     @MainActor
     func startPageNumbers() {
-        if self.store.isPremium.value {
-            self.push(.pageNumbers)
-        } else {
-            self.pageNumbersPending = true
-            self.pageNumbersMonetizationShow = true
-        }
-    }
-
-    @MainActor
-    func onPageNumbersMonetizationClose() {
-        let shouldOpen = self.pageNumbersPending && self.store.isPremium.value
-        self.pageNumbersPending = false
-        if shouldOpen {
-            // Defer so the paywall cover finishes dismissing before the push:
-            // pushing under a cover that is still on screen loses the animation.
-            DispatchQueue.main.async {
-                self.push(.pageNumbers)
-            }
-        }
+        self.requirePremium(for: .pageNumbers) { self.push(.pageNumbers) }
     }
 
     /// Entry point for the watermark tool. Same premium gate as the page-number tool.
     @MainActor
     func startWatermark() {
-        if self.store.isPremium.value {
-            self.push(.watermark)
-        } else {
-            self.watermarkPending = true
-            self.watermarkMonetizationShow = true
-        }
+        self.requirePremium(for: .watermark) { self.push(.watermark) }
     }
 
-    @MainActor
-    func onWatermarkMonetizationClose() {
-        let shouldOpen = self.watermarkPending && self.store.isPremium.value
-        self.watermarkPending = false
-        if shouldOpen {
-            DispatchQueue.main.async {
-                self.push(.watermark)
-            }
-        }
-    }
-    
     func setPassword(_ password: String) {
         self.internalSetPassword(password)
         debugPrint(for: self, message: "New password set")

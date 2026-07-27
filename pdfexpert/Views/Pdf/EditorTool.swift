@@ -23,10 +23,10 @@ enum EditorToolPresentation {
     /// Runs at once against the document, with no UI of its own beyond the
     /// progress and the result — rotate, flatten, invert, remove blank pages.
     case immediate
-    /// The tool's own view model owns how it appears. These are the flows that
-    /// are more than a question — import, configure, produce a second document,
-    /// offer to share it — and the ones that are direct manipulation of the page,
-    /// where a navigation bar over the canvas would only be in the way.
+    /// The tool's own view model owns how it appears. What is left here is
+    /// direct manipulation of the page — signing, filling in a form, redacting —
+    /// where a navigation bar over the canvas would only be in the way, plus the
+    /// two that are an alert rather than a screen.
     case flow
 }
 
@@ -149,14 +149,16 @@ enum EditorTool: String, CaseIterable, Identifiable {
         case .rotateLeft, .rotateRight, .duplicatePage, .removeBlankPages,
              .invertColors, .flatten, .ocr:
             return .immediate
-        case .reorderPages, .pageNumbers, .watermark, .metadata:
+        // Split, extract, export, compress and permissions are longer than a
+        // question — an import, a form, a second document, an alert — but only
+        // the form is a screen, and a screen is a screen wherever it came from.
+        // Their view models still own the sequence; what they no longer own is
+        // where the form appears (see `prepare` on each of them).
+        case .reorderPages, .pageNumbers, .watermark, .metadata,
+             .split, .extractPages, .export, .compress, .permissions:
             return .push
-        // Compress and permissions ask a question too, but each is the tail of a
-        // flow that starts with an import and ends with a saved copy and an
-        // alert. Their view models own that sequence; pushing only the middle of
-        // it would split the ownership in two.
-        case .compress, .permissions, .signature, .addText, .fillForm, .redact,
-             .split, .extractPages, .export, .password, .share, .addPage, .deletePage:
+        case .signature, .addText, .fillForm, .redact,
+             .password, .share, .addPage, .deletePage:
             return .flow
         }
     }
@@ -168,6 +170,11 @@ enum EditorTool: String, CaseIterable, Identifiable {
         case .pageNumbers: return .pageNumbers
         case .watermark: return .watermark
         case .metadata: return .metadata
+        case .split: return .split
+        case .extractPages: return .extractPages
+        case .export: return .export
+        case .compress: return .compress
+        case .permissions: return .permissions
         default: return nil
         }
     }

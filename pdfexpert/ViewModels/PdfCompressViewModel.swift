@@ -24,6 +24,9 @@ extension Container {
 
 class PdfCompressViewModel: ObservableObject {
 
+    /// True while the compression editor is on screen — a cover from the Tools
+    /// tab, a pushed screen from the editor. Saving or cancelling lowers it, and
+    /// that is what takes the screen away either way.
     @Published var editorShow: Bool = false
     @Published var successAlertShow: Bool = false
     @Published var preset: CompressionPreset = .balanced {
@@ -76,21 +79,38 @@ class PdfCompressViewModel: ObservableObject {
         }
     }
 
+    /// The half of `run(pdf:)` that stops short of presenting, for a host that
+    /// shows the editor itself — the editor pushes it. Synchronous, so the
+    /// caller knows straight away whether there is a screen to push.
+    @MainActor
+    @discardableResult
+    func prepare(pdf: Pdf, onCompleted: (() -> ())?) -> Bool {
+        self.onCompleted = onCompleted
+        return self.startEditor(for: pdf)
+    }
+
     private func onImportCompleted(pdf: Pdf) {
+        // Defer so the import sheet has finished dismissing before the editor.
+        DispatchQueue.main.async {
+            self.startEditor(for: pdf)
+        }
+    }
+
+    @MainActor
+    @discardableResult
+    private func startEditor(for pdf: Pdf) -> Bool {
         guard pdf.pageCount > 0 else {
             self.asyncSave = .error(.unknownError)
-            return
+            return false
         }
         self.sourcePdf = pdf
         self.originalByteCount = pdf.rawData?.count ?? 0
         self.preset = .balanced
-        // Defer so the import sheet has finished dismissing before the editor.
-        DispatchQueue.main.async {
-            self.analyticsManager.track(event: .reportScreen(.compress))
-            self.analyticsManager.track(event: .compressionStarted)
-            self.editorShow = true
-            self.compress()
-        }
+        self.analyticsManager.track(event: .reportScreen(.compress))
+        self.analyticsManager.track(event: .compressionStarted)
+        self.editorShow = true
+        self.compress()
+        return true
     }
 
     // MARK: - Compression

@@ -27,7 +27,9 @@ extension Container {
 class PdfPermissionsViewModel: ObservableObject {
 
     @Published var monetizationShow: Bool = false
-    /// The owner-password + toggles form.
+    /// The owner-password + toggles form. True while it is on screen, cover or
+    /// pushed screen; confirming or cancelling lowers it, and that is what takes
+    /// the screen away either way.
     @Published var formShow: Bool = false
     @Published var successAlertShow: Bool = false
 
@@ -71,6 +73,24 @@ class PdfPermissionsViewModel: ObservableObject {
         } else {
             self.pdfImportViewModel.importPdf(importFileTypes: K.Misc.ImportFileTypesForExtract)
         }
+    }
+
+    /// The half of `run(pdf:)` that stops short of presenting, for a host that
+    /// shows the form itself — the editor pushes it. The premium gate stays with
+    /// that host: it is the one deciding whether to open a screen at all, and a
+    /// paywall raised here would have nothing to return to.
+    @MainActor
+    @discardableResult
+    func prepare(pdf: Pdf, onCompleted: (() -> ())?) -> Bool {
+        self.onCompleted = onCompleted
+        guard pdf.pageCount > 0 else {
+            self.asyncApply = .error(.unknownError)
+            return false
+        }
+        self.toBeProcessedPdf = pdf
+        self.analyticsManager.track(event: .reportScreen(.permissions))
+        self.presentForm()
+        return true
     }
 
     private func onImportCompleted(pdf: Pdf) {

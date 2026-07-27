@@ -23,6 +23,7 @@ class PdfExportViewModel: ObservableObject {
         let pdf: Pdf
     }
 
+    /// True while the format list is on screen, cover or pushed screen.
     @Published var formatPickerShow: Bool = false
     @Published var monetizationShow: Bool = false
     @Published var asyncImportedPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
@@ -69,14 +70,27 @@ class PdfExportViewModel: ObservableObject {
         }
     }
 
+    /// The half of `export(pdf:)` that stops short of presenting, for a host
+    /// that shows the format list itself — the editor pushes it.
+    @discardableResult
+    func prepare(pdf: Pdf) -> Bool {
+        self.prepareFormatChoice(for: pdf)
+    }
+
     private func onImportCompleted(pdf: Pdf) {
+        self.prepareFormatChoice(for: pdf)
+    }
+
+    @discardableResult
+    private func prepareFormatChoice(for pdf: Pdf) -> Bool {
         guard pdf.pageCount > 0 else {
             self.asyncExport = AsyncOperation(status: .error(.unknownError))
-            return
+            return false
         }
         self.toBeExportedPdf = pdf
         self.analyticsManager.track(event: .reportScreen(.export))
         self.formatPickerShow = true
+        return true
     }
 
     @MainActor

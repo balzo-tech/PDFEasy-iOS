@@ -16,6 +16,28 @@ enum PdfExportFormat: CaseIterable {
     case imagesJpeg
     case text
     case embeddedImages
+
+    /// How the format is offered. Here rather than in the view because it is
+    /// offered from two places now — a sheet from the Tools tab, a pushed screen
+    /// from the editor — and a format that reads differently in each is a format
+    /// the user cannot be sure they picked.
+    var title: String {
+        switch self {
+        case .imagesPng: return String(localized: "Images (PNG)")
+        case .imagesJpeg: return String(localized: "Images (JPEG)")
+        case .text: return String(localized: "Text file")
+        case .embeddedImages: return String(localized: "Embedded images")
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .imagesPng: return "photo"
+        case .imagesJpeg: return "photo.fill"
+        case .text: return "doc.plaintext"
+        case .embeddedImages: return "photo.on.rectangle"
+        }
+    }
 }
 
 /// Renders a PDF into shareable files written to the temporary directory. The

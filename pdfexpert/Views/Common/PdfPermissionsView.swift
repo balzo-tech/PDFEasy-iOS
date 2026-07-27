@@ -15,22 +15,35 @@ struct PdfPermissionsView: ViewModifier {
     func body(content: Content) -> some View {
         content
             .showImportView(viewModel: self.viewModel.pdfImportViewModel)
-            .asyncView(asyncItem: self.$viewModel.asyncImportedPdf)
+            .permissionsOutcomes(viewModel: self.viewModel)
             .fullScreenCover(isPresented: self.$viewModel.formShow) {
                 self.formView
             }
-            .asyncView(asyncItem: self.$viewModel.asyncApply)
-            .alert(String(localized: "Done"), isPresented: self.$viewModel.successAlertShow, actions: {
-                Button("Ok", role: .cancel, action: {})
-            }, message: {
-                Text("A protected copy has been saved to your archive.")
-            })
             .showSubscriptionView(self.$viewModel.monetizationShow,
                                   onComplete: { self.viewModel.onMonetizationClose() })
     }
 
     private var formView: some View {
         PdfPermissionsFormView(viewModel: self.viewModel)
+    }
+}
+
+/// The loader and the "it was saved" alert. Not the form — the editor pushes
+/// that — and not the paywall: a host that pushes the form gates it before
+/// pushing, so this flow's own paywall never comes up there.
+struct PdfPermissionsOutcomes: ViewModifier {
+
+    @ObservedObject var viewModel: PdfPermissionsViewModel
+
+    func body(content: Content) -> some View {
+        content
+            .asyncView(asyncItem: self.$viewModel.asyncImportedPdf)
+            .asyncView(asyncItem: self.$viewModel.asyncApply)
+            .alert(String(localized: "Done"), isPresented: self.$viewModel.successAlertShow, actions: {
+                Button("Ok", role: .cancel, action: {})
+            }, message: {
+                Text("A protected copy has been saved to your archive.")
+            })
     }
 }
 
@@ -90,7 +103,12 @@ struct PdfPermissionsFormView: View {
 }
 
 extension View {
+
     func showPermissionsView(viewModel: PdfPermissionsViewModel) -> some View {
         self.modifier(PdfPermissionsView(viewModel: viewModel))
+    }
+
+    func permissionsOutcomes(viewModel: PdfPermissionsViewModel) -> some View {
+        self.modifier(PdfPermissionsOutcomes(viewModel: viewModel))
     }
 }

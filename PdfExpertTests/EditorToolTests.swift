@@ -23,7 +23,12 @@ import PDFKit
 
 final class EditorToolTests: XCTestCase {
 
+    /// The store the editor under test is looking at, so a test can grant
+    /// premium mid-flow — which is what a purchase looks like from here.
+    private var store: StoreMock!
+
     override func tearDown() {
+        self.store = nil
         Container.shared.repository.reset()
         Container.shared.analyticsManager.reset()
         Container.shared.store.reset()
@@ -67,8 +72,23 @@ final class EditorToolTests: XCTestCase {
     func testEveryRouteIsReachable() {
         // The other direction: a destination nothing can open is dead code.
         let routes = Set(EditorTool.allCases.compactMap(\.route))
-        for route in [EditorRoute.reorderPages, .pageNumbers, .watermark, .metadata] {
+        for route in EditorRoute.allCases {
             XCTAssertTrue(routes.contains(route), "\(route) has no tool that opens it")
+        }
+    }
+
+    func testTheLongFlowsAreScreensNow() {
+        // Each of these is an import, a form, a second document and an alert.
+        // Only the form is a screen, and it is pushed like any other.
+        for tool in [EditorTool.split, .extractPages, .export, .compress, .permissions] {
+            XCTAssertEqual(tool.presentation, .push, "\(tool) went back to being a cover")
+        }
+    }
+
+    func testDirectManipulationStaysFullScreen() {
+        // A navigation bar over the page being signed or redacted is in the way.
+        for tool in [EditorTool.signature, .addText, .fillForm, .redact] {
+            XCTAssertEqual(tool.presentation, .flow, "\(tool) should stay full screen")
         }
     }
 
@@ -217,6 +237,129 @@ final class EditorToolTests: XCTestCase {
         XCTAssertEqual(viewModel.pdfCurrentPageIndex, 2)
     }
 
+    // MARK: - The pushed flows
+
+    @MainActor
+    func testSplittingPushesTheRangeEditor() {
+        let viewModel = self.makeViewModel(pageCount: 3)
+
+        viewModel.run(.split)
+
+        XCTAssertEqual(viewModel.path, [.split])
+        // Prepared before the push, so the screen opens on the whole document
+        // rather than on an empty list of ranges.
+        XCTAssertEqual(viewModel.pdfSplitViewModel.pageRanges, [0...2])
+        XCTAssertEqual(viewModel.pdfSplitViewModel.totalPages, 3)
+        XCTAssertTrue(viewModel.pdfSplitViewModel.showPageRangeEditor)
+    }
+
+    @MainActor
+    func testSplittingASinglePageDocumentPushesNothing() {
+        // The whole point of preparing before pushing: this is a screen with
+        // nothing to do on it, and it used to be presented anyway.
+        let viewModel = self.makeViewModel(pageCount: 1)
+
+        viewModel.run(.split)
+
+        XCTAssertTrue(viewModel.path.isEmpty)
+        XCTAssertFalse(viewModel.pdfSplitViewModel.showPageRangeEditor)
+        XCTAssertNotNil(viewModel.pdfSplitViewModel.asyncSplit.error)
+    }
+
+    @MainActor
+    func testExtractingPushesTheRangeEditor() {
+        let viewModel = self.makeViewModel(pageCount: 4)
+
+        viewModel.run(.extractPages)
+
+        XCTAssertEqual(viewModel.path, [.extractPages])
+        XCTAssertEqual(viewModel.pdfExtractViewModel.pageRanges, [0...3])
+    }
+
+    @MainActor
+    func testExtractingFromASinglePageDocumentPushesNothing() {
+        let viewModel = self.makeViewModel(pageCount: 1)
+
+        viewModel.run(.extractPages)
+
+        XCTAssertTrue(viewModel.path.isEmpty)
+        XCTAssertNotNil(viewModel.pdfExtractViewModel.asyncExtract.error)
+    }
+
+    @MainActor
+    func testExportingPushesTheFormatListForEveryone() {
+        // Export is premium per format, so the list itself opens without a gate.
+        let viewModel = self.makeViewModel(pageCount: 2)
+
+        viewModel.run(.export)
+
+        XCTAssertEqual(viewModel.path, [.export])
+        XCTAssertTrue(viewModel.pdfExportViewModel.formatPickerShow)
+        XCTAssertFalse(viewModel.monetizationShow)
+    }
+
+    @MainActor
+    func testCompressingPushesTheEditor() {
+        let viewModel = self.makeViewModel(pageCount: 2)
+
+        viewModel.run(.compress)
+
+        XCTAssertEqual(viewModel.path, [.compress])
+        XCTAssertTrue(viewModel.pdfCompressViewModel.editorShow)
+    }
+
+    // MARK: - The paywall
+
+    @MainActor
+    func testAGatedToolShowsThePaywallInsteadOfItsScreen() {
+        let viewModel = self.makeViewModel(pageCount: 2)
+
+        viewModel.run(.permissions)
+
+        XCTAssertTrue(viewModel.monetizationShow)
+        XCTAssertTrue(viewModel.path.isEmpty)
+        XCTAssertFalse(viewModel.pdfPermissionsViewModel.formShow)
+    }
+
+    @MainActor
+    func testAGatedToolOpensStraightAwayForASubscriber() {
+        let viewModel = self.makeViewModel(pageCount: 2, premium: true)
+
+        viewModel.run(.permissions)
+
+        XCTAssertFalse(viewModel.monetizationShow)
+        XCTAssertEqual(viewModel.path, [.permissions])
+        XCTAssertTrue(viewModel.pdfPermissionsViewModel.formShow)
+    }
+
+    @MainActor
+    func testAPurchaseCarriesOnIntoTheToolItGated() async throws {
+        let viewModel = self.makeViewModel(pageCount: 2)
+        viewModel.run(.permissions)
+
+        self.store.isPremium.send(true)
+        viewModel.onMonetizationClose()
+        // The tool opens a runloop later, so the paywall is off screen first.
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(viewModel.path, [.permissions])
+    }
+
+    @MainActor
+    func testADismissedPaywallOpensNothing() async throws {
+        let viewModel = self.makeViewModel(pageCount: 2)
+        viewModel.run(.permissions)
+
+        viewModel.onMonetizationClose()
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertTrue(viewModel.path.isEmpty)
+        // And it does not fire later either: the tool is forgotten, not queued.
+        viewModel.onMonetizationClose()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertTrue(viewModel.path.isEmpty)
+    }
+
     // MARK: - Fixtures
 
     /// A document whose pages are distinguishable by their text, so a reorder is
@@ -235,11 +378,17 @@ final class EditorToolTests: XCTestCase {
     }
 
     /// `@Injected` resolves eagerly in this view model, so the mocks go in first.
+    /// The store is registered as one shared instance, not a new one per
+    /// resolution, so a test can grant premium and have the editor see it.
     @MainActor
-    private func makeViewModel(pageCount: Int) -> PdfEditViewModel {
+    private func makeViewModel(pageCount: Int, premium: Bool = false) -> PdfEditViewModel {
+        let store = StoreMock()
+        store.isPremium.send(premium)
+        self.store = store
+
         Container.shared.repository.register { RepositoryMock() }
         Container.shared.analyticsManager.register { AnalyticsManagerMock() }
-        Container.shared.store.register { StoreMock() }
+        Container.shared.store.register { store }
 
         let pdf = Pdf(pdfDocument: self.makeDocument(pageCount: pageCount))
         let parameter = PdfEditViewModel.InputParameter(pdf: pdf,

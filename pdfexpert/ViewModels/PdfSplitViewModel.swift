@@ -18,7 +18,10 @@ extension Container {
 typealias SplitCompletedCallback = (() -> ())
 
 class PdfSplitViewModel: ObservableObject {
-    
+
+    /// True while the range editor is on screen — whichever way the host shows
+    /// it: a cover from the Tools tab, a pushed screen from the editor. It is
+    /// this flag falling that takes the screen away in both cases.
     @Published var showPageRangeEditor: Bool = false
     @Published var showSuccess: Bool = false
     @Published var asyncImportedPdf: AsyncOperation<Pdf, PdfError> = AsyncOperation(status: .empty) {
@@ -52,7 +55,18 @@ class PdfSplitViewModel: ObservableObject {
             self.pdfImportViewModel.importPdf(importFileTypes: K.Misc.ImportFileTypesForSplit)
         }
     }
-    
+
+    /// The half of `split(pdf:)` that stops short of deciding how the range
+    /// editor appears, for a host that shows it itself — the editor pushes it
+    /// onto its own stack. Synchronous, and it says whether there is anything to
+    /// show: a document of one page reports its error here rather than opening a
+    /// screen with nothing to do.
+    @discardableResult
+    func prepare(pdf: Pdf, onSplitCompleted: SplitCompletedCallback?) -> Bool {
+        self.onSplitCompleted = onSplitCompleted
+        return self.prepareRanges(for: pdf)
+    }
+
     func onPageRangeEditingCancelled() {
         self.toBeSplitPdf = nil
         self.showPageRangeEditor = false
@@ -68,19 +82,25 @@ class PdfSplitViewModel: ObservableObject {
     }
     
     private func onImportCompleted(pdf: Pdf) {
+        self.prepareRanges(for: pdf)
+    }
+
+    @discardableResult
+    private func prepareRanges(for pdf: Pdf) -> Bool {
         guard pdf.pageCount > 0 else {
             self.asyncSplit = .error(.pdfNoPage)
-            return
+            return false
         }
         guard pdf.pageCount > 1 else {
             // TODO: Decide whether pdf must still be saved or not
             self.asyncSplit = .error(.pdfSinglePage)
-            return
+            return false
         }
         self.toBeSplitPdf = pdf
         self.pageRanges = [0...pdf.pageCount - 1]
         self.totalPages = pdf.pageCount
         self.showPageRangeEditor = true
+        return true
     }
     
     @MainActor

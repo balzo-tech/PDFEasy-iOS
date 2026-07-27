@@ -16,10 +16,22 @@ struct PdfCompressView: ViewModifier {
     func body(content: Content) -> some View {
         content
             .showImportView(viewModel: self.viewModel.pdfImportViewModel)
-            .asyncView(asyncItem: self.$viewModel.asyncImportedPdf)
+            .compressOutcomes(viewModel: self.viewModel)
             .fullScreenCover(isPresented: self.$viewModel.editorShow) {
                 PdfCompressEditorView(viewModel: self.viewModel)
             }
+    }
+}
+
+/// The loader and the "it was saved" alert, without the editor itself: the
+/// document editor pushes that screen and keeps only what belongs over the page.
+struct PdfCompressOutcomes: ViewModifier {
+
+    @ObservedObject var viewModel: PdfCompressViewModel
+
+    func body(content: Content) -> some View {
+        content
+            .asyncView(asyncItem: self.$viewModel.asyncImportedPdf)
             .asyncView(asyncItem: self.$viewModel.asyncSave)
             .alert(String(localized: "Done"), isPresented: self.$viewModel.successAlertShow, actions: {
                 Button("Ok", role: .cancel, action: {})
@@ -171,7 +183,12 @@ struct PdfCompressEditorView: View {
 }
 
 extension View {
+
     func showCompressView(viewModel: PdfCompressViewModel) -> some View {
         self.modifier(PdfCompressView(viewModel: viewModel))
+    }
+
+    func compressOutcomes(viewModel: PdfCompressViewModel) -> some View {
+        self.modifier(PdfCompressOutcomes(viewModel: viewModel))
     }
 }

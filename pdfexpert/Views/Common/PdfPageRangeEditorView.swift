@@ -4,14 +4,26 @@
 //
 //  Created by Leonardo Passeri on 04/08/23.
 //
+//  One screen, two tools: the same list of ranges splits a document into several
+//  files or copies pages out of one, so what it is for arrives from the caller
+//  rather than being written in here — it used to say "Split" to someone
+//  extracting pages.
+//
+//  Through `ToolScreen` it is also two presentations: a cover from the Tools tab,
+//  a pushed screen from the editor.
+//
 
 import SwiftUI
 import Factory
 
 struct PdfPageRangeEditorView: View {
-    
+
     @ObservedObject var viewModel: PdfPageRangeEditorViewModel
-    
+
+    /// What the screen is for, and what the button at the bottom of it does.
+    let title: String
+    let confirmTitle: String
+
     @Injected(\.analyticsManager) private var analyticsManager
     
     @FocusState private var pdfPageRangeInFocus: PdfPageRangeFocusable?
@@ -21,7 +33,7 @@ struct PdfPageRangeEditorView: View {
     @State var previousNumberOfRanges: Int = 0
     
     var body: some View {
-        NavigationStack {
+        ToolScreen(title: self.title, onCancel: { self.viewModel.cancel() }) {
             ZStack {
                 self.listView
                 self.bottomView
@@ -29,12 +41,7 @@ struct PdfPageRangeEditorView: View {
             }
             .padding(.top, 48)
             .readableColumn()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Split pages into ranges")
             .background(ColorPalette.primaryBG)
-            .addSystemCloseButton(color: ColorPalette.primaryText, onPress: {
-                self.viewModel.cancel()
-            })
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -94,7 +101,7 @@ struct PdfPageRangeEditorView: View {
         VStack(spacing: 0) {
             Spacer()
             VStack(spacing: 0) {
-                self.getDefaultButton(text: "Split PDF", onButtonPressed: {
+                self.getDefaultButton(text: self.confirmTitle, onButtonPressed: {
                     self.viewModel.confirm()
                 })
                 .padding([.leading, .trailing], 16)
@@ -183,26 +190,32 @@ struct PdfPageRangeEditorView: View {
 extension View {
     func showPageRangeEditorView(isPresented: Binding<Bool>,
                                  onDismiss: (() -> Void)?,
+                                 title: String,
+                                 confirmTitle: String,
                                  params: PdfPageRangeEditorViewModel.Params) -> some View {
         self.fullScreenCover(isPresented: isPresented, onDismiss: onDismiss) {
             let viewModel = Container.shared.pdfPageRangeEditorViewModel(params)
-            PdfPageRangeEditorView(viewModel: viewModel)
+            PdfPageRangeEditorView(viewModel: viewModel,
+                                   title: title,
+                                   confirmTitle: confirmTitle)
         }
     }
 }
 
 struct PdfPageRangeEditorView_Previews: PreviewProvider {
-    
+
     static let params = PdfPageRangeEditorViewModel.Params(
         pageRanges: .constant([0...1, 0...1]),
         totalPages: 10,
         confirmCallback: { print("Split confirmed!") },
         cancelCallback: { print("Split cancelled...") })
-    
+
     static var previews: some View {
         Color(.white)
             .showPageRangeEditorView(isPresented: .constant(true),
                                      onDismiss: { print("Split completed.") },
+                                     title: "Split pages into ranges",
+                                     confirmTitle: "Split PDF",
                                      params: Self.params)
     }
 }
