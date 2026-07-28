@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Factory
-import PagerTabStripView
 
 struct ImportTutorialItem {
     let title: String
@@ -37,18 +36,21 @@ struct ImportTutorialView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                PagerTabStripView(
-                    swipeGestureEnabled: .constant(false),
-                    selection: self.$pageIndex
-                ) {
+                // Same swap as the onboarding: PagerTabStripView stopped
+                // honouring its `selection` binding, so the button advanced the
+                // dots while the page snapped back. The drag gesture on top
+                // keeps this one on rails — the three steps are in order and are
+                // meant to be read with the button.
+                TabView(selection: self.$pageIndex) {
                     ForEach(Array(Self.items.enumerated()), id: \.offset) { index, item in
                         ImportTutorialPageView(title: item.title,
                                                imageName: item.imageName,
                                                description: item.description)
-                        .pagerTabItem(tag: index) { }
+                        .tag(index)
                     }
                 }
-                .pagerTabStripViewStyle(.bar() { Color(.clear) })
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .highPriorityGesture(DragGesture())
                 PageControl(currentPageIndex: self.pageIndex,
                             numberOfPages: self.pageCount,
                             currentPageColor: ColorPalette.buttonGradientStart,

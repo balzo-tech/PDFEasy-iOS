@@ -81,6 +81,17 @@ class ColorPalette {
     static let categoryRead = Color(light: "4F46E5", dark: "8B93FF")
     static let categoryAi = Color(light: "C6339B", dark: "F472B6")
 
+    // MARK: - File formats
+    //
+    // The colors an Office file is recognised by, on the paywall's collage. Only
+    // the hue is borrowed — the icons are our own symbols, never the vendors'
+    // marks — but it is the hue that makes a tile read as "a spreadsheet"
+    // before the shape does.
+
+    static let formatWord = Color(light: "2B579A", dark: "6EA8FF")
+    static let formatExcel = Color(light: "1E7145", dark: "4ADE80")
+    static let formatPowerPoint = Color(light: "C6431E", dark: "FF8A5B")
+
     // MARK: - Legacy aliases
     //
     // Kept so the screens that have not been reworked yet keep their meaning.

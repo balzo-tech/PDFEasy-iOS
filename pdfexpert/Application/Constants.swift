@@ -11,13 +11,6 @@ import UniformTypeIdentifiers
 import PDFKit
 import Factory
 
-enum SubscriptionViewType: CaseIterable {
-    case pairs
-    case verticalHighlightLongPeriod
-    case verticalHighlightShortPeriod
-    case picker
-}
-
 struct K {
     struct Test {
         static let UseMockDB = false
@@ -66,10 +59,6 @@ struct K {
             // even if it has already been shown in the past.
             static let ShowAlways = false
         }
-    }
-    
-    struct MonetizationK {
-        static let defaultSubscriptionViewType: SubscriptionViewType = .verticalHighlightLongPeriod
     }
     
     struct RemoteConfigK {

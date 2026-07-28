@@ -12,7 +12,6 @@ import Combine
 import CombineExt
 
 struct RemoteConfigData {
-    let subcriptionViewType: SubscriptionViewType
     let chatGptModel: String
     let chatGptMaxTokens: Int
     let chatMaxMessagesPerMonth: Int
@@ -20,9 +19,6 @@ struct RemoteConfigData {
     let stirlingApiBaseUrl: String
 
     init(remoteConfig: RemoteConfig) {
-        let subscriptionViewTypeValue = remoteConfig.configValue(forKey: RemoteConfigKey.subcriptionViewType.rawValue).stringValue
-        self.subcriptionViewType = SubscriptionViewType.getSubscriptionViewType(forRemoteConfigValue: subscriptionViewTypeValue)
-
         let chatGptModelValue = remoteConfig.configValue(forKey: RemoteConfigKey.chatGptModel.rawValue).stringValue ?? ""
         self.chatGptModel = chatGptModelValue.isEmpty ? K.ChatPdf.DefaultChatGptModel : chatGptModelValue
 
@@ -40,13 +36,11 @@ struct RemoteConfigData {
 
     /// Memberwise initializer used by non-Firebase call sites (e.g. unit tests / previews)
     /// that need a `RemoteConfigData` without spinning up `RemoteConfig`.
-    init(subcriptionViewType: SubscriptionViewType = K.MonetizationK.defaultSubscriptionViewType,
-         chatGptModel: String = K.ChatPdf.DefaultChatGptModel,
+    init(chatGptModel: String = K.ChatPdf.DefaultChatGptModel,
          chatGptMaxTokens: Int = K.ChatPdf.DefaultChatGptMaxTokens,
          chatMaxMessagesPerMonth: Int = K.ChatPdf.DefaultChatMaxMessagesPerMonth,
          stirlingApiEnabled: Bool = K.Stirling.DefaultEnabled,
          stirlingApiBaseUrl: String = K.Stirling.DefaultBaseUrl) {
-        self.subcriptionViewType = subcriptionViewType
         self.chatGptModel = chatGptModel
         self.chatGptMaxTokens = chatGptMaxTokens
         self.chatMaxMessagesPerMonth = chatMaxMessagesPerMonth
@@ -150,7 +144,6 @@ class RemoteConfigManager : ConfigService {
 }
 
 fileprivate enum RemoteConfigKey : String, CaseIterable {
-    case subcriptionViewType = "subscription_view_type"
     case chatGptModel = "chat_gpt_model"
     case chatGptMaxTokens = "chat_gpt_max_tokens"
     case chatMaxMessagesPerMonth = "chat_max_messages_per_month"
@@ -164,8 +157,6 @@ fileprivate extension RemoteConfig {
         var result: [String: NSObject] = [:]
         RemoteConfigKey.allCases.forEach { (key) in
             switch key {
-            case .subcriptionViewType:
-                result[key.rawValue] = NSString(string: K.MonetizationK.defaultSubscriptionViewType.remoteConfigValue)
             case .chatGptModel:
                 result[key.rawValue] = NSString(string: K.ChatPdf.DefaultChatGptModel)
             case .chatGptMaxTokens:
@@ -179,25 +170,5 @@ fileprivate extension RemoteConfig {
             }
         }
         return result
-    }
-}
-
-fileprivate extension SubscriptionViewType {
-    var remoteConfigValue: String {
-        switch self {
-        case .pairs: return "pairs"
-        case .verticalHighlightLongPeriod: return "vertical"
-        case .verticalHighlightShortPeriod: return "vertical_highlight_short_period"
-        case .picker: return "picker"
-        }
-    }
-    
-    static func getSubscriptionViewType(forRemoteConfigValue remoteConfigValue: String?) -> Self {
-        for type in Self.allCases {
-            if type.remoteConfigValue == remoteConfigValue {
-                return type
-            }
-        }
-        return K.MonetizationK.defaultSubscriptionViewType
     }
 }

@@ -85,11 +85,10 @@ struct PdfImageViewerView: View {
 struct PdfImageViewerView_Previews: PreviewProvider {
     static var previews: some View {
         PdfImageViewerView(pageIndex: 0, images: [
-            PdfImage(image: UIImage(named: "onboarding_chat_pdf"), caption: "onboarding chat pdf"),
-            PdfImage(image: nil, caption: "onboarding chat pdf"),
-            PdfImage(image: UIImage(named: "onboarding_convert"), caption: "onboarding convert"),
-            PdfImage(image: UIImage(named: "onboarding_password"), caption: "onboarding password"),
-            PdfImage(image: UIImage(named: "onboarding_signature"), caption: "onboarding signature"),
+            PdfImage(image: UIImage(named: "import_tutorial_1"), caption: "first page"),
+            PdfImage(image: nil, caption: "a page that failed to render"),
+            PdfImage(image: UIImage(named: "import_tutorial_2"), caption: "second page"),
+            PdfImage(image: UIImage(named: "import_tutorial_3"), caption: "third page"),
         ])
         .previewDisplayName("Standard")
         PdfImageViewerView(pageIndex: 0, images: [])

@@ -15,33 +15,41 @@ extension Container {
 }
 
 struct OnboardingItem {
-    let imageName: String
+    let illustration: OnboardingIllustration
     let title: String
     let description: String
 }
 
 public class OnboardingViewModel : ObservableObject {
     
+    /// The four things the app is for, in the order someone reaches for them.
+    /// Scanning leads because it is the one thing people open this app for while
+    /// standing over a piece of paper — and because it was missing here entirely,
+    /// while a page still advertised a password screen.
+    ///
+    /// Every string goes through `String(localized:)`: these are handed to
+    /// `Text` as plain `String`s, and that overload does not localize. The four
+    /// sentences this replaced were English in every language for that reason.
     let items: [OnboardingItem] = [
         OnboardingItem(
-            imageName: "onboarding_convert",
-            title: "Convert files to PDF",
-            description: "You can convert to pdf a lot of file types from the programs you prefer."
+            illustration: .scan,
+            title: String(localized: "Scan anything into a PDF"),
+            description: String(localized: "Point the camera at a page. It comes out straight, sharp and ready to send.")
         ),
         OnboardingItem(
-            imageName: "onboarding_signature",
-            title: "Enter and edit your signature",
-            description: "Insert your signature in the pdf you created with a single tap."
+            illustration: .convert,
+            title: String(localized: "Turn any file into a PDF"),
+            description: String(localized: "Documents, spreadsheets, slides and photos — converted on your phone, not on a server.")
         ),
         OnboardingItem(
-            imageName: "onboarding_password",
-            title: "Protect your files with password",
-            description: "Enter a password to protect your pdf, you can delete it and change it whenever you want."
+            illustration: .signature,
+            title: String(localized: "Sign without printing"),
+            description: String(localized: "Draw your signature once, then place it on any document with a tap.")
         ),
         OnboardingItem(
-            imageName: "onboarding_chat_pdf",
-            title: "Chat with any PDF files",
-            description: "You can ask questions to any PDF and get quick insights and clarifications."
+            illustration: .chat,
+            title: String(localized: "Ask your document"),
+            description: String(localized: "The short version of a long PDF, or the one answer you were looking for.")
         ),
     ]
     

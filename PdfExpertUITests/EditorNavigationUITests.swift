@@ -148,17 +148,61 @@ final class EditorNavigationUITests: XCTestCase {
 
         self.openFromPanelBySearching("share", query: "Share")
 
-        let paywall = self.app.buttons["Continue"].firstMatch
+        let paywall = self.app.buttons["Start free trial"].firstMatch
         XCTAssertTrue(paywall.waitForExistence(timeout: 15),
                       "sharing did not show the paywall")
         XCTAssertTrue(self.app.staticTexts["With the yearly plan, we let you know before it expires."].exists,
                       "the renewal notice is not on the paywall")
+
+        self.attachScreenshot(named: "Paywall")
 
         let close = self.app.buttons["Close"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 10), "the paywall cannot be closed")
         self.tap(close)
 
         XCTAssertTrue(self.editorIsShowing, "closing the paywall left the document behind")
+    }
+
+    /// The shape the paywall was rebuilt into: the yearly plan preselected, the
+    /// retired monthly one gone, and nothing else selected alongside it.
+    ///
+    /// What the paywall has to sell comes from App Store Connect at run time, so
+    /// this cannot insist on the weekly card being there — a product that is not
+    /// yet approved simply does not arrive. It checks the weekly card only when
+    /// StoreKit hands it over, and always checks the two things that are ours:
+    /// the monthly plan is off sale and exactly one card is chosen.
+    func testThePaywallOffersTheYearlyPlanPreselectedAndNoMonthlyOne() {
+        self.launch(premium: false)
+        self.openTheFirstDocument()
+
+        self.openFromPanelBySearching("share", query: "Share")
+
+        XCTAssertTrue(self.app.buttons["Start free trial"].firstMatch.waitForExistence(timeout: 15),
+                      "sharing did not show the paywall")
+
+        // Each card combines its children into one accessibility element, so a
+        // plan is a button whose label starts with the plan's name and not a
+        // static text of its own.
+        let yearly = self.card(named: "Yearly")
+        XCTAssertTrue(yearly.exists, "the yearly plan is missing")
+        XCTAssertTrue(yearly.isSelected, "the yearly plan is not the one preselected")
+        XCTAssertFalse(self.card(named: "Monthly").exists, "the retired monthly plan is still on sale")
+
+        let weekly = self.card(named: "Weekly")
+        if weekly.exists {
+            XCTAssertFalse(weekly.isSelected, "both plans are selected at once")
+        }
+    }
+
+    private func card(named plan: String) -> XCUIElement {
+        self.app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", plan)).firstMatch
+    }
+
+    private func attachScreenshot(named name: String) {
+        let attachment = XCTAttachment(screenshot: self.app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        self.add(attachment)
     }
 
     // MARK: - Getting there

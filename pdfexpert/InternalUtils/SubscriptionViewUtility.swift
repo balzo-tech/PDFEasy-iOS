@@ -2,59 +2,24 @@
 //  SubscriptionViewUtility.swift
 //  PdfExpert
 //
-//  Created by Leonardo Passeri on 24/02/23.
+//  Everything the paywall needs to read out of a StoreKit product: the plan's
+//  name, the length of its free trial, the price it renews at, and how much
+//  cheaper it is than the other plan on the screen.
+//
+//  All of it localized. This used to build its strings in English by hand
+//  ("Weekly", "Free for 7 days, then …") and show them untouched to an Italian
+//  or Spanish customer — on the one screen where a word the reader has to guess
+//  at costs a sale.
 //
 
 import Foundation
 import StoreKit
-import Collections
-
-fileprivate struct InternalSubscriptionPeriod {
-    let unit: Product.SubscriptionPeriod.Unit
-    let value: Int
-}
 
 extension Product.SubscriptionPeriod.Unit {
-    var displayUnitSingle: String {
-        switch self {
-        case .day: return "day"
-        case .week: return "week"
-        case .month: return "month"
-        case .year: return "year"
-        default: return ""
-        }
-    }
-    
-    var displayUnitPeriod: String {
-        switch self {
-        case .day: return "daily"
-        case .week: return "weekly"
-        case .month: return "monthly"
-        case .year: return "yearly"
-        default: return ""
-        }
-    }
-    
-    var displayUnitMultiple: String {
-        switch self {
-        case .day: return "days"
-        case .week: return "weeks"
-        case .month: return "months"
-        case .year: return "years"
-        default: return ""
-        }
-    }
-    
-    var displayUnitSingleWithArticle: String {
-        switch self {
-        case .day: return "a day"
-        case .week: return "a week"
-        case .month: return "a month"
-        case .year: return "an year"
-        default: return ""
-        }
-    }
-    
+
+    /// Rough length in days. Months and years are fixed at 30 and 365, which is
+    /// close enough to compare two plans and to restate a yearly price per week,
+    /// and nowhere near good enough for a legal statement or a real date.
     var days: Int {
         switch self {
         case .day: return 1
@@ -64,290 +29,155 @@ extension Product.SubscriptionPeriod.Unit {
         default: return 0
         }
     }
-    
-    var previousUnit: Self? {
-        switch self {
-        case .day: return nil
-        case .week: return .day
-        case .month: return .week
-        case .year: return .month
-        default: return nil
-        }
-    }
-}
-
-fileprivate extension InternalSubscriptionPeriod {
-    
-    var days: Int {
-        return self.unit.days * self.value
-    }
-    
-    // period == 1 ? "a day" : "5 days"
-    var displayPeriodStartStatement: String {
-        if self.value > 1 {
-            return "\(self.value) \(self.unit.displayUnitMultiple)"
-        } else {
-            return self.unit.displayUnitSingleWithArticle
-        }
-    }
-    
-    // period == 1 ? "day" : "5 days"
-    var displayPeriod: String {
-        if self.value > 1 {
-            return "\(self.value) \(self.unit.displayUnitMultiple)"
-        } else {
-            return self.unit.displayUnitSingle
-        }
-    }
-    
-    // period == 1 ? "daily" : "5 days"
-    var displayFrequency: String {
-        if self.value > 1 {
-            return "\(self.value) \(self.unit.displayUnitMultiple)"
-        } else {
-            return self.unit.displayUnitPeriod
-        }
-    }
-    
-    // period == 1 ? "1 day" : "5 days"
-    var displayPeriodWithNumber: String {
-        "\(self.value) \(self.value > 1 ? self.unit.displayUnitMultiple : self.unit.displayUnitSingle)"
-    }
-    
-    func convert(toUnit unit: Product.SubscriptionPeriod.Unit) -> Self {
-        return InternalSubscriptionPeriod(unit: unit, value: self.days/unit.days)
-    }
 }
 
 extension Product.SubscriptionPeriod {
-    
-    // 3 days => 3, 3 weeks => 21, 2 months => 60, ...
-    // Not reliable for legal information or date calculations,
-    // since months and years are fixed on 30 and 365 respectively
-    var days: Int {
-        return InternalSubscriptionPeriod(unit: self.unit, value: self.value).days
+
+    var days: Int { self.unit.days * self.value }
+
+    /// Seven days and one week are the same plan, and StoreKit hands back
+    /// whichever of the two the product was created with in App Store Connect.
+    /// Everything the card says — its name, "9,99 €/week" — has to see one of
+    /// them, or a weekly plan ends up titled with its display name and priced
+    /// "9,99 €/1 week".
+    var normalized: (unit: Unit, value: Int) {
+        if self.unit == .day, self.value == 7 { return (.week, 1) }
+        return (self.unit, self.value)
     }
-    
-    fileprivate func getInternalPeriod(weekFrom7days: Bool) -> InternalSubscriptionPeriod {
-        if weekFrom7days, self.value == 7, self.unit == .day {
-            return InternalSubscriptionPeriod(unit: .week, value: 1)
-        } else {
-            return InternalSubscriptionPeriod(unit: self.unit, value: self.value)
+
+    /// "7 days", "1 week", "1 anno" — the system's own wording, in the reader's
+    /// language, so no plural rule has to be maintained here.
+    var localizedDuration: String {
+        var components = DateComponents()
+        switch self.unit {
+        case .day: components.day = self.value
+        case .week: components.weekOfMonth = self.value
+        case .month: components.month = self.value
+        case .year: components.year = self.value
+        default: components.day = self.days
         }
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.day, .weekOfMonth, .month, .year]
+        formatter.maximumUnitCount = 1
+        return formatter.string(from: components) ?? ""
     }
 }
 
 extension Product {
-    
-    var title: String {
-        var text = "Premium"
-        if let subscription = self.subscription {
-            text += " \(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).displayPeriodWithNumber)"
+
+    /// The plan's name on its card: "Weekly", "Yearly". Anything that is not a
+    /// plain one-unit period (a two-month plan, say) falls back to the name set
+    /// in App Store Connect rather than inventing a phrase for it.
+    var planTitle: String {
+        guard let period = self.subscription?.subscriptionPeriod.normalized, period.value == 1 else {
+            return self.displayName
         }
-        return text
-    }
-    
-    var titleShort: String {
-        var text = ""
-        if let subscription = self.subscription {
-            text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).displayFrequency)"
+        switch period.unit {
+        case .day: return String(localized: "Daily")
+        case .week: return String(localized: "Weekly")
+        case .month: return String(localized: "Monthly")
+        case .year: return String(localized: "Yearly")
+        default: return self.displayName
         }
-        text += " \(self.displayPrice)"
-        text = text.capitalizingFirstLetter()
-        return text
     }
-    
-    var period: String {
-        var text = ""
-        if let subscription = self.subscription {
-            text += "\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: true).displayFrequency)"
+
+    /// "7 days" when the plan opens with a free trial, nil when it does not.
+    var freeTrialDuration: String? {
+        guard let offer = self.subscription?.introductoryOffer, offer.paymentMode == .freeTrial else {
+            return nil
         }
-        text = text.capitalizingFirstLetter()
-        return text
+        // An offer can repeat its period (2 × 1 week); collapse that into a
+        // single span so the card reads "14 days" rather than "1 week" twice.
+        guard offer.periodCount > 1 else { return offer.period.localizedDuration }
+        let totalDays = offer.period.days * offer.periodCount
+        var components = DateComponents()
+        components.day = totalDays
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.day]
+        return formatter.string(from: components) ?? offer.period.localizedDuration
     }
-    
-    var priceText: String {
-        return self.displayPrice
+
+    /// "9,99 €/week" — what the plan charges once any trial is over.
+    var recurringPriceText: String {
+        guard let period = self.subscription?.subscriptionPeriod else { return self.displayPrice }
+        return Self.priceText(price: self.displayPrice, period: period)
     }
-    
-    var weeklyPriceAndPeriod: String {
-        var text = self.getPriceText(weekFrom7days: false, customUnitPeriod: .week)
-        text = text.capitalizingFirstLetter()
-        return text
+
+    /// The same price restated per week — "1,54 €/week" for a yearly plan — so
+    /// the two cards can be compared without doing the division in your head.
+    /// Nil on a plan that is already weekly, where it would only repeat itself.
+    var weeklyEquivalentPriceText: String? {
+        guard let period = self.subscription?.subscriptionPeriod,
+              period.normalized != (.week, 1) else {
+            return nil
+        }
+        let weekly = (self.price / Decimal(period.days)) * Decimal(SubscriptionPeriod.Unit.week.days)
+        let formatted = self.priceFormatStyle
+            .precision(.integerAndFractionLength(integerLimits: 1..<4, fractionLimits: 2...2))
+            .format(weekly)
+        return String(localized: "\(formatted)/week")
     }
-    
+
+    /// The line of small print under the button: "Free for 7 days, then 79,99 €/year".
     var fullDescriptionText: String {
-        var text = ""
-        if let introductortOffer = self.subscription?.introductoryOffer {
-            text += "\(introductortOffer.period.getInternalPeriod(weekFrom7days: false).displayPeriodStartStatement) free, then "
-        }
-        text += self.getPriceText(weekFrom7days: true)
-        text = text.capitalizingFirstLetter()
-        return text
+        guard let trial = self.freeTrialDuration else { return self.recurringPriceText }
+        return String(localized: "Free for \(trial), then \(self.recurringPriceText)")
     }
-    
-    var freeTrialText: String? {
-        if let introductoryOffer = self.subscription?.introductoryOffer, introductoryOffer.paymentMode == .freeTrial {
-            let freeTrialDuration = introductoryOffer.period.getInternalPeriod(weekFrom7days: false).displayPeriodWithNumber
-            return String(localized: "FREE TRIAL for \(freeTrialDuration)")
-        } else {
+
+    /// "Save 73%", shown on the plan that costs least per day — but only when
+    /// there is a dearer plan on the same screen for it to beat.
+    func savingBadge(comparedTo products: [Product]) -> String? {
+        guard let mine = self.yearlyEquivalentPrice else { return nil }
+        let others = products.filter { $0.id != self.id }.compactMap { $0.yearlyEquivalentPrice }
+        guard let cheapestOther = others.min(), mine < cheapestOther,
+              let dearest = others.max(), dearest > 0 else {
             return nil
         }
-    }
-    
-    // Returned only if:
-    // - The current product is a subscription
-    // - The current product is the most convenient one
-    // - There is another product which is a subscription and is less convenient
-    func getBestDiscount(forProducts products: [Product]) -> String? {
-        // Compare subscription periods instead of the products themselves to handle cases of identical
-        // subscriptions that varies only for introductory offers (e.g.: yearly with free trial, yearly without free trial)
-        let mostConvenientSubscriptionPeriod = Self.getMostConvenientSubscription(fromProducts: products)?.subscription?.subscriptionPeriod
-        guard let mostConvenientSubscriptionPeriod, self.subscription?.subscriptionPeriod == mostConvenientSubscriptionPeriod else {
-            return nil
-        }
-        guard let discountPercentage = self.getDiscountPercentage(forProducts: products) else {
-            return nil
-        }
-        return "\(discountPercentage) OFF"
-    }
-    
-    // Returned only if:
-    // - The current product is a subscription
-    // - There is another product which is a subscription and is less convenient
-    func getDiscount(forProducts products: [Product]) -> String? {
-        guard let subscription = self.subscription else {
-            return nil
-        }
-        guard let discountPercentage = self.getDiscountPercentage(forProducts: products) else {
-            return nil
-        }
-        guard let previousUnit = subscription.subscriptionPeriod.unit.previousUnit else {
-            return nil
-        }
-        let periodInPreviousUnit = subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: false).convert(toUnit: previousUnit)
-        var text = periodInPreviousUnit.displayPeriodWithNumber
-        text += " at "
-        text += self.getPriceText(weekFrom7days: false, customUnitPeriod: previousUnit, showTrailing: false)
-        text = text.capitalizingFirstLetter()
-        text += ", save \(discountPercentage)"
-        return text
-    }
-    
-    private func getDiscountPercentage(forProducts products: [Product]) -> String? {
-        let nextMostConvenientProduct = Self.getMostConvenientSubscription(fromProducts: products, worseThan: self)
-        
-        guard let nextMostConvenientProduct = nextMostConvenientProduct else {
-            return nil
-        }
-        guard let priceYearly = self.priceYearly,
-              let nextMostConvenientProductPriceYearly = nextMostConvenientProduct.priceYearly else {
-            return nil
-        }
-        
-        let discount = Decimal(1) - priceYearly / nextMostConvenientProductPriceYearly
-        let discountPercentage = discount.formatted(.percent
+        let saving = Decimal(1) - mine / dearest
+        let percentage = saving.formatted(.percent
             .precision(.integerAndFractionLength(integerLimits: ..<3, fractionLimits: 0...0)))
-        return discountPercentage
+        return String(localized: "Save \(percentage)")
     }
-    
-    private static func sortedSubscriptionsBasedOnConvenience(fromProducts products: [Product]) -> [Product] {
-        return products.filter { $0.priceYearly != nil }.sorted { $0.priceYearly ?? 0 < $1.priceYearly ?? 0 }
+
+    /// What a year on this plan costs, used only to rank plans against each other.
+    private var yearlyEquivalentPrice: Decimal? {
+        guard let period = self.subscription?.subscriptionPeriod, period.days > 0 else { return nil }
+        return (self.price / Decimal(period.days)) * Decimal(SubscriptionPeriod.Unit.year.days)
     }
-    
-    private static func getMostConvenientSubscription(fromProducts products: [Product], worseThan referenceProduct: Product? = nil) -> Product? {
-        let sortedProducts = Self.sortedSubscriptionsBasedOnConvenience(fromProducts: products)
-        if let referenceProduct = referenceProduct, let index = sortedProducts.firstIndex(of: referenceProduct) {
-            let nextProductIndex = index + 1
-            if nextProductIndex < sortedProducts.count {
-                return sortedProducts[nextProductIndex]
-            } else {
-                return nil
-            }
-        } else {
-            return sortedProducts.first
+
+    private static func priceText(price: String, period: SubscriptionPeriod) -> String {
+        let normalized = period.normalized
+        guard normalized.value == 1 else {
+            // "39,99 €/2 months"
+            return String(localized: "\(price)/\(period.localizedDuration)")
         }
-    }
-    
-    private var priceYearly: Decimal? {
-        if let subscription = self.subscription {
-            return (self.price / Decimal(subscription.subscriptionPeriod.days)) * Decimal(SubscriptionPeriod.Unit.year.days)
-        } else {
-            return nil
-        }
-    }
-    
-    // if customUnitPeriod == nil
-    // <price>/<displayPeriod>. E.g.: 99.99€/year, 19.99/2 months
-    // otherwise
-    // <price in custom unit period>(= (price / period days) * custom unit period days)/<display period of custom unit period>
-    // E.g.: custom unit period == week => 89.99€/year => 1.73€/week
-    private func getPriceText(weekFrom7days: Bool, customUnitPeriod: SubscriptionPeriod.Unit? = nil, showTrailing: Bool = true) -> String {
-        if let subscription = self.subscription {
-            var text = ""
-            if let customUnitPeriod = customUnitPeriod {
-                let pricePerUnit = (self.price / Decimal(subscription.subscriptionPeriod.days)) * Decimal(customUnitPeriod.days)
-                text += self.priceFormatStyle
-                    .precision(.integerAndFractionLength(integerLimits: 1..<3, fractionLimits: 2...2))
-                    .format(pricePerUnit)
-                if showTrailing {
-                    text += "/\(customUnitPeriod.displayUnitSingle)"
-                }
-            } else {
-                text += self.displayPrice
-                if showTrailing {
-                    text += "/\(subscription.subscriptionPeriod.getInternalPeriod(weekFrom7days: weekFrom7days).displayPeriod)"
-                }
-            }
-            return text
-        } else {
-            return self.displayPrice
+        switch normalized.unit {
+        case .day: return String(localized: "\(price)/day")
+        case .week: return String(localized: "\(price)/week")
+        case .month: return String(localized: "\(price)/month")
+        case .year: return String(localized: "\(price)/year")
+        default: return price
         }
     }
 }
 
-let productMetaViewsKey: String = "views"
+/// Marks, in `Products.plist`, the plans the paywall is allowed to sell.
+let productMetaOfferedKey: String = "offered"
 
-func getSubscriptionsForView(products: [Product], store: Store, viewKey: String) -> [Product] {
+/// The plans on sale right now.
+///
+/// Retired products stay listed in `Products.plist` with `offered` set to false:
+/// the app still has to recognise a subscriber who bought the monthly plan back
+/// when it existed, and StoreKit only hands back the products we ask for by id.
+/// They simply no longer appear on the paywall.
+func getOfferedSubscriptions(products: [Product], store: Store) -> [Product] {
     return products.filter {
-        if $0.subscription != nil,
-           let metaDictionary = store.getProductData(forProductId: $0.id) as? [String: Any],
-           let views = metaDictionary[productMetaViewsKey] as? [String],
-           views.contains(viewKey) {
-            return true
-        } else {
+        guard $0.subscription != nil,
+              let metaDictionary = store.getProductData(forProductId: $0.id) as? [String: Any] else {
             return false
         }
-    }
-}
-
-extension Array where Element == Product {
-    func subscriptionPairs<T: SubscriptionPlan>(periodOrderDesc: Bool, conversion: ((Product?) -> T?)) async throws -> [SubscriptionPlanCombo<T>] {
-        var groupedSubscriptions: OrderedDictionary<Int, [Product]> = self.reduce([:]) { partialResult, subscription in
-            var partialResult = partialResult
-            if let subscriptionInfo = subscription.subscription {
-                let key = subscriptionInfo.subscriptionPeriod.days
-                var subscriptions = partialResult[key] ?? []
-                subscriptions.append(subscription)
-                partialResult[key] = subscriptions
-            }
-            return partialResult
-        }
-        
-        groupedSubscriptions.sort { pair1, pair2 in
-            periodOrderDesc ? pair1.key > pair2.key : pair1.key < pair2.key
-        }
-        
-        let subscriptionPlanPairs: [SubscriptionPlanCombo<T>] = groupedSubscriptions.reduce([]) { partialResult, rawPair in
-            var partialResult = partialResult
-            let freeTrialSubscriptionPlan = conversion(rawPair.value.first (where: { $0.subscription?.introductoryOffer?.paymentMode == .freeTrial }))
-            let standardSubscriptionPlan = conversion(rawPair.value.first (where: { $0.subscription?.introductoryOffer == nil }))
-            if standardSubscriptionPlan != nil || freeTrialSubscriptionPlan != nil {
-                partialResult.append(SubscriptionPlanCombo<T>(standardSubscriptionPlan: standardSubscriptionPlan,
-                                                              freeTrialSubscriptionPlan: freeTrialSubscriptionPlan))
-            }
-            return partialResult
-        }
-        return subscriptionPlanPairs
+        return (metaDictionary[productMetaOfferedKey] as? Bool) ?? false
     }
 }
