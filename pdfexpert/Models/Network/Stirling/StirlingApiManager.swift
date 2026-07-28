@@ -7,11 +7,12 @@
 //  processed document back as a BINARY response body. Errors on non-2xx come
 //  back as JSON or plain text.
 //
-//  SECURITY NOTE: the Stirling API key is embedded in the client (see
-//  `ProjectInfo.stirlingApiKey`, compiled in XOR-obfuscated). This only raises
-//  the bar; the accepted future mitigation is a server-side proxy that holds the
-//  real key. The feature is additionally gated behind the `stirling_api_enabled`
-//  remote-config kill switch so it can be turned off without shipping a build.
+//  Requests go to the Cloudflare Worker in `proxy/`, never to Stirling directly:
+//  the service key lives there and the app has none. What it sends instead is an
+//  App Check token and the id of its subscription, which the worker checks with
+//  Apple before spending anything — see `ProxyCredentials` and
+//  `proxy/README.md`. The `stirling_api_enabled` remote-config kill switch still
+//  applies on top, so the feature can be turned off without shipping a build.
 //
 
 import Foundation
@@ -31,6 +32,10 @@ enum StirlingOperation: String, CaseIterable {
     /// whose *input* is not a PDF: it backs the high-fidelity fallback offered when
     /// the on-device WebKit conversion cannot render a document.
     case fileToPdf
+
+    /// What the proxy is asked for. The worker keeps the table of Stirling paths,
+    /// so these names have to match the keys in `proxy/src/upstream.ts`.
+    var proxyName: String { self.rawValue }
 }
 
 /// A successful Stirling response: the raw processed document plus the file

@@ -22,28 +22,35 @@ class StirlingApiManagerImpl: StirlingApiManager {
 
     // MARK: Injectable inputs
 
-    private let apiKey: String
     private let isEnabledProvider: () -> Bool
     private let baseUrlProvider: () -> String
+    private let credentialsProvider: ProxyCredentialsProvider
     private let provider: MoyaProvider<StirlingService>
 
     /// The defaults wire up the production inputs. Every dependency is injectable so
     /// tests can drive `process(...)` with a stubbed provider and forced availability
-    /// without touching Firebase, `ProjectInfo`, or the network.
-    init(apiKey: String = ProjectInfo.stirlingApiKey,
-         isEnabledProvider: @escaping () -> Bool = { Container.shared.configService().remoteConfigData.value.stirlingApiEnabled },
-         baseUrlProvider: @escaping () -> String = { Container.shared.configService().remoteConfigData.value.stirlingApiBaseUrl },
+    /// without touching Firebase, the proxy, or the network.
+    ///
+    /// There is no API key here any more: it lives in the Cloudflare Worker, and
+    /// what stands in for it is the pair of credentials in `ProxyCredentials` —
+    /// see `proxy/README.md`.
+    init(isEnabledProvider: @escaping () -> Bool = { Container.shared.configService().remoteConfigData.value.stirlingApiEnabled },
+         baseUrlProvider: @escaping () -> String = { Container.shared.configService().remoteConfigData.value.proxyBaseUrl },
+         credentialsProvider: ProxyCredentialsProvider = Container.shared.proxyCredentialsProvider(),
          provider: MoyaProvider<StirlingService>? = nil) {
-        self.apiKey = apiKey
         self.isEnabledProvider = isEnabledProvider
         self.baseUrlProvider = baseUrlProvider
+        self.credentialsProvider = credentialsProvider
         self.provider = provider ?? Self.makeProvider()
     }
 
     // MARK: - StirlingApiManager
 
+    /// Enabled, and with somewhere to send the request. What used to be "do we
+    /// have a key" is now "has the proxy been deployed" — the key is the
+    /// worker's business.
     var isAvailable: Bool {
-        self.isEnabledProvider() && !self.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        self.isEnabledProvider() && !self.baseUrlProvider().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     func process(fileData: Data,
@@ -52,16 +59,29 @@ class StirlingApiManagerImpl: StirlingApiManager {
         guard self.isAvailable else {
             return Fail(error: StirlingApiError.notConfigured).eraseToAnyPublisher()
         }
-        let target = StirlingService.process(operation: operation,
-                                             fileData: fileData,
-                                             filename: filename,
-                                             apiKey: self.apiKey,
-                                             baseUrlString: self.baseUrlProvider())
-        return self.provider.requestPublisher(target)
-            .tryMap { try Self.mapResponse($0, operation: operation) }
-            .mapError { Self.mapError($0) }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        let baseUrl = self.baseUrlProvider()
+        // The credentials are fetched before the request is built: Moya's headers
+        // are synchronous, and App Check's token is not.
+        return Future<ProxyCredentials, Error> { promise in
+            _Concurrency.Task {
+                do { promise(.success(try await self.credentialsProvider.credentials())) }
+                catch { promise(.failure(error)) }
+            }
+        }
+        .mapError { Self.mapError($0) }
+        .flatMap { credentials -> AnyPublisher<StirlingResult, StirlingApiError> in
+            let target = StirlingService.process(operation: operation,
+                                                 fileData: fileData,
+                                                 filename: filename,
+                                                 credentials: credentials,
+                                                 baseUrlString: baseUrl)
+            return self.provider.requestPublisher(target)
+                .tryMap { try Self.mapResponse($0, operation: operation) }
+                .mapError { Self.mapError($0) }
+                .eraseToAnyPublisher()
+        }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
     }
 
     // MARK: - Provider
@@ -263,7 +283,7 @@ enum StirlingService {
     case process(operation: StirlingOperation,
                  fileData: Data,
                  filename: String,
-                 apiKey: String,
+                 credentials: ProxyCredentials,
                  baseUrlString: String)
 }
 
@@ -272,22 +292,18 @@ extension StirlingService: TargetType {
     var baseURL: URL {
         switch self {
         case let .process(_, _, _, _, baseUrlString):
-            return URL(string: baseUrlString) ?? URL(string: K.Stirling.DefaultBaseUrl)!
+            // The proxy, not Stirling. The app has not known where Stirling
+            // lives since the key stopped living in the bundle.
+            return URL(string: baseUrlString) ?? URL(string: "https://invalid.invalid")!
         }
     }
 
+    /// The operation's *name*. The worker maps it to a Stirling path, because a
+    /// caller that could choose the path could reach any endpoint on that host.
     var path: String {
         switch self {
         case let .process(operation, _, _, _, _):
-            switch operation {
-            case .pdfToWord: return "/api/v1/convert/pdf/word"
-            case .pdfToPresentation: return "/api/v1/convert/pdf/presentation"
-            case .pdfToCsv: return "/api/v1/convert/pdf/csv"
-            case .pdfToPdfa: return "/api/v1/convert/pdf/pdfa"
-            case .repair: return "/api/v1/misc/repair"
-            case .sanitize: return "/api/v1/security/sanitize-pdf"
-            case .fileToPdf: return "/api/v1/convert/file/pdf"
-            }
+            return "/v1/stirling/\(operation.proxyName)"
         }
     }
 
@@ -309,8 +325,8 @@ extension StirlingService: TargetType {
 
     var headers: [String: String]? {
         switch self {
-        case let .process(_, _, _, apiKey, _):
-            return ["X-API-KEY": apiKey]
+        case let .process(_, _, _, credentials, _):
+            return credentials.headers
         }
     }
 

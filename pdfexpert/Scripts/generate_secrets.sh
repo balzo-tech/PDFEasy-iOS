@@ -47,8 +47,6 @@ else:
 
 # (Swift property name, plist key)
 KEYS = [
-    ("openAiApiKey", "OPENAI_API_KEY"),
-    ("stirlingApiKey", "STIRLING_API_KEY"),
     ("appleAttributionApiKey", "APPLE_ATTRIBUTION_API_KEY"),
 ]
 

@@ -223,6 +223,7 @@ private final class AnalyticsManagerMock: AnalyticsManager {
 @MainActor
 private final class StoreMock: Store {
     nonisolated let isPremium: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
+    nonisolated let originalTransactionId: CurrentValueSubject<String?, Never> = CurrentValueSubject(nil)
 
     var subscriptions: [Product] { [] }
     var consumables: [Product] { [] }

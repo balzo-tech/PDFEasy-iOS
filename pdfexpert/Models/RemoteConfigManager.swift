@@ -12,6 +12,7 @@ import Combine
 import CombineExt
 
 struct RemoteConfigData {
+    let proxyBaseUrl: String
     let chatGptModel: String
     let chatGptMaxTokens: Int
     let chatMaxMessagesPerMonth: Int
@@ -19,6 +20,9 @@ struct RemoteConfigData {
     let stirlingApiBaseUrl: String
 
     init(remoteConfig: RemoteConfig) {
+        let proxyBaseUrlValue = remoteConfig.configValue(forKey: RemoteConfigKey.proxyBaseUrl.rawValue).stringValue ?? ""
+        self.proxyBaseUrl = proxyBaseUrlValue.isEmpty ? K.Proxy.DefaultBaseUrl : proxyBaseUrlValue
+
         let chatGptModelValue = remoteConfig.configValue(forKey: RemoteConfigKey.chatGptModel.rawValue).stringValue ?? ""
         self.chatGptModel = chatGptModelValue.isEmpty ? K.ChatPdf.DefaultChatGptModel : chatGptModelValue
 
@@ -36,11 +40,13 @@ struct RemoteConfigData {
 
     /// Memberwise initializer used by non-Firebase call sites (e.g. unit tests / previews)
     /// that need a `RemoteConfigData` without spinning up `RemoteConfig`.
-    init(chatGptModel: String = K.ChatPdf.DefaultChatGptModel,
+    init(proxyBaseUrl: String = K.Proxy.DefaultBaseUrl,
+         chatGptModel: String = K.ChatPdf.DefaultChatGptModel,
          chatGptMaxTokens: Int = K.ChatPdf.DefaultChatGptMaxTokens,
          chatMaxMessagesPerMonth: Int = K.ChatPdf.DefaultChatMaxMessagesPerMonth,
          stirlingApiEnabled: Bool = K.Stirling.DefaultEnabled,
          stirlingApiBaseUrl: String = K.Stirling.DefaultBaseUrl) {
+        self.proxyBaseUrl = proxyBaseUrl
         self.chatGptModel = chatGptModel
         self.chatGptMaxTokens = chatGptMaxTokens
         self.chatMaxMessagesPerMonth = chatMaxMessagesPerMonth
@@ -144,6 +150,7 @@ class RemoteConfigManager : ConfigService {
 }
 
 fileprivate enum RemoteConfigKey : String, CaseIterable {
+    case proxyBaseUrl = "proxy_base_url"
     case chatGptModel = "chat_gpt_model"
     case chatGptMaxTokens = "chat_gpt_max_tokens"
     case chatMaxMessagesPerMonth = "chat_max_messages_per_month"
@@ -157,6 +164,8 @@ fileprivate extension RemoteConfig {
         var result: [String: NSObject] = [:]
         RemoteConfigKey.allCases.forEach { (key) in
             switch key {
+            case .proxyBaseUrl:
+                result[key.rawValue] = NSString(string: K.Proxy.DefaultBaseUrl)
             case .chatGptModel:
                 result[key.rawValue] = NSString(string: K.ChatPdf.DefaultChatGptModel)
             case .chatGptMaxTokens:

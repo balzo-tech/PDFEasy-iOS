@@ -275,6 +275,7 @@
 		89CD7BA529D32C52003F1C3A /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BA429D32C52003F1C3A /* Lottie */; };
 		89CD7BA829D32C72003F1C3A /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BA729D32C72003F1C3A /* Factory */; };
 		89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */; };
+		E7C4A1B209F3486D8A2C0102 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = E7C4A1B209F3486D8A2C0101 /* FirebaseAppCheck */; };
 		8A11AT0100000000000001 /* AppleAttribution in Frameworks */ = {isa = PBXBuildFile; productRef = 8A11AT0100000000000002 /* AppleAttribution */; };
 		8A11AT0100000000000004 /* AppleAttributionPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000005 /* AppleAttributionPlatform.swift */; };
 		89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */; };
@@ -347,6 +348,8 @@
 		D32EEBA7C31BB249B5ACE94E /* ToolTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EC3A7137C6581334095286 /* ToolTileView.swift */; };
 		D33A40C8CABE125D33F28218 /* PdfCompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1211F42434E7C13EFE673417 /* PdfCompareView.swift */; };
 		D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */; };
+		F5D2B7C310A4597E9B3D0202 /* ProxyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */; };
+		F5D2B7C310A4597E9B3D0102 /* AppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */; };
 		D6E7A58072DE05382605B65A /* PdfFileIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F68728D1C787B176CB1AB6B /* PdfFileIntents.swift */; };
 		D803CF2A0EEE999C06EAEF60 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A56A520C1AA285C2FEA012 /* SmokeTests.swift */; };
 		DA15D6C79FF2C282B8334C90 /* PdfConvertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731333E3FF44FB5FADB73EC /* PdfConvertView.swift */; };
@@ -757,6 +760,8 @@
 		C4B9FF21B5BE8333D1705F4B /* ScanCaptureService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanCaptureService.swift; sourceTree = "<group>"; };
 		C6F6ADAE49FFA46E46905627 /* PdfExpertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PdfExpertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerImpl.swift; sourceTree = "<group>"; };
+		F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/ProxyCredentials.swift; sourceTree = "<group>"; };
+		F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/AppCheckProviderFactory.swift; sourceTree = "<group>"; };
 		CC97E4F38C9B51C5EA1B7150 /* ScanImageProcessor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanImageProcessor.swift; sourceTree = "<group>"; };
 		D32F5A6A3F6405B6ED0D305E /* PdfRedactView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactView.swift; sourceTree = "<group>"; };
 		D3D1D21120BBA459D1E33557 /* PdfRedactUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactUtilityTests.swift; sourceTree = "<group>"; };
@@ -826,6 +831,7 @@
 				8942034529DC12BC004D610B /* PagerTabStripView in Frameworks */,
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
+				E7C4A1B209F3486D8A2C0102 /* FirebaseAppCheck in Frameworks */,
 				8A11AT0100000000000001 /* AppleAttribution in Frameworks */,
 				8991485629E85DE500DD01F2 /* CombineExt in Frameworks */,
 				89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */,
@@ -1806,6 +1812,8 @@
 			children = (
 				A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */,
 				C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */,
+				F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */,
+				F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */,
 				E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */,
 			);
 			path = Stirling;
@@ -1881,6 +1889,7 @@
 				89CD7BA429D32C52003F1C3A /* Lottie */,
 				89CD7BA729D32C72003F1C3A /* Factory */,
 				89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */,
+				E7C4A1B209F3486D8A2C0101 /* FirebaseAppCheck */,
 				89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */,
 				89923E6629D437F500E246FC /* FirebasePerformance */,
 				895FE2CF29D7392F00A99D5B /* Collections */,
@@ -2231,6 +2240,8 @@
 				879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */,
 				437028E1F0DB00419857B9E8 /* StirlingApiManager.swift in Sources */,
 				D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */,
+				F5D2B7C310A4597E9B3D0202 /* ProxyCredentials.swift in Sources */,
+				F5D2B7C310A4597E9B3D0102 /* AppCheckProviderFactory.swift in Sources */,
 				9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */,
 				E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */,
 				894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */,
@@ -3461,6 +3472,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E7C4A1B209F3486D8A2C0101 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
 		891A07E829E028EE0002FA3A /* CloudKitSyncMonitor */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 891A07E729E028EE0002FA3A /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */;

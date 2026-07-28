@@ -1,0 +1,38 @@
+name = "pdfpro-proxy"
+main = "src/index.ts"
+# The Balzo account; the token can see three, and a deploy has to say which.
+account_id = "c9b26d1da215e6a682afb7d5a3d92fb9"
+compatibility_date = "2025-01-15"
+
+# Secrets — set with `wrangler secret put <NAME>`, never in this file:
+#   OPENAI_API_KEY      the OpenAI key that used to be compiled into the app
+#   STIRLING_API_KEY    the Stirling-PDF key that was never issued, and now need not be
+#   APPLE_PRIVATE_KEY   the .p8 from App Store Connect (Keys → In-App Purchase),
+#                       pasted whole, BEGIN/END lines included
+
+[vars]
+# Firebase project *number* (not the id): the App Check token's issuer and
+# audience are built from it.
+FIREBASE_PROJECT_NUMBER = ""
+# App Store Connect key identifiers that go with APPLE_PRIVATE_KEY.
+APPLE_KEY_ID = ""
+APPLE_ISSUER_ID = ""
+# Both bundle ids are accepted so the staging build can use the same worker.
+APPLE_BUNDLE_IDS = "eu.balzo.pdfexpert,eu.balzo.pdfexpert.staging"
+# Where Stirling-PDF actually lives. No default on purpose: a wrong host here
+# would send documents somewhere nobody chose.
+STIRLING_BASE_URL = ""
+# Per-subscriber ceilings, per calendar month.
+CHAT_MONTHLY_LIMIT = "20"
+STIRLING_MONTHLY_LIMIT = "50"
+# Rough ceiling per IP per minute, as a backstop against scripted traffic.
+IP_RATE_LIMIT = "30"
+
+# Created with `wrangler kv namespace create LIMITS`. Holds the monthly counters
+# and the per-IP windows; nothing in it is worth reading.
+[[kv_namespaces]]
+binding = "LIMITS"
+id = "77d0eede826e41459f52126bfeaa64b5"
+
+[observability]
+enabled = true

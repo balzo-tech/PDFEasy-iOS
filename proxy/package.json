@@ -1,0 +1,22 @@
+{
+  "name": "pdfpro-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Worker that holds the API keys PDF Pro used to carry in its bundle.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "jose": "^6.2.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5",
+    "wrangler": "^3.105.0"
+  }
+}

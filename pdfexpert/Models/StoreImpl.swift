@@ -45,6 +45,7 @@ final class StoreImpl: Store {
     private(set) var subscriptionGroupStatus: RenewalState?
 
     nonisolated let isPremium: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
+    nonisolated let originalTransactionId: CurrentValueSubject<String?, Never> = CurrentValueSubject(nil)
 
     // Touched only from the nonisolated init / deinit, never on the main actor.
     nonisolated(unsafe) var updateListenerTask: Task<Void, Error>? = nil
@@ -231,6 +232,7 @@ final class StoreImpl: Store {
     @MainActor
     func updateCustomerProductStatus() async {
         var purchasedSubscriptions: [Product] = []
+        var currentOriginalTransactionId: String? = nil
 
         //Iterate through all of the user's purchased products.
         for await result in Transaction.currentEntitlements {
@@ -248,6 +250,10 @@ final class StoreImpl: Store {
                     if let subscription = self.subscriptions.first(where: { $0.id == transaction.productID }) {
                         purchasedSubscriptions.append(subscription)
                     }
+                    // Taken from the entitlement rather than from a purchase, so
+                    // it is also there for someone who subscribed on another
+                    // device or before this install.
+                    currentOriginalTransactionId = String(transaction.originalID)
                 default:
                     break
                 }
@@ -255,6 +261,8 @@ final class StoreImpl: Store {
                 print()
             }
         }
+
+        self.originalTransactionId.send(currentOriginalTransactionId)
 
         //Update the store information with auto-renewable subscription products.
         self.purchasedSubscriptions = purchasedSubscriptions

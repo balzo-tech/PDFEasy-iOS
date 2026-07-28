@@ -7,12 +7,20 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseAppCheck
 import AppleAttribution
 import Factory
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // App Check has to be told which provider to use *before* Firebase is
+        // configured — afterwards the default one is already in place. It is what
+        // lets the proxy tell our app from a script with a copy of its traffic,
+        // which is the only reason the OpenAI key can live on a server instead of
+        // in this binary.
+        AppCheck.setAppCheckProviderFactory(PdfProAppCheckProviderFactory())
+
         // Firebase init
         FirebaseApp.configure()
 

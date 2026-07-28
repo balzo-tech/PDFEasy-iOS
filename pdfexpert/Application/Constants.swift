@@ -82,6 +82,15 @@ struct K {
         static let ConversationHistoryMessageLimit: Int = 20
     }
 
+    struct Proxy {
+        /// Where the Cloudflare Worker answers. Overridable from remote config so
+        /// the host can be moved without shipping a build, which matters for the
+        /// one piece of infrastructure every online feature now goes through.
+        /// Empty means "not deployed yet": the online features stay hidden rather
+        /// than failing against a URL nobody owns.
+        static let DefaultBaseUrl = ""
+    }
+
     struct Stirling {
         // In-app fallbacks for the Stirling-PDF remote-config values.
         static let DefaultBaseUrl = "https://api.stirling.com"

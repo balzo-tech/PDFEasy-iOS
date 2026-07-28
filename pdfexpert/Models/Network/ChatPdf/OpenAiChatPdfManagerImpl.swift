@@ -58,6 +58,7 @@ class OpenAiChatPdfManagerImpl: ChatPdfManager {
     }()
 
     @Injected(\.configService) private var configService
+    @Injected(\.proxyCredentialsProvider) private var credentialsProvider
 
     func createProvider() -> MoyaProvider<OpenAiChatService> {
         MoyaProvider<OpenAiChatService>(plugins: [self.loggerPlugin])
@@ -96,20 +97,25 @@ class OpenAiChatPdfManagerImpl: ChatPdfManager {
         guard let conversation = self.conversation(forId: ref.sourceId) else {
             return Fail(error: ChatPdfError.unknownError).eraseToAnyPublisher()
         }
-        guard let apiKey = self.validatedApiKey() else {
+        let config = self.configService.remoteConfigData.value
+        guard !config.proxyBaseUrl.isEmpty else {
             return Fail(error: Self.missingKeyError).eraseToAnyPublisher()
         }
-        let config = self.configService.remoteConfigData.value
         let messages: [[String: Any]] = [
             ["role": "system", "content": Self.setupSystemPrompt(documentText: conversation.documentText,
                                                                  truncated: conversation.truncated)],
             ["role": "user", "content": Self.setupUserPrompt]
         ]
-        return self.provider.requestPublisher(.chatCompletion(apiKey: apiKey,
-                                                              model: config.chatGptModel,
-                                                              messages: messages,
-                                                              maxTokens: config.chatGptMaxTokens,
-                                                              jsonResponse: true))
+        return self.proxyCredentials()
+            .flatMap { credentials in
+                self.provider.requestPublisher(.chatCompletion(credentials: credentials,
+                                                               baseUrlString: config.proxyBaseUrl,
+                                                               model: config.chatGptModel,
+                                                               messages: messages,
+                                                               maxTokens: config.chatGptMaxTokens,
+                                                               jsonResponse: true))
+                .mapError { $0 as Error }
+            }
             .tryMap { try Self.extractContent(from: $0) }
             .map { content -> ChatPdfSetupData in
                 if let data = content.data(using: .utf8),
@@ -135,10 +141,10 @@ class OpenAiChatPdfManagerImpl: ChatPdfManager {
         guard let conversation = self.conversation(forId: ref.sourceId) else {
             return Fail(error: ChatPdfError.unknownError).eraseToAnyPublisher()
         }
-        guard let apiKey = self.validatedApiKey() else {
+        let config = self.configService.remoteConfigData.value
+        guard !config.proxyBaseUrl.isEmpty else {
             return Fail(error: Self.missingKeyError).eraseToAnyPublisher()
         }
-        let config = self.configService.remoteConfigData.value
         var messages: [[String: Any]] = [
             ["role": "system", "content": Self.chatSystemPrompt(documentText: conversation.documentText,
                                                                truncated: conversation.truncated)]
@@ -146,11 +152,16 @@ class OpenAiChatPdfManagerImpl: ChatPdfManager {
         messages.append(contentsOf: conversation.history.map { ["role": $0.role, "content": $0.content] })
         messages.append(["role": "user", "content": prompt])
 
-        return self.provider.requestPublisher(.chatCompletion(apiKey: apiKey,
-                                                              model: config.chatGptModel,
-                                                              messages: messages,
-                                                              maxTokens: config.chatGptMaxTokens,
-                                                              jsonResponse: false))
+        return self.proxyCredentials()
+            .flatMap { credentials in
+                self.provider.requestPublisher(.chatCompletion(credentials: credentials,
+                                                               baseUrlString: config.proxyBaseUrl,
+                                                               model: config.chatGptModel,
+                                                               messages: messages,
+                                                               maxTokens: config.chatGptMaxTokens,
+                                                               jsonResponse: false))
+                .mapError { $0 as Error }
+            }
             .tryMap { try Self.extractContent(from: $0) }
             .map { content -> ChatPdfMessage in
                 self.appendToHistory(forId: ref.sourceId, userPrompt: prompt, assistantReply: content)
@@ -209,9 +220,17 @@ class OpenAiChatPdfManagerImpl: ChatPdfManager {
 
     // MARK: - Helpers
 
-    private func validatedApiKey() -> String? {
-        let key = ProjectInfo.openAiApiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        return key.isEmpty ? nil : key
+    /// The App Check token and the subscription id, fetched per request. Moya's
+    /// headers are synchronous and App Check's token is not, so this runs first
+    /// and the request is built from what it returns.
+    private func proxyCredentials() -> AnyPublisher<ProxyCredentials, Error> {
+        Future<ProxyCredentials, Error> { promise in
+            _Concurrency.Task {
+                do { promise(.success(try await self.credentialsProvider.credentials())) }
+                catch { promise(.failure(error)) }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     private static func extractContent(from response: Moya.Response) throws -> String {
@@ -306,14 +325,21 @@ private struct SetupResponse: Decodable {
 // MARK: - Moya target
 
 enum OpenAiChatService {
-    case chatCompletion(apiKey: String, model: String, messages: [[String: Any]], maxTokens: Int, jsonResponse: Bool)
+    case chatCompletion(credentials: ProxyCredentials, baseUrlString: String, model: String, messages: [[String: Any]], maxTokens: Int, jsonResponse: Bool)
 }
 
 extension OpenAiChatService: TargetType {
 
-    var baseURL: URL { URL(string: "https://api.openai.com")! }
+    /// The proxy, not OpenAI. The app has not held an OpenAI key since the key
+    /// stopped being extractable from its bundle — see `proxy/README.md`.
+    var baseURL: URL {
+        switch self {
+        case let .chatCompletion(_, baseUrlString, _, _, _, _):
+            return URL(string: baseUrlString) ?? URL(string: "https://invalid.invalid")!
+        }
+    }
 
-    var path: String { "/v1/chat/completions" }
+    var path: String { "/v1/chat" }
 
     var method: Moya.Method { .post }
 
@@ -323,7 +349,7 @@ extension OpenAiChatService: TargetType {
 
     var task: Task {
         switch self {
-        case let .chatCompletion(_, model, messages, maxTokens, jsonResponse):
+        case let .chatCompletion(_, _, model, messages, maxTokens, jsonResponse):
             var parameters: [String: Any] = [
                 "model": model,
                 "messages": messages,
@@ -338,11 +364,8 @@ extension OpenAiChatService: TargetType {
 
     var headers: [String: String]? {
         switch self {
-        case let .chatCompletion(apiKey, _, _, _, _):
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer \(apiKey)"
-            ]
+        case let .chatCompletion(credentials, _, _, _, _, _):
+            return credentials.headers.merging(["Content-Type": "application/json"]) { current, _ in current }
         }
     }
 }

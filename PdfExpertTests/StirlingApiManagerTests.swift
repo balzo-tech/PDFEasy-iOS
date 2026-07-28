@@ -26,15 +26,17 @@ final class StirlingApiManagerTests: XCTestCase {
     // MARK: - Helpers
 
     private func target(_ operation: StirlingOperation,
-                        apiKey: String = "TEST-KEY",
-                        baseUrl: String = "https://api.stirling.com",
+                        baseUrl: String = "https://proxy.example",
                         filename: String = "document") -> StirlingService {
         .process(operation: operation,
                  fileData: Data("%PDF-1.4".utf8),
                  filename: filename,
-                 apiKey: apiKey,
+                 credentials: Self.credentials,
                  baseUrlString: baseUrl)
     }
+
+    private static let credentials = ProxyCredentials(appCheckToken: "APPCHECK",
+                                                     originalTransactionId: "1000000000000001")
 
     /// Builds a MoyaProvider that immediately stubs every request with the given
     /// status/data. When `headers` is provided the stub is delivered as a full
@@ -63,12 +65,13 @@ final class StirlingApiManagerTests: XCTestCase {
                                              stubClosure: MoyaProvider.immediatelyStub)
     }
 
-    private func manager(apiKey: String,
-                         enabled: Bool,
-                         provider: MoyaProvider<StirlingService>) -> StirlingApiManagerImpl {
-        StirlingApiManagerImpl(apiKey: apiKey,
-                               isEnabledProvider: { enabled },
-                               baseUrlProvider: { "https://api.stirling.com" },
+    private func manager(enabled: Bool,
+                         provider: MoyaProvider<StirlingService>,
+                         proxyUrl: String = "https://proxy.example",
+                         credentials: ProxyCredentialsProvider = CredentialsProviderStub()) -> StirlingApiManagerImpl {
+        StirlingApiManagerImpl(isEnabledProvider: { enabled },
+                               baseUrlProvider: { proxyUrl },
+                               credentialsProvider: credentials,
                                provider: provider)
     }
 
@@ -94,18 +97,12 @@ final class StirlingApiManagerTests: XCTestCase {
 
     // MARK: - Request building
 
+    /// Every operation asks the proxy for itself by name. These names are the
+    /// contract with `proxy/src/upstream.ts`, which holds the Stirling paths — if
+    /// one is renamed here without being renamed there, the worker answers 404.
     func testPathPerOperation() {
-        let expected: [StirlingOperation: String] = [
-            .pdfToWord: "/api/v1/convert/pdf/word",
-            .pdfToPresentation: "/api/v1/convert/pdf/presentation",
-            .pdfToCsv: "/api/v1/convert/pdf/csv",
-            .pdfToPdfa: "/api/v1/convert/pdf/pdfa",
-            .repair: "/api/v1/misc/repair",
-            .sanitize: "/api/v1/security/sanitize-pdf",
-            .fileToPdf: "/api/v1/convert/file/pdf"
-        ]
         for operation in StirlingOperation.allCases {
-            XCTAssertEqual(self.target(operation).path, expected[operation])
+            XCTAssertEqual(self.target(operation).path, "/v1/stirling/\(operation.rawValue)")
         }
     }
 
@@ -113,9 +110,20 @@ final class StirlingApiManagerTests: XCTestCase {
         XCTAssertEqual(self.target(.pdfToWord).method, .post)
     }
 
-    func testHeadersContainApiKey() {
-        let headers = self.target(.pdfToWord, apiKey: "SECRET-123").headers
-        XCTAssertEqual(headers?["X-API-KEY"], "SECRET-123")
+    /// The app presents App Check and the subscription id. It has no service key
+    /// to send any more, and sending one would be a bug worth catching.
+    func testHeadersCarryProxyCredentialsAndNoServiceKey() {
+        let headers = self.target(.pdfToWord).headers
+        XCTAssertEqual(headers?["X-App-Check"], "APPCHECK")
+        XCTAssertEqual(headers?["X-Original-Transaction-Id"], "1000000000000001")
+        XCTAssertNil(headers?["X-API-KEY"])
+    }
+
+    /// The path names the operation; the worker owns the mapping to Stirling's
+    /// own paths, so the app cannot be talked into reaching another endpoint.
+    func testPathNamesTheOperationRatherThanAStirlingPath() {
+        XCTAssertEqual(self.target(.sanitize).path, "/v1/stirling/sanitize")
+        XCTAssertEqual(self.target(.pdfToWord).path, "/v1/stirling/pdfToWord")
     }
 
     func testBaseUrlComesFromTarget() {
@@ -251,7 +259,7 @@ final class StirlingApiManagerTests: XCTestCase {
         let provider = self.stubbingProvider(statusCode: 200,
                                              data: Data("binary".utf8),
                                              headers: ["Content-Disposition": "attachment; filename=\"out.docx\""])
-        let outcome = self.run(self.manager(apiKey: "KEY", enabled: true, provider: provider))
+        let outcome = self.run(self.manager(enabled: true, provider: provider))
         switch outcome {
         case .success(let result):
             XCTAssertEqual(result.suggestedFileExtension, "docx")
@@ -265,42 +273,68 @@ final class StirlingApiManagerTests: XCTestCase {
         let provider = self.stubbingProvider(statusCode: 200,
                                              data: Data("binary".utf8),
                                              headers: ["Content-Type": "text/csv"])
-        let outcome = self.run(self.manager(apiKey: "KEY", enabled: true, provider: provider), operation: .pdfToCsv)
+        let outcome = self.run(self.manager(enabled: true, provider: provider), operation: .pdfToCsv)
         XCTAssertEqual(try? outcome.get().suggestedFileExtension, "csv")
     }
 
     func testSuccessFallsBackToOperationDefaultWhenNoHeaders() {
         let provider = self.stubbingProvider(statusCode: 200, data: Data("binary".utf8))
-        let outcome = self.run(self.manager(apiKey: "KEY", enabled: true, provider: provider), operation: .pdfToPresentation)
+        let outcome = self.run(self.manager(enabled: true, provider: provider), operation: .pdfToPresentation)
         XCTAssertEqual(try? outcome.get().suggestedFileExtension, "pptx")
     }
 
     func testUnauthorizedMapsToInvalidApiKey() {
         let provider = self.stubbingProvider(statusCode: 401, data: Data())
-        let outcome = self.run(self.manager(apiKey: "KEY", enabled: true, provider: provider))
+        let outcome = self.run(self.manager(enabled: true, provider: provider))
         XCTAssertEqual(self.error(from: outcome), .invalidApiKey)
     }
 
     func testServerErrorWithJsonBodyMapsToServerError() {
         let provider = self.stubbingProvider(statusCode: 500, data: Data(#"{"error":"Conversion failed"}"#.utf8))
-        let outcome = self.run(self.manager(apiKey: "KEY", enabled: true, provider: provider))
+        let outcome = self.run(self.manager(enabled: true, provider: provider))
         XCTAssertEqual(self.error(from: outcome), .serverError(message: "Conversion failed"))
     }
 
-    func testNotConfiguredWhenKeyEmpty() {
+    func testNotConfiguredWhenNoProxyIsDeployed() {
         let provider = self.stubbingProvider(statusCode: 200, data: Data())
-        let outcome = self.run(self.manager(apiKey: "", enabled: true, provider: provider))
+        let outcome = self.run(self.manager(enabled: true, provider: provider, proxyUrl: ""))
         XCTAssertEqual(self.error(from: outcome), .notConfigured)
+    }
+
+    /// A subscriber whose subscription has lapsed never reaches the network: the
+    /// credentials cannot be built, and the error says why.
+    func testFailsWithoutCredentialsRatherThanCallingTheProxy() {
+        let provider = self.stubbingProvider(statusCode: 200, data: Data())
+        let stub = CredentialsProviderStub(error: ProxyCredentialsError.notSubscribed)
+        let outcome = self.run(self.manager(enabled: true, provider: provider, credentials: stub))
+        XCTAssertNotNil(self.error(from: outcome))
     }
 
     func testNotConfiguredWhenKillSwitchOff() {
         let provider = self.stubbingProvider(statusCode: 200, data: Data())
-        let outcome = self.run(self.manager(apiKey: "KEY", enabled: false, provider: provider))
+        let outcome = self.run(self.manager(enabled: false, provider: provider))
         XCTAssertEqual(self.error(from: outcome), .notConfigured)
     }
 
     private func error(from outcome: Result<StirlingResult, StirlingApiError>) -> StirlingApiError? {
         if case .failure(let error) = outcome { return error }
         return nil
+    }
+}
+
+/// Hands out fixed credentials, or refuses, without Firebase or StoreKit.
+private final class CredentialsProviderStub: ProxyCredentialsProvider {
+
+    private let error: Error?
+
+    init(error: Error? = nil) {
+        self.error = error
+    }
+
+    var canAuthenticate: Bool { self.error == nil }
+
+    func credentials() async throws -> ProxyCredentials {
+        if let error = self.error { throw error }
+        return ProxyCredentials(appCheckToken: "APPCHECK", originalTransactionId: "1000000000000001")
     }
 }
