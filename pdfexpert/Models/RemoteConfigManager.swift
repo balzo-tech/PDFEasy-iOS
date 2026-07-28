@@ -111,40 +111,36 @@ class RemoteConfigManager : ConfigService {
         return sharedFetchConfigRequest
     }
     
+    /// Fetch then activate, as one sequence rather than a callback inside a callback.
+    ///
+    /// Firebase hands both results back on some queue of its own, which is why this
+    /// used to hop to the main thread by hand in two places; `@MainActor` on the task
+    /// says it once. Whatever happens — fetched, throttled, offline — the subscriber
+    /// is told, because callers wait on this before deciding what the app can do.
     private func createFetchConfigRequest() -> AnyPublisher<RemoteConfigData, Never> {
         return AnyPublisher<RemoteConfigData, Never>.create { subscriber in
-            let notifyRemoteConfig = {
+            let task = Task { @MainActor in
+                do {
+                    let status = try await self.remoteConfig
+                        .fetch(withExpirationDuration: self.remoteConfigExpirationDuration)
+                    if status == .success {
+                        print("RemoteConfigManager - Config fetched!")
+                        let changed = try await self.remoteConfig.activate()
+                        print("RemoteConfigManager - Config activated \(changed ? "with" : "without") changes")
+                    } else {
+                        print("RemoteConfigManager - Config not fetched. Status: '\(status.rawValue)'")
+                    }
+                } catch {
+                    print("RemoteConfigManager - Config not fetched or activated. Error: '\(error.localizedDescription)'")
+                }
                 self.sharedFetchConfigRequest = nil
                 let remoteConfigData = RemoteConfigData(remoteConfig: self.remoteConfig)
                 self.remoteConfigData.send(remoteConfigData)
                 subscriber.send(remoteConfigData)
             }
-            self.remoteConfig
-                .fetch(withExpirationDuration: self.remoteConfigExpirationDuration,
-                       completionHandler: { (status, error) in
-                        if status == .success {
-                            print("RemoteConfigManager - Config fetched!")
-                            self.remoteConfig.activate(completion: { (changed, error) in
-                                if let error = error {
-                                    print("RemoteConfigManager - Config not activated. Error: '\(error.localizedDescription)'")
-                                } else if changed {
-                                    print("RemoteConfigManager - Config activated with changes")
-                                } else {
-                                    print("RemoteConfigManager - Config activated without changes")
-                                }
-                                // Must run this on main thread (this completion block runs on a different thread... how cute...)
-                                DispatchQueue.main.async {
-                                    notifyRemoteConfig()
-                                }
-                            })
-                        } else {
-                            print("RemoteConfigManager - Config not fetched. Error: '\(error?.localizedDescription ?? "")'")
-                            DispatchQueue.main.async {
-                                notifyRemoteConfig()
-                            }
-                        }
-                })
-            return AnyCancellable {}
+            // The old cancellable was empty, so cancelling the publisher left the
+            // fetch running and still writing to `remoteConfigData` afterwards.
+            return AnyCancellable { task.cancel() }
         }.share().eraseToAnyPublisher()
     }
 }

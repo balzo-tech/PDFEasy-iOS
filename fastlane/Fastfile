@@ -35,7 +35,7 @@ platform :ios do
     sh("python3", "../pdfexpert/Scripts/localization_lint.py")
   end
 
-  desc "Run the unit test suite (PdfExpertTests) on a simulator"
+  desc "Run the test suite (unit + UI) on a simulator"
   lane :test do
     # Cheap and fails fast: no point compiling if a string was left untranslated.
     lint
@@ -45,7 +45,11 @@ platform :ios do
       configuration: STAGING_CONFIG,
       devices: ["iPhone 17 Pro"], # adjust to a simulator available on your machine / CI
       code_coverage: true,
-      xcargs: "CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES"
+      # Ad-hoc signing rather than no signing at all. Skipping it leaves the host
+      # app without its iCloud entitlement, and the first Core Data access brings
+      # it down before a single test runs — which reads as a crash in the app and
+      # is not one. Signing with "-" costs nothing and keeps the entitlements.
+      xcargs: 'CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=YES ONLY_ACTIVE_ARCH=YES'
     )
   end
 
