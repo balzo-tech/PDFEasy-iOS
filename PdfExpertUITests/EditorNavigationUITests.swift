@@ -148,7 +148,7 @@ final class EditorNavigationUITests: XCTestCase {
 
         self.openFromPanelBySearching("share", query: "Share")
 
-        let paywall = self.app.buttons["Start free trial"].firstMatch
+        let paywall = self.app.buttons["Try for free"].firstMatch
         XCTAssertTrue(paywall.waitForExistence(timeout: 15),
                       "sharing did not show the paywall")
         XCTAssertTrue(self.app.staticTexts["With the yearly plan, we let you know before it expires."].exists,
@@ -177,7 +177,7 @@ final class EditorNavigationUITests: XCTestCase {
 
         self.openFromPanelBySearching("share", query: "Share")
 
-        XCTAssertTrue(self.app.buttons["Start free trial"].firstMatch.waitForExistence(timeout: 15),
+        XCTAssertTrue(self.app.buttons["Try for free"].firstMatch.waitForExistence(timeout: 15),
                       "sharing did not show the paywall")
 
         // Each card combines its children into one accessibility element, so a

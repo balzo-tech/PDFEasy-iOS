@@ -11355,28 +11355,6 @@
         }
       }
     },
-    "Start free trial": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start free trial"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Empezar la prueba gratuita"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inizia la prova gratuita"
-          }
-        }
-      }
-    },
     "Start from a blank document": {
       "localizations": {
         "en": {
@@ -14771,6 +14749,72 @@
           "stringUnit": {
             "state": "translated",
             "value": "Inizia"
+          }
+        }
+      }
+    },
+    "%lld tools in one app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld tools in one app"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld herramientas en una sola app"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld strumenti in un'app sola"
+          }
+        }
+      }
+    },
+    "Merge, split, compress, protect, redact, read aloud — and all of it on your phone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merge, split, compress, protect, redact, read aloud — and all of it on your phone."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une, divide, comprime, protege, censura, escucha — y todo en tu móvil."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unisci, dividi, comprimi, proteggi, oscura, ascolta — e tutto sul telefono."
+          }
+        }
+      }
+    },
+    "Try for free": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try for free"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prueba Gratis"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prova Gratis"
           }
         }
       }

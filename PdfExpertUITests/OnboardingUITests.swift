@@ -2,9 +2,10 @@
 //  OnboardingUITests.swift
 //  PdfExpertUITests
 //
-//  The four screens a first launch opens on, and the one thing they have to do:
-//  advance. The pager keeps every page in the tree at once, so a title existing
-//  proves nothing — each check asks whether the page is actually on screen.
+//  The five steps a first launch opens on, and the one thing they have to do:
+//  advance. A title can linger in the tree through a step's transition, so a
+//  title existing proves nothing — each check asks whether the words are inside
+//  the window.
 //
 //  See the note at the top of EditorNavigationUITests about `tap()`: it never
 //  fires in this app, so everything here taps by coordinate.
@@ -16,11 +17,16 @@ final class OnboardingUITests: XCTestCase {
 
     private var app: XCUIApplication!
 
+    /// Enough of each page's title to recognise it. The last one is a fragment
+    /// because it opens with the number of tools in the catalog, which moves on
+    /// its own — the tools that need the online service leave it when that is
+    /// switched off.
     private static let pages = [
         "Scan anything into a PDF",
         "Turn any file into a PDF",
         "Sign without printing",
         "Ask your document",
+        "tools in one app",
     ]
 
     override func setUpWithError() throws {
@@ -61,15 +67,18 @@ final class OnboardingUITests: XCTestCase {
             self.tap(self.app.buttons[isLast ? "Get started" : "Continue"].firstMatch)
         }
 
-        XCTAssertTrue(self.app.buttons["Start free trial"].firstMatch.waitForExistence(timeout: 20),
+        XCTAssertTrue(self.app.buttons["Try for free"].firstMatch.waitForExistence(timeout: 20),
                       "the last page did not open the paywall")
         self.attachScreenshot(named: "Onboarding-paywall")
     }
 
-    /// Every page of the pager is in the tree from the start, so existence is not
-    /// the question — whether the label sits inside the window is.
+    /// Whether the page carrying this title is the one on screen — matched on a
+    /// fragment, and checked by frame rather than by existence, since a title can
+    /// linger in the tree through the step's transition.
     private func isOnScreen(_ label: String) -> Bool {
-        let element = self.app.staticTexts[label]
+        let element = self.app.staticTexts
+            .matching(NSPredicate(format: "label CONTAINS %@", label))
+            .firstMatch
         guard element.waitForExistence(timeout: 10) else { return false }
         let window = self.app.windows.firstMatch.frame
         let deadline = Date().addingTimeInterval(5)

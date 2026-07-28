@@ -51,6 +51,15 @@ public class OnboardingViewModel : ObservableObject {
             title: String(localized: "Ask your document"),
             description: String(localized: "The short version of a long PDF, or the one answer you were looking for.")
         ),
+        OnboardingItem(
+            illustration: .toolbox,
+            // Counted, not written down. A number typed into a sentence is wrong
+            // the first time someone adds a tool, and nothing tells you — and
+            // this one moves on its own anyway: the tools that need the online
+            // service leave the catalog when it is switched off.
+            title: String(localized: "\(ToolCatalog.allTools.count) tools in one app"),
+            description: String(localized: "Merge, split, compress, protect, redact, read aloud — and all of it on your phone.")
+        ),
     ]
     
     @Published var monetizationShow: Bool = false

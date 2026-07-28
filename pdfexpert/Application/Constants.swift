@@ -85,7 +85,13 @@ struct K {
     struct Stirling {
         // In-app fallbacks for the Stirling-PDF remote-config values.
         static let DefaultBaseUrl = "https://api.stirling.com"
-        static let DefaultEnabled = false
+        // On by default, so the online tools ship listed rather than waiting for
+        // someone to remember a Firebase flag. It is not the whole switch: the
+        // catalog also needs an API key (`ProjectInfo.plist` → obfuscated at
+        // build time), and without one `isAvailable` stays false and the online
+        // tools stay out of the catalog. The remote flag remains the kill
+        // switch if the service goes down.
+        static let DefaultEnabled = true
 
         // Conversions can be long-running; give the request a generous timeout so it
         // is not cut off by Alamofire's default 60s.

@@ -25,6 +25,7 @@ enum OnboardingIllustration: CaseIterable, Hashable {
     case convert
     case signature
     case chat
+    case toolbox
 }
 
 struct OnboardingIllustrationView: View {
@@ -78,6 +79,7 @@ struct OnboardingIllustrationView: View {
         case .convert: ConvertProps()
         case .signature: SignatureProps()
         case .chat: ChatProps()
+        case .toolbox: ToolboxProps()
         }
     }
 
@@ -89,6 +91,7 @@ struct OnboardingIllustrationView: View {
         case .convert: return ColorPalette.accent
         case .signature: return ColorPalette.categoryEdit
         case .chat: return ColorPalette.categoryAi
+        case .toolbox: return ColorPalette.categoryOrganize
         }
     }
 
@@ -98,6 +101,7 @@ struct OnboardingIllustrationView: View {
         case .convert: return 4
         case .signature: return -2
         case .chat: return -5
+        case .toolbox: return 0
         }
     }
 
@@ -107,6 +111,7 @@ struct OnboardingIllustrationView: View {
         case .convert: return CGSize(width: 42, height: 6)
         case .signature: return CGSize(width: 0, height: 0)
         case .chat: return CGSize(width: -62, height: -16)
+        case .toolbox: return CGSize(width: 0, height: 0)
         }
     }
 
@@ -116,6 +121,9 @@ struct OnboardingIllustrationView: View {
         case .convert: return 1.02
         case .signature: return 1.12
         case .chat: return 0.92
+        // Small enough for the ring of tools to close around it without
+        // crowding: the document is what they are all for.
+        case .toolbox: return 0.62
         }
     }
 }
@@ -467,6 +475,54 @@ private struct ChatProps: View {
             }
         }
         .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
+    }
+}
+
+// MARK: - Toolbox
+
+/// The rest of the app, closing in a ring around the document.
+///
+/// A ring rather than the paywall's scattered drift: that one says "there is a
+/// lot here", this one says "all of it works on the thing in the middle". The
+/// eight are one per family plus the ones people go looking for by name, and
+/// they arrive one after another, going round.
+private struct ToolboxProps: View {
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var gathered = false
+
+    private static let tools: [(symbol: String, tint: Color)] = [
+        ("arrow.trianglehead.merge", ColorPalette.categoryOrganize),
+        ("scissors", ColorPalette.categoryOrganize),
+        ("textformat", ColorPalette.categoryEdit),
+        ("text.viewfinder", ColorPalette.categoryEdit),
+        ("lock.shield", ColorPalette.categoryProtect),
+        ("arrow.up.forward.square", ColorPalette.categoryExport),
+        ("book", ColorPalette.categoryRead),
+        ("rotate.right", ColorPalette.categoryOrganize),
+    ]
+
+    private static let radius: CGFloat = 104
+
+    var body: some View {
+        ZStack {
+            ForEach(Array(Self.tools.enumerated()), id: \.offset) { index, tool in
+                let angle = Angle.degrees(Double(index) / Double(Self.tools.count) * 360 - 90)
+                ToolTile(systemImage: tool.symbol, tint: tool.tint, side: 42)
+                    .offset(x: cos(angle.radians) * Self.radius * (self.gathered ? 1 : 0.35),
+                            y: sin(angle.radians) * Self.radius * (self.gathered ? 1 : 0.35))
+                    .scaleEffect(self.gathered ? 1 : 0.4)
+                    .opacity(self.gathered ? 1 : 0)
+                    .animation(self.reduceMotion
+                               ? nil
+                               : .snappy(duration: 0.5, extraBounce: 0.3).delay(Double(index) * 0.06),
+                               value: self.gathered)
+            }
+        }
+        .transition(.prop)
+        .onAppear {
+            self.gathered = true
+        }
     }
 }
 

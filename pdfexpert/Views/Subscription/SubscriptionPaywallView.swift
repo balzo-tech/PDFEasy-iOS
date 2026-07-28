@@ -132,12 +132,12 @@ struct SubscriptionPaywallView: View {
         }
     }
 
-    /// "Start free trial" only when the selected plan actually opens with one —
-    /// promising a trial on a plan that charges today is the kind of thing App
+    /// "Try for free" only when the selected plan actually opens with a trial —
+    /// promising one on a plan that charges today is the kind of thing App
     /// Review rejects, and rightly.
     private var buttonTitle: String {
         if self.viewModel.currentSubscriptionPlan?.hasFreeTrial ?? false {
-            return String(localized: "Start free trial")
+            return String(localized: "Try for free")
         }
         return String(localized: "Continue")
     }
