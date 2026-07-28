@@ -64,10 +64,10 @@ struct PdfEditAlerts: ViewModifier {
                              addPasswordCallback: { self.viewModel.setPassword($0) })
 
             // Results.
-            .alert(String(localized: "Done"), isPresented: self.$viewModel.cleanupAlertShow, actions: {
+            .alert(self.viewModel.toolOutcomeAlertTitle, isPresented: self.$viewModel.toolOutcomeAlertShow, actions: {
                 Button("Ok", role: .cancel, action: {})
             }, message: {
-                Text(self.viewModel.cleanupAlertMessage)
+                Text(self.viewModel.toolOutcomeAlertMessage)
             })
             .alert("Info", isPresented: self.$viewModel.missingWidgetWarningShow, actions: {
                 Button("Ok", role: .cancel, action: {})

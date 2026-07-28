@@ -50,7 +50,7 @@ final class OcrUtilityTests: XCTestCase {
                       "fixture should be image-only (no extractable text)")
 
         let result = OcrUtility.makeSearchableDocument(from: original)
-        let resultText = (result?.page(at: 0)?.string ?? "")
+        let resultText = (result?.document.page(at: 0)?.string ?? "")
 
         XCTAssertFalse(resultText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                        "OCR must produce a selectable text layer")
@@ -61,7 +61,7 @@ final class OcrUtilityTests: XCTestCase {
     /// The page count must be preserved when OCR runs.
     func testMakeSearchablePreservesPageCount() {
         let result = OcrUtility.makeSearchableDocument(from: makeScannedPdf(text: "Hello"))
-        XCTAssertEqual(result?.pageCount, 1)
+        XCTAssertEqual(result?.document.pageCount, 1)
     }
 
     /// A page that already has vector text must be left untouched (its text must
@@ -72,41 +72,109 @@ final class OcrUtilityTests: XCTestCase {
                       "fixture should have extractable text")
 
         let result = OcrUtility.makeSearchableDocument(from: document)
-        let resultText = (result?.page(at: 0)?.string ?? "")
+        let resultText = (result?.document.page(at: 0)?.string ?? "")
         XCTAssertTrue(resultText.contains("selectable"),
                       "existing vector text must survive, got: \(resultText)")
-        XCTAssertEqual(result?.pageCount, 1)
+        XCTAssertEqual(result?.document.pageCount, 1)
     }
 
     /// An empty document must not crash and must stay empty.
     func testMakeSearchableEmptyDocumentDoesNotCrash() {
         let result = OcrUtility.makeSearchableDocument(from: PDFDocument())
-        XCTAssertEqual(result?.pageCount, 0)
+        XCTAssertEqual(result?.document.pageCount, 0)
+        XCTAssertEqual(result?.didChangeDocument, false)
+        XCTAssertEqual(result?.wasAlreadySearchable, false,
+                       "an empty document has nothing to be already searchable")
     }
 
     /// JPEG compression of the page bitmap must not break the (vector) OCR text
-    /// layer: the text stays selectable even at aggressive quality.
+    /// layer: the text stays selectable even at the harshest preset.
     func testMakeSearchableWithCompressionKeepsTextSelectable() {
         let result = OcrUtility.makeSearchableDocument(from: makeScannedPdf(text: "Searchable"),
-                                                       jpegQuality: 0.3)
-        let resultText = (result?.page(at: 0)?.string ?? "")
+                                                       preset: .maximum)
+        let resultText = (result?.document.page(at: 0)?.string ?? "")
         XCTAssertTrue(resultText.lowercased().contains("searchable"),
                       "text must survive aggressive compression, got: \(resultText)")
     }
 
     /// A page with a compressible (smooth-gradient) background must come out
-    /// smaller with JPEG compression than without it.
+    /// smaller under a harsher preset than under a light one.
     func testMakeSearchableCompressionShrinksOutput() {
         let source = makeGradientScannedPdf(text: "Searchable")
-        let uncompressed = OcrUtility.makeSearchableDocument(from: source, jpegQuality: 1.0)
-        let compressed = OcrUtility.makeSearchableDocument(from: source, jpegQuality: 0.3)
+        let light = OcrUtility.makeSearchableDocument(from: source, preset: .light)
+        let maximum = OcrUtility.makeSearchableDocument(from: source, preset: .maximum)
 
-        guard let uncompressedSize = uncompressed?.dataRepresentation()?.count,
-              let compressedSize = compressed?.dataRepresentation()?.count else {
+        guard let lightSize = light?.document.dataRepresentation()?.count,
+              let maximumSize = maximum?.document.dataRepresentation()?.count else {
             return XCTFail("expected data for both documents")
         }
-        XCTAssertLessThan(compressedSize, uncompressedSize,
-                          "compressed (\(compressedSize)) should be smaller than uncompressed (\(uncompressedSize))")
+        XCTAssertLessThan(maximumSize, lightSize,
+                          ".maximum (\(maximumSize)) should be smaller than .light (\(lightSize))")
+    }
+
+    // MARK: - What the run reports back
+
+    /// A scan must be reported as OCR'd, not as anything else.
+    func testResultCountsOcredPage() {
+        let result = OcrUtility.makeSearchableDocument(from: makeScannedPdf(text: "Searchable"))
+        XCTAssertEqual(result?.ocredPageCount, 1)
+        XCTAssertEqual(result?.alreadySearchablePageCount, 0)
+        XCTAssertEqual(result?.unrecognizedPageCount, 0)
+        XCTAssertEqual(result?.didChangeDocument, true)
+        XCTAssertEqual(result?.wasAlreadySearchable, false)
+    }
+
+    /// A document that is already searchable must say so, and must come back
+    /// unchanged — the case that used to be silent.
+    func testResultReportsAlreadySearchableDocument() {
+        let result = OcrUtility.makeSearchableDocument(from: makeTextPdf(text: "Already selectable text"))
+        XCTAssertEqual(result?.alreadySearchablePageCount, 1)
+        XCTAssertEqual(result?.ocredPageCount, 0)
+        XCTAssertEqual(result?.didChangeDocument, false,
+                       "nothing was OCR'd, so the document must not be marked as changed")
+        XCTAssertEqual(result?.wasAlreadySearchable, true)
+    }
+
+    /// An image-only page with nothing to recognize is neither OCR'd nor already
+    /// searchable: it has to be told apart from both.
+    func testResultReportsUnrecognizedPage() {
+        let result = OcrUtility.makeSearchableDocument(from: makeBlankScannedPdf())
+        XCTAssertEqual(result?.unrecognizedPageCount, 1)
+        XCTAssertEqual(result?.ocredPageCount, 0)
+        XCTAssertEqual(result?.alreadySearchablePageCount, 0)
+        XCTAssertEqual(result?.didChangeDocument, false)
+        XCTAssertEqual(result?.wasAlreadySearchable, false,
+                       "a page Vision read nothing on is not an already-searchable page")
+    }
+
+    /// A mixed document must count each page as what it is.
+    func testResultCountsMixedDocument() {
+        let mixed = makeScannedPdf(text: "Searchable")
+        if let textPage = makeTextPdf(text: "Already selectable text").page(at: 0) {
+            mixed.insert(textPage, at: mixed.pageCount)
+        }
+        let result = OcrUtility.makeSearchableDocument(from: mixed)
+        XCTAssertEqual(result?.document.pageCount, 2)
+        XCTAssertEqual(result?.ocredPageCount, 1)
+        XCTAssertEqual(result?.alreadySearchablePageCount, 1)
+        XCTAssertEqual(result?.didChangeDocument, true)
+        XCTAssertEqual(result?.wasAlreadySearchable, false,
+                       "one page still needed OCR, so the document was not already searchable")
+    }
+
+    /// An image-only page with no text on it at all (a blank scan).
+    private func makeBlankScannedPdf() -> PDFDocument {
+        let size = CGSize(width: 600, height: 800)
+        let image = UIGraphicsImageRenderer(size: size).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+        }
+        let bounds = CGRect(origin: .zero, size: size)
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+            image.draw(in: bounds)
+        }
+        return PDFDocument(data: data) ?? PDFDocument()
     }
 
     /// Image-only page whose background is a smooth vertical gradient (cheap for

@@ -19,7 +19,8 @@
 #  2. RAW STRING TEXT — a `return "Some sentence"` inside a view or view model,
 #     not wrapped in `String(localized:)`. A `String` reaches `Text` through the
 #     verbatim overload, so it is never localized no matter what the catalog
-#     says. `CameraError` did this for its whole alert.
+#     says. `CameraError` did this for its whole alert, and `EditMode.text` did
+#     it with a single word — "Done"/"Edit", English in every language.
 #
 #  3. BROKEN TRANSLATION — a translation whose placeholder set (%@ / %lld / %%,
 #     positional or not) or newline count differs from the source. A lost
@@ -278,19 +279,33 @@ def check_sources() -> list[Finding]:
 
 def looks_like_prose(text: str) -> bool:
     """
-    Heuristic for "a human is meant to read this". Sentences have a space and
-    start with a capital; identifiers, symbol names, keys and formats do not.
-    Keeps the raw-string check quiet enough to be worth running.
+    Heuristic for "a human is meant to read this". Everything user-facing starts
+    with a capital; identifiers, symbol names, keys and formats mostly do not.
+
+    Sentences are the easy case. Single words are the hard one, and skipping
+    them used to let a whole class of bug through: `EditMode.text` returned a
+    bare "Done"/"Edit" straight into a `Text(…)`, so the edit button stayed
+    English in every language. A single word only counts as prose when it is
+    plain letters with no internal capital — which keeps out `PdfManager`,
+    `doc.text.fill`, `PDF` and `analytics_key`, the shapes an identifier
+    actually takes.
     """
     stripped = text.strip()
-    if len(stripped) < 4 or " " not in stripped:
+    if not stripped or not stripped[0].isupper():
         return False
-    if not stripped[0].isupper():
+    if " " in stripped:
+        if len(stripped) < 4:
+            return False
+        # SF Symbol names and reverse-DNS identifiers.
+        return not re.fullmatch(r"[A-Za-z0-9._-]+", stripped)
+    # A single word: "Cut" is the shortest label worth catching.
+    if len(stripped) < 3 or not stripped.isalpha():
         return False
-    # SF Symbol names and reverse-DNS identifiers.
-    if re.fullmatch(r"[A-Za-z0-9._-]+", stripped):
+    # ALL-CAPS reads as an acronym or a constant, not a label.
+    if stripped.isupper():
         return False
-    return True
+    # An internal capital means camel/PascalCase, so a symbol rather than a word.
+    return not any(character.isupper() for character in stripped[1:])
 
 
 def main() -> int:

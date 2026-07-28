@@ -156,8 +156,8 @@ extension Binding where Value == String {
 fileprivate extension EditMode {
     var text: String {
         switch self {
-        case .active: return "Done"
-        case .inactive: return "Edit"
+        case .active: return String(localized: "Done")
+        case .inactive: return String(localized: "Edit")
         case .transient: return ""
         @unknown default: return ""
         }

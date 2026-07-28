@@ -58,6 +58,7 @@
 		5D1133CFF416761B8269105B /* PdfProCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAFD3A0352EF7AFBDD1F7FF /* PdfProCommands.swift */; };
 		5EF19A59B2443E9D1488854C /* EditorToolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE74F79E52A4160AB0E3DC /* EditorToolTests.swift */; };
 		8A11AT0100000000000008 /* PdfAppendAndShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */; };
+		8A11AT010000000000000A /* PersistenceDeduplicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */; };
 		8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */; };
 		5FB784C183156FB295411832 /* Folder+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7ECBFF6B0754689D031066 /* Folder+Persistable.swift */; };
 		60EBDB7251CED824ADE01D33 /* PdfProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FAB5AB0963B3746F42B50E /* PdfProWidgetBundle.swift */; };
@@ -728,6 +729,7 @@
 		9B74D4690C1D855C28282544 /* EditorOpeningCostTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorOpeningCostTests.swift; sourceTree = "<group>"; };
 		9CCE74F79E52A4160AB0E3DC /* EditorToolTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorToolTests.swift; sourceTree = "<group>"; };
 		8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfAppendAndShareTests.swift; sourceTree = "<group>"; };
+		8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersistenceDeduplicationTests.swift; sourceTree = "<group>"; };
 		8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleAttributionPlatformTests.swift; sourceTree = "<group>"; };
 		A130C45F0AE3DB1011B31E35 /* Tag+Persistable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Tag+Persistable.swift"; sourceTree = "<group>"; };
 		A14FF9709A641E3F5C6DED28 /* PdfAnnotationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfAnnotationTests.swift; sourceTree = "<group>"; };
@@ -1785,6 +1787,7 @@
 				70736180CA61F13C8AD9D616 /* ScanImageProcessorTests.swift */,
 				9CCE74F79E52A4160AB0E3DC /* EditorToolTests.swift */,
 				8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */,
+				8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */,
 				8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */,
 				9B74D4690C1D855C28282544 /* EditorOpeningCostTests.swift */,
 			);
@@ -2470,6 +2473,7 @@
 				0DEF9EB225D554D91A8CA034 /* ScanImageProcessorTests.swift in Sources */,
 				5EF19A59B2443E9D1488854C /* EditorToolTests.swift in Sources */,
 				8A11AT0100000000000008 /* PdfAppendAndShareTests.swift in Sources */,
+				8A11AT010000000000000A /* PersistenceDeduplicationTests.swift in Sources */,
 				8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */,
 				50D3963EB3588AC7DAC2C955 /* EditorOpeningCostTests.swift in Sources */,
 			);

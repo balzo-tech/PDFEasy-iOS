@@ -17,6 +17,35 @@ import PDFKit
 import Vision
 import CoreText
 
+/// What a pass over a document actually did. A run that recognizes nothing is a
+/// perfectly normal outcome — an already-searchable PDF, a page of photographs —
+/// and the caller has to be able to say which one happened instead of handing
+/// back an unchanged document in silence.
+struct OcrResult {
+
+    /// The document to keep. Identical in content to the source when
+    /// `ocredPageCount` is zero.
+    let document: PDFDocument
+    /// Image-only pages that came back carrying a text layer.
+    let ocredPageCount: Int
+    /// Pages that already had extractable text and were left untouched.
+    let alreadySearchablePageCount: Int
+    /// Image-only pages Vision found no text on: a photo, a blank scan.
+    let unrecognizedPageCount: Int
+
+    /// False when the document came back exactly as it went in, so the caller can
+    /// skip marking the file dirty and rebuilding every thumbnail for nothing.
+    var didChangeDocument: Bool { self.ocredPageCount > 0 }
+
+    /// Every page was already searchable — the one case worth its own wording,
+    /// because nothing was wrong and nothing needed doing.
+    var wasAlreadySearchable: Bool {
+        self.ocredPageCount == 0
+            && self.unrecognizedPageCount == 0
+            && self.alreadySearchablePageCount > 0
+    }
+}
+
 class OcrUtility {
 
     /// Recognition languages, BCP-47. The app ships EN/IT, so OCR targets both.
@@ -31,29 +60,38 @@ class OcrUtility {
     /// very large pages.
     static let maxRenderDimension: CGFloat = 4000
 
-    /// JPEG quality used to re-encode the rasterized page before embedding it.
-    /// OCR'd pages are inherently images (a scan), so JPEG shrinks them a lot with
-    /// negligible quality loss for scanned text. `1.0` disables compression.
-    static let defaultJpegQuality: CGFloat = 0.7
+    /// How the rasterized page is re-encoded before being embedded. An OCR'd page
+    /// is a scan, so it is pixels whatever we do; saying so with a
+    /// `CompressionPreset` keeps the choice in the same vocabulary as the Compress
+    /// tool instead of a lone magic number that drifts away from it.
+    ///
+    /// `.light` because the user asked to make the document searchable, not to
+    /// shrink it — and it is still an improvement: the preset caps the embedded
+    /// bitmap at 2400 px on the long edge (~290 dpi on A4, more than a scan needs),
+    /// where the OCR render alone would have carried 4000 px of pure weight.
+    static let defaultPreset: CompressionPreset = .light
 
     // MARK: - Async entry point
 
     /// Asynchronous, progress-reporting entry point mirroring
     /// `PdfScanUtility.convertScan`: drives an `AsyncOperation` binding so the
     /// editor can show a per-page progress bar and pick up the resulting `Pdf`.
+    /// `onCompleted` carries the outcome so the caller can tell the user what
+    /// happened — including that nothing did.
     static func makeSearchable(pdf: Pdf,
                                languages: [String] = defaultLanguages,
-                               jpegQuality: CGFloat = defaultJpegQuality,
-                               asyncOperation: Binding<AsyncOperation<Pdf, PdfError>>) {
+                               preset: CompressionPreset = defaultPreset,
+                               asyncOperation: Binding<AsyncOperation<Pdf, PdfError>>,
+                               onCompleted: ((OcrResult) -> Void)? = nil) {
 
         let document = pdf.pdfDocument
         let progress = Progress(totalUnitCount: Int64(max(document.pageCount, 1)))
         asyncOperation.wrappedValue = AsyncOperation(status: .loading(progress))
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let searchableDocument = Self.makeSearchableDocument(from: document,
-                                                                 languages: languages,
-                                                                 jpegQuality: jpegQuality) { completed, _ in
+            let result = Self.makeSearchableDocument(from: document,
+                                                     languages: languages,
+                                                     preset: preset) { completed, _ in
                 DispatchQueue.main.async {
                     progress.completedUnitCount = Int64(completed)
                     asyncOperation.wrappedValue = AsyncOperation(status: .loading(progress))
@@ -61,13 +99,22 @@ class OcrUtility {
             }
 
             DispatchQueue.main.async {
-                if let searchableDocument {
-                    var newPdf = pdf
-                    newPdf.updateDocument(searchableDocument)
-                    asyncOperation.wrappedValue = AsyncOperation(status: .data(newPdf))
-                } else {
+                guard let result else {
                     asyncOperation.wrappedValue = AsyncOperation(status: .error(.unknownError))
+                    return
                 }
+                // No page changed: publish nothing, so the host does not mark the
+                // file as modified (and rebuild every thumbnail) for a document it
+                // would save back byte for byte. The caller still hears about it.
+                guard result.didChangeDocument else {
+                    asyncOperation.wrappedValue = AsyncOperation(status: .empty)
+                    onCompleted?(result)
+                    return
+                }
+                var newPdf = pdf
+                newPdf.updateDocument(result.document)
+                asyncOperation.wrappedValue = AsyncOperation(status: .data(newPdf))
+                onCompleted?(result)
             }
         }
     }
@@ -75,22 +122,32 @@ class OcrUtility {
     // MARK: - Synchronous core (unit-testable)
 
     /// Returns a new document where every image-only page carries an invisible OCR
-    /// text layer. Pages that already have extractable text are kept verbatim.
+    /// text layer, along with a count of what each page turned out to be. Pages
+    /// that already have extractable text are kept verbatim.
     /// Returns `nil` only if the source document can't be copied.
     /// - Parameter progress: called as `(completedPages, totalPages)` after each page.
     static func makeSearchableDocument(from document: PDFDocument,
                                        languages: [String] = defaultLanguages,
                                        renderScale: CGFloat = defaultRenderScale,
-                                       jpegQuality: CGFloat = defaultJpegQuality,
-                                       progress: ((Int, Int) -> Void)? = nil) -> PDFDocument? {
+                                       preset: CompressionPreset = defaultPreset,
+                                       progress: ((Int, Int) -> Void)? = nil) -> OcrResult? {
 
         let pageCount = document.pageCount
-        guard pageCount > 0 else { return document }
+        guard pageCount > 0 else {
+            return OcrResult(document: document,
+                             ocredPageCount: 0,
+                             alreadySearchablePageCount: 0,
+                             unrecognizedPageCount: 0)
+        }
 
         // Work on a copy so the caller's document is never mutated.
         guard let copy = document.dataRepresentation().flatMap({ PDFDocument(data: $0) }) else {
             return nil
         }
+
+        var ocredPageCount = 0
+        var alreadySearchablePageCount = 0
+        var unrecognizedPageCount = 0
 
         for index in 0..<pageCount {
             defer { progress?(index + 1, pageCount) }
@@ -102,22 +159,30 @@ class OcrUtility {
             let hasText = !(page.string ?? "")
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .isEmpty
-            if hasText { continue }
+            if hasText {
+                alreadySearchablePageCount += 1
+                continue
+            }
 
             // OCR + rebuild. If nothing is recognized (or rendering fails) the
             // original page is left in place.
             guard let searchablePage = Self.makeSearchablePage(from: page,
                                                                languages: languages,
                                                                renderScale: renderScale,
-                                                               jpegQuality: jpegQuality) else {
+                                                               preset: preset) else {
+                unrecognizedPageCount += 1
                 continue
             }
 
             copy.removePage(at: index)
             copy.insert(searchablePage, at: index)
+            ocredPageCount += 1
         }
 
-        return copy
+        return OcrResult(document: copy,
+                         ocredPageCount: ocredPageCount,
+                         alreadySearchablePageCount: alreadySearchablePageCount,
+                         unrecognizedPageCount: unrecognizedPageCount)
     }
 
     /// OCRs a single page and rebuilds it as `image + invisible text layer`.
@@ -126,7 +191,7 @@ class OcrUtility {
     static func makeSearchablePage(from page: PDFPage,
                                    languages: [String] = defaultLanguages,
                                    renderScale: CGFloat = defaultRenderScale,
-                                   jpegQuality: CGFloat = defaultJpegQuality) -> PDFPage? {
+                                   preset: CompressionPreset = defaultPreset) -> PDFPage? {
 
         let pageRect = page.bounds(for: .mediaBox)
         guard pageRect.width > 0, pageRect.height > 0 else { return nil }
@@ -141,10 +206,11 @@ class OcrUtility {
         let observations = Self.recognizeText(in: cgImage, languages: languages)
         guard !observations.isEmpty else { return nil }
 
-        // 3. Rebuild the page at its original size: draw the (JPEG-compressed)
-        // bitmap, then overlay the recognized text invisibly so it becomes
+        // 3. Rebuild the page at its original size: draw the bitmap — bounded and
+        // JPEG-encoded by the preset, since what the page keeps does not need OCR
+        // resolution — then overlay the recognized text invisibly so it becomes
         // selectable/searchable.
-        let imageToDraw = Self.compressedImage(pageImage, quality: jpegQuality)
+        let imageToDraw = Self.embeddableImage(pageImage, preset: preset)
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageRect.size))
         let data = renderer.pdfData { context in
             context.beginPage()
@@ -190,15 +256,37 @@ class OcrUtility {
         return page.thumbnail(of: targetSize, for: .mediaBox)
     }
 
-    /// Re-encodes the image as JPEG at `quality` so it embeds compactly. Returns
-    /// the original image when compression is disabled (`quality >= 1`) or fails.
-    private static func compressedImage(_ image: UIImage, quality: CGFloat) -> UIImage {
-        guard quality < 1.0,
-              let jpegData = image.jpegData(compressionQuality: quality),
+    /// The bitmap that goes back into the page: bounded by the preset's pixel
+    /// ceiling, then JPEG-encoded at its quality. The OCR render is deliberately
+    /// larger than a page needs to carry — recognition wants the detail, the
+    /// reader does not — so this is where those two parts company. Returns the
+    /// image unchanged if either step fails.
+    private static func embeddableImage(_ image: UIImage, preset: CompressionPreset) -> UIImage {
+        let bounded = Self.scaledDown(image, maxPixelSize: preset.maxPixelSize)
+        guard let jpegData = bounded.jpegData(compressionQuality: preset.jpegQuality),
               let compressed = UIImage(data: jpegData) else {
-            return image
+            return bounded
         }
         return compressed
+    }
+
+    /// Redraws `image` so its long edge is at most `maxPixelSize` px. Never
+    /// upscales: a page that is already small keeps the pixels it has.
+    private static func scaledDown(_ image: UIImage, maxPixelSize: CGFloat) -> UIImage {
+        let pixelSize = CGSize(width: image.size.width * image.scale,
+                               height: image.size.height * image.scale)
+        let longEdge = max(pixelSize.width, pixelSize.height)
+        guard longEdge > maxPixelSize, longEdge > 0 else { return image }
+
+        let ratio = maxPixelSize / longEdge
+        let targetSize = CGSize(width: pixelSize.width * ratio, height: pixelSize.height * ratio)
+        let format = UIGraphicsImageRendererFormat.default()
+        // Points map 1:1 to pixels, so `targetSize` is the pixel size it says it is.
+        format.scale = 1
+        format.opaque = true
+        return UIGraphicsImageRenderer(size: targetSize, format: format).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 
     /// Draws the recognized text as an invisible, *word-level* layer: each word is

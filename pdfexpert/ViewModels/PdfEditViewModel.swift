@@ -159,9 +159,13 @@ class PdfEditViewModel: ObservableObject {
         }
     }
 
-    @Published var cleanupAlertShow: Bool = false
-    /// Message for the alert above; set right before it is shown.
-    private(set) var cleanupAlertMessage: String = ""
+    /// The editor's plain "here is what that did" alert, shared by the tools that
+    /// finish in place — hygiene and OCR. Both titles and message are set right
+    /// before it is shown, because a tool that found nothing to do has to be able
+    /// to say so under "Info" rather than under "Done".
+    @Published var toolOutcomeAlertShow: Bool = false
+    private(set) var toolOutcomeAlertTitle: String = ""
+    private(set) var toolOutcomeAlertMessage: String = ""
 
     @Published var saveSuccessfulAlertShow: Bool = false
     
@@ -780,7 +784,25 @@ class PdfEditViewModel: ObservableObject {
     @MainActor
     private func performOcr() {
         self.analyticsManager.track(event: .ocrStarted)
-        OcrUtility.makeSearchable(pdf: self.pdf, asyncOperation: self.asyncSubject(\.asyncOcr))
+        OcrUtility.makeSearchable(pdf: self.pdf,
+                                  asyncOperation: self.asyncSubject(\.asyncOcr),
+                                  onCompleted: { [weak self] result in
+            guard let self = self else { return }
+            // A run that recognized nothing is not a failure, and used to be
+            // indistinguishable from one: the document came back unchanged with
+            // nothing said. Each of the three outcomes now has its own sentence.
+            if result.didChangeDocument {
+                self.toolOutcomeAlertTitle = String(localized: "Done")
+                self.toolOutcomeAlertMessage = String(localized: "Pages made searchable: \(result.ocredPageCount)")
+            } else if result.wasAlreadySearchable {
+                self.toolOutcomeAlertTitle = String(localized: "Info")
+                self.toolOutcomeAlertMessage = String(localized: "Your PDF is already searchable. You can search and select its text as it is.")
+            } else {
+                self.toolOutcomeAlertTitle = String(localized: "Info")
+                self.toolOutcomeAlertMessage = String(localized: "No text was recognized in your PDF.")
+            }
+            self.toolOutcomeAlertShow = true
+        })
     }
 
     /// Entry point for the document-hygiene tools. All three are free and on-device, so
@@ -796,18 +818,23 @@ class PdfEditViewModel: ObservableObject {
             case .removeBlankPages:
                 // Phrased as a count rather than "N blank pages were removed" so the
                 // sentence stays correct for 1 as well, in every language.
-                self.cleanupAlertMessage = removedCount > 0
+                self.toolOutcomeAlertTitle = removedCount > 0
+                    ? String(localized: "Done")
+                    : String(localized: "Info")
+                self.toolOutcomeAlertMessage = removedCount > 0
                     ? String(localized: "Blank pages removed: \(removedCount)")
                     : String(localized: "No blank pages were found in your PDF.")
                 self.analyticsManager.track(event: .blankPagesRemoved(count: removedCount))
             case .flatten:
-                self.cleanupAlertMessage = String(localized: "Your PDF has been flattened. Annotations and form fields are now part of the page.")
+                self.toolOutcomeAlertTitle = String(localized: "Done")
+                self.toolOutcomeAlertMessage = String(localized: "Your PDF has been flattened. Annotations and form fields are now part of the page.")
                 self.analyticsManager.track(event: .pdfFlattened)
             case .invertColors:
-                self.cleanupAlertMessage = String(localized: "Colors have been inverted.")
+                self.toolOutcomeAlertTitle = String(localized: "Done")
+                self.toolOutcomeAlertMessage = String(localized: "Colors have been inverted.")
                 self.analyticsManager.track(event: .colorsInverted)
             }
-            self.cleanupAlertShow = true
+            self.toolOutcomeAlertShow = true
         })
     }
 
