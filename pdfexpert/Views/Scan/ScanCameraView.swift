@@ -63,6 +63,9 @@ struct ScanCameraView: View {
         ZStack {
             ScanCameraPreview(session: self.capture.session,
                               rotationAngle: self.capture.previewRotationAngle,
+                              onPreviewLayerReady: { layer in
+                self.capture.attach(previewLayer: layer)
+            },
                               onFocusTap: { devicePoint in
                 self.capture.focus(at: devicePoint)
             })

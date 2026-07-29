@@ -124,6 +124,13 @@ final class ScanCaptureService: NSObject, ObservableObject {
     private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
     private var rotationObservations: [NSKeyValueObservation] = []
     private var isConfigured = false
+    /// The layer the picture is actually shown in. The rotation coordinator
+    /// answers *for a given layer*: `videoRotationAngleForHorizonLevelPreview`
+    /// is the angle that keeps that layer level, and computing it needs to know
+    /// how the layer itself is oriented. Built with `previewLayer: nil` it can
+    /// only answer for an assumed one — which is how a preview ends up ninety
+    /// degrees out and stays there however carefully the angle is applied.
+    private weak var previewLayer: AVCaptureVideoPreviewLayer?
 
     private let detector = DocumentDetector()
     /// One detection at a time: frames arrive faster than Vision can answer, and
@@ -267,10 +274,22 @@ final class ScanCaptureService: NSObject, ObservableObject {
     /// Keeps the photo and video connections pointed the way the user is holding
     /// the device. Without it a scan taken on an iPad in landscape comes out on
     /// its side, and the detected quad no longer lines up with the preview.
+    /// Called by the preview as soon as its layer exists. The coordinator is
+    /// rebuilt around it, because an angle computed for no layer in particular
+    /// is an angle for the wrong one.
+    func attach(previewLayer: AVCaptureVideoPreviewLayer) {
+        guard self.previewLayer !== previewLayer else { return }
+        self.previewLayer = previewLayer
+        guard let device = self.videoDeviceInput?.device else { return }
+        self.startTrackingRotation(for: device)
+    }
+
     private func startTrackingRotation(for device: AVCaptureDevice) {
-        let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: nil)
+        let coordinator = AVCaptureDevice.RotationCoordinator(device: device,
+                                                              previewLayer: self.previewLayer)
         self.rotationCoordinator = coordinator
         self.previewRotationAngle = coordinator.videoRotationAngleForHorizonLevelPreview
+        debugPrint(for: self, message: "rotation: preview \(coordinator.videoRotationAngleForHorizonLevelPreview)°, capture \(coordinator.videoRotationAngleForHorizonLevelCapture)°, layer attached: \(self.previewLayer != nil)")
         // The coordinator reports the device's real orientation, which is what
         // "upright" means here — the app's own window is locked to portrait on a
         // phone, so watching the interface orientation would never fire.

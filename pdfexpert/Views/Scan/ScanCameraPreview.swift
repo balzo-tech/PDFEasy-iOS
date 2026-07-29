@@ -21,6 +21,9 @@ struct ScanCameraPreview: UIViewRepresentable {
 
     let session: AVCaptureSession
     let rotationAngle: CGFloat
+    /// Handed the layer as soon as it exists, so the capture service can build
+    /// its rotation coordinator around the layer the picture is really in.
+    var onPreviewLayerReady: ((AVCaptureVideoPreviewLayer) -> Void)? = nil
     /// Reports where the user tapped, already converted to the capture device's
     /// own coordinate space, which is what focus and exposure want.
     var onFocusTap: ((CGPoint) -> Void)? = nil
@@ -34,6 +37,7 @@ struct ScanCameraPreview: UIViewRepresentable {
             let devicePoint = view.previewLayer.captureDevicePointConverted(fromLayerPoint: layerPoint)
             self.onFocusTap?(devicePoint)
         }
+        self.onPreviewLayerReady?(view.previewLayer)
         return view
     }
 
