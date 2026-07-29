@@ -118,19 +118,25 @@ farsi sentire. Tutti in `ab993b5`, con quattro test nuovi sulla geometria.
       in Foto — **l'unica riga della sezione mai nominata**: da fare quando capita
 - [-] iPad in orizzontale: la pagina esce dritta — nessun iPad disponibile
 
-## 5. Editor su una scansione lunga — la prova che conta
+## 5. Editor su una scansione lunga — ✅ passata il 2026-07-29
 
-Con la scansione di 20+ pagine:
+Provata con una **scansione vera di 20 pagine**, fatte con lo scatto automatico:
+«ci lavoravo tranquillamente». Nessun difetto trovato.
 
-- [ ] Si apre **subito**, con «Preparazione delle pagine…» e le pagine che arrivano
-- [ ] Applicare uno strumento **non congela** l'editor
-- [ ] Riordinare e cancellare pagine; la barra sotto la pagina si **riaccende**
-- [ ] **Sfogliarla da capo a fondo**: la pagina resta nitida (al massimo un istante
+Questa era la prova che contava: è il difetto segnalato il 2026-07-27 («gli
+strumenti non funzionano, nemmeno il tasto indietro»), chiuso due volte — per
+tempo e per memoria — senza che nessuno potesse verificarlo su hardware. Ora sì.
+
+- [x] Si apre **subito**, con «Preparazione delle pagine…» e le pagine che arrivano
+- [x] Applicare uno strumento **non congela** l'editor
+- [x] Riordinare e cancellare pagine; la barra sotto la pagina si **riaccende**
+- [x] **Sfogliarla da capo a fondo**: la pagina resta nitida (al massimo un istante
       di miniatura sfocata)
-- [ ] La memoria non sale sfogliando (Instruments, se puoi)
-- [ ] Trascinare una miniatura di **più posti in un colpo solo** nella striscia
-- [ ] **Ruotare mentre le pagine si stanno ancora disegnando**: si vede la pagina ruotata
-- [ ] Tasto **indietro** funziona in ogni momento
+- [ ] La memoria non sale sfogliando — **non misurata** con Instruments: l'app
+      regge, ma il numero non l'ha visto nessuno
+- [x] Trascinare una miniatura di **più posti in un colpo solo** nella striscia
+- [x] **Ruotare mentre le pagine si stanno ancora disegnando**: si vede la pagina ruotata
+- [x] Tasto **indietro** funziona in ogni momento
 
 ---
 
