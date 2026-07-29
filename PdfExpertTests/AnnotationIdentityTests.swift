@@ -77,6 +77,39 @@ final class AnnotationIdentityTests: XCTestCase {
                       "a saved signature is not recognised either")
     }
 
+    /// Both annotation tools detach every annotation from its page on the way in —
+    /// the page is rendered as a flat image and the annotations are held in an
+    /// array, so they can be drawn as editable boxes on top. Afterwards they find
+    /// them again by asking `annotation.page`:
+    ///
+    ///     let textAnnotationsInPoint = textAnnotations.filter { $0.page == page && … }
+    ///     let pageAnnotations = self.annotations.filter { $0.page == page }
+    ///
+    /// If removing an annotation from a page clears that reference, neither filter
+    /// can ever match — you could not tap an existing signature to edit it, and
+    /// the confirm step could not put anything back. Which is it?
+    func testAnAnnotationRemembersItsPageAfterBeingDetached() throws {
+        let document = self.makeDocument()
+        let page = try XCTUnwrap(document.page(at: 0))
+        let signature = PDFAnnotation.createSignature(with: self.makeSignatureImage(),
+                                                     forBounds: CGRect(x: 100, y: 100, width: 200, height: 80))
+        page.addAnnotation(signature)
+        XCTAssertTrue(signature.page === page, "an annotation on a page should know its page")
+
+        // Measured: it forgets. This is PDFKit's behaviour, not a bug in the app —
+        // but it is the reason a saved signature could not be edited, because both
+        // tools detached first and matched on `page` afterwards.
+        page.removeAnnotation(signature)
+        XCTAssertNil(signature.page, "PDFKit used to clear this; if it stops, the workaround below can go")
+
+        // What the view models do now, and the only thing that makes the filters
+        // work: give the page back after detaching.
+        signature.page = page
+        XCTAssertTrue(signature.page === page)
+        XCTAssertFalse(page.annotations.contains(signature),
+                       "the annotation must stay off the page — it is drawn as an editable box instead")
+    }
+
     /// Text is recognised by its subtype alone, with no custom key involved, so it
     /// should survive both states. Here to tell the two reports apart: if this
     /// passes, "the text cannot be edited" is a different bug from the signature.

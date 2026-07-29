@@ -130,8 +130,19 @@ struct TextResizableView: View {
                             .frame(width: self.computedSize.width, height: self.computedSize.height)
                             .background(Rectangle().stroke(self.color, lineWidth: self.borderWidth))
                             .position(self.computedCenter)
-                            .gesture(
-                                DragGesture(coordinateSpace: .named(Self.canvasSpace))
+                            // `highPriorityGesture`, and a minimum distance: the
+                            // box is a `TextField`, and a text field's own gesture
+                            // recognisers — cursor placement, selection — win the
+                            // race against an ordinary `.gesture`. SwiftUI then
+                            // delivered the drag only once the touch ended, which
+                            // is exactly the report: the frame jumped to its new
+                            // position when the finger lifted instead of following
+                            // it. Winning the race makes the drag continuous; the
+                            // eight points leave a tap to the field, so tapping
+                            // the text still puts the cursor in it.
+                            .highPriorityGesture(
+                                DragGesture(minimumDistance: 8,
+                                            coordinateSpace: .named(Self.canvasSpace))
                                     .onChanged { gesture in
                                         self.OnDrag(dragGestureValue: gesture,
                                                     parentViewSize: parentGeometryReader.size)

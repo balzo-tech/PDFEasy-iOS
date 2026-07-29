@@ -71,9 +71,20 @@ class PdfSignatureViewModel: ObservableObject {
                 let annotations = page.annotations.signatureAnnotations
                 // Store annotations
                 annotationLists.append(contentsOf: annotations)
-                // Detach annotations from page
+                // Detach annotations from page, then hand each one its page back.
+                //
+                // `removeAnnotation` clears `annotation.page`, and everything
+                // downstream matches on it: the tap that turns an existing
+                // signature back into an editable box (`annotationsInPoint`), and
+                // the confirm step that reattaches them. With the reference gone
+                // those filters never match, which is why a signature could not
+                // be edited once it had been saved — and why the confirm step had
+                // nothing to put back. Newly drawn annotations already get this
+                // treatment further down; the ones that were already in the
+                // document did not.
                 for annotation in annotations {
                     page.removeAnnotation(annotation)
+                    annotation.page = page
                 }
                 // Render page
                 pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))

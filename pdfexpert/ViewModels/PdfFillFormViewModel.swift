@@ -80,9 +80,13 @@ class PdfFillFormViewModel: ObservableObject {
                 let annotations = page.annotations.supportedAnnotations
                 // Store annotations
                 annotationLists.append(contentsOf: annotations)
-                // Detach annotations from page
+                // Detach annotations from page, then hand each one its page back.
+                // See the note in `PdfSignatureViewModel`: `removeAnnotation`
+                // clears `annotation.page`, and the tap that reopens an existing
+                // annotation for editing matches on exactly that.
                 for annotation in annotations {
                     page.removeAnnotation(annotation)
+                    annotation.page = page
                 }
                 // Render page
                 pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
