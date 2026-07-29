@@ -123,7 +123,9 @@ platform :ios do
     # Reads the same files the upload does and reports what it found, so a
     # missing locale or a description over the 4000-character limit is caught
     # here rather than halfway through a run.
-    limits = { "description" => 4000, "release_notes" => 4000 }
+    # promotional_text is the short one, and the only field here that can be
+    # changed without shipping a version.
+    limits = { "description" => 4000, "release_notes" => 4000, "promotional_text" => 170 }
     dir = File.expand_path("metadata", __dir__)
     Dir.children(dir).sort.each do |locale|
       path = File.join(dir, locale)

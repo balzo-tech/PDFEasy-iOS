@@ -1,0 +1,1 @@
+Mới: máy quét camera tích hợp, thư mục và thẻ, cùng tìm kiếm đọc được nội dung bên trong tệp PDF chứ không chỉ tên tệp.
