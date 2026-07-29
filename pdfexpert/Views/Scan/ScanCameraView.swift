@@ -115,6 +115,11 @@ struct ScanCameraView: View {
                 Image(systemName: "xmark")
                     .font(.system(size: 15, weight: .semibold))
                     .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                    // Without this the tappable area is the glyph — fifteen
+                    // points of cross in a forty-four point target — and the
+                    // close button reads as not working, because most of it is
+                    // not a button at all.
+                    .contentShape(.circle)
             }
             .buttonStyle(.plain)
             .foregroundStyle(.white)
@@ -136,6 +141,7 @@ struct ScanCameraView: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, DS.Spacing.md)
                     .frame(height: DS.Size.tapTarget)
+                    .contentShape(.capsule)
                 }
                 .buttonStyle(.plain)
                 .floatingGlassCapsule(tint: ColorPalette.accent)
@@ -184,23 +190,22 @@ struct ScanCameraView: View {
         .padding(.bottom, DS.Spacing.md)
     }
 
+    /// The shutter is centred on the screen, not on what is left of it. It used
+    /// to sit in an `HStack` between the thumbnail and a spacer of the same
+    /// width — but the thumbnail only exists once a page has been taken, and an
+    /// absent view has no width to balance, so before the first capture the
+    /// shutter sat half a thumbnail to the left of centre, out of line with the
+    /// three controls above it. A centred layer with the thumbnail laid over it
+    /// cannot drift.
     private var shutterRow: some View {
-        HStack {
+        ShutterButton(progress: self.capture.autoShutterProgress,
+                      isEnabled: self.capture.state == .running && !self.capture.isCapturing) {
+            self.capture.capture()
+        }
+        .frame(maxWidth: .infinity)
+        .overlay(alignment: .leading) {
             self.lastPageThumbnail
                 .frame(width: 58, height: 58)
-
-            Spacer()
-
-            ShutterButton(progress: self.capture.autoShutterProgress,
-                          isEnabled: self.capture.state == .running && !self.capture.isCapturing) {
-                self.capture.capture()
-            }
-
-            Spacer()
-
-            // Balances the thumbnail so the shutter sits in the middle of the
-            // screen rather than in the middle of what is left of it.
-            Color.clear.frame(width: 58, height: 58)
         }
     }
 
@@ -280,6 +285,10 @@ struct CameraControlButton: View {
                     .font(.system(size: 19, weight: .medium))
                     .foregroundStyle(self.isActive ? ColorPalette.accent : .white)
                     .frame(width: 52, height: 52)
+                    // The whole disc, not the icon inside it. Missing this is
+                    // why a control could take two attempts: the first tap
+                    // landed on glass that was not listening.
+                    .contentShape(.circle)
                     .floatingGlassCapsule()
                     .overlay(alignment: .topTrailing) {
                         if let badge = self.badge {

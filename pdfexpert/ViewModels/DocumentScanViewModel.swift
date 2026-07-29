@@ -295,6 +295,14 @@ class DocumentScanViewModel: ObservableObject {
                 // A long session should not hold every render of every page.
                 if self.renderCache.count > 60 { self.renderCache.removeAll() }
                 self.renderCache[key] = image
+                // The cache is not `@Published` — it is a dictionary read through
+                // `preview(for:)`, and publishing it would redraw on every key.
+                // But nothing else changes when a render lands, so without this
+                // the screen keeps whatever it drew while waiting: the unfiltered
+                // capture. That is what "the filter does nothing the first time"
+                // was — the filter had been applied, to an image nobody asked for
+                // again.
+                self.objectWillChange.send()
             }
         }
     }

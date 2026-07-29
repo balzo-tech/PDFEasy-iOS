@@ -163,6 +163,10 @@ final class ScanCaptureService: NSObject, ObservableObject {
             guard !session.isRunning else { return }
             session.startRunning()
         }
+        // Again on every start, not only when the coordinator reports a change.
+        // A second visit to the scanner reuses a configured session, and the
+        // angle written the first time is the only one it would otherwise have.
+        self.applyRotationAngles()
     }
 
     func stop() {

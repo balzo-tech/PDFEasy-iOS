@@ -29,6 +29,7 @@ struct ScanCameraPreview: UIViewRepresentable {
         let view = ScanPreviewUIView()
         view.previewLayer.session = self.session
         view.previewLayer.videoGravity = .resizeAspectFill
+        view.desiredRotationAngle = self.rotationAngle
         view.onTap = { layerPoint in
             let devicePoint = view.previewLayer.captureDevicePointConverted(fromLayerPoint: layerPoint)
             self.onFocusTap?(devicePoint)
@@ -37,11 +38,7 @@ struct ScanCameraPreview: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: ScanPreviewUIView, context: Context) {
-        if let connection = uiView.previewLayer.connection,
-           connection.isVideoRotationAngleSupported(self.rotationAngle),
-           connection.videoRotationAngle != self.rotationAngle {
-            connection.videoRotationAngle = self.rotationAngle
-        }
+        uiView.desiredRotationAngle = self.rotationAngle
     }
 }
 
@@ -56,11 +53,35 @@ final class ScanPreviewUIView: UIView {
 
     var onTap: ((CGPoint) -> Void)? = nil
 
+    /// The angle the picture should be shown at. Applied whenever it changes and
+    /// again on every layout pass, which is the part that matters: the layer has
+    /// no connection until the session has been configured on its own queue, and
+    /// SwiftUI only calls `updateUIView` when something it can see changes. A
+    /// preview created before the connection existed, and then handed the same
+    /// angle it already had, would never have the angle written to it at all —
+    /// and an unset connection sits at 0°, which is landscape. That is the
+    /// camera coming up on its side.
+    var desiredRotationAngle: CGFloat = 90 {
+        didSet { self.applyRotationAngle() }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .black
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         self.addGestureRecognizer(recognizer)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.applyRotationAngle()
+    }
+
+    private func applyRotationAngle() {
+        guard let connection = self.previewLayer.connection,
+              connection.isVideoRotationAngleSupported(self.desiredRotationAngle),
+              connection.videoRotationAngle != self.desiredRotationAngle else { return }
+        connection.videoRotationAngle = self.desiredRotationAngle
     }
 
     required init?(coder: NSCoder) {
