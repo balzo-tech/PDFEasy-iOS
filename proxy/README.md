@@ -50,11 +50,16 @@ Deployed on the **Balzo** Cloudflare account (`account_id` is in `wrangler.toml`
 the token can see three accounts and a deploy has to say which). The KV namespace
 `pdfpro-proxy-LIMITS` is already created and bound.
 
-Deployed and answering, but **not yet configured**: with no secrets it refuses
-everything, which is the correct state for a proxy nobody has given keys to.
-`FIREBASE_PROJECT_NUMBERS` is filled in; the secrets and the two Apple
-identifiers are not. `/health` answers `{"ok":true}`; every other route answers
-401 until App Check is set up.
+**Configured and live** since 2026-07-29: all three secrets uploaded, every
+`[vars]` filled in, deployed. Confirmed from the outside with curl — `/health`
+answers, every other route answers `401 app_check_invalid` without a token, and
+the per-IP ceiling trips at 30/min with a `429`, which also proves the KV writes
+and that the checks run in the order above.
+
+What curl cannot reach is everything behind check 2: that the OpenAI key works,
+that Stirling accepts its own, that Apple answers about the subscription, and
+that the monthly counters add up. All four need a real App Check token, which
+needs a device.
 
 ## Setting it up
 
@@ -91,18 +96,39 @@ Then fill in `[vars]` in `wrangler.toml`:
 
 ## What has to happen on the Firebase side
 
-App Check has to be turned on for the iOS app with the **App Attest** provider
-(Firebase console → Build → App Check), and the app's Team ID and bundle id
-registered there. Until that is done, `verifyAppCheck` refuses every request —
-which is the correct failure: an unconfigured proxy is an open key.
+App Check has to be turned on with the **App Attest** provider (Firebase console
+→ Build → App Check) in **both** projects — `pdf-expert-270b1` for
+`eu.balzo.pdfexpert` and `pdf-expert-staging` for `eu.balzo.pdfexpert.staging` —
+with the Team ID `G6RAKRKZPR` registered against each. The two builds are two
+apps to Firebase and mint their own tokens; a project that is not registered
+mints nothing, and `verifyAppCheck` refuses every request from it.
 
-While rolling out, App Check has a *monitoring* mode in the Firebase console
-that reports how many requests would have been refused without blocking them.
-Worth a day or two there before enforcing.
+That registration is the whole of it. In particular:
+
+**Do not turn on enforcement.** The *enforced / monitoring / unenforced* switch
+in the console governs Firebase's own backends — Remote Config, Firestore,
+Storage — and has no bearing on this worker, which verifies the JWT itself and
+always blocks. There is no gradual rollout to be had here: from the first
+request the worker either accepts a token or refuses it. Turning enforcement on
+for Remote Config would only add a way for the app to lose its configuration,
+which is a risk taken for nothing. What monitoring would have given you is in
+the Cloudflare logs instead (`[observability]` is enabled in `wrangler.toml`);
+a refusal appears there as `401 app_check_invalid`.
+
+**A debug build needs its token registered.** `PdfProAppCheckProviderFactory`
+uses App Attest only in release: App Attest needs a Secure Enclave, so the
+simulator and the test bundles have none to offer, and a DEBUG build uses
+Firebase's debug provider. The app prints the token in a box on launch — from
+`AppCheckProviderFactory.swift`, not from Firebase, whose own log line is
+emitted by a factory this app does not use. Paste it into App Check → the app →
+⋮ → Manage debug tokens, **in the project that build belongs to** (staging
+build → staging project). Until then it is refused exactly like a forged token.
+The token is a bypass of App Check for whoever holds it: it does not belong in
+the repository, in a scheme that is committed, or in a screenshot.
 
 ## Tests
 
-    npm test          # 34 cases, no network, no account needed
+    npm test          # 47 cases, no network, no account needed
     npm run typecheck
 
 They cover the limits, the two upstreams and — the part worth having — the order
