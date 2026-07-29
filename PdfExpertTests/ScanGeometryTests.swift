@@ -49,6 +49,35 @@ final class ScanGeometryTests: XCTestCase {
         XCTAssertFalse(sliver.isUsable, "1% of the frame is not a page")
     }
 
+    /// The same shape, drawn on purpose rather than guessed at. The detector's
+    /// area floor is an opinion about what is probably a page; a crop the user
+    /// dragged into place is not a guess, and rendering has to honour it —
+    /// otherwise the page comes back whole and nothing says why.
+    func testATinyCropTheUserDrewIsStillRendered() {
+        let stamp = ScanQuad(topLeft: CGPoint(x: 0.4, y: 0.4),
+                             topRight: CGPoint(x: 0.5, y: 0.4),
+                             bottomRight: CGPoint(x: 0.5, y: 0.5),
+                             bottomLeft: CGPoint(x: 0.4, y: 0.5))
+        XCTAssertFalse(stamp.isUsable, "still not something to propose on its own")
+        XCTAssertTrue(stamp.isRenderable, "but perspective correction can crop to it")
+    }
+
+    func testAnEdgeCollapsedToNothingIsNotRenderable() {
+        let degenerate = ScanQuad(topLeft: CGPoint(x: 0.2, y: 0.2),
+                                  topRight: CGPoint(x: 0.205, y: 0.2),
+                                  bottomRight: CGPoint(x: 0.8, y: 0.8),
+                                  bottomLeft: CGPoint(x: 0.2, y: 0.8))
+        XCTAssertFalse(degenerate.isRenderable)
+    }
+
+    func testASelfCrossingQuadIsNotRenderableEither() {
+        let crossed = ScanQuad(topLeft: CGPoint(x: 0.1, y: 0.1),
+                               topRight: CGPoint(x: 0.9, y: 0.9),
+                               bottomRight: CGPoint(x: 0.9, y: 0.1),
+                               bottomLeft: CGPoint(x: 0.1, y: 0.9))
+        XCTAssertFalse(crossed.isRenderable)
+    }
+
     func testASelfCrossingQuadIsNotConvex() {
         // Top-right and bottom-right swapped: the shape folds over itself.
         let crossed = ScanQuad(topLeft: CGPoint(x: 0.1, y: 0.1),

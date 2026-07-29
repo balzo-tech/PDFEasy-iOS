@@ -56,13 +56,29 @@ struct ScanQuad: Equatable, Hashable, Codable, Sendable {
     /// A detection worth acting on. Vision happily returns slivers when it is
     /// looking at a table top: anything under a sixth of the frame, or with a
     /// side shorter than a twentieth of it, is noise rather than a page.
+    /// Whether the detector should offer this shape as a page it has found.
+    ///
+    /// The area floor is a guess about intent: something covering a sixth of the
+    /// frame is probably a page, something smaller is probably a book on a desk,
+    /// and proposing the second is worse than proposing nothing. It belongs to
+    /// the detector alone — see `isRenderable` for the crop the user drew, where
+    /// the same floor would mean overruling them.
     var isUsable: Bool {
         guard self.area > 0.16 else { return false }
+        return self.isRenderable
+    }
+
+    /// Whether perspective correction can do anything with this shape.
+    ///
+    /// No opinion about size: a user cropping to a stamp in the corner of the
+    /// page means it. Only the two things that make the correction itself
+    /// meaningless — an edge collapsed to nothing, or a self-crossing quad.
+    var isRenderable: Bool {
         let points = self.corners
         for index in points.indices {
             let current = points[index]
             let next = points[(index + 1) % points.count]
-            if hypot(next.x - current.x, next.y - current.y) < 0.05 { return false }
+            if hypot(next.x - current.x, next.y - current.y) < 0.02 { return false }
         }
         return self.isConvex
     }

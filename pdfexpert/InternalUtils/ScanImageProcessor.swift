@@ -62,7 +62,11 @@ enum ScanImageProcessor {
     /// perspective, so a page shot at an angle comes out rectangular rather than
     /// trapezoidal — the difference between a scan and a photo of a page.
     static func corrected(_ image: CIImage, quad: ScanQuad?) -> CIImage {
-        guard let quad, quad.isUsable, !quad.isFullFrame else { return image }
+        // `isRenderable`, not `isUsable`: the second carries the detector's
+        // opinion that anything under a sixth of the frame is not a page, and
+        // applying that here threw away a crop the user had drawn by hand — the
+        // page came back whole, with nothing said about why.
+        guard let quad, quad.isRenderable, !quad.isFullFrame else { return image }
 
         let points = quad.clamped().normalizedCorners().coreImagePoints(in: image.extent.size)
         let filter = CIFilter.perspectiveCorrection()

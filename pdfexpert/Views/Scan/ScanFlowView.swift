@@ -132,15 +132,6 @@ struct ScanSaveSheetView: View {
                 .onSubmit { self.isNameFocused = false }
                 .autocorrectionDisabled()
 
-            VStack(spacing: DS.Spacing.xs) {
-                PrimaryActionButton(title: String(localized: "Save as PDF"), systemImage: "doc.fill") {
-                    self.viewModel.saveAsPdf()
-                }
-                SecondaryActionButton(title: String(localized: "Save as images"), systemImage: "photo.on.rectangle") {
-                    self.viewModel.saveAsImages()
-                }
-            }
-
             Spacer(minLength: 0)
         }
         .padding(.horizontal, DS.Spacing.lg)
@@ -148,5 +139,25 @@ struct ScanSaveSheetView: View {
         .readableColumn()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(ColorPalette.background)
+        // The two answers live in a bottom inset rather than in the stack, so
+        // the keyboard raised by the name field pushes them up instead of
+        // covering them. Underneath it, the first tap on a covered button is
+        // spent dismissing the keyboard and the button appears not to work —
+        // which is what "I had to press Save more than once" was.
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: DS.Spacing.xs) {
+                PrimaryActionButton(title: String(localized: "Save as PDF"), systemImage: "doc.fill") {
+                    self.isNameFocused = false
+                    self.viewModel.saveAsPdf()
+                }
+                SecondaryActionButton(title: String(localized: "Save as images"), systemImage: "photo.on.rectangle") {
+                    self.isNameFocused = false
+                    self.viewModel.saveAsImages()
+                }
+            }
+            .padding(.horizontal, DS.Spacing.lg)
+            .padding(.bottom, DS.Spacing.md)
+            .background(ColorPalette.background)
+        }
     }
 }

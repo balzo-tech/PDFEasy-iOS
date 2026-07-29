@@ -80,6 +80,24 @@ final class ScanImageProcessorTests: XCTestCase {
         XCTAssertEqual(rendered.size.height, photo.size.height / 2, accuracy: 2)
     }
 
+    /// Reported from the phone: "I moved the corners well in and it still gives
+    /// me the whole image". A crop under a sixth of the frame was being dropped
+    /// on the way to Core Image, because rendering was asking the detector's
+    /// question — is this likely to be a page? — about a shape the user had
+    /// already decided on.
+    func testACropSmallerThanTheDetectorWouldProposeIsStillApplied() throws {
+        let photo = self.makePhoto()
+        let stamp = ScanQuad(topLeft: CGPoint(x: 0.40, y: 0.40),
+                             topRight: CGPoint(x: 0.52, y: 0.40),
+                             bottomRight: CGPoint(x: 0.52, y: 0.52),
+                             bottomLeft: CGPoint(x: 0.40, y: 0.52))
+        let page = ScannedPage(original: photo, quad: stamp, filter: .original)
+        let rendered = try XCTUnwrap(ScanImageProcessor.render(page))
+        XCTAssertEqual(rendered.size.width, photo.size.width * 0.12, accuracy: 2)
+        XCTAssertLessThan(rendered.size.width, photo.size.width / 4,
+                          "the crop was ignored and the whole frame came back")
+    }
+
     func testAFullFrameQuadIsTreatedAsNoCrop() throws {
         let photo = self.makePhoto()
         let page = ScannedPage(original: photo, quad: .full, filter: .original)

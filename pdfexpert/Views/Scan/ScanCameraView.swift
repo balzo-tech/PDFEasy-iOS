@@ -108,6 +108,12 @@ struct ScanCameraView: View {
             withAnimation(.easeOut(duration: 0.08)) { self.shutterFlash = true }
             withAnimation(.easeIn(duration: 0.18).delay(0.08)) { self.shutterFlash = false }
         }
+        // A shutter the user did not press has to announce itself. The white
+        // flash alone was missed on a phone held over a desk — it is brief, and
+        // it happens in the part of the screen being watched for the page, not
+        // for feedback. A knock in the hand is felt whether or not anyone is
+        // looking, and the page count changing is the receipt.
+        .sensoryFeedback(.impact(weight: .medium), trigger: self.viewModel.pages.count)
     }
 
     // MARK: - Chrome
