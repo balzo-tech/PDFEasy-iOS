@@ -514,15 +514,19 @@ class PdfEditViewModel: ObservableObject {
 
     /// Draws one page at full size, off the main thread.
     ///
-    /// The page is copied first, here on the main thread, because the document it
-    /// belongs to can be edited while the drawing is still going — rotating or
-    /// deleting a page out from under a render is a crash waiting to happen. The
-    /// copy is cheap: PDFKit copies the page's structure, not the picture inside
-    /// it, which is the part that costs (0.9s a page on a scan).
+    /// The page is detached first, here on the main thread, because the document
+    /// it belongs to can be edited while the drawing is still going — rotating or
+    /// deleting a page out from under a render is a crash waiting to happen.
+    ///
+    /// This used to be `page.copy()`, and that is exactly what "Image to PDF
+    /// shows a white page" was: PDFKit copies the page's structure without the
+    /// resources its content refers to, so the copy draws blank. It goes through
+    /// the page's own bytes now — see `PDFUtility.detachedPage(from:)`, which has
+    /// the measurements.
     private func drawPageImage(at index: Int) {
         guard index >= 0, index < self.pages.count,
               let page = self.pdf.pdfDocument.page(at: index),
-              let copy = page.copy() as? PDFPage else { return }
+              let copy = PDFUtility.detachedPage(from: page) else { return }
         let id = self.pages[index].id
         guard self.pageImageRenders[id] == nil else { return }
         let token = UUID()

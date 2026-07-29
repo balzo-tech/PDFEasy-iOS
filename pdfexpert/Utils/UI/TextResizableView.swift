@@ -97,7 +97,12 @@ struct TextResizableView: View {
             GeometryReader { parentGeometryReader in
                 ZStack {
                     GeometryReader { _ in
-                        TextField("", text: self.$data.text)
+                        // No placeholder, and no empty one either: the first
+                        // argument of `TextField("", …)` is a localizable key, so
+                        // it lands in the string catalog as a blank entry that no
+                        // translator can act on — and the localization lint fails
+                        // on it the next time a build extracts strings.
+                        TextField(text: self.$data.text, prompt: nil) { EmptyView() }
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .font(Font(self.font))

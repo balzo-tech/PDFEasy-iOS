@@ -137,6 +137,31 @@ class PDFUtility {
             : mediaBoxSize
         return page.thumbnail(of: targetSize, for: .mediaBox)
     }
+
+    /// A page that can be drawn on another queue without holding the document
+    /// still — which is what the editor needs, and what `PDFPage.copy()` does not
+    /// give it.
+    ///
+    /// A copied page draws **white**. Measured: the page from the document draws
+    /// its picture on either thread, `page.copy()` draws blank on both. The copy
+    /// carries the page's structure and even keeps a non-nil `document`, but the
+    /// resources its content stream points at — the embedded image, for a photo —
+    /// do not come with it. That is the "Image to PDF gives me a white page"
+    /// report: the strip's thumbnail was drawn from the document and was right,
+    /// the full-size page was drawn from a copy and was blank.
+    ///
+    /// Going through the page's own bytes produces a document that owns
+    /// everything it refers to, so the result is both independent of the original
+    /// and complete. It costs a serialization of one page, against a render that
+    /// already takes the best part of a second on a scan.
+    static func detachedPage(from page: PDFPage) -> PDFPage? {
+        guard let data = page.dataRepresentation,
+              let document = PDFDocument(data: data),
+              let detached = document.page(at: 0) else {
+            return page.copy() as? PDFPage
+        }
+        return detached
+    }
     
     /// Returns true when a page is dominated by a high-resolution embedded image
     /// (e.g. a photo with a caption), by inspecting the CGPDF XObject dictionary.

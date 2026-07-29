@@ -42,7 +42,13 @@ final class ArchiveFilingUITests: XCTestCase {
         self.app.launchArguments = ["-AppleLanguages", "(en)",
                                     "-onboardingShown", "YES",
                                     "-debugPremium", "YES",
-                                    "-debugSeedArchive", "YES"]
+                                    "-debugSeedArchive", "YES",
+                                    // Empty it first: these tests look for the
+                                    // seeded folders, and the seed only lands in
+                                    // an empty archive. Without this they pass
+                                    // alone and fail after the scanner tests,
+                                    // which leave documents behind.
+                                    "-debugResetArchive", "YES"]
         if showingOrganizer {
             self.app.launchArguments += ["-debugShowOrganizer", "YES"]
         }

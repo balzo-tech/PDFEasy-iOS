@@ -126,27 +126,23 @@ final class ImageToPdfTests: XCTestCase {
     /// once that has gone the copy has no picture left to draw. A scan does not
     /// hit this because it reaches the editor through the archive, which
     /// serialises the document on the way in.
-    func testTheCopyTheEditorDrawsIsNotBlank() throws {
+    func testTheDetachedPageTheEditorDrawsIsNotBlank() throws {
         let document = PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto(orientation: .right))
         let page = try XCTUnwrap(document.page(at: 0))
-        let copy = try XCTUnwrap(page.copy() as? PDFPage, "a page has to be copyable")
 
-        let image = PDFUtility.generatePageImage(copy)
-        let holder = PDFDocument()
-        holder.insert(copy, at: 0)
+        // What `page.copy()` gives back, for the record: a page that draws white.
+        // This is the bug, kept as a measurement so nobody reintroduces the copy.
+        let copy = try XCTUnwrap(page.copy() as? PDFPage)
+        let fromCopy = try self.centrePixel(of: PDFUtility.generatePageImage(copy))
+        XCTAssertEqual(fromCopy.r, 255)
+        XCTAssertEqual(fromCopy.g, 255, "a copied page used to draw the picture; if it does now, simplify detachedPage")
 
-        let cgImage = try XCTUnwrap(image.cgImage)
-        var pixel = [UInt8](repeating: 0, count: 4)
-        let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1,
-                                             bitsPerComponent: 8, bytesPerRow: 4,
-                                             space: CGColorSpaceCreateDeviceRGB(),
-                                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
-        context.draw(cgImage, in: CGRect(x: -CGFloat(cgImage.width) / 2 + 0.5,
-                                         y: -CGFloat(cgImage.height) / 2 + 0.5,
-                                         width: CGFloat(cgImage.width),
-                                         height: CGFloat(cgImage.height)))
-        XCTAssertGreaterThan(Int(pixel[0]), 150,
-                             "the page the editor draws is blank — r\(pixel[0]) g\(pixel[1]) b\(pixel[2])")
+        // And what the editor uses instead.
+        let detached = try XCTUnwrap(PDFUtility.detachedPage(from: page))
+        let pixel = try self.centrePixel(of: PDFUtility.generatePageImage(detached))
+        XCTAssertGreaterThan(pixel.r, 150)
+        XCTAssertLessThan(pixel.g, 100,
+                          "the page the editor draws is blank — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
     }
 
     /// The editor's strip and its first frame come from
@@ -188,6 +184,116 @@ final class ImageToPdfTests: XCTestCase {
         let pixel = try self.centrePixel(of: thumbnail)
         XCTAssertGreaterThan(pixel.r, 150,
                              "even a serialised document draws blank — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
+    }
+
+    /// The whole chain the report describes, in one go: a photo converted, handed
+    /// to the editor exactly as `HomeViewModel` hands it over, and then asked for
+    /// the picture the pager puts on screen — `pageImage(at:)` if it is drawn,
+    /// the page's thumbnail if not. That expression is the screen. If it is white
+    /// here, it is white on the phone.
+    ///
+    /// It is not a photo test any more: the report says the page is white whether
+    /// the image came from the library, the camera or Files, and all three arrive
+    /// here.
+    func testTheEditorShowsThePhotoItWasOpenedWith() throws {
+        let pdf = Pdf(pdfDocument: PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto()),
+                      filename: "photo",
+                      source: .unknown)
+        let viewModel = PdfEditViewModel(inputParameter: .init(pdf: pdf,
+                                                              startAction: nil,
+                                                              shouldShowCloseWarning: .constant(false)))
+
+        let deadline = Date().addingTimeInterval(20)
+        while viewModel.isPreparingPages, Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+        }
+        XCTAssertFalse(viewModel.isPreparingPages, "the pages never finished drawing")
+        XCTAssertEqual(viewModel.pages.count, 1, "the editor did not list the page")
+
+        // And wait for the full-size render too, which is the one that was blank.
+        // Without this the test settles for the thumbnail and proves nothing.
+        while viewModel.pageImage(at: 0) == nil, Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+        }
+        XCTAssertNotNil(viewModel.pageImage(at: 0), "the full-size page was never drawn")
+
+        // Which of the two is white matters: they are drawn by different code on
+        // different queues, so say so rather than reporting "the editor".
+        let drawn = viewModel.pageImage(at: 0)
+        let thumbnail = viewModel.pageThumbnail(at: 0)
+        print("EDITOR pageImage=\(drawn.map { "\($0.size)" } ?? "nil") thumbnail=\(thumbnail.map { "\($0.size)" } ?? "nil")")
+        if let drawn { print("EDITOR pageImage pixel: \(try self.centrePixel(of: drawn))") }
+        if let thumbnail { print("EDITOR thumbnail pixel: \(try self.centrePixel(of: thumbnail))") }
+        print("EDITOR document pages=\(viewModel.pdf.pdfDocument.pageCount) bounds=\(viewModel.pdf.pdfDocument.page(at: 0)?.bounds(for: .mediaBox) ?? .zero)")
+
+        // Exactly what PdfEditView draws.
+        let shown = try XCTUnwrap(drawn ?? thumbnail,
+                                  "the editor has neither a page image nor a thumbnail to show")
+        let pixel = try self.centrePixel(of: shown)
+        XCTAssertGreaterThan(pixel.r, 150,
+                             "the editor is showing a white page — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
+        XCTAssertLessThan(pixel.g, 100, "the editor's page is washed out")
+    }
+
+    /// Where the white comes from: `generatePdfThumbnail(size:)` multiplies the
+    /// requested size by `UIScreen.main.nativeScale`, and `refreshPages()` calls
+    /// it from a background queue. Read off the main thread that returns 0, the
+    /// target size collapses, and `thumbnail(of: .zero)` hands back a blank image.
+    /// Called on the main thread the same code draws the picture — which is why
+    /// every test above passed while the editor showed white.
+    func testTheThumbnailIsBlankWhenItIsDrawnOffTheMainThread() throws {
+        let document = PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto())
+
+        let onMain = try XCTUnwrap(PDFUtility.generatePdfThumbnail(pdfDocument: document,
+                                                                  size: K.Misc.ThumbnailEditSize))
+        XCTAssertGreaterThan(try self.centrePixel(of: onMain).r, 150)
+        XCTAssertLessThan(try self.centrePixel(of: onMain).g, 100, "even on the main thread it is blank")
+
+        let expectation = self.expectation(description: "drawn off the main thread")
+        var offMain: UIImage?
+        var scaleSeenOffMain: CGFloat = -1
+        DispatchQueue.global(qos: .userInitiated).async {
+            scaleSeenOffMain = UIScreen.main.nativeScale
+            offMain = PDFUtility.generatePdfThumbnail(pdfDocument: document,
+                                                      size: K.Misc.ThumbnailEditSize)
+            expectation.fulfill()
+        }
+        self.wait(for: [expectation], timeout: 10)
+
+        print("SCALE off main thread: \(scaleSeenOffMain)")
+        let image = try XCTUnwrap(offMain, "no thumbnail came back at all")
+        let pixel = try self.centrePixel(of: image)
+        XCTAssertLessThan(pixel.g, 100,
+                          "the thumbnail drawn off the main thread is blank — r\(pixel.r) g\(pixel.g) b\(pixel.b), scale \(scaleSeenOffMain)")
+    }
+
+    /// Four combinations, one variable at a time: the page or a copy of it, on the
+    /// main thread or off it, always through the code the editor uses. Whichever
+    /// line comes back white is the bug.
+    func testWhichCombinationDrawsWhite() throws {
+        let document = PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto())
+        let page = try XCTUnwrap(document.page(at: 0))
+        let copy = try XCTUnwrap(page.copy() as? PDFPage)
+        print("MATRIX copy.document is nil: \(copy.document == nil)")
+
+        func report(_ label: String, _ image: UIImage) throws {
+            let pixel = try self.centrePixel(of: image)
+            print("MATRIX \(label): r\(pixel.r) g\(pixel.g) b\(pixel.b) size \(image.size)")
+        }
+
+        try report("page/main    ", PDFUtility.generatePageImage(page))
+        try report("copy/main    ", PDFUtility.generatePageImage(copy))
+
+        for (label, subject) in [("page/background", page), ("copy/background", copy)] {
+            let expectation = self.expectation(description: label)
+            var result: UIImage?
+            DispatchQueue.global(qos: .userInitiated).async {
+                result = PDFUtility.generatePageImage(subject)
+                expectation.fulfill()
+            }
+            self.wait(for: [expectation], timeout: 10)
+            try report(label, try XCTUnwrap(result))
+        }
     }
 
     /// A tall photo and a wide one both have to fit inside the margins rather

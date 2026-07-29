@@ -127,8 +127,25 @@ class ArchiveViewModel: ObservableObject {
     /// possible. Enable with:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugSeedArchive -bool YES
     private func seedDebugArchiveIfNeeded() {
-        guard UserDefaults.standard.bool(forKey: "debugSeedArchive"),
-              (try? self.repository.getDoPdfExist()) == false else { return }
+        guard UserDefaults.standard.bool(forKey: "debugSeedArchive") else { return }
+        // debugResetArchive=YES empties it first, so the seed lands whatever the
+        // last run left behind. A UI test bundle installs the app fresh but keeps
+        // the container: the scanner tests save documents, and the archive tests
+        // that ran after them found a non-empty archive, skipped the seed and
+        // failed looking for folders nobody had made. A test that only passes
+        // when it runs first is not a test.
+        if UserDefaults.standard.bool(forKey: "debugResetArchive") {
+            for pdf in (try? self.repository.loadPdfs()) ?? [] {
+                try? self.repository.delete(pdf: pdf)
+            }
+            for folder in (try? self.repository.loadFolders()) ?? [] {
+                try? self.repository.delete(folder: folder)
+            }
+            for tag in (try? self.repository.loadTags()) ?? [] {
+                try? self.repository.delete(tag: tag)
+            }
+        }
+        guard (try? self.repository.getDoPdfExist()) == false else { return }
         let names = ["Rental agreement", "Invoice 2026-07", "Scanned receipt", "Passport scan", "Meeting notes"]
         var saved: [Pdf] = []
         for name in names {

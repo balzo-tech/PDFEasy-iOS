@@ -162,8 +162,11 @@ struct PdfPageRangeEditorView: View {
                     .foregroundColor(ColorPalette.thirdText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(1)
-                TextField("", text: self.viewModel.getTextFieldText(index: index,
-                                                                    isLowerBound: isLowerBound))
+                // See the note in `TextResizableView`: an empty placeholder is a
+                // blank key in the string catalog.
+                TextField(text: self.viewModel.getTextFieldText(index: index,
+                                                               isLowerBound: isLowerBound),
+                          prompt: nil) { EmptyView() }
                 .font(forCategory: .body2)
                 .foregroundColor(ColorPalette.primaryText)
                 .lineLimit(1)
