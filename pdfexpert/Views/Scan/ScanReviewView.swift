@@ -80,6 +80,7 @@ struct ScanReviewView: View {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 16, weight: .semibold))
                     .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                    .contentShape(.circle)
             }
             .buttonStyle(.plain)
             .foregroundStyle(.white)
@@ -95,6 +96,7 @@ struct ScanReviewView: View {
                     Image(systemName: "list.bullet.indent")
                         .font(.system(size: 15, weight: .semibold))
                         .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                        .contentShape(.circle)
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
@@ -110,6 +112,7 @@ struct ScanReviewView: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, DS.Spacing.md)
                     .frame(height: DS.Size.tapTarget)
+                    .contentShape(.capsule)
             }
             .buttonStyle(.plain)
             .floatingGlassCapsule()

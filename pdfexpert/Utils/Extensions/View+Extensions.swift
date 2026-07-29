@@ -84,10 +84,20 @@ extension View {
             .foregroundColor(color)
     }
     
+    /// The close button used by thirteen screens — signature, forms, redaction,
+    /// the reader, chat, the tutorial, the tool screens.
+    ///
+    /// The glyph is sixteen points. On its own that is also the whole target:
+    /// SwiftUI hit-tests what was drawn, so everything around the cross belongs
+    /// to whatever is underneath, and a close button that has to be hit dead
+    /// centre reads as a close button that does not work. A tap target of the
+    /// documented size, and a shape that says the whole square is the button.
     static func getSystemClose(color: Color) -> some View {
         Image(systemName: "xmark")
             .font(.system(size: 16).bold())
             .foregroundColor(color)
+            .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+            .contentShape(.rect)
     }
     
     func addSystemCloseButton(color: Color, onPress: @escaping () -> ()) -> some View {
