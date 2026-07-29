@@ -70,6 +70,11 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 fastlane/README.md
+# App Store Connect API credentials. fastlane loads fastlane/.env on its own,
+# which is why the key ids live there and not in a shell profile. The .p8 itself
+# belongs outside the repository entirely — see fastlane/.env.example.
+fastlane/.env
+fastlane/*.p8
 
 # Serena MCP
 .serena/
