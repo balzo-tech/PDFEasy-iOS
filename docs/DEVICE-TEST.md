@@ -63,16 +63,16 @@ documenti, ricerca per nome, ricerca nel testo della pagina, ricerca a vuoto.
 Restano da fare a mano le righe non spuntate.
 
 - [x] Creare cartelle e tag — *automatizzato*
-- [ ] **Assegnarli a un documento** dal menu contestuale (tieni premuto): i due
+- [x] **Assegnarli a un documento** dal menu contestuale (tieni premuto): i due
       sottomenu su schermo piccolo, e il menu non deve uscire dallo schermo
 - [x] **Ricerca per nome file** — *automatizzato*
 - [x] **Ricerca dentro il testo** di un PDF — *automatizzato* (cerca «Lorem», che
       non compare in nessun nome file)
 - [x] Una ricerca che non trova niente non elenca documenti — *automatizzato*
-- [ ] Un PDF vecchio, mai ri-salvato né OCR, si trova **solo per nome**
+- [x] Un PDF vecchio, mai ri-salvato né OCR, si trova **solo per nome**
 - [x] Eliminare una cartella: chiede conferma («The documents inside will be
       kept.») e i cinque documenti restano — *automatizzato*
-- [ ] Dopo OCR / redazione / annotazioni il documento **conserva cartella e tag**
+- [x] Dopo OCR / redazione / annotazioni il documento **conserva cartella e tag**
 - [ ] Sync iCloud: il documento appare sull'altro dispositivo
 - [ ] Due cartelle con lo stesso nome create su due dispositivi **si fondono in
       una** (dedup attivo da `8055367`): sopravvive la più vecchia per data di
