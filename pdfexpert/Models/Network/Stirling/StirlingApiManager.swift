@@ -87,7 +87,7 @@ enum StirlingApiError: LocalizedError, Equatable {
 }
 
 protocol StirlingApiManager {
-    /// Both the remote-config kill switch and a non-empty API key are required.
+    /// Both the remote-config kill switch and a deployed proxy are required.
     var isAvailable: Bool { get }
     /// Uploads `fileData` and returns the processed document. `filename` names the
     /// multipart part: for PDF-in operations a `.pdf` extension is enforced, while

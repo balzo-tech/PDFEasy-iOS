@@ -10,6 +10,12 @@
 //  without it the key is not extractable but the endpoint is, and the bill is
 //  the same.
 //
+//  Two Firebase projects mint tokens for this worker, production and staging,
+//  because the two builds are two apps to Firebase. Which is why the project
+//  number is a list: the staging build is how the app gets tested against a real
+//  proxy, and a worker that only knew production would refuse every one of those
+//  tests at the door.
+//
 
 import { createRemoteJWKSet, jwtVerify } from 'jose'
 
@@ -29,29 +35,77 @@ function keySet() {
 export interface AppCheckClaims {
   /// The Firebase app id the token was minted for.
   appId: string
+  /// The project number that minted it — production or staging.
+  projectNumber: string
+}
+
+/// The configured project numbers, in the order they were written. Empty entries
+/// are dropped so a trailing comma is not read as a project that verifies
+/// nothing.
+export function parseProjectNumbers(raw: string): string[] {
+  return raw
+    .split(',')
+    .map((number) => number.trim())
+    .filter((number) => number.length > 0)
+}
+
+/**
+ * Which of `numbers` a token names, or null if it names none of them.
+ *
+ * `jwtVerify` is given both lists and checks them independently, so on its own
+ * it would accept a token that claims one project as its issuer and another as
+ * its audience. No such token exists — Firebase mints both claims from the same
+ * project — and both projects here are ours, so nothing is gained by forging
+ * one. It is checked anyway because it costs a string comparison, and because
+ * "the token belongs to one project" is the thing this function is supposed to
+ * be able to say.
+ */
+export function matchingProject(
+  numbers: string[],
+  issuer: unknown,
+  audience: unknown,
+): string | null {
+  const audiences = Array.isArray(audience) ? audience : [audience]
+  const match = numbers.find(
+    (number) =>
+      issuer === `https://firebaseappcheck.googleapis.com/${number}` &&
+      audiences.includes(`projects/${number}`),
+  )
+  return match ?? null
 }
 
 /**
  * Verifies an App Check token and returns its claims.
  *
- * Throws on anything that is not a valid, unexpired token issued by Firebase
- * for this project — there is no soft failure here on purpose: a caller that
- * cannot attest gets nothing.
+ * Throws on anything that is not a valid, unexpired token issued by Firebase for
+ * one of the configured projects — there is no soft failure here on purpose: a
+ * caller that cannot attest gets nothing.
  */
 export async function verifyAppCheck(
   token: string | null,
-  projectNumber: string,
+  projectNumbers: string,
 ): Promise<AppCheckClaims> {
   if (!token) {
     throw new Error('missing App Check token')
   }
+  const numbers = parseProjectNumbers(projectNumbers)
+  if (numbers.length === 0) {
+    // An unconfigured worker refuses everything rather than verifying against
+    // the empty string, which no token can name and every token would fail
+    // against for the wrong reason.
+    throw new Error('no Firebase project number configured')
+  }
   const { payload } = await jwtVerify(token, keySet(), {
-    issuer: `https://firebaseappcheck.googleapis.com/${projectNumber}`,
-    audience: `projects/${projectNumber}`,
+    issuer: numbers.map((number) => `https://firebaseappcheck.googleapis.com/${number}`),
+    audience: numbers.map((number) => `projects/${number}`),
     algorithms: ['RS256'],
   })
+  const projectNumber = matchingProject(numbers, payload.iss, payload.aud)
+  if (!projectNumber) {
+    throw new Error('App Check token names two different projects')
+  }
   if (typeof payload.sub !== 'string' || payload.sub.length === 0) {
     throw new Error('App Check token carries no app id')
   }
-  return { appId: payload.sub }
+  return { appId: payload.sub, projectNumber }
 }

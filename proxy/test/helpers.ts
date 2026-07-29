@@ -27,7 +27,7 @@ export function makeEnv(overrides: Partial<Env> = {}): TestEnv {
     OPENAI_API_KEY: 'sk-test',
     STIRLING_API_KEY: 'stirling-test',
     APPLE_PRIVATE_KEY: '',
-    FIREBASE_PROJECT_NUMBER: '1234567890',
+    FIREBASE_PROJECT_NUMBERS: '1234567890,9876543210',
     APPLE_KEY_ID: 'KEYID',
     APPLE_ISSUER_ID: 'ISSUER',
     APPLE_BUNDLE_IDS: 'eu.balzo.pdfexpert,eu.balzo.pdfexpert.staging',

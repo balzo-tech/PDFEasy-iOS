@@ -70,7 +70,7 @@ async function route(request: Request, env: Env): Promise<Response> {
   // as a 500, and the message stays vague on purpose — a caller that failed
   // attestation does not get told which part it failed.
   try {
-    await verifyAppCheck(request.headers.get('x-app-check'), env.FIREBASE_PROJECT_NUMBER)
+    await verifyAppCheck(request.headers.get('x-app-check'), env.FIREBASE_PROJECT_NUMBERS)
   } catch (error) {
     if (error instanceof RequestRejected) throw error
     throw new RequestRejected(401, 'app_check_invalid', 'App Check token rejected')

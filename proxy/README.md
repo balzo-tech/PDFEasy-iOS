@@ -50,10 +50,11 @@ Deployed on the **Balzo** Cloudflare account (`account_id` is in `wrangler.toml`
 the token can see three accounts and a deploy has to say which). The KV namespace
 `pdfpro-proxy-LIMITS` is already created and bound.
 
-Deployed and answering, but **not yet configured**: with no secrets and no
-`FIREBASE_PROJECT_NUMBER` it refuses everything, which is the correct state for a
-proxy nobody has given keys to. `/health` answers `{"ok":true}`; every other
-route answers 401 until App Check is set up.
+Deployed and answering, but **not yet configured**: with no secrets it refuses
+everything, which is the correct state for a proxy nobody has given keys to.
+`FIREBASE_PROJECT_NUMBERS` is filled in; the secrets and the two Apple
+identifiers are not. `/health` answers `{"ok":true}`; every other route answers
+401 until App Check is set up.
 
 ## Setting it up
 
@@ -71,14 +72,22 @@ The KV namespace step is done:
 
 Then fill in `[vars]` in `wrangler.toml`:
 
-- `FIREBASE_PROJECT_NUMBER` — the project *number* from the Firebase console
-  (Project settings → General), not the project id.
+- `FIREBASE_PROJECT_NUMBERS` — already filled in: the project *numbers* from the
+  Firebase console (Project settings → General), not the project ids. Production
+  and staging, comma-separated, because the two builds are two apps to Firebase
+  and each mints its own App Check tokens. A worker that knew only production
+  would refuse the staging build — which is the build the app is tested with.
 - `APPLE_KEY_ID` / `APPLE_ISSUER_ID` — from App Store Connect → Users and Access
   → Integrations → In-App Purchase, where you also generate the `.p8`. Download
   it once; Apple will not show it again.
-- `STIRLING_BASE_URL` — where your Stirling-PDF instance actually answers. No
-  default on purpose: a wrong host here would send customers' documents
-  somewhere nobody chose.
+- `STIRLING_BASE_URL` — already filled in with `https://api.stirling.com`,
+  Stirling's own hosted API. It runs the same software a self-hosted instance
+  does: `/api/v1/info/status` answers `{"version":"2.14.1","status":"UP"}`, and
+  the OpenAPI at `/v1/api-docs` contains all seven paths in `upstream.ts` and
+  declares `X-API-KEY` as its scheme. Point it at your own instance instead if
+  you would rather the documents not leave your infrastructure — there is no
+  default in the code on purpose, because a wrong host here would send
+  customers' documents somewhere nobody chose.
 
 ## What has to happen on the Firebase side
 

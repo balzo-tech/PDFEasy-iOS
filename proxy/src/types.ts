@@ -4,7 +4,8 @@ export interface Env {
   STIRLING_API_KEY: string
   APPLE_PRIVATE_KEY: string
   // Vars
-  FIREBASE_PROJECT_NUMBER: string
+  /// Comma-separated: production and staging mint their own App Check tokens.
+  FIREBASE_PROJECT_NUMBERS: string
   APPLE_KEY_ID: string
   APPLE_ISSUER_ID: string
   APPLE_BUNDLE_IDS: string
