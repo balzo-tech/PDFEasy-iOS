@@ -86,6 +86,16 @@ Restano da fare a mano le righe non spuntate.
 
 ## 4. Scanner — la parte più scoperta
 
+Primo giro il 2026-07-29: **cinque difetti trovati, tutti corretti**. L'anteprima
+ruotata di 90° (`0519295`, poi davvero `31fcc93`: il coordinatore di rotazione
+va costruito **con** il preview layer), lo scatto fuori asse, la X e i filtri che
+richiedevano più tocchi (`contentShape` mancante, corretto anche nelle altre 13
+schermate che condividono quella X), i filtri che sembravano non applicarsi (la
+cache di rendering non avvisava la vista). Rotazione **riverificata sul device e
+funzionante**. Dettagli in `scanner-camera-traps`.
+Le righe qui sotto vanno rifatte su questa build: sono state provate con la
+camera storta.
+
 - [ ] Il **contorno sta sulla pagina**, non accanto
 - [ ] Lo **scatto automatico** parte quando il telefono si ferma, non prima
 - [ ] Dopo uno scatto non rifà la stessa pagina
