@@ -37,6 +37,21 @@ final class ImageToPdfTests: XCTestCase {
         return UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
     }
 
+    /// Reads the middle pixel of an image as drawn.
+    private func centrePixel(of image: UIImage) throws -> (r: Int, g: Int, b: Int) {
+        let cgImage = try XCTUnwrap(image.cgImage)
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1,
+                                             bitsPerComponent: 8, bytesPerRow: 4,
+                                             space: CGColorSpaceCreateDeviceRGB(),
+                                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.draw(cgImage, in: CGRect(x: -CGFloat(cgImage.width) / 2 + 0.5,
+                                         y: -CGFloat(cgImage.height) / 2 + 0.5,
+                                         width: CGFloat(cgImage.width),
+                                         height: CGFloat(cgImage.height)))
+        return (Int(pixel[0]), Int(pixel[1]), Int(pixel[2]))
+    }
+
     /// Reads the middle of the first page of `document` as it would be drawn.
     private func centrePixelOfFirstPage(of document: PDFDocument) throws -> (r: Int, g: Int, b: Int) {
         let page = try XCTUnwrap(document.page(at: 0), "the document has no page")
@@ -99,6 +114,80 @@ final class ImageToPdfTests: XCTestCase {
             XCTAssertGreaterThan(pixel.r, 150,
                                  "a decoded photo (\(orientation.rawValue)) did not reach the page — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
         }
+    }
+
+    /// The editor does not draw the page it was given: it draws a *copy*, on a
+    /// background queue, so that rotating or deleting a page mid-render cannot
+    /// pull the ground out from under it (`PdfEditViewModel.drawPageImage`).
+    ///
+    /// That is the difference between this and the tests above, and it is the
+    /// reported bug: a page built inside a throwaway `PDFDocument` and then
+    /// inserted into another one keeps pointing at the document that made it, and
+    /// once that has gone the copy has no picture left to draw. A scan does not
+    /// hit this because it reaches the editor through the archive, which
+    /// serialises the document on the way in.
+    func testTheCopyTheEditorDrawsIsNotBlank() throws {
+        let document = PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto(orientation: .right))
+        let page = try XCTUnwrap(document.page(at: 0))
+        let copy = try XCTUnwrap(page.copy() as? PDFPage, "a page has to be copyable")
+
+        let image = PDFUtility.generatePageImage(copy)
+        let holder = PDFDocument()
+        holder.insert(copy, at: 0)
+
+        let cgImage = try XCTUnwrap(image.cgImage)
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1,
+                                             bitsPerComponent: 8, bytesPerRow: 4,
+                                             space: CGColorSpaceCreateDeviceRGB(),
+                                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.draw(cgImage, in: CGRect(x: -CGFloat(cgImage.width) / 2 + 0.5,
+                                         y: -CGFloat(cgImage.height) / 2 + 0.5,
+                                         width: CGFloat(cgImage.width),
+                                         height: CGFloat(cgImage.height)))
+        XCTAssertGreaterThan(Int(pixel[0]), 150,
+                             "the page the editor draws is blank — r\(pixel[0]) g\(pixel[1]) b\(pixel[2])")
+    }
+
+    /// The editor's strip and its first frame come from
+    /// `generatePdfThumbnail(size:)`, which draws the page for **`.trimBox`** —
+    /// while the full-size image next to it uses `.mediaBox`. A PDF written by
+    /// `UIGraphicsPDFRenderer` declares no TrimBox at all, and a scan only
+    /// escapes this because it reaches the editor through the archive, which
+    /// serialises the document and gives PDFKit a chance to write the boxes out.
+    ///
+    /// So: does a freshly converted photo have a thumbnail with a picture in it?
+    func testTheThumbnailOfAFreshlyConvertedPhotoIsNotBlank() throws {
+        let document = PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto())
+        let page = try XCTUnwrap(document.page(at: 0))
+
+        // What the boxes actually say, reported rather than assumed.
+        let media = page.bounds(for: .mediaBox)
+        let trim = page.bounds(for: .trimBox)
+        print("BOXES media=\(media) trim=\(trim)")
+
+        let thumbnail = try XCTUnwrap(PDFUtility.generatePdfThumbnail(pdfDocument: document,
+                                                                     size: K.Misc.ThumbnailEditSize),
+                                      "no thumbnail at all")
+        let pixel = try self.centrePixel(of: thumbnail)
+        XCTAssertGreaterThan(pixel.r, 150,
+                             "the editor's thumbnail is blank — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
+        XCTAssertLessThan(pixel.g, 100, "the thumbnail is washed out")
+    }
+
+    /// The same document after a round trip through its own bytes, which is what
+    /// saving to the archive does. If this one passes while the test above fails,
+    /// the difference between a photo and a scan is exactly that trip.
+    func testTheThumbnailIsFineOnceTheDocumentHasBeenThroughItsOwnBytes() throws {
+        let document = PDFUtility.convertUiImageToPdf(uiImage: self.makePhoto())
+        let data = try XCTUnwrap(document.dataRepresentation())
+        let reloaded = try XCTUnwrap(PDFDocument(data: data))
+
+        let thumbnail = try XCTUnwrap(PDFUtility.generatePdfThumbnail(pdfDocument: reloaded,
+                                                                     size: K.Misc.ThumbnailEditSize))
+        let pixel = try self.centrePixel(of: thumbnail)
+        XCTAssertGreaterThan(pixel.r, 150,
+                             "even a serialised document draws blank — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
     }
 
     /// A tall photo and a wide one both have to fit inside the margins rather
