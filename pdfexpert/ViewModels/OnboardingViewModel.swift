@@ -69,6 +69,7 @@ public class OnboardingViewModel : ObservableObject {
     @Injected(\.mainCoordinator) private var coordinator
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.appTrackingTransparancy) private var appTrackingTransparency
     
     func onMonetizationClose() {
         self.coordinator.goToMain()
@@ -88,13 +89,28 @@ public class OnboardingViewModel : ObservableObject {
         self.closeOnboarding()
     }
     
+    /// The tracking prompt is asked here, at the end of the tour, rather than on
+    /// every activation of the app as it used to be. Two reasons: by this point
+    /// the five steps have said what the app is for, and a system alert that
+    /// arrives on a launch the user did not initiate reads as a demand from
+    /// nowhere. Awaiting it also keeps the two presentations in single file —
+    /// the alert is answered before the paywall is asked for, instead of both
+    /// being requested in the same runloop.
+    ///
+    /// It returns immediately when the status is already decided, which is every
+    /// launch after the first, and on the simulator, where there is no
+    /// advertising identifier to ask about.
     private func closeOnboarding() {
         self.cacheManager.onboardingShown = true
-        
-        if self.store.isPremium.value {
-            self.coordinator.goToMain()
-        } else {
-            self.monetizationShow = true
+
+        Task { @MainActor in
+            await self.appTrackingTransparency.requestPermissionIfNeeded()
+
+            if self.store.isPremium.value {
+                self.coordinator.goToMain()
+            } else {
+                self.monetizationShow = true
+            }
         }
     }
 }

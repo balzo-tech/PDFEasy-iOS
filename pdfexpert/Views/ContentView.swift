@@ -10,7 +10,6 @@ import Factory
 
 struct ContentView: View {
     
-    @Injected(\.appTrackingTransparancy) var appTrackingTransparency
     @InjectedObject(\.mainCoordinator) var coordinator
     @Injected(\.store) var store
     @Injected(\.configService) var configService
@@ -19,10 +18,10 @@ struct ContentView: View {
         self.content
             .background(ColorPalette.primaryBG)
             .reviewFlowView(flow: self.coordinator.reviewFlow)
+            // The tracking prompt used to be asked here, on every activation.
+            // It is asked once at the end of the onboarding now, where the tour
+            // has just said what the app does — see `OnboardingViewModel`.
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                Task {
-                    await self.appTrackingTransparency.requestPermissionIfNeeded()
-                }
                 self.configService.onApplicationDidBecomeActive()
             }
             .onOpenURL { url in
