@@ -22,6 +22,13 @@ force(true)
 submit_for_review(false)
 automatic_release(false)
 
+# precheck screens metadata for things that get a submission rejected. It runs
+# before submitting — and this lane never submits, so it has nothing to guard.
+# It also cannot read in-app purchases with an API key, only with an Apple ID
+# login, so leaving it on means the upload finishes and the lane fails anyway.
+run_precheck_before_submit(false)
+precheck_include_in_app_purchases(false)
+
 # Only the two text fields are ours. Anything not listed here keeps whatever is
 # on App Store Connect, so a locale we have not translated yet is left as it is
 # rather than being blanked.
