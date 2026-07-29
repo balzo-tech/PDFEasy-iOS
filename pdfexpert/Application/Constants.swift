@@ -125,7 +125,10 @@ struct K {
         static let AppTitle = "PDF Pro"
         
         static let PrivacyPolicyUrlString = "https://www.balzo.eu/privacy-policy"
-        static let TermsAndConditionsUrlString = "https://balzo.eu/terms-and-conditions/"
+        // The path is `terms-conditions`, without the `and`, and the host wants
+        // its `www`: the old string answered 404, from Settings and from the
+        // paywall both.
+        static let TermsAndConditionsUrlString = "https://www.balzo.eu/terms-conditions"
         
         static let ImportFileTypesForAddPage: [UTType] = {
             [
