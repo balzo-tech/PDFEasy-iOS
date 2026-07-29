@@ -25,16 +25,28 @@ Segna così: `[x]` passata · `[!]` problema (scrivi cosa) · `[-]` non provabil
 
 ---
 
-## 1. Primo avvio
+## 1. Primo avvio — ✅ passata il 2026-07-29
 
-- [ ] Onboarding: cinque schermate, avanti **e indietro**, i puntini seguono la pagina
-- [ ] «Skip» in cima esce subito
-- [ ] Alla fine del tour compare il **permesso di tracciamento** (una volta sola)
-- [ ] Subito dopo compare il **paywall**, non insieme all'alert
-- [ ] Chiudendo il paywall si entra nell'app
-- [ ] Riavviando l'app: niente onboarding, niente secondo prompt di tracciamento
+- [x] Onboarding: cinque schermate, avanti **e indietro**, i puntini seguono la pagina
+- [x] «Skip» in cima esce subito
+- [x] Alla fine del tour compare il **permesso di tracciamento** (una volta sola)
+- [x] Subito dopo compare il **paywall**, non insieme all'alert
+- [x] Chiudendo il paywall si entra nell'app
+- [x] Riavviando l'app: niente onboarding, niente secondo prompt di tracciamento
 
 ## 2. Acquisti
+
+⚠️ **Prima di comprare, spegni la configurazione StoreKit locale**: Edit Scheme →
+Run → Options → **StoreKit Configuration → None**. Lo scheme `PdfExpert Staging`
+la referenzia nella `LaunchAction`, quindi un Run da Xcode compra *simulato*: la
+transazione ha un `originalID` che conta da zero, Apple non ne sa niente e il
+proxy la rifiuta con `402 no_subscription` prima ancora di chiamare Apple. Il
+risultato è che chat e strumenti online sembrano rotti mentre il problema è qui.
+Poi serve un **Account Apple sandbox** (Impostazioni → Sviluppatore → Account
+sandbox). Per rifare una prova: Impostazioni → App Store → Account Sandbox →
+Gestisci → annulla l'abbonamento.
+Il paywall si raggiunge **provando a far uscire un documento** (condividi,
+esporta, stampa), non da un badge PRO.
 
 - [ ] Acquisto **settimanale** con prova gratuita → l'app diventa premium
 - [ ] Acquisto **annuale** con prova gratuita
