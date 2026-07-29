@@ -84,7 +84,11 @@ Restano da fare a mano le righe non spuntate.
 > un simulatore con la build Staging e lo **stesso account iCloud**: il container
 > è unico e in Development entrambi ci parlano.
 
-## 4. Scanner — la parte più scoperta
+## 4. Scanner — ✅ chiusa il 2026-07-29
+
+**Otto difetti in tutto**, tutti corretti e riverificati sul device. È la sezione
+che ne ha resi di più, il che era prevedibile: metà di questo schermo non era mai
+girata su hardware.
 
 Primo giro il 2026-07-29: **cinque difetti trovati, tutti corretti**. L'anteprima
 ruotata di 90° (`0519295`, poi davvero `31fcc93`: il coordinatore di rotazione
@@ -93,20 +97,26 @@ richiedevano più tocchi (`contentShape` mancante, corretto anche nelle altre 13
 schermate che condividono quella X), i filtri che sembravano non applicarsi (la
 cache di rendering non avvisava la vista). Rotazione **riverificata sul device e
 funzionante**. Dettagli in `scanner-camera-traps`.
-Le righe qui sotto vanno rifatte su questa build: sono state provate con la
-camera storta.
+Secondo giro, stesso giorno: **altri tre**. Il ritaglio manuale scartato in
+silenzio quando copriva meno di un sesto dell'inquadratura (il rendering
+chiedeva la domanda del rilevatore automatico), «Salva» da premere due volte
+perché la tastiera copriva i bottoni, e lo scatto automatico che partiva senza
+farsi sentire. Tutti in `ab993b5`, con quattro test nuovi sulla geometria.
 
-- [ ] Il **contorno sta sulla pagina**, non accanto
-- [ ] Lo **scatto automatico** parte quando il telefono si ferma, non prima
-- [ ] Dopo uno scatto non rifà la stessa pagina
-- [ ] Flash sulla carta, pinch per lo zoom, tap per la messa a fuoco
-- [ ] Ritaglio: maniglie con la lente, il crop combacia con i pixel raddrizzati
-- [ ] Filtro «Documento» leggibile
-- [ ] Filtro **«Bianco e nero» su pagina in penombra** (il caso critico: le matite
+- [x] Il **contorno sta sulla pagina**, non accanto
+- [x] Lo **scatto automatico** parte quando il telefono si ferma, non prima —
+      e ora si sente: colpetto aptico sul conteggio pagine (`ab993b5`)
+- [x] Dopo uno scatto non rifà la stessa pagina
+- [x] Flash sulla carta, pinch per lo zoom, tap per la messa a fuoco
+- [x] Ritaglio: maniglie con la lente, il crop combacia con i pixel raddrizzati
+      — un taglio stretto veniva scartato in silenzio fino a `ab993b5`
+- [x] Filtro «Documento» leggibile
+- [x] Filtro **«Bianco e nero» su pagina in penombra** (il caso critico: le matite
       chiare non devono sparire)
-- [ ] «Salva come PDF» → il documento compare nella **tab Scanner**
-- [ ] «Salva come immagini» → chiede il permesso *solo aggiunta*, le pagine arrivano in Foto
-- [ ] iPad in orizzontale: la pagina esce dritta
+- [x] «Salva come PDF» → il documento compare nella **tab Scanner**
+- [ ] «Salva come immagini» → chiede il permesso *solo aggiunta*, le pagine arrivano
+      in Foto — **l'unica riga della sezione mai nominata**: da fare quando capita
+- [-] iPad in orizzontale: la pagina esce dritta — nessun iPad disponibile
 
 ## 5. Editor su una scansione lunga — la prova che conta
 
