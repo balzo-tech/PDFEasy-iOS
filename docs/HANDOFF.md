@@ -179,11 +179,22 @@ In order:
 
 ### Release blockers — none of them are code
 
-1. **Deploy the CloudKit production schema.** `searchableText` (phase 2), the
-   `Folder` / `Tag` record types with their relationships (phase 6), and
-   `sourceType` on `Pdf` (phase 14 — it is what the Scanner tab filters on). The
-   dev environment creates these on its own; production does not, and the app
-   will fail to sync without them.
+1. ~~Deploy the CloudKit production schema.~~ — **done 2026-07-29** on
+   `iCloud.eu.balzo.pdfexpert` (one container, shared by staging and production;
+   `Persistence.swift:12`). Promoted `CD_Folder`, `CD_Tag` and `CDMR` — the
+   record type that carries the Pdf↔Tag many-to-many — plus the four fields
+   `CD_Pdf` was missing (`CD_searchableText` and its `_ckAsset`, `CD_sourceType`,
+   `CD_folder`), 41 indexes, and the three new types added to the `_world` /
+   `_icloud` / `_creator` roles. Verified by re-exporting: production and
+   development now match, no field missing.
+   Two things worth knowing next time. **`cktool` cannot write to production** —
+   `import-schema` and `validate-schema` both answer `endpoint not applicable in
+   the environment 'production'`, and there is no deploy subcommand: the CLI is
+   for `export-schema` and diffing, the promotion is the console's "Deploy Schema
+   Changes…" button and nothing else. And **the environment follows the
+   signature, not the build configuration**: a build installed from Xcode talks
+   to Development, TestFlight and the App Store talk to Production — so the
+   device run does not exercise the schema that was just promoted.
 2. ~~`APPLE_ATTRIBUTION_API_KEY` in `ProjectInfo.plist`~~ — set on 2026-07-29,
    the one key still shipped in the bundle. Note the plist is git-ignored: on any
    other checkout it is absent, the build warns, and Search Ads attribution stays
