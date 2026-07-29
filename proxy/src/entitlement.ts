@@ -38,11 +38,15 @@ export interface Subscriber {
 export async function verifyEntitlement(
   originalTransactionId: string | null,
   env: Env,
+  bundleId: string,
 ): Promise<Subscriber> {
   if (!originalTransactionId || !/^[0-9]{6,20}$/.test(originalTransactionId)) {
     throw new RequestRejected(402, 'no_subscription', 'No subscription was presented')
   }
-  const cacheKey = `ent:${originalTransactionId}`
+  // Keyed by app as well: the same id means different things to Apple depending
+  // on which bundle id asks, and a cached "inactive" from the wrong app would
+  // outlive the mistake that produced it.
+  const cacheKey = `ent:${bundleId}:${originalTransactionId}`
   const cached = await env.LIMITS.get(cacheKey)
   if (cached === 'active') {
     return { originalTransactionId }
@@ -51,7 +55,7 @@ export async function verifyEntitlement(
     throw new RequestRejected(402, 'subscription_expired', 'This subscription is not active')
   }
 
-  const active = await askApple(originalTransactionId, env)
+  const active = await askApple(originalTransactionId, env, bundleId)
   await env.LIMITS.put(cacheKey, active ? 'active' : 'inactive', {
     expirationTtl: CACHE_SECONDS,
   })
@@ -71,12 +75,16 @@ export async function verifyEntitlement(
 /// is every device test, and every TestFlight build. So any answer production
 /// cannot make sense of moves on to the sandbox, and only a failure at *both*
 /// hosts is reported as the store being unreachable.
-async function askApple(originalTransactionId: string, env: Env): Promise<boolean> {
+async function askApple(
+  originalTransactionId: string,
+  env: Env,
+  bundleId: string,
+): Promise<boolean> {
   let unreachable: number | null = null
   for (const host of [PRODUCTION_HOST, SANDBOX_HOST]) {
     const response = await fetch(
       `${host}/inApps/v1/subscriptions/${originalTransactionId}`,
-      { headers: { Authorization: `Bearer ${await appleToken(env)}` } },
+      { headers: { Authorization: `Bearer ${await appleToken(env, bundleId)}` } },
     )
     if (response.status === 404) continue
     if (!response.ok) {
@@ -114,33 +122,34 @@ function statusIsEntitling(body: AppleStatusResponse): boolean {
   return false
 }
 
-/// Apple's API wants a short-lived ES256 JWT signed with the .p8. Rebuilt per
-/// isolate rather than per request; an hour is well inside the 60 minutes Apple
-/// allows.
-let tokenCache: { value: string; expiresAt: number } | null = null
+/// Apple's API wants a short-lived ES256 JWT signed with the .p8, naming the app
+/// it is about. One per bundle id, rebuilt per isolate rather than per request;
+/// half an hour is well inside the 60 minutes Apple allows.
+const tokenCache = new Map<string, { value: string; expiresAt: number }>()
 
-async function appleToken(env: Env): Promise<string> {
+async function appleToken(env: Env, bundleId: string): Promise<string> {
   const now = Math.floor(Date.now() / 1000)
-  if (tokenCache && tokenCache.expiresAt - 60 > now) {
-    return tokenCache.value
+  const cached = tokenCache.get(bundleId)
+  if (cached && cached.expiresAt - 60 > now) {
+    return cached.value
   }
   if (!env.APPLE_PRIVATE_KEY || !env.APPLE_KEY_ID || !env.APPLE_ISSUER_ID) {
     throw new RequestRejected(500, 'not_configured', 'App Store Server API credentials are not set')
   }
   const key = await importPKCS8(env.APPLE_PRIVATE_KEY, 'ES256')
   const expiresAt = now + 30 * 60
-  const value = await new SignJWT({ bid: env.APPLE_BUNDLE_IDS.split(',')[0].trim() })
+  const value = await new SignJWT({ bid: bundleId })
     .setProtectedHeader({ alg: 'ES256', kid: env.APPLE_KEY_ID, typ: 'JWT' })
     .setIssuer(env.APPLE_ISSUER_ID)
     .setAudience('appstoreconnect-v1')
     .setIssuedAt(now)
     .setExpirationTime(expiresAt)
     .sign(key)
-  tokenCache = { value, expiresAt }
+  tokenCache.set(bundleId, { value, expiresAt })
   return value
 }
 
 /// Test seam.
 export function resetAppleTokenForTests() {
-  tokenCache = null
+  tokenCache.clear()
 }

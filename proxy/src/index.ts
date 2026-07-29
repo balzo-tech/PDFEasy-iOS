@@ -21,7 +21,7 @@
 //  only for callers that have already passed the ones that do not.
 //
 
-import { verifyAppCheck } from './appcheck'
+import { bundleIdForProject, verifyAppCheck } from './appcheck'
 import { verifyEntitlement } from './entitlement'
 import { chargeIpRateLimit, chargeMonthlyQuota } from './limits'
 import { RequestRejected, type Env } from './types'
@@ -69,16 +69,35 @@ async function route(request: Request, env: Env): Promise<Response> {
   // App Check throws plain errors; they become a 401 here rather than leaking
   // as a 500, and the message stays vague on purpose — a caller that failed
   // attestation does not get told which part it failed.
+  let claims
   try {
-    await verifyAppCheck(request.headers.get('x-app-check'), env.FIREBASE_PROJECT_NUMBERS)
+    claims = await verifyAppCheck(request.headers.get('x-app-check'), env.FIREBASE_PROJECT_NUMBERS)
   } catch (error) {
     if (error instanceof RequestRejected) throw error
     throw new RequestRejected(401, 'app_check_invalid', 'App Check token rejected')
   }
 
+  // The attested token says which Firebase project minted it, and that is what
+  // decides which app Apple is asked about. Taking it from here rather than
+  // from anything the caller wrote means the choice is as trustworthy as the
+  // attestation itself.
+  const bundleId = bundleIdForProject(
+    env.FIREBASE_PROJECT_NUMBERS,
+    env.APPLE_BUNDLE_IDS,
+    claims.projectNumber,
+  )
+  if (!bundleId) {
+    throw new RequestRejected(
+      500,
+      'not_configured',
+      'No bundle id configured for the attested project',
+    )
+  }
+
   const subscriber = await verifyEntitlement(
     request.headers.get('x-original-transaction-id'),
     env,
+    bundleId,
   )
 
   if (chat) {

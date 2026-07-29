@@ -11,29 +11,51 @@
 //
 
 import { describe, expect, it } from 'vitest'
-import { matchingProject, parseProjectNumbers, verifyAppCheck } from '../src/appcheck'
+import { bundleIdForProject, matchingProject, parseList, verifyAppCheck } from '../src/appcheck'
 
 const PRODUCTION = '950539290225'
 const STAGING = '971070997447'
+const NUMBERS = `${PRODUCTION},${STAGING}`
+const BUNDLE_IDS = 'eu.balzo.pdfexpert,eu.balzo.pdfexpert.staging'
 
 const issuerOf = (number: string) => `https://firebaseappcheck.googleapis.com/${number}`
 
-describe('parseProjectNumbers', () => {
+describe('parseList', () => {
   it('reads a single project', () => {
-    expect(parseProjectNumbers(PRODUCTION)).toEqual([PRODUCTION])
+    expect(parseList(PRODUCTION)).toEqual([PRODUCTION])
   })
 
   it('reads a list, and tolerates the spacing a human leaves', () => {
-    expect(parseProjectNumbers(` ${PRODUCTION} , ${STAGING} `)).toEqual([PRODUCTION, STAGING])
+    expect(parseList(` ${PRODUCTION} , ${STAGING} `)).toEqual([PRODUCTION, STAGING])
   })
 
   it('drops empty entries rather than keeping a project that matches nothing', () => {
-    expect(parseProjectNumbers(`${PRODUCTION},,`)).toEqual([PRODUCTION])
+    expect(parseList(`${PRODUCTION},,`)).toEqual([PRODUCTION])
   })
 
   it('reads an unset var as no projects at all', () => {
-    expect(parseProjectNumbers('')).toEqual([])
-    expect(parseProjectNumbers('  ,  ')).toEqual([])
+    expect(parseList('')).toEqual([])
+    expect(parseList('  ,  ')).toEqual([])
+  })
+})
+
+describe('bundleIdForProject', () => {
+  it('gives the production app for the production project', () => {
+    expect(bundleIdForProject(NUMBERS, BUNDLE_IDS, PRODUCTION)).toBe('eu.balzo.pdfexpert')
+  })
+
+  it('gives the staging app for the staging project — the whole point', () => {
+    expect(bundleIdForProject(NUMBERS, BUNDLE_IDS, STAGING)).toBe('eu.balzo.pdfexpert.staging')
+  })
+
+  it('has nothing to say about a project that is not configured', () => {
+    expect(bundleIdForProject(NUMBERS, BUNDLE_IDS, '1111111111')).toBeNull()
+  })
+
+  it('refuses to guess when the two lists are not the same length', () => {
+    // Rather than falling back to the first bundle id, which is the bug this
+    // function exists to fix.
+    expect(bundleIdForProject(NUMBERS, 'eu.balzo.pdfexpert', STAGING)).toBeNull()
   })
 })
 

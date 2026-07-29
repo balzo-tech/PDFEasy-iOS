@@ -85,6 +85,13 @@ Then fill in `[vars]` in `wrangler.toml`:
 - `APPLE_KEY_ID` / `APPLE_ISSUER_ID` — from App Store Connect → Users and Access
   → Integrations → In-App Purchase, where you also generate the `.p8`. Download
   it once; Apple will not show it again.
+- `APPLE_BUNDLE_IDS` — read positionally against `FIREBASE_PROJECT_NUMBERS`:
+  first with first. The JWT sent to Apple names one app in its `bid` claim, and
+  Apple answers 404 about a transaction belonging to any other — so a staging
+  subscription asked about under the production bundle id reads as no
+  subscription at all. Which app to name comes from the App Check token's
+  project, so it is as trustworthy as the attestation. Keep the two lists in the
+  same order.
 - `STIRLING_BASE_URL` — already filled in with `https://api.stirling.com`,
   Stirling's own hosted API. It runs the same software a self-hosted instance
   does: `/api/v1/info/status` answers `{"version":"2.14.1","status":"UP"}`, and
@@ -128,7 +135,7 @@ the repository, in a scheme that is committed, or in a screenshot.
 
 ## Tests
 
-    npm test          # 47 cases, no network, no account needed
+    npm test          # 66 cases, no network, no account needed
     npm run typecheck
 
 They cover the limits, the two upstreams and — the part worth having — the order

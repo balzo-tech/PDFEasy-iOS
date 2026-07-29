@@ -5,7 +5,8 @@ import { makeEnv } from './helpers'
 // The two checks that need the network are stubbed: what is under test here is
 // the order they run in and what happens when one says no.
 const verifyAppCheck = vi.fn<(token: string | null, project: string) => Promise<unknown>>()
-const verifyEntitlement = vi.fn<(id: string | null, env: unknown) => Promise<unknown>>()
+const verifyEntitlement =
+  vi.fn<(id: string | null, env: unknown, bundleId: string) => Promise<unknown>>()
 const forwardChat = vi.fn(async (_request: Request, _env: unknown) =>
   new Response('chat', { status: 200 }),
 )
@@ -13,7 +14,13 @@ const forwardStirling = vi.fn(async (_request: Request, _operation: string, _env
   new Response('doc', { status: 200 }),
 )
 
-vi.mock('../src/appcheck', () => ({ verifyAppCheck }))
+// Only the verification is stubbed: `bundleIdForProject` is plain string work,
+// and the router's job of pairing an attested project with an app is exactly
+// what these tests are here to check.
+vi.mock('../src/appcheck', async () => {
+  const actual = await vi.importActual<typeof import('../src/appcheck')>('../src/appcheck')
+  return { ...actual, verifyAppCheck }
+})
 vi.mock('../src/entitlement', () => ({ verifyEntitlement }))
 vi.mock('../src/upstream', () => ({ forwardChat, forwardStirling }))
 
@@ -30,7 +37,7 @@ function post(path: string, headers: Record<string, string> = {}): Request {
 const goodHeaders = { 'x-app-check': 'token', 'x-original-transaction-id': '1000000000000001' }
 
 beforeEach(() => {
-  verifyAppCheck.mockResolvedValue({ appId: 'app' })
+  verifyAppCheck.mockResolvedValue({ appId: 'app', projectNumber: '1234567890' })
   verifyEntitlement.mockResolvedValue({ originalTransactionId: '1000000000000001' })
 })
 
@@ -64,6 +71,25 @@ describe('routing', () => {
   it('passes the operation name through to Stirling', async () => {
     await worker.fetch(post('/v1/stirling/repair', goodHeaders), makeEnv())
     expect(forwardStirling.mock.calls[0][1]).toBe('repair')
+  })
+})
+
+describe('which app the subscription is checked against', () => {
+  it('asks about the app whose project attested the caller', async () => {
+    verifyAppCheck.mockResolvedValue({ appId: 'app', projectNumber: '9876543210' })
+    await worker.fetch(post('/v1/chat', goodHeaders), makeEnv())
+    expect(verifyEntitlement.mock.calls[0][2]).toBe('eu.balzo.pdfexpert.staging')
+  })
+
+  it('stops rather than guessing when the attested project has no app', async () => {
+    // A misconfiguration, and one worth failing loudly over: falling back to the
+    // first bundle id would ask Apple about the wrong app and read the answer as
+    // "not a subscriber".
+    verifyAppCheck.mockResolvedValue({ appId: 'app', projectNumber: '5555555555' })
+    const response = await worker.fetch(post('/v1/chat', goodHeaders), makeEnv())
+    expect(response.status).toBe(500)
+    expect(await response.json()).toMatchObject({ error: { code: 'not_configured' } })
+    expect(verifyEntitlement).not.toHaveBeenCalled()
   })
 })
 
