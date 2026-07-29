@@ -74,17 +74,22 @@ behind is in "What landed on `main`".
   passing one makes xcodebuild silently fall back to `Production Release` and emit
   misleading `Unable to resolve module` errors. Always pass an explicit config.
 - **Local build needs `ProjectInfo.plist`**: `pdfexpert/Resources/ProjectInfo.plist`
-  is git-ignored (holds `OPENAI_API_KEY`, and now `STIRLING_API_KEY`) and must exist
-  locally. A placeholder is enough to compile; use the real key to exercise ChatPDF.
-  The plist is **no longer bundled** into the app. At build time the "Generate Secrets"
+  is git-ignored and must exist locally. Since the proxy landed it holds **one key**,
+  `APPLE_ATTRIBUTION_API_KEY` — `OPENAI_API_KEY` and `STIRLING_API_KEY` are gone from
+  it, and from the app: they live as Cloudflare Worker secrets now (uploaded
+  2026-07-29), and the app never sees them. An empty value compiles and only costs a
+  warning: `AppDelegate` skips `AppleAttribution.configure` when the key is empty, so
+  Search Ads attribution stays off.
+  The plist is **not bundled** into the app. At build time the "Generate Secrets"
   run-script phase (runs before Compile Sources; see `pdfexpert/Scripts/generate_secrets.sh`)
   reads the plist and emits `pdfexpert/Generated/ObfuscatedSecrets.swift` (git-ignored)
-  with each key XOR-obfuscated against a fresh random pad. `ProjectInfo.openAiApiKey` /
-  `ProjectInfo.stirlingApiKey` deobfuscate it at runtime via `ObfuscatedSecret`. Result:
-  no cleartext key in the IPA and nothing recognizable in `strings` on the binary. To
-  set the real key, just edit the git-ignored plist and rebuild — nothing else. This
-  only raises the bar; a runtime attacker can still extract keys, so the eventual fix
-  is still a server-side proxy.
+  with each key XOR-obfuscated against a fresh random pad;
+  `ProjectInfo.appleAttributionApiKey` deobfuscates it at runtime via `ObfuscatedSecret`.
+  Result: no cleartext key in the IPA and nothing recognizable in `strings` on the
+  binary. To set the real key, edit the git-ignored plist and rebuild — nothing else.
+  This only raises the bar; a runtime attacker can still extract it. It stays in the
+  bundle because the attribution SDK takes the key on the device; the two keys that
+  could move behind a server did.
 - Per-env `Info.plist` / `GoogleService-Info.plist` live in
   `pdfexpert/Resources/{Staging,Production}` and are git-ignored too.
 - **Verify build/test from CLI (Apple Silicon)**:
@@ -179,14 +184,31 @@ In order:
    `sourceType` on `Pdf` (phase 14 — it is what the Scanner tab filters on). The
    dev environment creates these on its own; production does not, and the app
    will fail to sync without them.
-2. **Real keys in the local/CI `ProjectInfo.plist`**: `OPENAI_API_KEY` (ChatPDF),
-   `STIRLING_API_KEY` (the six conversion tools).
-3. **Flip `stirling_api_enabled=true`** in Firebase Remote Config, or those six
-   tools stay invisible in the catalog.
-4. **The device test run.** See the `device-test-setup` memory note — it is the
+2. ~~`APPLE_ATTRIBUTION_API_KEY` in `ProjectInfo.plist`~~ — set on 2026-07-29,
+   the one key still shipped in the bundle. Note the plist is git-ignored: on any
+   other checkout it is absent, the build warns, and Search Ads attribution stays
+   off — which is a degradation, not a build failure. It still wants a device
+   run against a live campaign; AdServices returns no token on a simulator.
+   (`OPENAI_API_KEY` and `STIRLING_API_KEY` are **done** too: Cloudflare Worker
+   secrets since 2026-07-29, gone from the plist and from the app. So is
+   `stirling_api_enabled=true`, set on both Firebase projects on 2026-07-28.)
+3. **The device test run.** See the `device-test-setup` memory note — it is the
    accumulated checklist for phases 1–11, and it needs an iPad as well as an
    iPhone since phase 8. **Phase 14 raises the stakes here**: the scanner's
    camera has never run against real frames, and a simulator cannot run it.
+4. **Privacy labels on App Store Connect** (Purchase History / Product
+   Interaction / Identifier, per phase 21) and a privacy policy covering
+   attribution and purchase data. The SDK ships only its own
+   `PrivacyInfo.xcprivacy`; the app's labels are filled in by whoever publishes.
+
+### The release being prepared
+
+**1.27, build 1** — set on all four configurations of both the app and the
+widget (2026-07-29). 1.26 is spent: builds 1, 2 and 3 are already on TestFlight
+and App Store Connect refuses a version/build pair it has seen.
+⚠️ `fastlane beta` runs `increment_build_number` before archiving, so that lane
+uploads build **2**, not 1. Archive from Xcode, or drop the increment, if build 1
+is what should go up.
 
 ### Needs on-device / behavioral verification (the code is in, the behavior isn't CLI-checkable)
 - **A5/A5b** — open & dismiss each modal (PdfEdit: camera, scanner, signature,
