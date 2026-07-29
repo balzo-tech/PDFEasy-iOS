@@ -127,7 +127,10 @@ struct ChatPdfView: View {
 
             HStack(alignment: .bottom, spacing: 0) {
                 TextField("Type your Message...", text: self.$typingMessage, axis: .vertical)
-                    .font(forCategory: .body2)
+                    // Same size as the messages: what is typed here becomes one
+                    // of them, and a field smaller than its own output reads as
+                    // an afterthought.
+                    .font(forCategory: .body1)
                     .foregroundColor(ColorPalette.primaryText)
                     // A question typed to a document is prose, so it gets the
                     // capital letter and the corrections prose expects — this

@@ -48,13 +48,20 @@ struct MessageView: View {
         Group {
             switch self.message.type {
             case .text:
-                Text(self.message.content.trimmingCharacters(in: .whitespacesAndNewlines))
-                    .font(forCategory: .body2)
+                Text(self.attributedContent)
+                    // `.body` rather than `.subheadline`: a summary is a
+                    // paragraph to be read, not a caption to be glanced at, and
+                    // the extra point of size is the cheapest legibility there
+                    // is. The leading goes with it — set solid, lines of this
+                    // length are tiring to follow back to the left margin.
+                    .font(forCategory: .body1)
+                    .lineSpacing(3)
                     .foregroundColor(self.message.textColor)
+                    .multilineTextAlignment(.leading)
                     // Answers carry figures and dates worth copying out.
                     .textSelection(.enabled)
                     .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 11)
             case .indicator:
                 MessageIndicatorView()
                     .padding(.horizontal, 14)
@@ -65,6 +72,25 @@ struct MessageView: View {
             RoundedCorner(radius: 18, corners: self.message.roundedCorners)
                 .fill(self.message.backgroundColor)
         )
+    }
+
+    /// The answer, with its Markdown honoured.
+    ///
+    /// The model marks up what it writes — a total in bold, an occasional list —
+    /// and a plain `Text` shows the asterisks instead of the emphasis. Parsed
+    /// inline only, and preserving whitespace: the full parser treats the text
+    /// as a document and folds the line breaks that separate one item from the
+    /// next, which is exactly the structure worth keeping. A string that will
+    /// not parse is shown as it arrived rather than not shown at all.
+    private var attributedContent: AttributedString {
+        let trimmed = self.message.content.trimmingCharacters(in: .whitespacesAndNewlines)
+        let options = AttributedString.MarkdownParsingOptions(
+            allowsExtendedAttributes: false,
+            interpretedSyntax: .inlineOnlyPreservingWhitespace,
+            failurePolicy: .returnPartiallyParsedIfPossible
+        )
+        return (try? AttributedString(markdown: trimmed, options: options))
+            ?? AttributedString(trimmed)
     }
 
     private var suggestedQuestions: some View {
@@ -79,6 +105,7 @@ struct MessageView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
                         Text(suggestedQuestion)
                             .font(forCategory: .body2)
+                            .lineSpacing(2)
                             .multilineTextAlignment(.leading)
                         Image(systemName: "arrow.up.forward")
                             .font(.caption2)
