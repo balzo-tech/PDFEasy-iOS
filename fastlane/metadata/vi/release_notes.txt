@@ -1,0 +1,24 @@
+Đây là bản cập nhật lớn nhất từ trước đến nay của PDF Pro: gần như mọi phần của ứng dụng đều được làm lại.
+
+MÁY QUÉT CỦA RIÊNG CHÚNG TÔI
+Quét bằng camera nay đã tích hợp sẵn: khung viền bám theo tờ giấy, máy tự chụp khi tay bạn giữ yên, và bản quét nằm trong tab riêng.
+
+MỘT KHO TÀI LIỆU THỰC SỰ TÌM ĐƯỢC
+Thư mục và thẻ, cùng khả năng tìm kiếm bên trong nội dung văn bản chứ không chỉ theo tên tệp. Tất cả đồng bộ qua tài khoản iCloud của bạn.
+
+TRÌNH CHỈNH SỬA THEO KỊP BẠN
+Tài liệu dài và bản quét mở ra ngay lập tức và cuộn mượt mà: các trang được vẽ khi bạn cuộn tới. Một danh sách công cụ duy nhất, thanh trang đi theo tài liệu, và mỗi công cụ có màn hình riêng thay vì chồng nhiều bảng lên nhau.
+
+NHIỀU CÔNG CỤ HƠN
+Xoay cả tài liệu, so sánh hai tệp PDF, nén với thiết lập sẵn cho biết bạn đang đánh đổi điều gì, che nội dung, nghe đọc thành tiếng, và để ứng dụng tự đề xuất tên tệp dựa trên chính tài liệu.
+
+THIẾT KẾ LẠI
+Diện mạo mới trên toàn ứng dụng, giao diện dành cho iPad, tiện ích Màn hình chính, cùng hỗ trợ Siri và Phím tắt.
+
+HỎI CHÍNH TÀI LIỆU
+Phần trò chuyện được làm lại: câu trả lời rõ ràng hơn, có câu hỏi gợi ý, và định dạng cuối cùng cũng dễ đọc.
+
+NAY CÓ TIẾNG TÂY BAN NHA
+Bên cạnh tiếng Anh và tiếng Ý.
+
+Ngoài ra: khởi động nhanh hơn, đồng bộ iCloud ổn định hơn và một danh sách dài các sửa lỗi.

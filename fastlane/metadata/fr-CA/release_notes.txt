@@ -1,0 +1,24 @@
+C'est la plus grande mise à jour qu'ait connue PDF Pro : presque toutes les parties de l'app ont été refaites.
+
+UN SCANNER BIEN À NOUS
+La numérisation par l'appareil photo est désormais intégrée : le contour suit la feuille, le déclenchement se fait quand votre main s'immobilise, et les numérisations arrivent dans leur propre onglet.
+
+UNE BIBLIOTHÈQUE OÙ L'ON TROUVE
+Des dossiers et des étiquettes, et une recherche qui regarde à l'intérieur du texte de vos documents, pas seulement leur nom. Tout se synchronise via votre compte iCloud.
+
+UN ÉDITEUR QUI SUIT
+Les documents longs et les numérisations s'ouvrent immédiatement et défilent sans à-coups : les pages sont dessinées à mesure que vous les atteignez. Une seule liste d'outils, une barre de pages qui suit le document, et chaque outil sur son propre écran plutôt qu'une pile de panneaux.
+
+PLUS D'OUTILS
+Faites pivoter un document entier, comparez deux PDF, compressez avec des préréglages qui annoncent ce que vous perdez, masquez, écoutez le texte à voix haute, et laissez l'app proposer le nom du fichier à partir du document lui-même.
+
+ENTIÈREMENT REDESSINÉE
+Une nouvelle apparence partout, une interface conçue pour l'iPad, un widget sur l'écran d'accueil et la prise en charge de Siri et des Raccourcis.
+
+INTERROGEZ VOTRE DOCUMENT
+Le chat a été refait : des réponses plus claires, des questions suggérées et une mise en forme enfin lisible.
+
+MAINTENANT EN ESPAGNOL
+Aux côtés de l'anglais et de l'italien.
+
+Et aussi : des lancements plus rapides, une synchronisation iCloud plus stable et une longue liste de corrections.

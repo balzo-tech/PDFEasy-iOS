@@ -1,0 +1,28 @@
+# Metadata upload, text only.
+#
+# `fastlane metadata` reads fastlane/metadata/<locale>/{description,release_notes}.txt
+# and writes them to the version that is open for editing on App Store Connect.
+# Everything else on that page is left alone — screenshots, keywords, pricing,
+# the build itself. Uploading text should not be able to change what ships.
+
+app_identifier("eu.balzo.pdfexpert")
+
+# The binary is uploaded by `fastlane beta`, not from here.
+skip_binary_upload(true)
+
+# Screenshots are managed in the web UI. Without this, an empty
+# fastlane/screenshots directory would read as "remove them all".
+skip_screenshots(true)
+skip_app_version_update(false)
+
+# No HTML preview waiting for a keypress: this lane has to run unattended.
+force(true)
+
+# Submission is a separate decision, taken by a person.
+submit_for_review(false)
+automatic_release(false)
+
+# Only the two text fields are ours. Anything not listed here keeps whatever is
+# on App Store Connect, so a locale we have not translated yet is left as it is
+# rather than being blanked.
+overwrite_screenshots(false)

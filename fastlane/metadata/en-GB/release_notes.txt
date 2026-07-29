@@ -1,0 +1,24 @@
+This is the largest update PDF Pro has had. Almost every part of the app was rebuilt.
+
+A SCANNER OF OUR OWN
+Camera scanning is now built in: the outline follows the page, the shutter fires when your hand settles, and scans land in their own tab.
+
+AN ARCHIVE THAT CAN BE SEARCHED
+Folders and tags, and search that looks inside the text of your documents instead of only at their names. It all syncs through your iCloud account.
+
+AN EDITOR THAT KEEPS UP
+Long documents and scans open immediately and stay smooth while you scroll — pages are drawn as you reach them. One tool list, a page bar that follows the document, and every tool on its own screen instead of a stack of sheets.
+
+MORE TOOLS
+Rotate a whole document, compare two PDFs, compress with presets that say what you are trading away, redact, read aloud, and let the app suggest a file name from the document itself.
+
+REDESIGNED
+A new look throughout, a layout made for iPad, a Home Screen widget, and Siri and Shortcuts support.
+
+ASK YOUR DOCUMENT
+The chat was rebuilt: clearer answers, suggested questions, and formatting that is actually readable.
+
+NOW IN SPANISH
+Alongside English and Italian.
+
+Plus faster launches, steadier iCloud sync, and a long list of fixes.
