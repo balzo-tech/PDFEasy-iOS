@@ -34,7 +34,7 @@ Segna così: `[x]` passata · `[!]` problema (scrivi cosa) · `[-]` non provabil
 - [x] Chiudendo il paywall si entra nell'app
 - [x] Riavviando l'app: niente onboarding, niente secondo prompt di tracciamento
 
-## 2. Acquisti
+## 2. Acquisti — ✅ passata il 2026-07-29
 
 ⚠️ **Prima di comprare, spegni la configurazione StoreKit locale**: Edit Scheme →
 Run → Options → **StoreKit Configuration → None**. Lo scheme `PdfExpert Staging`
@@ -48,12 +48,12 @@ Gestisci → annulla l'abbonamento.
 Il paywall si raggiunge **provando a far uscire un documento** (condividi,
 esporta, stampa), non da un badge PRO.
 
-- [ ] Acquisto **settimanale** con prova gratuita → l'app diventa premium
-- [ ] Acquisto **annuale** con prova gratuita
-- [ ] Il badge della prova dice il periodo giusto, in italiano
-- [ ] Chiudere e riaprire l'app: resta premium
-- [ ] **Ripristina acquisti** su installazione pulita
-- [ ] Termini e Privacy sotto il paywall aprono pagine **che esistono** (non 404)
+- [x] Acquisto **settimanale** con prova gratuita → l'app diventa premium
+- [x] Acquisto **annuale** con prova gratuita
+- [x] Il badge della prova dice il periodo giusto, in italiano
+- [x] Chiudere e riaprire l'app: resta premium
+- [x] **Ripristina acquisti** su installazione pulita
+- [x] Termini e Privacy sotto il paywall aprono pagine **che esistono** (non 404)
 
 ## 3. Archivio, cartelle, tag, ricerca
 
@@ -64,7 +64,15 @@ esporta, stampa), non da un badge PRO.
 - [ ] Eliminare una cartella: i documenti restano e tornano fra i non archiviati
 - [ ] Dopo OCR / redazione / annotazioni il documento **conserva cartella e tag**
 - [ ] Sync iCloud: il documento appare sull'altro dispositivo
-- [ ] Due cartelle con lo stesso nome create su due dispositivi → restano due
+- [ ] Due cartelle con lo stesso nome create su due dispositivi **si fondono in
+      una** (dedup attivo da `8055367`): sopravvive la più vecchia per data di
+      creazione e si porta dietro i documenti di entrambe. Vale anche per «Lavoro»
+      contro «lavoro » — maiuscole e spazi non fanno due cartelle. Idem per i tag,
+      che però vengono *condivisi* invece che spostati.
+
+> Le due righe qui sopra vogliono un **secondo dispositivo**. Senza iPad, va bene
+> un simulatore con la build Staging e lo **stesso account iCloud**: il container
+> è unico e in Development entrambi ci parlano.
 
 ## 4. Scanner — la parte più scoperta
 
