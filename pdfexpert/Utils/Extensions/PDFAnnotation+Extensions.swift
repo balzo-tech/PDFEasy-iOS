@@ -121,3 +121,16 @@ fileprivate extension Dictionary where Key == AnyHashable, Value == Any {
         return self["/\(Self.keyPrefix)_\(key)"] as? T
     }
 }
+
+extension CGRect {
+
+    /// Same rectangle, allowing for the rounding a round trip through a PDF does.
+    /// Used to match an annotation in one copy of a document against the same
+    /// annotation in another — identity cannot cross that boundary.
+    func isNearlyEqual(to other: CGRect, tolerance: CGFloat = 1) -> Bool {
+        abs(self.origin.x - other.origin.x) <= tolerance
+            && abs(self.origin.y - other.origin.y) <= tolerance
+            && abs(self.size.width - other.size.width) <= tolerance
+            && abs(self.size.height - other.size.height) <= tolerance
+    }
+}

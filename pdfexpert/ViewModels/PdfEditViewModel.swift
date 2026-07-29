@@ -639,6 +639,62 @@ class PdfEditViewModel: ObservableObject {
         self.mainCoordinator.goToArchive()
     }
     
+    /// The annotation the user touched on the page, handed to the tool that owns
+    /// it so it opens straight into editing that element rather than making a new
+    /// one. Consumed once — see `consumeAnnotationToEdit()`.
+    private var annotationToEdit: PDFAnnotation? = nil
+
+    func consumeAnnotationToEdit() -> PDFAnnotation? {
+        defer { self.annotationToEdit = nil }
+        return self.annotationToEdit
+    }
+
+    /// A tap on the page. If it landed on a signature or on a piece of text, the
+    /// matching tool opens with that element already selected; otherwise nothing
+    /// happens, because a tap on the page itself has no other meaning here.
+    ///
+    /// This is what "I want to fix the thing I just placed" needs: the elements
+    /// are annotations in the document, and the two tools can already edit one —
+    /// what was missing was a way to say *which*, without reopening a tool and
+    /// hunting for it.
+    @MainActor
+    func tapOnPage(at point: CGPoint, viewSize: CGSize) {
+        guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
+              let pointInPage = Self.pointInPage(point, viewSize: viewSize, page: page) else {
+            return
+        }
+        let annotations = page.annotations
+        if let signature = annotations.first(where: { $0.isSignatureAnnotation && $0.bounds.contains(pointInPage) }) {
+            self.annotationToEdit = signature
+            self.activeSheet = .signature
+        } else if let text = annotations.first(where: { $0.isTextAnnotation && $0.bounds.contains(pointInPage) }) {
+            self.annotationToEdit = text
+            self.activeSheet = .fillForm
+        }
+    }
+
+    /// Where a tap on the pager lands in the page's own coordinates.
+    ///
+    /// The pager draws an image, not a `PDFView`, so there is no `convert(_:to:)`
+    /// to lean on: the image is drawn aspect-fit, which letterboxes it, and PDF
+    /// space has its origin at the bottom left while a tap arrives with y going
+    /// down. Returns nil for a tap in the letterbox — that is the background, not
+    /// the page.
+    static func pointInPage(_ point: CGPoint, viewSize: CGSize, page: PDFPage) -> CGPoint? {
+        let mediaBox = page.bounds(for: .mediaBox)
+        // A quarter-turned page is drawn with its sides swapped.
+        let drawnSize = (page.rotation % 180 != 0)
+            ? CGSize(width: mediaBox.height, height: mediaBox.width)
+            : mediaBox.size
+        let fitted = ScanPreviewGeometry.fittedRect(imageSize: drawnSize, in: viewSize)
+        guard fitted.width > 0, fitted.height > 0, fitted.contains(point) else { return nil }
+
+        let across = (point.x - fitted.minX) / fitted.width
+        let down = (point.y - fitted.minY) / fitted.height
+        return CGPoint(x: mediaBox.minX + across * mediaBox.width,
+                       y: mediaBox.maxY - down * mediaBox.height)
+    }
+
     func showAddSignature() {
         self.activeSheet = .signature
     }

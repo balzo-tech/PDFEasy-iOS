@@ -132,3 +132,78 @@ final class AnnotationIdentityTests: XCTestCase {
         XCTAssertTrue(annotation.isTextAnnotation, "a text annotation is not recognised after saving")
     }
 }
+
+// MARK: - Tapping the page in the editor
+
+/// The editor's pager shows an *image* of the page, not a `PDFView`, so there is
+/// no `convert(_:to:)` to lean on: `PdfEditViewModel.pointInPage` does the
+/// arithmetic. It has two chances to be wrong in ways nobody would notice —
+/// the letterbox of an aspect-fit image, and PDF space having its origin at the
+/// bottom — and being wrong means tapping an element does nothing.
+final class EditorPageHitTestingTests: XCTestCase {
+
+    private func makePage(size: CGSize = CGSize(width: 600, height: 800)) throws -> PDFPage {
+        let bounds = CGRect(origin: .zero, size: size)
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+        }
+        return try XCTUnwrap(PDFDocument(data: data)?.page(at: 0))
+    }
+
+    func testTheCentreOfTheViewIsTheCentreOfThePage() throws {
+        let page = try self.makePage()
+        let viewSize = CGSize(width: 300, height: 700)
+        let point = try XCTUnwrap(PdfEditViewModel.pointInPage(CGPoint(x: 150, y: 350),
+                                                              viewSize: viewSize,
+                                                              page: page))
+        let mediaBox = page.bounds(for: .mediaBox)
+        XCTAssertEqual(point.x, mediaBox.midX, accuracy: 1)
+        XCTAssertEqual(point.y, mediaBox.midY, accuracy: 1)
+    }
+
+    /// The one that catches a flipped axis: a tap near the top of the screen has
+    /// to land near the *top* of the page, which in PDF coordinates is the high y.
+    func testATapNearTheTopLandsNearTheTopOfThePage() throws {
+        let page = try self.makePage()
+        // A view the same shape as the page, so there is no letterbox to reason
+        // about and only the direction of y is under test.
+        let viewSize = CGSize(width: 300, height: 400)
+        let near = try XCTUnwrap(PdfEditViewModel.pointInPage(CGPoint(x: 150, y: 20),
+                                                             viewSize: viewSize,
+                                                             page: page))
+        XCTAssertGreaterThan(near.y, page.bounds(for: .mediaBox).midY,
+                             "a tap at the top of the view mapped to the bottom of the page")
+    }
+
+    /// An aspect-fit image in a wider view is letterboxed left and right, and a
+    /// tap in the bars is not a tap on the page.
+    func testATapInTheLetterboxIsNotOnThePage() throws {
+        let page = try self.makePage()
+        let viewSize = CGSize(width: 1000, height: 400)
+        XCTAssertNil(PdfEditViewModel.pointInPage(CGPoint(x: 5, y: 200),
+                                                  viewSize: viewSize,
+                                                  page: page),
+                     "a tap beside the page was reported as being on it")
+        XCTAssertNotNil(PdfEditViewModel.pointInPage(CGPoint(x: 500, y: 200),
+                                                     viewSize: viewSize,
+                                                     page: page))
+    }
+
+    /// The corners, which is where an off-by-one in the letterbox shows up.
+    func testTheCornersMapToTheCornersOfThePage() throws {
+        let page = try self.makePage()
+        let viewSize = CGSize(width: 300, height: 400)
+        let mediaBox = page.bounds(for: .mediaBox)
+
+        let topLeft = try XCTUnwrap(PdfEditViewModel.pointInPage(CGPoint(x: 0.5, y: 0.5),
+                                                                viewSize: viewSize, page: page))
+        XCTAssertEqual(topLeft.x, mediaBox.minX, accuracy: 2)
+        XCTAssertEqual(topLeft.y, mediaBox.maxY, accuracy: 2)
+
+        let bottomRight = try XCTUnwrap(PdfEditViewModel.pointInPage(CGPoint(x: viewSize.width - 0.5,
+                                                                            y: viewSize.height - 0.5),
+                                                                    viewSize: viewSize, page: page))
+        XCTAssertEqual(bottomRight.x, mediaBox.maxX, accuracy: 2)
+        XCTAssertEqual(bottomRight.y, mediaBox.minY, accuracy: 2)
+    }
+}

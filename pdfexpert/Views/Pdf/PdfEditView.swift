@@ -179,12 +179,14 @@ struct PdfEditView: View {
             let inputParameter = PdfSignatureViewModel
                 .InputParameter(pdf: self.viewModel.pdf,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                annotationToEdit: self.viewModel.consumeAnnotationToEdit(),
                                 onConfirm: { self.viewModel.updatePdf(pdf: $0) })
             PdfSignatureView(viewModel: Container.shared.pdfSignatureViewModel(inputParameter))
         case .fillForm:
             let inputParameter = PdfFillFormViewModel
                 .InputParameter(pdf: self.viewModel.pdf,
                                 currentPageIndex: self.viewModel.pdfCurrentPageIndex,
+                                annotationToEdit: self.viewModel.consumeAnnotationToEdit(),
                                 onConfirm: { self.viewModel.updatePdf(pdf: $0) })
             PdfFillFormView(viewModel: Container.shared.pdfFillFormViewModel(inputParameter))
         case .fillWidget:
@@ -208,10 +210,18 @@ struct PdfEditView: View {
                     // not: only the pages around this one are kept at full size,
                     // so a fast swipe can outrun the drawing by a moment.
                     let drawn = self.viewModel.pageImage(at: pageIndex)
-                    PageImage(image: drawn ?? page.thumbnail, isSharp: drawn != nil)
-                        .padding(.horizontal, DS.Spacing.md)
-                        .padding(.vertical, DS.Spacing.xs)
-                        .tag(pageIndex)
+                    GeometryReader { geometry in
+                        PageImage(image: drawn ?? page.thumbnail, isSharp: drawn != nil)
+                            // Tap an element to edit it. A tap, not a drag, so the
+                            // pager keeps its swipe: `TabView` reads the drag and
+                            // this reads the tap, and the two do not compete.
+                            .onTapGesture { location in
+                                self.viewModel.tapOnPage(at: location, viewSize: geometry.size)
+                            }
+                    }
+                    .padding(.horizontal, DS.Spacing.md)
+                    .padding(.vertical, DS.Spacing.xs)
+                    .tag(pageIndex)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))

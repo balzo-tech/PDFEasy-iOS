@@ -23,6 +23,9 @@ class PdfFillFormViewModel: ObservableObject {
     struct InputParameter {
         let pdf: Pdf
         let currentPageIndex: Int
+        /// See the note in `PdfSignatureViewModel`: an annotation to open for
+        /// editing, matched by position because this tool copies the document.
+        var annotationToEdit: PDFAnnotation? = nil
         let onConfirm: PdfFillFormViewCallback
     }
     
@@ -47,6 +50,8 @@ class PdfFillFormViewModel: ObservableObject {
     @Published var suggestedFields: SuggestedFields? = nil
     
     var pageViewSize: CGSize = .zero
+    /// The annotation the editor asked to edit, waiting for the view's size.
+    private var pendingEdit: (pageIndex: Int, bounds: CGRect)? = nil
     var unsavedChangesExist: Bool = false
     
     // Used only to perform point and rect conversions from view space to page space and viceversa
@@ -104,8 +109,38 @@ class PdfFillFormViewModel: ObservableObject {
         self.pdfViews = pdfViews
         
         self.pageIndex = inputParameter.currentPageIndex
-        
+
+        // See `PdfSignatureViewModel`: the annotation the editor tapped belongs to
+        // its own document, so it is matched again by page and position.
+        if let target = inputParameter.annotationToEdit, let page = target.page {
+            let index = inputParameter.pdf.pdfDocument.index(for: page)
+            if index != NSNotFound {
+                self.pendingEdit = (pageIndex: index, bounds: target.bounds)
+                self.pageIndex = index
+            }
+        }
+
         self.refreshSuggestedFields()
+    }
+
+    /// The view reporting its page size — the first moment it is known, and where
+    /// an annotation the editor asked to edit is turned into an editable box.
+    func onPageAppeared(size: CGSize, pageIndex: Int) {
+        if self.pageViewSize == .zero { self.pageViewSize = size }
+        guard let pending = self.pendingEdit,
+              pending.pageIndex == pageIndex,
+              let page = self.pdfDocument.page(at: pageIndex) else { return }
+        self.pendingEdit = nil
+        guard let annotation = self.annotations.first(where: {
+            $0.isTextAnnotation && $0.page == page && $0.bounds.isNearlyEqual(to: pending.bounds)
+        }) else { return }
+        let rect = self.convertRect(annotation.verticalCenteredTextBounds,
+                                    viewSize: self.pageViewSize,
+                                    fromPage: page)
+        self.currentTextResizableViewData = TextResizableViewData(text: annotation.contents ?? "", rect: rect)
+        self.editedPageIndex = pageIndex
+        self.annotations.removeAll(where: { $0 == annotation })
+        self.unsavedChangesExist = true
     }
     
     func onAppear() {

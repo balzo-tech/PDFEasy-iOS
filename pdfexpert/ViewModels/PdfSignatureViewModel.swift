@@ -24,6 +24,10 @@ class PdfSignatureViewModel: ObservableObject {
     struct InputParameter {
         let pdf: Pdf
         let currentPageIndex: Int
+        /// An annotation the caller wants opened for editing straight away —
+        /// tapped on the page in the editor. Matched by position rather than by
+        /// identity, because this tool works on a copy of the document.
+        var annotationToEdit: PDFAnnotation? = nil
         let onConfirm: PdfSignatureCallback
     }
     
@@ -36,6 +40,9 @@ class PdfSignatureViewModel: ObservableObject {
     @Published var signatureImage: UIImage? = nil
     
     var pageViewSize: CGSize = .zero
+    /// Set when the editor asked for one specific annotation. Held until the view
+    /// reports its size — converting needs it, and it is zero until then.
+    private var pendingEdit: (pageIndex: Int, bounds: CGRect)? = nil
     var unsavedChangesExist: Bool = false
     
     // Used only to perform point and rect conversions from view space to page space and viceversa
@@ -107,6 +114,35 @@ class PdfSignatureViewModel: ObservableObject {
             .sink { [weak self] _ in
                 self?.applyCurrentEditedAnnotation()
             }.store(in: &self.cancelBag)
+
+        // The editor asked for one particular signature. It belongs to *its*
+        // document, not to the copy made above, so it is remembered by page and
+        // position and matched again once the view can say how big a page is.
+        if let target = inputParameter.annotationToEdit, let page = target.page {
+            let index = inputParameter.pdf.pdfDocument.index(for: page)
+            if index != NSNotFound {
+                self.pendingEdit = (pageIndex: index, bounds: target.bounds)
+                self.pageIndex = index
+            }
+        }
+    }
+
+    /// Called by the view once it knows how large a page is drawn.
+    ///
+    /// Two jobs: it is the first moment `pageViewSize` can be known — it used to
+    /// arrive only with the first tap — and it is where a signature the editor
+    /// asked to edit is opened, because converting its rect needs that size.
+    func onPageAppeared(size: CGSize, pageIndex: Int) {
+        if self.pageViewSize == .zero { self.pageViewSize = size }
+        guard let pending = self.pendingEdit,
+              pending.pageIndex == pageIndex,
+              let page = self.pdfDocument.page(at: pageIndex) else { return }
+        self.pendingEdit = nil
+        guard let annotation = self.annotations.first(where: {
+            $0.page == page && $0.bounds.isNearlyEqual(to: pending.bounds)
+        }) else { return }
+        self.convertAnnotationToView(annotation: annotation, pageIndex: pageIndex)
+        self.unsavedChangesExist = true
     }
     
     func onAppear() {

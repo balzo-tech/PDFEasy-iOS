@@ -42,6 +42,13 @@ struct PdfFillFormView: View {
                                                                     pageViewSize: geometryReader.size)
                                     }
                                     .position(x: geometryReader.size.width / 2, y: geometryReader.size.height / 2)
+                            // Report the size as soon as the page is on screen.
+                            // It used to be learned from the first tap, which is
+                            // too late for an element the editor asked to open.
+                            .onAppear {
+                                self.viewModel.onPageAppeared(size: geometryReader.size,
+                                                              pageIndex: pageIndex)
+                            }
                                 }
                             }
                         }
