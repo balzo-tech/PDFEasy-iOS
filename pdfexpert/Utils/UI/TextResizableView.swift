@@ -32,6 +32,9 @@ struct TextResizableView: View {
     let deleteCallback: TextResizableViewDeleteCallback
     let suggestedWords: [String]
     
+    /// Name of the fixed coordinate space the drags are measured in.
+    private static let canvasSpace = "textResizableCanvas"
+
     @State private var tapOffset: CGPoint? = nil
     @FocusState private var focusedField: FocusField?
     @State private var filteredSuggestedWords: [String] = []
@@ -95,6 +98,13 @@ struct TextResizableView: View {
                     self.focusedField = .none
                 }
             GeometryReader { parentGeometryReader in
+                // A coordinate space that does not move. The drag gestures below
+                // are attached to views that are being repositioned by the very
+                // drag being measured, and `DragGesture` reports its location in
+                // the coordinate space of the view it is attached to — so each
+                // update moved the frame of reference, and the box stuttered
+                // instead of following the finger. Measured against the container
+                // instead, the numbers stay in one system.
                 ZStack {
                     GeometryReader { _ in
                         // No placeholder, and no empty one either: the first
@@ -121,7 +131,7 @@ struct TextResizableView: View {
                             .background(Rectangle().stroke(self.color, lineWidth: self.borderWidth))
                             .position(self.computedCenter)
                             .gesture(
-                                DragGesture()
+                                DragGesture(coordinateSpace: .named(Self.canvasSpace))
                                     .onChanged { gesture in
                                         self.OnDrag(dragGestureValue: gesture,
                                                     parentViewSize: parentGeometryReader.size)
@@ -155,6 +165,7 @@ struct TextResizableView: View {
                     self.getResizeHandle(parentViewSize: parentGeometryReader.size)
                     self.getDeleteButton(parentViewSize: parentGeometryReader.size)
                 }
+                .coordinateSpace(name: Self.canvasSpace)
             }
         }
     }
@@ -217,7 +228,7 @@ struct TextResizableView: View {
         .position(CGPoint(x: self.computedCenter.x + self.computedSize.width / 2,
                           y: self.computedCenter.y + self.computedSize.height / 2))
         .gesture(
-            DragGesture()
+            DragGesture(coordinateSpace: .named(Self.canvasSpace))
                 .onChanged { gesture in
                     self.onResizeDrag(dragGestureValue: gesture, parentViewSize: parentViewSize)
                 }
