@@ -57,11 +57,21 @@ esporta, stampa), non da un badge PRO.
 
 ## 3. Archivio, cartelle, tag, ricerca
 
-- [ ] Creare cartelle e tag; assegnarli a un documento
-- [ ] Menu contestuale del documento: i due sottomenu su schermo piccolo
-- [ ] **Ricerca per nome file** e **ricerca dentro il testo** di un PDF
+Coperta in parte da `ArchiveFilingUITests` (6 test, simulatore, verdi il
+2026-07-29): creare cartella, creare tag, eliminare una cartella tenendo i suoi
+documenti, ricerca per nome, ricerca nel testo della pagina, ricerca a vuoto.
+Restano da fare a mano le righe non spuntate.
+
+- [x] Creare cartelle e tag — *automatizzato*
+- [ ] **Assegnarli a un documento** dal menu contestuale (tieni premuto): i due
+      sottomenu su schermo piccolo, e il menu non deve uscire dallo schermo
+- [x] **Ricerca per nome file** — *automatizzato*
+- [x] **Ricerca dentro il testo** di un PDF — *automatizzato* (cerca «Lorem», che
+      non compare in nessun nome file)
+- [x] Una ricerca che non trova niente non elenca documenti — *automatizzato*
 - [ ] Un PDF vecchio, mai ri-salvato né OCR, si trova **solo per nome**
-- [ ] Eliminare una cartella: i documenti restano e tornano fra i non archiviati
+- [x] Eliminare una cartella: chiede conferma («The documents inside will be
+      kept.») e i cinque documenti restano — *automatizzato*
 - [ ] Dopo OCR / redazione / annotazioni il documento **conserva cartella e tag**
 - [ ] Sync iCloud: il documento appare sull'altro dispositivo
 - [ ] Due cartelle con lo stesso nome create su due dispositivi **si fondono in
