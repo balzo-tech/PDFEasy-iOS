@@ -320,6 +320,7 @@
 		A1B2C3D4E5F600000000A004 /* ObfuscatedSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A003 /* ObfuscatedSecrets.swift */; };
 		A1B2C3D4E5F600000000A007 /* ObfuscatedSecretTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */; };
 		A1FA24BF8B8A745F98B9116A /* ScannedPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E955A450F02101DFDD8D553A /* ScannedPage.swift */; };
+		A288A9DACDDDD15D84CCDD9C /* ImageToPdfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6498F5D0225CCE67211E67 /* ImageToPdfTests.swift */; };
 		A3CA268EF1354A6EA365114C /* SubscriptionRenewalNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67766B42712040628D80734E /* SubscriptionRenewalNoticeView.swift */; };
 		A674F9B2FE9F473E86E9706B /* PdfTitleUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEDA421121C4496ACDCCCB1 /* PdfTitleUtilityTests.swift */; };
 		A8972D22FF4DBD88AB3AF1D5 /* EditorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DE17116539594FB0A55520 /* EditorTool.swift */; };
@@ -786,6 +787,7 @@
 		E9828836133DF7554F050F37 /* RecentDocumentsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecentDocumentsWidget.swift; sourceTree = "<group>"; };
 		E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerMock.swift; sourceTree = "<group>"; };
 		EE55A583AE59555978FA3002 /* ArchiveFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArchiveFilter.swift; sourceTree = "<group>"; };
+		EE6498F5D0225CCE67211E67 /* ImageToPdfTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageToPdfTests.swift; sourceTree = "<group>"; };
 		EF6FDA188D47B9D2F495EFC9 /* PdfToolEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfToolEntity.swift; sourceTree = "<group>"; };
 		EFCD3B9E018C23C99E6EF738 /* PdfPermissionsUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsUtility.swift; sourceTree = "<group>"; };
 		F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/AppCheckProviderFactory.swift; sourceTree = "<group>"; };
@@ -1796,6 +1798,7 @@
 				8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */,
 				8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */,
 				9B74D4690C1D855C28282544 /* EditorOpeningCostTests.swift */,
+				EE6498F5D0225CCE67211E67 /* ImageToPdfTests.swift */,
 			);
 			name = PdfExpertTests;
 			path = PdfExpertTests;
@@ -2484,6 +2487,7 @@
 				8A11AT010000000000000A /* PersistenceDeduplicationTests.swift in Sources */,
 				8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */,
 				50D3963EB3588AC7DAC2C955 /* EditorOpeningCostTests.swift in Sources */,
+				A288A9DACDDDD15D84CCDD9C /* ImageToPdfTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
