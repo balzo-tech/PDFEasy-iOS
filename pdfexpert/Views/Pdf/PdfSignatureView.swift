@@ -136,6 +136,15 @@ struct PdfSignatureView: View {
                 Image(uiImage: annotation.image)
                     .resizable()
                     .frame(width: annotationBounds.width, height: annotationBounds.height)
+                    // A dashed outline says this one can be touched. Without it a
+                    // signature already in the document looks exactly like part of
+                    // the page, and the only way to discover that tapping it
+                    // reopens it for editing is to try.
+                    .overlay {
+                        Rectangle()
+                            .strokeBorder(ColorPalette.accent.opacity(0.7),
+                                          style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                    }
                     .position(position)
             }
         }

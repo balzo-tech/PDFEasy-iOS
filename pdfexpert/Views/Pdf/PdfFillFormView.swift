@@ -131,6 +131,14 @@ struct PdfFillFormView: View {
                                            options: [])))
                     .foregroundColor(Color(annotation.fontColor ?? .black))
                     .frame(width: annotationBounds.width, height: annotationBounds.height)
+                    // See the note in `PdfSignatureView`: the outline is what tells
+                    // the user this text is still editable.
+                    .overlay {
+                        Rectangle()
+                            .strokeBorder(ColorPalette.accent.opacity(0.7),
+                                          style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                    }
+                    .frame(width: annotationBounds.width, height: annotationBounds.height)
                     .position(position)
             }
         }

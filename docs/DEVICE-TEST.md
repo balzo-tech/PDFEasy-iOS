@@ -265,3 +265,39 @@ Se il servizio è spento questi sei **non devono comparire** nel catalogo.
 - [ ] Archivio 1.27 caricato su App Store Connect
 - [ ] Screenshot aggiornati (quelli attuali sono dell'interfaccia vecchia)
 - [ ] Invio in revisione
+
+---
+
+## Appendice — modificare una firma o un testo già inseriti
+
+Segnalato il 2026-07-29 e concordato: si deve poter correggere un elemento subito
+dopo averlo messo, perché è lì che ci si accorge di averlo posizionato male.
+
+**Fatto**
+
+- Il tocco su un'annotazione esistente la riapre in modifica: c'era già in
+  `tapOnPdfView`, ma il filtro non trovava mai nulla perché `removeAnnotation`
+  azzera `annotation.page` (`5509055`). Con `page` nulla non veniva disegnato
+  nemmeno l'overlay: `getView(forAnnotation:)` esce subito.
+- Un **bordo tratteggiato** attorno agli elementi già presenti nei due tool, per
+  dire che si possono toccare. Prima erano indistinguibili dalla pagina.
+
+**Da fare — modifica dal documento**
+
+Toccare una firma o un testo nell'editor e trovarsi nel tool, già in modifica su
+quell'elemento. Serve, in ordine:
+
+1. Un tocco sulla pagina nell'editor. Oggi il pager mostra un'**immagine**, non un
+   `PDFView`: le coordinate vanno convertite a mano (l'immagine è in aspect fit,
+   vedi `ScanPreviewGeometry.fittedRect` per la stessa matematica già risolta
+   altrove).
+2. Interrogare il documento: `page.annotations` filtrate con `isSignatureAnnotation`
+   / `isTextAnnotation`, e il punto convertito in spazio pagina.
+3. Distinguere il tocco dallo scorrimento fra pagine — il pager è un `TabView`.
+4. Aprire il tool giusto passandogli **quale** annotazione modificare: oggi
+   `PdfSignatureViewModel` e `PdfFillFormViewModel` prendono il documento e
+   scoprono da sé cosa c'è; serve un parametro in più.
+
+⚠️ Nota per chi lo farà: `verticalCenteredTextBounds` restringe i bounds di 10
+punti per lato (`CGRect.decode`), e su un testo corto l'area sensibile diventa
+molto piccola. Vale la pena verificarla prima di dare la colpa alle coordinate.
