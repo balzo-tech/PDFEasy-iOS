@@ -92,6 +92,14 @@ class ColorPalette {
     static let formatExcel = Color(light: "1E7145", dark: "4ADE80")
     static let formatPowerPoint = Color(light: "C6431E", dark: "FF8A5B")
 
+    // MARK: - Chat
+
+    /// The customer's own turn in a conversation, filled behind white text.
+    /// Deliberately not `accent`: in dark appearance that is a light blue, and
+    /// white on it lands under 3:1 — fine for a button label, not for a
+    /// paragraph somebody has to read.
+    static let chatBubbleUser = Color(light: "0A63E8", dark: "1B4FA8")
+
     // MARK: - Legacy aliases
     //
     // Kept so the screens that have not been reworked yet keep their meaning.

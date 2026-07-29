@@ -102,7 +102,7 @@ struct MainSplitView: View {
         } else {
             NavigationStack {
                 ContentUnavailableView {
-                    Label("No conversation yet", systemImage: "ellipses.bubble")
+                    Label("No conversation yet", systemImage: "ellipsis.bubble")
                 } description: {
                     Text("Choose a PDF and the conversation appears here.")
                 }

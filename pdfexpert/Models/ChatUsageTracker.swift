@@ -2,13 +2,16 @@
 //  ChatUsageTracker.swift
 //  PdfExpert
 //
-//  Tracks how many chat messages the user has sent in the current calendar month
-//  and enforces a monthly cap.
+//  Tracks how many chat messages the user has sent in the current calendar month.
 //
-//  NOTE: this is a purely client-side limit. It is bypassable (e.g. by reinstalling
-//  the app or clearing app data, since it is backed by UserDefaults). This is
-//  accepted for v1; a server-enforced quota would require the thin proxy discussed
-//  in `OpenAiChatPdfManagerImpl`.
+//  ⚠️ This is no longer where the cap is enforced. The proxy counts the same
+//  allowance against Apple's `originalTransactionId` and answers
+//  `429 monthly_limit_reached` on its own, which survives the reinstall that
+//  resets these UserDefaults. What is left here is a local estimate: it decides
+//  what the composer says and when it goes quiet, and it can disagree with the
+//  server — after a reinstall, or on a second device, it will read full while
+//  the month is already spent. Making the two agree means having the proxy
+//  report the remaining count back and reading it from the response.
 //
 
 import Foundation
