@@ -63,7 +63,16 @@ export async function verifyEntitlement(
 
 /// Production first, then sandbox: a TestFlight or Xcode build's transactions
 /// only exist in the sandbox, and Apple answers 404 for them in production.
+///
+/// "Answers 404" was too kind a description of production. Asked about a
+/// transaction it does not have, it has also been seen returning 500
+/// (`5000001`, "an unknown error occurred") and 401. Treating those as fatal
+/// meant a sandbox subscriber got a 502 and the sandbox was never asked — which
+/// is every device test, and every TestFlight build. So any answer production
+/// cannot make sense of moves on to the sandbox, and only a failure at *both*
+/// hosts is reported as the store being unreachable.
 async function askApple(originalTransactionId: string, env: Env): Promise<boolean> {
+  let unreachable: number | null = null
   for (const host of [PRODUCTION_HOST, SANDBOX_HOST]) {
     const response = await fetch(
       `${host}/inApps/v1/subscriptions/${originalTransactionId}`,
@@ -71,14 +80,21 @@ async function askApple(originalTransactionId: string, env: Env): Promise<boolea
     )
     if (response.status === 404) continue
     if (!response.ok) {
-      throw new RequestRejected(
-        502,
-        'store_unreachable',
-        `App Store Server API answered ${response.status}`,
-      )
+      unreachable = response.status
+      continue
     }
     const body = (await response.json()) as AppleStatusResponse
     return statusIsEntitling(body)
+  }
+  if (unreachable !== null) {
+    // Nobody answered, and at least one host failed for a reason that is not
+    // "no such subscription". Saying "not a subscriber" here would take the
+    // paywall down on an Apple outage.
+    throw new RequestRejected(
+      502,
+      'store_unreachable',
+      `App Store Server API answered ${unreachable}`,
+    )
   }
   return false
 }
