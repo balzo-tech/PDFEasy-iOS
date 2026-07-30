@@ -190,7 +190,12 @@ class PdfCompressUtility {
     /// Weight of a single page, measured by putting it in a document of its own.
     /// Not free, but the only honest way to compare two versions of a page.
     private static func byteCount(of page: PDFPage) -> Int {
-        guard let copy = page.copy() as? PDFPage else { return .max }
+        // Through the page's bytes, not `page.copy()`. A copied page leaves its
+        // images behind, and this measured the leftovers: 841 bytes for a page
+        // that weighs 1.6 MB, in the test next to this. Every decision the tool
+        // makes — is this already as small as it gets, is the result worth
+        // offering — compared two numbers that were both about nothing.
+        guard let copy = PDFUtility.detachedPage(from: page) else { return .max }
         let document = PDFDocument()
         document.insert(copy, at: 0)
         return document.dataRepresentation()?.count ?? .max

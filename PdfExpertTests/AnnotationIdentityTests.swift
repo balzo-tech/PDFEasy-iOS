@@ -292,3 +292,49 @@ final class DuplicatePageTests: XCTestCase {
         XCTAssertEqual(pixel.g, 255, "a plain copy used to draw the signature; if it does now, detachedPage can go")
     }
 }
+
+// MARK: - Weighing a page
+
+/// `PdfCompressUtility.byteCount(of:)` weighs a page by copying it into a
+/// document of its own and serialising that. If the copy leaves the page's images
+/// behind, the number is far too small — and it is the number the compress tool
+/// uses to decide whether a document is already as small as it can get, and
+/// whether the result it produced is worth offering.
+final class PageWeightTests: XCTestCase {
+
+    private func makeImagePage() throws -> PDFPage {
+        let bounds = CGRect(origin: .zero, size: K.Misc.PdfPageSize)
+        // Noise rather than a flat fill: a solid colour compresses to nothing and
+        // would hide the difference being measured.
+        let photo = UIGraphicsImageRenderer(size: CGSize(width: 1200, height: 1600)).image { context in
+            for x in stride(from: 0, to: 1200, by: 4) {
+                for y in stride(from: 0, to: 1600, by: 4) {
+                    UIColor(hue: CGFloat((x * y) % 255) / 255,
+                            saturation: 0.9, brightness: 0.9, alpha: 1).setFill()
+                    context.fill(CGRect(x: x, y: y, width: 4, height: 4))
+                }
+            }
+        }
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+            photo.draw(in: bounds)
+        }
+        return try XCTUnwrap(PDFDocument(data: data)?.page(at: 0))
+    }
+
+    private func weight(of page: PDFPage) -> Int {
+        let document = PDFDocument()
+        document.insert(page, at: 0)
+        return document.dataRepresentation()?.count ?? 0
+    }
+
+    func testWeighingAPageThroughACopyLosesTheImage() throws {
+        let page = try self.makeImagePage()
+        let viaCopy = self.weight(of: try XCTUnwrap(page.copy() as? PDFPage))
+        let viaBytes = self.weight(of: try XCTUnwrap(PDFUtility.detachedPage(from: page)))
+
+        print("WEIGHT copy=\(viaCopy) bytes=\(viaBytes)")
+        XCTAssertGreaterThan(viaBytes, viaCopy * 2,
+                             "a copied page weighs about the same as one carrying its picture, so this is not the problem")
+    }
+}
