@@ -404,8 +404,13 @@ class PdfEditViewModel: ObservableObject {
     @MainActor
     func duplicateCurrentPage() {
         guard self.canEditPages else { return }
+        // Not `page.copy()`: that brings the page's structure — annotation
+        // rectangles included — and leaves the resources behind, so a duplicated
+        // page arrived without the signature on it while the empty box was still
+        // there to be tapped and dragged. Same PDFKit behaviour that made every
+        // full-size page image blank; same answer, through the page's own bytes.
         guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
-              let copy = page.copy() as? PDFPage else {
+              let copy = PDFUtility.detachedPage(from: page) else {
             return
         }
         let destination = self.pdfCurrentPageIndex + 1

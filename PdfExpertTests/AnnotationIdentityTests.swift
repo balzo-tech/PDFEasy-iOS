@@ -207,3 +207,88 @@ final class EditorPageHitTestingTests: XCTestCase {
         XCTAssertEqual(bottomRight.y, mediaBox.minY, accuracy: 2)
     }
 }
+
+// MARK: - Duplicating a page that carries a signature
+
+/// Reported: duplicate a page with a signature on it and the copy arrives empty —
+/// but touching where the signature *was* opens the editing box, moved and
+/// hollow. Both halves of that describe one thing: `page.copy()` brings the
+/// structure, annotation rectangles included, and leaves the resources behind.
+final class DuplicatePageTests: XCTestCase {
+
+    private func makePageWithSignature() throws -> (PDFDocument, CGRect) {
+        let bounds = CGRect(origin: .zero, size: K.Misc.PdfPageSize)
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+            UIColor.white.setFill()
+            context.fill(bounds)
+        }
+        let document = try XCTUnwrap(PDFDocument(data: data))
+        let page = try XCTUnwrap(document.page(at: 0))
+
+        let ink = UIGraphicsImageRenderer(size: CGSize(width: 200, height: 100)).image { context in
+            UIColor.red.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 200, height: 100))
+        }
+        let signatureBounds = CGRect(x: 150, y: 300, width: 200, height: 100)
+        page.addAnnotation(PDFAnnotation.createSignature(with: ink, forBounds: signatureBounds))
+        return (document, signatureBounds)
+    }
+
+    /// Samples the middle of `rect` on `page`, in page coordinates.
+    private func pixel(of page: PDFPage, at rect: CGRect) throws -> (r: Int, g: Int, b: Int) {
+        let mediaBox = page.bounds(for: .mediaBox)
+        let image = page.thumbnail(of: mediaBox.size, for: .mediaBox)
+        let cgImage = try XCTUnwrap(image.cgImage)
+        // Page space counts from the bottom, the bitmap from the top.
+        let x = rect.midX / mediaBox.width * CGFloat(cgImage.width)
+        let y = (1 - rect.midY / mediaBox.height) * CGFloat(cgImage.height)
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1,
+                                             bitsPerComponent: 8, bytesPerRow: 4,
+                                             space: CGColorSpaceCreateDeviceRGB(),
+                                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.draw(cgImage, in: CGRect(x: -x, y: -(CGFloat(cgImage.height) - y),
+                                         width: CGFloat(cgImage.width), height: CGFloat(cgImage.height)))
+        return (Int(pixel[0]), Int(pixel[1]), Int(pixel[2]))
+    }
+
+    func testTheDuplicateCarriesTheSignatureAndNotJustItsBox() throws {
+        let (document, signatureBounds) = try self.makePageWithSignature()
+        let original = try XCTUnwrap(document.page(at: 0))
+
+        // The signature is visible on the page it was put on.
+        let before = try self.pixel(of: original, at: signatureBounds)
+        XCTAssertGreaterThan(before.r, 150, "the signature is not even on the original page")
+        XCTAssertLessThan(before.g, 100)
+
+        // Duplicate the way the editor does.
+        let copy = try XCTUnwrap(PDFUtility.detachedPage(from: original))
+        document.insert(copy, at: 1)
+        XCTAssertEqual(document.pageCount, 2)
+
+        let duplicate = try XCTUnwrap(document.page(at: 1))
+        XCTAssertEqual(duplicate.annotations.count, 1, "the duplicate lost the annotation itself")
+
+        let after = try self.pixel(of: duplicate, at: signatureBounds)
+        XCTAssertGreaterThan(after.r, 150,
+                             "the duplicate has the box but not the signature — r\(after.r) g\(after.g) b\(after.b)")
+        XCTAssertLessThan(after.g, 100, "the duplicated signature is blank")
+    }
+
+    /// The old way, kept as the measurement that explains the report: the copy
+    /// carries the annotation — hence a box you can drag — and draws nothing.
+    func testAPlainCopyBringsTheBoxWithoutTheSignature() throws {
+        let (document, signatureBounds) = try self.makePageWithSignature()
+        let original = try XCTUnwrap(document.page(at: 0))
+
+        let copy = try XCTUnwrap(original.copy() as? PDFPage)
+        document.insert(copy, at: 1)
+        let duplicate = try XCTUnwrap(document.page(at: 1))
+
+        XCTAssertEqual(duplicate.annotations.count, 1, "the box came across")
+        let pixel = try self.pixel(of: duplicate, at: signatureBounds)
+        XCTAssertEqual(pixel.r, 255)
+        XCTAssertEqual(pixel.g, 255, "a plain copy used to draw the signature; if it does now, detachedPage can go")
+    }
+}
