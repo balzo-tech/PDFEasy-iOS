@@ -192,7 +192,7 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       che invece calcola la posizione come se la pagina fosse centrata
 - [x] **Split PDF** — su `una-pagina.pdf` dice l'errore e non apre niente
 - [x] **Extract pages** — idem sul PDF di una pagina
-- [ ] **Rotate PDF** — una pagina e **tutte**; anche dalla tab Strumenti su file vero
+- [x] **Rotate PDF** — una pagina e tutte, su `ruotato.pdf`
 - [x] **Remove blank pages** — `con-pagine-bianche.pdf`: da 6 pagine a 3, tolta
       anche quella che conteneva **soli spazi**
 - [x] **Compare PDFs** — `contratto-v1` (3 pagine) contro `contratto-v2` (4): «2
@@ -216,13 +216,26 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [x] **Fill in a form** — `modulo.pdf`, quattro campi e una casella: i valori
       digitati sono nel PDF salvato e si vedono nel file esportato, casella
       compresa
-- [ ] **Add text** — posizionamento e salvataggio
+- [ ] **Add text** — posizionamento e salvataggio.
+      ⚠️ Due difetti il 2026-07-31, corretti e da riprovare: la barra sopra la
+      tastiera era una **striscia vuota** (conteneva solo le parole suggerite, che
+      arrivano dal modulo dei dati personali e quasi sempre non ci sono), e un
+      riquadro in basso finiva **sotto la tastiera** senza modo di raggiungerlo —
+      la pagina non si sposta di proposito, perché muoverla sposterebbe il sistema
+      di coordinate del trascinamento. Ora la barra porta un «Fatto» che chiude la
+      tastiera e restituisce tutta la pagina
 - [ ] **Make Searchable (OCR)** — su una scansione vera; barra di avanzamento; il
       testo diventa selezionabile; su un PDF **già ricercabile** deve dirlo e non toccarlo
 - [ ] **Page numbers**
-- [ ] **Watermark**
+- [ ] **Watermark** — dal 2026-07-31 la filigrana finisce su una **copia**
+      (`nome-watermarked`) e il documento aperto resta pulito, con l'alert che lo
+      dice. Prima sostituiva il documento, e non c'è modo di togliere una filigrana:
+      è disegnata *dentro* la pagina, non appoggiata sopra come annotazione (è ciò
+      che tiene il testo selezionabile). Da riprovare
 - [ ] **Invert colors**
-- [ ] **Flatten PDF** — annotazioni e campi diventano parte della pagina
+- [ ] **Flatten PDF** — su `relazione 2_firmata.pdf`, che ha **1 annotazione**: dopo
+      Flatten deve averne **0** con la firma ancora visibile. Vale anche per
+      `modulo.pdf` compilato, dove i campi non devono più essere modificabili
 
 ### Proteggere
 

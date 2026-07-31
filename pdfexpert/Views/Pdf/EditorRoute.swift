@@ -48,9 +48,11 @@ struct EditorDestinationView: View {
                                     onConfirm: { self.viewModel.updatePdf(pdf: $0) })
                 PdfPageNumberView(viewModel: Container.shared.pdfPageNumberViewModel(parameter))
             case .watermark:
+                // No `updatePdf`: the watermark is filed as its own document and the
+                // one open here stays clean. The editor only says where the copy went.
                 let parameter = PdfWatermarkViewModel
                     .InputParameter(pdf: self.viewModel.pdf,
-                                    onConfirm: { self.viewModel.updatePdf(pdf: $0) })
+                                    onSaved: { self.viewModel.onWatermarkSaved() })
                 PdfWatermarkView(viewModel: Container.shared.pdfWatermarkViewModel(parameter))
             case .metadata:
                 let parameter = PdfMetadataViewModel

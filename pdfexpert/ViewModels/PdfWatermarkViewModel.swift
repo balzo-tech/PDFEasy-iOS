@@ -4,9 +4,14 @@
 //
 //  Premium tool that stamps a text watermark across every page of a PDF. Wraps
 //  `PdfOverlayUtility.addWatermark`, running the redraw off the main thread and
-//  publishing an `AsyncOperation` so the view can show a loader. The input `Pdf`
-//  is never mutated: on success a fresh `Pdf` (same filename/password/etc.) is
-//  built from the new document and handed to `onConfirm`.
+//  publishing an `AsyncOperation` so the view can show a loader.
+//
+//  The watermark goes on a **copy**, saved straight to the archive, and the source
+//  document is left alone — the same trade Compress and Redact make. It is not a
+//  precaution: the overlay is drawn into the page content rather than laid on top
+//  as an annotation (that is what keeps the text selectable), so there is nothing
+//  to remove afterwards. Overwriting the original would make "put a watermark on
+//  it to send it" a one-way door.
 //
 
 import Foundation
@@ -24,7 +29,9 @@ class PdfWatermarkViewModel: ObservableObject {
 
     struct InputParameter {
         let pdf: Pdf
-        let onConfirm: (Pdf) -> Void
+        /// Called once the copy is in the archive, so the host can say so over the
+        /// document rather than over a screen that is on its way out.
+        let onSaved: () -> Void
     }
 
     @Published var text: String = ""
@@ -42,22 +49,22 @@ class PdfWatermarkViewModel: ObservableObject {
     }
 
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.repository) private var repository
 
     private let pdf: Pdf
-    private let onConfirm: (Pdf) -> Void
+    private let onSaved: () -> Void
 
     init(inputParameter: InputParameter) {
         self.pdf = inputParameter.pdf
-        self.onConfirm = inputParameter.onConfirm
+        self.onSaved = inputParameter.onSaved
     }
 
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.watermark))
     }
 
-    /// Applies the watermark on a background queue, then rebuilds the `Pdf` and
-    /// notifies `onConfirm` on the main thread. `onCompletion` lets the view dismiss
-    /// itself once the new document has been handed back.
+    /// Applies the watermark on a background queue and saves the result as a new
+    /// document. `onCompletion` lets the view dismiss itself once the copy is filed.
     func apply(onCompletion: @escaping () -> Void) {
         let trimmedText = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedText.isEmpty else { return }
@@ -79,11 +86,21 @@ class PdfWatermarkViewModel: ObservableObject {
                     self.asyncApply = AsyncOperation(status: .error(.unknownError))
                     return
                 }
-                var newPdf = sourcePdf
-                newPdf.updateDocument(newDocument)
+                // A *new* `Pdf`, not a mutated copy of the source: `Pdf` carries the
+                // Core Data storeId, so saving a mutated one would overwrite the
+                // clean original — and the original is the only way back from a
+                // watermark, which cannot be lifted off the page once drawn.
+                var watermarkedPdf = Pdf(pdfDocument: newDocument)
+                watermarkedPdf.updateFilename(sourcePdf.filename + "-watermarked")
+                do {
+                    _ = try self.repository.savePdf(pdf: watermarkedPdf)
+                } catch {
+                    self.asyncApply = AsyncOperation(status: .error(.unknownError))
+                    return
+                }
                 self.analyticsManager.track(event: .watermarkCompleted(layout: layout))
                 self.asyncApply = AsyncOperation(status: .empty)
-                self.onConfirm(newPdf)
+                self.onSaved()
                 onCompletion()
             }
         }

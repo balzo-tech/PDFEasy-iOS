@@ -676,6 +676,28 @@
         }
       }
     },
+    "A watermarked copy has been saved to your archive. This document is unchanged." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A watermarked copy has been saved to your archive. This document is unchanged."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha guardado en tu archivo una copia con la marca de agua. Este documento no ha cambiado."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una copia con la filigrana è stata salvata nel tuo archivio. Questo documento resta invariato."
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "en" : {

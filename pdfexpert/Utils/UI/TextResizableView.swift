@@ -149,23 +149,44 @@ struct TextResizableView: View {
                                     }
                                     .onEnded { _ in self.tapOffset = nil }
                             )
+                            // The bar over the keyboard. It used to hold the
+                            // suggested words and nothing else, so with no
+                            // suggestions to show — which is most of the time, since
+                            // they only come from the personal-details form — it was
+                            // an empty white strip.
+                            //
+                            // "Done" is what makes the tool usable at all: the page
+                            // deliberately does not move when the keyboard opens (it
+                            // would drag the box's frame of reference with it), so a
+                            // box near the bottom sits under the keyboard with no way
+                            // to reach it. Putting the keyboard away gives the whole
+                            // page back, and tapping the box brings it up again.
                             .toolbar {
                                 ToolbarItem(placement: .keyboard) {
-                                    ScrollView(.horizontal, showsIndicators: false) {
-                                        HStack(spacing: 8) {
-                                            ForEach(self.filteredSuggestedWords, id: \.self) { suggestedWord in
-                                                Button(action: {
-                                                    self.data.text = suggestedWord
-                                                }) {
-                                                    Text(suggestedWord)
-                                                        .foregroundColor(ColorPalette.primaryText)
-                                                        .font(FontCategory.body2.font.bold())
-                                                        .padding([.trailing, .leading], 8)
+                                    HStack(spacing: DS.Spacing.sm) {
+                                        if !self.filteredSuggestedWords.isEmpty {
+                                            ScrollView(.horizontal, showsIndicators: false) {
+                                                HStack(spacing: 8) {
+                                                    ForEach(self.filteredSuggestedWords, id: \.self) { suggestedWord in
+                                                        Button(action: {
+                                                            self.data.text = suggestedWord
+                                                        }) {
+                                                            Text(suggestedWord)
+                                                                .foregroundStyle(.white)
+                                                                .font(FontCategory.body2.font.bold())
+                                                                .padding(.horizontal, DS.Spacing.sm)
+                                                                .padding(.vertical, DS.Spacing.xxs)
+                                                        }
+                                                        .background(ColorPalette.accent, in: .capsule)
+                                                    }
                                                 }
-                                                .background(ColorPalette.secondaryText)
-                                                .clipShape(Capsule())
                                             }
                                         }
+                                        Spacer(minLength: 0)
+                                        Button(String(localized: "Done")) {
+                                            self.focusedField = .none
+                                        }
+                                        .fontWeight(.semibold)
                                     }
                                 }
                             }

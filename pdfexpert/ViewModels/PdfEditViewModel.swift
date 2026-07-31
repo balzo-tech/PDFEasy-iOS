@@ -913,6 +913,18 @@ class PdfEditViewModel: ObservableObject {
         self.push(.watermark)
     }
 
+    /// The watermark tool has filed its copy. Said here rather than on the tool's
+    /// own screen, which is being popped at this moment — and worth saying at all
+    /// because the document on screen is deliberately *not* the one that got the
+    /// watermark: it cannot be taken off a page once drawn, so the clean original
+    /// stays open and the stamped version becomes a document of its own.
+    @MainActor
+    func onWatermarkSaved() {
+        self.toolOutcomeAlertTitle = String(localized: "Done")
+        self.toolOutcomeAlertMessage = String(localized: "A watermarked copy has been saved to your archive. This document is unchanged.")
+        self.toolOutcomeAlertShow = true
+    }
+
     func setPassword(_ password: String) {
         self.internalSetPassword(password)
         debugPrint(for: self, message: "New password set")
