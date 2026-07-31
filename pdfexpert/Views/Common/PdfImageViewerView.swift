@@ -84,11 +84,13 @@ struct PdfImageViewerView: View {
 
 struct PdfImageViewerView_Previews: PreviewProvider {
     static var previews: some View {
+        // Stand-ins for rendered pages: the screenshots these used to borrow left
+        // with the import tutorial that owned them.
         PdfImageViewerView(pageIndex: 0, images: [
-            PdfImage(image: UIImage(named: "import_tutorial_1"), caption: "first page"),
+            PdfImage(image: UIImage(systemName: "doc.text"), caption: "first page"),
             PdfImage(image: nil, caption: "a page that failed to render"),
-            PdfImage(image: UIImage(named: "import_tutorial_2"), caption: "second page"),
-            PdfImage(image: UIImage(named: "import_tutorial_3"), caption: "third page"),
+            PdfImage(image: UIImage(systemName: "doc.richtext"), caption: "second page"),
+            PdfImage(image: UIImage(systemName: "doc.plaintext"), caption: "third page"),
         ])
         .previewDisplayName("Standard")
         PdfImageViewerView(pageIndex: 0, images: [])

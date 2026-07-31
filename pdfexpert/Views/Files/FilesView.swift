@@ -77,6 +77,8 @@ struct FilesView: View {
     @State private var pdfToDelete: Pdf? = nil
     @State private var pdfForInfo: Pdf? = nil
     @State private var importTutorialShow: Bool = false
+    /// Only ever moved by the debug flag below; the menu always opens at the start.
+    @State private var importTutorialStep: Int = 0
     @State private var organizerShow: Bool = false
     /// A folder or tag being created from a document's own menu: once saved it is
     /// applied to that document straight away.
@@ -135,12 +137,19 @@ struct FilesView: View {
             if UserDefaults.standard.bool(forKey: "debugShowOrganizer") {
                 self.organizerShow = true
             }
+            // debugImportTutorial=0..2 opens the import guide at that step. It
+            // carries the step because the simulator cannot press "Continue"
+            // either, and each step is a different drawing.
+            if let step = UserDefaults.standard.object(forKey: "debugImportTutorial") as? Int {
+                self.importTutorialStep = max(0, min(step, ImportTutorialView.items.count - 1))
+                self.importTutorialShow = true
+            }
             #endif
         }
         .asyncView(asyncOperation: self.$viewModel.asyncItemDelete)
         .asyncView(asyncOperation: self.$viewModel.asyncFiling)
         .fullScreenCover(isPresented: self.$importTutorialShow) {
-            ImportTutorialView()
+            ImportTutorialView(initialStep: self.importTutorialStep)
         }
         .sheet(isPresented: self.$organizerShow) {
             ArchiveOrganizerView(viewModel: self.viewModel)

@@ -142,36 +142,68 @@ tempo e per memoria — senza che nessuno potesse verificarlo su hardware. Ora s
 
 ## 6. I 36 strumenti, uno per uno
 
+Il materiale di prova sta in `~/Desktop/PdfExpert-Test` (generato il 2026-07-31):
+i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
+
 ### Creare
 
 - [ ] **Scan** — vedi sezione 4
 - [ ] **Image to PDF** — più foto insieme → una pagina per foto
-- [ ] **Word to PDF** — `.doc/.docx`, guarda il risultato
-- [ ] **Excel to PDF** — `.xls/.xlsx`
-- [ ] **Powerpoint to PDF** — `.ppt/.pptx`
+- [x] **Word to PDF** — `.doc` provato (`relazione-vecchio-formato.pdf`): titoli,
+      grassetto, corsivo, elenco puntato e numerato, tabella con i bordi, tutto reso
+      e selezionabile. L'interruzione di pagina non è stata rispettata, ma il salto
+      l'ha perso `textutil` scrivendo il `.doc`, non l'app.
+      ⚠️ Il `.docx` (`relazione.docx`) **non risulta ancora convertito**
+- [x] **Excel to PDF** — `fatture.pdf`: le righe e i due fogli ci sono e sono
+      leggibili; **si perdono la formattazione** (intestazione colorata → grigia) e
+      le larghezze di colonna. È la fedeltà dichiarata in `DocumentRenderUtility`:
+      WebKit rende bene i testi e male i fogli di calcolo.
+      Le colonne calcolate mostrano `0` perché il fixture non porta i valori
+      cached (openpyxl scrive la formula e non il risultato): **non è un difetto
+      dell'app**. Da rifare con un `.xlsx` salvato da Excel o Numbers per giudicare
+- [x] **Powerpoint to PDF** — `piano-commerciale.pdf`: 3 slide → 3 pagine, tutto il
+      testo presente. Il layout della slide (16:9, posizioni, sfondo) è appiattito
+      su A4: stesso limite dichiarato
 - [ ] **Web page to PDF** — una pagina normale e **una dietro cookie banner**
-- [ ] **Markdown to PDF** — formattazione rispettata
+- [x] **Markdown to PDF** — `guida.pdf`: intestazioni, elenchi puntati e numerati,
+      grassetto, corsivo, codice inline e a blocco, citazione in corsivo — tutto
+      corretto. La tabella esce scomposta, che è il comportamento previsto
 - [ ] **Create PDF** — documento vuoto
 - [ ] **Import PDF** — da File
+- [ ] **Nuovo ▸ Converti da qualsiasi file** — la guida in tre passi, rifatta il
+      2026-07-31: i testi devono essere **nella lingua del telefono** (erano in
+      inglese in ogni lingua), lo swipe deve andare avanti e indietro, «Ho capito»
+      chiude. In simulatore:
+      `xcrun simctl spawn booted defaults write <bundle-id> debugImportTutorial -int 0..2`
 
 ### Organizzare
 
 - [ ] **Merge PDF** — ordine dei file rispettato
-- [ ] **Split PDF** — e su un PDF di **una sola pagina** deve dire l'errore, non aprire nulla
-- [ ] **Extract pages** — idem sul PDF di una pagina
+- [x] **Split PDF** — su `una-pagina.pdf` dice l'errore e non apre niente
+- [x] **Extract pages** — idem sul PDF di una pagina
 - [ ] **Rotate PDF** — una pagina e **tutte**; anche dalla tab Strumenti su file vero
 - [ ] **Remove blank pages**
-- [ ] **Compare PDFs** — due versioni dello stesso contratto: allineamento con una
-      pagina inserita o rimossa; **due scansioni** senza testo; modalità Visivo e
-      «tieni premuto per vedere l'originale»
-- [ ] **Compress PDF** — i tre preset su una scansione lunga (tempo, memoria, resa);
-      un documento di solo testo deve dire «già compresso» e tenere Salva spento
+- [x] **Compare PDFs** — `contratto-v1` (3 pagine) contro `contratto-v2` (4): «2
+      pagine modificate», la pagina inserita riconosciuta come «esiste solo nella
+      versione modificata», e il diff a parole giusto (12.000,00 → 15.000,00,
+      quattro → sei, trimestrali → bimestrali). Modalità Visivo allineata.
+      Due osservazioni, nessuna bloccante: nel Visivo di quella pagina è evidenziata
+      **una sola** delle tre zone cambiate (la data in testa e la riga del
+      corrispettivo non lo sono), e nel Testo le parole isolate («1 → 2») si leggono
+      senza contesto. Da guardare nel codice, non sul device
+- [ ] Confronto fra **due scansioni** senza testo (deve cadere sull'allineamento
+      posizionale) e «tieni premuto per vedere l'originale»
+- [x] **Compress PDF** — funziona
+- [ ] I tre preset su una **scansione lunga** (tempo, memoria, resa) e il documento
+      di solo testo che deve dire «già compresso» e tenere Salva spento
 
 ### Modificare
 
 - [ ] **Sign PDF** — firma disegnata, da immagine, da fotocamera; **in tema chiaro**
       la firma resta nera su foglio bianco
-- [ ] **Fill in a form** — su un PDF con campi veri
+- [x] **Fill in a form** — `modulo.pdf`, quattro campi e una casella: i valori
+      digitati sono nel PDF salvato e si vedono nel file esportato, casella
+      compresa
 - [ ] **Add text** — posizionamento e salvataggio
 - [ ] **Make Searchable (OCR)** — su una scansione vera; barra di avanzamento; il
       testo diventa selezionabile; su un PDF **già ricercabile** deve dirlo e non toccarlo
@@ -184,7 +216,8 @@ tempo e per memoria — senza che nessuno potesse verificarlo su hardware. Ora s
 
 - [ ] **Protect PDF** — password; riaprendolo la chiede
 - [ ] Proteggere un PDF **già protetto** → messaggio in italiano, non in inglese
-- [ ] **Unlock PDF** — con password nota; e su un PDF **senza** password → «già sbloccato»
+- [x] **Unlock PDF** — `protetto-prova1234.pdf` (password `prova1234`) si sblocca
+- [ ] Su un PDF **senza** password → «già sbloccato»
 - [ ] **PDF permissions** — limita stampa e copia; uscendo a metà e rientrando il
       campo password dev'essere **vuoto**
 - [ ] **Redact PDF** — i box nella posizione giusta su pagine **ruotate** e a vari zoom;
