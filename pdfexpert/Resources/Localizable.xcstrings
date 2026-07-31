@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "# Your title\n\nWrite or paste your Markdown here." : {
       "localizations" : {
         "en" : {

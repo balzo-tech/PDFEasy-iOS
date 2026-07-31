@@ -338,10 +338,15 @@ private struct DestinationSheet: View {
             VStack {
                 ImportTutorialIllustrationView(step: self.step)
                     .frame(height: 300)
-                Picker("", selection: self.$step) {
+                // Label as a view, not as a `""` title: an empty string literal is
+                // a localizable key, and every extraction writes a blank entry
+                // into the catalog that the lint then reports.
+                Picker(selection: self.$step) {
                     Text(verbatim: "Find").tag(ImportTutorialStep.find)
                     Text(verbatim: "Share").tag(ImportTutorialStep.share)
                     Text(verbatim: "Choose").tag(ImportTutorialStep.choose)
+                } label: {
+                    EmptyView()
                 }
                 .pickerStyle(.segmented)
                 .padding()

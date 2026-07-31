@@ -10,6 +10,7 @@
 
 import XCTest
 import PDFKit
+import UniformTypeIdentifiers
 @testable import PdfExpert
 
 @MainActor
@@ -38,6 +39,36 @@ final class DocumentRenderUtilityTests: XCTestCase {
         for ext in ["docx", "DOCX", "xlsx", "pptx", "pages", "rtf", "html"] {
             let url = URL(fileURLWithPath: "/tmp/file.\(ext)")
             XCTAssertTrue(DocumentRenderUtility.canConvertFile(at: url), "\(ext) should be supported")
+        }
+    }
+
+    /// The picker has to offer what the engine can convert. It did not: `.word`
+    /// listed `com.microsoft.word.doc` alone, which is Word 97 — every `.docx` in
+    /// Files came up greyed out while `DocumentRenderUtility` was perfectly able to
+    /// render it. The two lists are written apart, so this walks the file types the
+    /// pickers promise and checks a real file of that kind would pass.
+    func testPickerFileTypesCoverTheOfficeFormatsTheEngineRenders() {
+        let cases: [(String, [UTType])] = [
+            ("doc", ImportFileOption.word.fileTypes),
+            ("docx", ImportFileOption.word.fileTypes),
+            ("xls", ImportFileOption.excel.fileTypes),
+            ("xlsx", ImportFileOption.excel.fileTypes),
+            ("ppt", ImportFileOption.powerpoint.fileTypes),
+            ("pptx", ImportFileOption.powerpoint.fileTypes),
+            ("doc", ImportFileOption.allDocs.fileTypes),
+            ("docx", ImportFileOption.allDocs.fileTypes),
+            ("pages", ImportFileOption.allDocs.fileTypes),
+            ("docx", K.Misc.ImportFileTypesForAddPage),
+        ]
+        for (ext, accepted) in cases {
+            guard let type = UTType(filenameExtension: ext) else {
+                XCTFail("no system type for .\(ext)")
+                continue
+            }
+            XCTAssertTrue(accepted.contains { type.conforms(to: $0) },
+                          ".\(ext) (\(type.identifier)) is not offered by that picker")
+            XCTAssertTrue(DocumentRenderUtility.canConvertFile(at: URL(fileURLWithPath: "/tmp/f.\(ext)")),
+                          ".\(ext) is offered but the engine would refuse it")
         }
     }
 

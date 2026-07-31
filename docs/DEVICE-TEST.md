@@ -153,7 +153,10 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       grassetto, corsivo, elenco puntato e numerato, tabella con i bordi, tutto reso
       e selezionabile. L'interruzione di pagina non è stata rispettata, ma il salto
       l'ha perso `textutil` scrivendo il `.doc`, non l'app.
-      ⚠️ Il `.docx` (`relazione.docx`) **non risulta ancora convertito**
+      ⚠️ Il `.docx` non si poteva nemmeno scegliere: il picker chiedeva
+      `com.microsoft.word.doc`, che è **Word 97**, e `.docx` è un tipo a sé che non
+      vi conforma. Corretto il 2026-07-31, con un test che tiene insieme le due
+      liste. Da riprovare
 - [x] **Excel to PDF** — `fatture.pdf`: le righe e i due fogli ci sono e sono
       leggibili; **si perdono la formattazione** (intestazione colorata → grigia) e
       le larghezze di colonna. È la fedeltà dichiarata in `DocumentRenderUtility`:
@@ -164,12 +167,17 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [x] **Powerpoint to PDF** — `piano-commerciale.pdf`: 3 slide → 3 pagine, tutto il
       testo presente. Il layout della slide (16:9, posizioni, sfondo) è appiattito
       su A4: stesso limite dichiarato
-- [ ] **Web page to PDF** — una pagina normale e **una dietro cookie banner**
+- [x] **Web page to PDF** — una pagina normale: 8 pagine, testo estraibile
+- [ ] Una pagina **dietro cookie banner**
 - [x] **Markdown to PDF** — `guida.pdf`: intestazioni, elenchi puntati e numerati,
       grassetto, corsivo, codice inline e a blocco, citazione in corsivo — tutto
       corretto. La tabella esce scomposta, che è il comportamento previsto
 - [ ] **Create PDF** — documento vuoto
 - [ ] **Import PDF** — da File
+- [ ] **Da un'altra app** — condividere un `.docx` (o un PDF, o una foto) da Mail,
+      File o Safari: dal 2026-07-31 l'app dichiara i tipi documento, quindi deve
+      comparire «Copia su PDF Pro»; il file arriva, si converte da sé e si apre
+      nell'editor. Prima non compariva per niente che non fosse un PDF
 - [ ] **Nuovo ▸ Converti da qualsiasi file** — la guida in tre passi, rifatta il
       2026-07-31: i testi devono essere **nella lingua del telefono** (erano in
       inglese in ogni lingua), lo swipe deve andare avanti e indietro, «Ho capito»
@@ -178,7 +186,11 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 
 ### Organizzare
 
-- [ ] **Merge PDF** — ordine dei file rispettato
+- [x] **Merge PDF** — tre documenti, 16 pagine, ordine rispettato.
+      ⚠️ Ha reso due difetti, corretti il 2026-07-31: nell'editor **la pagina non
+      era centrata** (un `GeometryReader` appoggia il figlio in alto a sinistra), e
+      con essa era fuori bersaglio il **tocco per modificare una firma o un testo**,
+      che invece calcola la posizione come se la pagina fosse centrata
 - [x] **Split PDF** — su `una-pagina.pdf` dice l'errore e non apre niente
 - [x] **Extract pages** — idem sul PDF di una pagina
 - [ ] **Rotate PDF** — una pagina e **tutte**; anche dalla tab Strumenti su file vero

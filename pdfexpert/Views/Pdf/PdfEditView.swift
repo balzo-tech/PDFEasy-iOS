@@ -212,6 +212,17 @@ struct PdfEditView: View {
                     let drawn = self.viewModel.pageImage(at: pageIndex)
                     GeometryReader { geometry in
                         PageImage(image: drawn ?? page.thumbnail, isSharp: drawn != nil)
+                            // A `GeometryReader` puts its child in the top left
+                            // corner, so an aspect-fit page hung from the top of
+                            // the pager with all the spare height below it. This
+                            // frame centres it — and the tap below depends on it:
+                            // `pointInPage` works out where the page is drawn with
+                            // `fittedRect`, which centres. Uncentred, every tap
+                            // landed half the spare height above where it looked,
+                            // which is enough to miss a short line of text.
+                            .frame(width: geometry.size.width,
+                                   height: geometry.size.height)
+                            .contentShape(.rect)
                             // Tap an element to edit it. A tap, not a drag, so the
                             // pager keeps its swipe: `TabView` reads the drag and
                             // this reads the tap, and the two do not compete.

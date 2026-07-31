@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Factory
+import UniformTypeIdentifiers
 
 enum MainTab: Int, CaseIterable, Hashable {
     /// Saved documents — the app opens here.
@@ -99,6 +100,9 @@ class MainCoordinator: ObservableObject {
     /// search results). The Tools screen owns every tool flow, so it picks this
     /// up and runs it once the tab is on screen.
     @Published var pendingToolAction: HomeAction? = nil
+    /// A file another app just handed over, waiting for the Tools screen to
+    /// import it. Staged in our own temporary directory — see `stagedCopy`.
+    @Published private(set) var pendingExternalFile: URL? = nil
     /// The scanner, presented over whichever shell is on screen. It lives here
     /// rather than inside the Scanner tab because a widget, a shortcut or the
     /// Files "New" menu can all ask for it while another tab is showing.
@@ -185,6 +189,62 @@ class MainCoordinator: ObservableObject {
         defer { self.pendingToolAction = nil }
         return self.pendingToolAction
     }
+
+    /// Returns the file another app handed over, if any, and clears it so it is
+    /// imported once.
+    func consumePendingExternalFile() -> URL? {
+        defer { self.pendingExternalFile = nil }
+        return self.pendingExternalFile
+    }
+
+    /// A document opened from another app: "Copy to PDF Pro" in a share sheet, or
+    /// an "Open in" menu. The Tools screen owns importing — the converter, the
+    /// fallback prompt, the editor — so this only carries the file until that
+    /// screen can take it, the same way `pendingToolAction` carries a tool.
+    @MainActor
+    private func handleIncomingFile(url: URL) {
+        guard self.canImport(url) else { return }
+        guard let staged = self.stagedCopy(of: url) else { return }
+        self.cacheManager.onboardingShown = true
+        self.rootView = .main
+        self.tab = .tools
+        self.pendingExternalFile = staged
+    }
+
+    /// Anything the app knows how to turn into a document. The system only offers
+    /// us the types declared in `CFBundleDocumentTypes`, but a file can always
+    /// arrive with an extension that promises more than it delivers.
+    @MainActor
+    private func canImport(_ url: URL) -> Bool {
+        if let type = UTType(filenameExtension: url.pathExtension),
+           type.conforms(to: .pdf) || type.conforms(to: .image) {
+            return true
+        }
+        return DocumentRenderUtility.canConvertFile(at: url)
+    }
+
+    /// Copies the file somewhere of our own before anything is done with it.
+    ///
+    /// Two reasons. A file the system drops in `Documents/Inbox` stays in the
+    /// app's storage for good unless it is removed, and one opened in place lives
+    /// behind a security-scoped door that is only open for this call.
+    private func stagedCopy(of url: URL) -> URL? {
+        let destination = FileManager.default.temporaryDirectory
+            .appendingPathComponent("incoming-\(UUID().uuidString)")
+            .appendingPathExtension(url.pathExtension)
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        do {
+            try FileManager.default.copyItem(at: url, to: destination)
+        } catch {
+            debugPrint(for: self, message: "Could not stage the incoming file. Error: \(error)")
+            return nil
+        }
+        if url.pathComponents.contains("Inbox") {
+            try? FileManager.default.removeItem(at: url)
+        }
+        return destination
+    }
     
     func showPdfEditFlow(pdf: Pdf, startAction: PdfEditStartAction? = nil, isNewPdf: Bool) {
         self.pdfEditFlowData = PdfEditFlowData(pdf: pdf, startAction: startAction, isNewPdf: isNewPdf)
@@ -194,8 +254,11 @@ class MainCoordinator: ObservableObject {
         self.pdfEditFlowData = nil
     }
     
+    @MainActor
     func handleOpenUrl(url: URL) {
-        if let deeplink = Deeplink(fromCustomUrl: url) {
+        if url.isFileURL {
+            self.handleIncomingFile(url: url)
+        } else if let deeplink = Deeplink(fromCustomUrl: url) {
             self.handleDeeplink(deeplink: deeplink)
         }
     }

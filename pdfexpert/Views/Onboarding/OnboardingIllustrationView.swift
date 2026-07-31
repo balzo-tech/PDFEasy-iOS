@@ -533,11 +533,15 @@ private struct ToolboxProps: View {
             VStack {
                 OnboardingIllustrationView(illustration: self.illustration)
                     .frame(height: 320)
-                Picker("", selection: self.$illustration) {
+                // Label as a view: `Picker("")` would put a blank key in the
+                // string catalog on every extraction.
+                Picker(selection: self.$illustration) {
                     Text(verbatim: "Scan").tag(OnboardingIllustration.scan)
                     Text(verbatim: "Convert").tag(OnboardingIllustration.convert)
                     Text(verbatim: "Sign").tag(OnboardingIllustration.signature)
                     Text(verbatim: "Chat").tag(OnboardingIllustration.chat)
+                } label: {
+                    EmptyView()
                 }
                 .pickerStyle(.segmented)
                 .padding()

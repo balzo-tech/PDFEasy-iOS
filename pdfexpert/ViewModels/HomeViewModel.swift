@@ -514,6 +514,26 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
+    /// A document another app handed over — "Copy to PDF Pro" from a share sheet,
+    /// or an "Open in" menu. It behaves exactly as if the file had been picked
+    /// here: a PDF opens in the editor, anything else goes through the same
+    /// conversion, with the same offer of the online fallback when the device
+    /// cannot manage it.
+    ///
+    /// The action is `.appExtension` because there is nothing to do afterwards:
+    /// this file arrived on its own rather than as a step of a tool, so there is
+    /// no password to set and no form to fill.
+    @MainActor
+    func importExternalFile(url: URL) {
+        self.action = .appExtension
+        self.currentAnalyticsImportOption = nil
+        if UTType(filenameExtension: url.pathExtension)?.conforms(to: .image) ?? false {
+            self.convertFileImageByURL(fileImageUrl: url)
+        } else {
+            self.convertFileByUrl(fileUrl: url)
+        }
+    }
+
     @MainActor
     func importPdf(pdfUrl: URL) {
         guard let pdf = Pdf(pdfUrl: pdfUrl) else {

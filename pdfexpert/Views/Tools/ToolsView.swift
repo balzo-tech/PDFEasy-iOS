@@ -53,6 +53,7 @@ struct ToolsView: View {
         .onAppear() {
             self.viewModel.onAppear()
             self.runPendingToolActionIfNeeded()
+            self.importPendingExternalFileIfNeeded()
             #if DEBUG
             self.runDebugToolIfNeeded()
             #endif
@@ -61,6 +62,12 @@ struct ToolsView: View {
         .onChange(of: self.mainCoordinator.pendingToolAction) { _, action in
             guard action != nil else { return }
             self.runPendingToolActionIfNeeded()
+        }
+        // A document another app handed over ("Copy to PDF Pro") lands here too:
+        // importing is this screen's job, whoever asked for it.
+        .onChange(of: self.mainCoordinator.pendingExternalFile) { _, url in
+            guard url != nil else { return }
+            self.importPendingExternalFileIfNeeded()
         }
         .formSheet(item: self.$viewModel.importOptionGroup) {
             OptionListView.getImportView(forImportOptionGroup: $0,
@@ -240,6 +247,16 @@ struct ToolsView: View {
         DispatchQueue.main.async {
             ToolUsageTracker.registerUse(of: action)
             self.viewModel.performHomeAction(action)
+        }
+    }
+
+    /// Imports a file another app handed over. Deferred for the same reason as
+    /// the tool above: the conversion can put an alert or the editor on screen,
+    /// and this screen may still be arriving.
+    private func importPendingExternalFileIfNeeded() {
+        guard let url = self.mainCoordinator.consumePendingExternalFile() else { return }
+        DispatchQueue.main.async {
+            self.viewModel.importExternalFile(url: url)
         }
     }
 

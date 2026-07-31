@@ -130,15 +130,26 @@ struct K {
         // paywall both.
         static let TermsAndConditionsUrlString = "https://www.balzo.eu/terms-conditions"
         
+        /// Word's two formats, which are two unrelated types: `.docx` does NOT
+        /// conform to `com.microsoft.word.doc` — that one is Word 97 — so listing
+        /// only the old one greys out every `.docx` in the picker. Spreadsheets and
+        /// presentations need no such pair: `.xlsx` and `.pptx` do conform to
+        /// `public.spreadsheet` and `public.presentation`.
+        static let WordFileTypes: [UTType] = {
+            [
+                UTType("com.microsoft.word.doc"),
+                UTType("org.openxmlformats.wordprocessingml.document")
+            ].compactMap { $0 }
+        }()
+
         static let ImportFileTypesForAddPage: [UTType] = {
             [
                 UTType.image,
                 UTType.pdf,
                 .presentation,
                 .spreadsheet,
-                UTType("com.microsoft.word.doc"),
                 UTType("com.apple.iwork.pages.sffpages")
-            ].compactMap { $0 }
+            ].compactMap { $0 } + Self.WordFileTypes
         }()
         static let ImportFileTypesForMerge: [UTType] = { [UTType.pdf].compactMap { $0 } }()
         static let ImportFileTypesForSplit: [UTType] = { [UTType.pdf].compactMap { $0 } }()
@@ -194,7 +205,7 @@ extension ImportFileOption: FilePickerTypeProvider {
     var fileTypes: [UTType] {
         switch self {
         case .image: return [UTType.image]
-        case .word: return [UTType("com.microsoft.word.doc")].compactMap { $0 }
+        case .word: return K.Misc.WordFileTypes
         case .excel: return [.spreadsheet]
         case .powerpoint: return [.presentation]
         case .pdf: return [UTType.pdf]
@@ -202,9 +213,8 @@ extension ImportFileOption: FilePickerTypeProvider {
             UTType.pdf,
             .presentation,
             .spreadsheet,
-            UTType("com.microsoft.word.doc"),
             UTType("com.apple.iwork.pages.sffpages")
-        ].compactMap { $0 }
+        ].compactMap { $0 } + K.Misc.WordFileTypes
         }
     }
  }
