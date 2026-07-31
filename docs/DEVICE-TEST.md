@@ -148,7 +148,17 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 ### Creare
 
 - [ ] **Scan** — vedi sezione 4
-- [ ] **Image to PDF** — più foto insieme → una pagina per foto
+- [x] **Image to PDF** — più foto insieme → una pagina per foto: **passata** il
+      2026-07-31 (`image_to_pdf.pdf`), tre foto → tre pagine, nessuna bianca, e
+      l'ordine è quello dei tocchi (selezionate 3-2-1, uscite 3-2-1).
+      **Non se ne poteva scegliere più di una**: il picker chiedeva un solo
+      `PhotosPickerItem`. Ora ne prende fino a 50, e le pagine si costruiscono
+      mentre le foto arrivano — cinquanta scatti a piena risoluzione insieme non
+      ci stanno in memoria.
+      La fotocamera resta una foto per volta: per fare più pagine con la
+      fotocamera c'è lo scanner, che è la funzione fatta apposta.
+      ⚠️ Le foto entrano in pagina a ~72 dpi (una da 1400 px esce 595 px di
+      larghezza): misurato, e **lasciato così** — decisione del 2026-07-31
 - [x] **Word to PDF** — `.doc` provato (`relazione-vecchio-formato.pdf`): titoli,
       grassetto, corsivo, elenco puntato e numerato, tabella con i bordi, tutto reso
       e selezionabile. L'interruzione di pagina non è stata rispettata, ma il salto
@@ -168,12 +178,13 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       testo presente. Il layout della slide (16:9, posizioni, sfondo) è appiattito
       su A4: stesso limite dichiarato
 - [x] **Web page to PDF** — una pagina normale: 8 pagine, testo estraibile
-- [ ] Una pagina **dietro cookie banner**
+- [x] Una pagina **dietro cookie banner** — provata il 2026-07-31: esce la pagina,
+      non il muro del consenso
 - [x] **Markdown to PDF** — `guida.pdf`: intestazioni, elenchi puntati e numerati,
       grassetto, corsivo, codice inline e a blocco, citazione in corsivo — tutto
       corretto. La tabella esce scomposta, che è il comportamento previsto
-- [ ] **Create PDF** — documento vuoto
-- [ ] **Import PDF** — da File
+- [x] **Create PDF** — documento vuoto: funziona (2026-07-31)
+- [x] **Import PDF** — da File: funziona (2026-07-31)
 - [x] **Da un'altra app, condividendo** — un `.docx` da File: «Copia su PDF Pro»
       compare, il file arriva, si converte e si apre. Prima non compariva per
       niente che non fosse un PDF (`relazione 2.pdf`)
@@ -203,24 +214,46 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       **una sola** delle tre zone cambiate (la data in testa e la riga del
       corrispettivo non lo sono), e nel Testo le parole isolate («1 → 2») si leggono
       senza contesto. Da guardare nel codice, non sul device
-- [ ] Confronto fra **due scansioni** senza testo (deve cadere sull'allineamento
-      posizionale) e «tieni premuto per vedere l'originale»
+- [x] Confronto fra **due scansioni** senza testo — provato il 2026-07-31 con
+      `scansione-contratto-v1.pdf` (3 pagine) e `-v2.pdf` (4), i due contratti
+      rasterizzati: nessun testo da estrarre, e infatti cade sull'allineamento
+      posizionale («È cambiata solo l'impaginazione: vedi la scheda Visivo») invece
+      di dire che i documenti sono vuoti, e riconosce la 4ª pagina come esistente
+      solo nella versione modificata (`scansione_confronto.png`).
+      Resta da provare «tieni premuto per vedere l'originale»
 - [x] **Compress PDF** — funziona
-- [ ] I tre preset su una **scansione lunga** (tempo, memoria, resa) e il documento
-      di solo testo che deve dire «già compresso» e tenere Salva spento
+- [x] I tre preset su una **scansione lunga** — provati tutti e tre il 2026-07-31 su
+      `scansione-lunga.pdf` (12 pagine immagine a 300 dpi, 13,5 MB) e vanno bene.
+      Misurato quello consegnato: **1,4 MB**, 12 pagine, JPEG a 94 dpi — un decimo
+      del peso, testo ancora leggibile
+- [x] Il documento **già compresso** deve dirlo e tenere Salva spento — verificato
+      il 2026-07-31 in simulatore (`LocalisationUITests`, screenshot
+      `compressione-es`): «151 KB → 151 KB, Este documento ya está comprimido todo
+      lo posible», Guardar spento
 
 ### Modificare
 
 - [x] **Sign PDF** — firma disegnata, inserita e salvata (`relazione 2_firmata.pdf`):
       resta un'annotazione, quindi si può riaprire e correggere
-- [ ] **Firma da immagine e da fotocamera** — non arrivava mai: il ritaglio scrive
-      l'immagine attraverso un binding e chiude la schermata nello stesso istante,
-      SwiftUI applica quella scrittura al giro dopo, e la chiusura buttava via la
-      callback un attimo prima. Corretto il 2026-07-31 con quattro test (`6a8f706`),
-      **da riprovare**
-- [ ] La firma in **tema chiaro**: deve restare nera su foglio bianco. Dal
-      2026-07-31 il tema si cambia dentro l'app (Impostazioni ▸ Aspetto), senza
-      toccare quello del telefono
+- [x] **Firma da immagine e da fotocamera** — provata sul device il 2026-07-31:
+      entrambe arrivano nell'anteprima e Conferma le prende.
+      Ci sono voluti due giri. Prima il ritaglio non si apriva affatto (`6a8f706`):
+      è un `fullScreenCover` chiesto mentre il picker che ha prodotto l'immagine si
+      sta ancora chiudendo, e SwiftUI scarta una presentazione chiesta lì —
+      lasciando per giunta il flag a `true`, cioè il flusso morto per sempre.
+      Poi il ritaglio si apriva ma il risultato non tornava: l'immagine croppata
+      rientrava attraverso lo **stesso** `image` da cui era entrata e veniva
+      consegnata dal suo `didSet`, mentre l'`onDisappear` del cover correva a
+      buttare via la callback — chi dei due arrivasse prima lo decideva SwiftUI.
+      Ora Mantis dice al flow cosa è successo (`onCropConfirmed` / `onCropCancelled`)
+      e il flow chiude il cover: nessun binding in mezzo, nessun ordine da
+      indovinare. Se una presentazione viene scartata lo stesso, il cover non
+      compare mai e il flow la richiede (8 test)
+- [x] La firma in **tema chiaro** — verificata in simulatore il 2026-07-31
+      (`LocalisationUITests`, screenshot `firma-tema-chiaro`): con l'app in «Sempre
+      chiaro», un tratto disegnato davvero sulla tela esce **nero su foglio
+      bianco** e Conferma si accende. Il foglio dipinge il proprio sfondo, quindi
+      l'inchiostro non può finire nero su nero
 - [x] **Fill in a form** — `modulo.pdf`, quattro campi e una casella: i valori
       digitati sono nel PDF salvato e si vedono nel file esportato, casella
       compresa
@@ -260,8 +293,9 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       **verificato sul device**
 - [x] **Il menu che si apre dal basso** (Strumenti ▸ Firma PDF, Aggiungi testo o
       Rendi ricercabile → «File / Scansiona»): lo sfondo è a posto
-- [ ] Lo stesso menu **nella lingua del telefono**: era in inglese ovunque, erano
-      `String` semplici. Corretto il 2026-07-31 (`2bd614d`), da riprovare
+- [x] Lo stesso menu **nella lingua del telefono** — verificato in simulatore il
+      2026-07-31 (screenshot `importa-da-it`): «Importa da», «File», «Scansiona un
+      documento». Era in inglese ovunque, erano `String` semplici (`2bd614d`)
 
 ### Proteggere
 
@@ -305,52 +339,116 @@ Se il servizio è spento questi sei **non devono comparire** nel catalogo.
 
 - [x] **Repair PDF** — su `danneggiato.pdf` (troncato, PDFKit non lo apriva):
       riparato. Prova anche che il giro completo del proxy funziona dal telefono
-- [ ] **Sanitize PDF**
-- [ ] **PDF to Word**
-- [ ] **PDF to PowerPoint**
-- [ ] **PDF to Excel**
-- [ ] **PDF/A**
+- [x] **Sanitize PDF** — passata il 2026-07-31 su `con-javascript.pdf`: nel file
+      che torna, `JavaScript`, `EmbeddedFile` e `note.txt` sono a **zero**, il link
+      e il testo sono ancora al loro posto. È quello che il tile promette.
+      ⚠️ L'errore visto prima **non era un difetto**: era il debug token di App
+      Check, che cambia a ogni reinstallazione. Se uno degli strumenti online
+      risponde con un errore, quello è il primo posto da guardare
+- [x] **PDF to Word** — passata il 2026-07-31 (`relazione 2.docx`): OOXML valido,
+      testo completo. **Era rotto davvero**: senza il campo `outputFormat` Stirling
+      risponde **400**. Misurato contro l'istanza locale
+      (`docker run -p 8081:8080 stirlingtools/stirling-pdf`, nessuna chiave):
+      senza il campo 400, con `outputFormat=docx` 200. Corretto in
+      `StirlingOperation.formFields`
+- [x] **PDF to PowerPoint** — passata (`piano-commerciale.pptx`): 3 pagine → 3
+      slide, testo dentro. Stessa causa e stessa correzione di PDF to Word
+- [x] **PDF to Excel** — funziona (2026-07-31): `tabella-materiali.csv`.
+      Esce un **CSV**, non un `.xlsx` — è quello che l'endpoint di Stirling
+      produce (`/api/v1/convert/pdf/csv`). **Deciso il 2026-07-31: va bene così**,
+      il CSV si apre in Excel e in Numbers.
+      Nel CSV di prova le colonne risultano attaccate, ma **è il file di partenza**:
+      `tabella-materiali.pdf` disegna le celle come testo posizionato senza
+      struttura di tabella. Con `fatture.pdf`, che nasce da un foglio vero, la
+      stessa chiamata rende `"Numero","Cliente","Imponibile",…` — verificato in
+      locale
+- [ ] **PDF/A** — l'ultima dei cinque online. Senza `outputFormat` risponde
+      comunque 200, ma il formato lo sceglierebbe il server: ora l'app chiede
+      `pdfa`. Verifica: `strings out.pdf | grep -i pdfaid`
+      ⚠️ La lista dei campi si legge da `curl https://api.stirling.com/v1/api-docs`;
+      **quali siano davvero imposti** si scopre solo chiedendo all'istanza locale,
+      perché la dichiarazione «required» dello schema e il comportamento a runtime
+      non coincidono (cinque dichiarati, due imposti)
 - [ ] Il prompt di passaggio al servizio online è **esplicito**, mai silenzioso
 
 ---
 
 ## 7. Chat sul documento
 
-- [ ] Domanda su un PDF corto → risposta sensata
-- [ ] Le **domande suggerite** sono bottoni e si premono
-- [ ] Il **grassetto e gli elenchi** si vedono formattati, non con gli asterischi
-- [ ] Un messaggio di soli spazi non parte (e non consuma uno dei venti)
-- [ ] Il contatore mensile scende; a quota zero il messaggio è chiaro
-- [ ] PDF enorme o con troppe pagine → messaggio in italiano
+- [x] Il documento viene letto e riassunto — provato il 2026-07-31 con
+      `chat-verbale.pdf` (`chat_verbale.png`): riassunto corretto in italiano
+      (Elena Bianchi, utile 87.450, assemblea del 12 settembre 2026), tre domande
+      suggerite in vista, contatore a «20 messaggi rimasti»
+- [x] Le **domande suggerite** si premono e rispondono correttamente (2026-07-31)
+- [x] Il **grassetto, il corsivo e gli elenchi** si vedono formattati, non con gli
+      asterischi
+- [x] Un messaggio di **soli spazi** non parte: l'invio resta inerte
+- [x] Il **contatore mensile scende**. Resta da vedere una sola volta cosa dice a
+      quota zero — non vale un giro di venti messaggi, si guarda quando capita
+- [x] Un documento **più lungo di quanto la chat possa leggere** — provato con
+      `chat-lungo.pdf` (17 pagine, ~70.000 caratteri contro i 60.000 che l'app
+      manda): alla domanda sulla parola di controllo, che sta nell'ultima pagina,
+      risponde che non la trova. È il comportamento giusto — non se l'è inventata.
+      ⚠️ Riga riscritta: **non esiste più un limite che dia errore**. Da quando il
+      testo si estrae sul telefono, oltre `K.ChatPdf.DocumentCharacterBudget` viene
+      troncato e al modello si dice che ha solo l'inizio
 
 ## 8. Uscire dal documento (il paywall all'uscita)
 
-- [ ] Da **non premium**: condividere/esportare/stampare fa comparire il paywall
-- [ ] Dopo l'acquisto l'operazione **riprende da sola**
-- [ ] Il file condiviso è **identico** a quello salvato (stessa dimensione), sia
+- [x] Da **non premium**: condividere/esportare/stampare fa comparire il paywall
+- [x] Dopo l'acquisto l'operazione **riprende da sola** — provato il 2026-07-31
+- [x] Il file condiviso è **identico** a quello salvato (stessa dimensione), sia
       dall'editor sia dall'archivio
-- [ ] Un documento protetto esce protetto
+- [x] Un documento protetto esce protetto
 
 ## 9. Widget, Siri, Scorciatoie
 
-- [ ] Entrambi i widget in tutte le taglie sulla schermata Home
-- [ ] Le cinque frasi Siri
-- [ ] Azioni Scorciatoie su file veri, comprese quelle che girano **senza aprire l'app**
-      (merge, rotate, remove blank pages)
-- [ ] L'azione premium (extract text) da non premium → errore, **non** un paywall
-- [ ] Deeplink `pdfprostaging://`
+Provata tutta il 2026-07-31, nessun difetto.
+
+- [x] Entrambi i widget in tutte le taglie sulla schermata Home
+- [x] Le frasi Siri — sono **sette**, non cinque: scansiona un documento, mostra le
+      mie scansioni, crea un PDF scansionato, apri i miei documenti, unisci PDF,
+      rimuovi le pagine vuote, apri uno strumento (`PdfExpertShortcuts`)
+- [x] Azioni Scorciatoie su file veri, comprese quelle che girano **senza aprire
+      l'app** (merge, rotate, remove blank pages)
+- [x] L'azione premium (extract text) da non premium → errore, **non** un paywall:
+      una scorciatoia può girare a telefono bloccato, dove un paywall non lo
+      vedrebbe nessuno
+- [x] Deeplink `pdfprostaging://`
 
 ## 10. Casi d'errore, in italiano e in spagnolo
 
-- [ ] **Tema dell'app** (Impostazioni ▸ Aspetto): Sistema, Sempre chiaro, Sempre
-      scuro. Deve valere su tutta l'app — sheet e schermate dei tool comprese — e
-      restare dopo un riavvio, senza toccare il tema del telefono
+> Le righe di questa sezione sono state **provate in simulatore** il 2026-07-31,
+> non a mano: `PdfExpertUITests/LocalisationUITests` (6 test) le percorre in
+> italiano e in spagnolo e allega gli screenshot al result bundle. Restano a mano
+> le due che vogliono hardware o la libreria foto.
 
-- [ ] Foglio firma: i tre tab dicono «Disegno / Da immagine / Da fotocamera»
+- [x] **Tema dell'app** (Impostazioni ▸ Aspetto): con «Sempre chiaro» l'editor è
+      chiaro, e lo è ancora dopo che l'app è stata uccisa e riaperta — screenshot
+      `editor-tema-chiaro`. Il tema sta in `@AppStorage`, applicato alla radice,
+      quindi arriva anche a sheet e cover
+- [x] Foglio firma: i tre tab dicono «Disegno / Da immagine / Da fotocamera»
+      (screenshot `foglio-firma-it`), il titolo «Tocca dove vuoi firmare», e il
+      bottone «Conferma»
 - [ ] Negare l'accesso alla fotocamera in Impostazioni e riprovare
-- [ ] Importare una foto illeggibile
-- [ ] Etichette lunghe in spagnolo: menu ⋯ dell'editor, preset di compressione, paywall
-- [ ] Numeri nelle frasi tradotte: «Pagina 3», «2 di 10», «Benvenuto in PDF Pro»
+- [ ] Importare una foto illeggibile — usa **`foto-corrotta.jpg`**: header e
+      dimensioni validi (1400×1050, quindi compare nel picker e ha la miniatura) e
+      dati di scansione mescolati. `foto-illeggibile.jpg` non serve: non essendo
+      un'immagine, la libreria Foto non la importa nemmeno e il picker non la
+      mostra — quello è il filtro di sistema, non l'app. Prova da **entrambe** le
+      porte, galleria e File
+- [x] Etichette lunghe in spagnolo: **preset di compressione** («Ligera /
+      Equilibrada / Máxima» con i sottotitoli) e **paywall** («Desbloquea todas las
+      herramientas», «Pruébalo ahora gratis», «Ahorra 83 %») — screenshot
+      `compressione-es` e `paywall-es`, niente tagliato
+- [x] Numeri nelle frasi tradotte: «1 di 3» sul contatore pagine e «Benvenuto in
+      PDF Pro» all'avvio — i due posti dove l'ordine degli argomenti si rompe
+      ⚠️ **Quattro bottoni erano inglesi in ogni lingua** e nessuno se n'era
+      accorto: «Finish» (firma, compila modulo, aggiungi testo, campi suggeriti),
+      «Retry», «Confirm», «Send Feedback». La causa è la stessa di sempre —
+      `PrimaryActionButton` riceve una `String` e `Text(String)` non localizza.
+      Corretti passando da `String(localized:)`; «Finish» e «Send Feedback» non
+      erano nemmeno nel catalogo, ora ci sono in tre lingue
 
 ## 11. iPad — serve un iPad
 
