@@ -304,7 +304,7 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [x] Proteggere un PDF **già protetto** → errore corretto
 - [x] **Unlock PDF** — `protetto-prova1234.pdf` (password `prova1234`) si sblocca
 - [x] Su un PDF **senza** password → messaggio in italiano, «già sbloccato»
-- [ ] **PDF permissions** — scrivi la password (senza, la conferma resta spenta),
+- [x] **PDF permissions** — passata il 2026-07-31. Scrivi la password (senza, la conferma resta spenta),
       spegni «Consenti stampa» e «Consenti copia», conferma; poi apri il file in
       Anteprima sul Mac e verifica che stampa e selezione siano bloccate.
       Il pezzo sulla sicurezza: riapri il tool, **scrivi qualcosa nel campo
@@ -329,8 +329,9 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 
 - [x] **Export PDF as…** — testo (29.276 caratteri, contenuto giusto) e immagini
       (12 JPG + 12 PNG) da `solo-testo-12-pagine.pdf`
-- [ ] Esportare le **foto incorporate**: quel documento non ne ha, per questo diceva
-      che non ce n'erano. Usa `con-immagini.pdf`, che ne porta tre vere
+- [x] Esportare le **foto incorporate** — passata il 2026-07-31 con
+      `con-immagini.pdf`, che ne porta tre vere. La volta prima era stato usato un
+      documento che non ne aveva: per questo diceva che non ce n'erano
 - [x] **Read PDF** — `leggi_pdf.pdf`: due pagine e **7 annotazioni** salvate
 
 ### Solo con il servizio online acceso
@@ -362,14 +363,15 @@ Se il servizio è spento questi sei **non devono comparire** nel catalogo.
       struttura di tabella. Con `fatture.pdf`, che nasce da un foglio vero, la
       stessa chiamata rende `"Numero","Cliente","Imponibile",…` — verificato in
       locale
-- [ ] **PDF/A** — l'ultima dei cinque online. Senza `outputFormat` risponde
-      comunque 200, ma il formato lo sceglierebbe il server: ora l'app chiede
-      `pdfa`. Verifica: `strings out.pdf | grep -i pdfaid`
+- [x] **PDF/A** — passata il 2026-07-31, e con lei **tutti e cinque gli online**.
+      Senza `outputFormat` il server risponde comunque 200 ma sceglie lui il
+      formato: ora l'app chiede `pdfa`
       ⚠️ La lista dei campi si legge da `curl https://api.stirling.com/v1/api-docs`;
       **quali siano davvero imposti** si scopre solo chiedendo all'istanza locale,
       perché la dichiarazione «required» dello schema e il comportamento a runtime
       non coincidono (cinque dichiarati, due imposti)
-- [ ] Il prompt di passaggio al servizio online è **esplicito**, mai silenzioso
+- [x] Il prompt di passaggio al servizio online è **esplicito**, mai silenzioso —
+      verificato il 2026-07-31
 
 ---
 
@@ -430,8 +432,10 @@ Provata tutta il 2026-07-31, nessun difetto.
 - [x] Foglio firma: i tre tab dicono «Disegno / Da immagine / Da fotocamera»
       (screenshot `foglio-firma-it`), il titolo «Tocca dove vuoi firmare», e il
       bottone «Conferma»
-- [ ] Negare l'accesso alla fotocamera in Impostazioni e riprovare
-- [ ] Importare una foto illeggibile — usa **`foto-corrotta.jpg`**: header e
+- [x] Negare l'accesso alla fotocamera in Impostazioni e riprovare — passata il
+      2026-07-31: l'app lo spiega invece di mostrare un riquadro nero
+- [x] Importare una foto illeggibile — passata il 2026-07-31 con
+      **`foto-corrotta.jpg`**: header e
       dimensioni validi (1400×1050, quindi compare nel picker e ha la miniatura) e
       dati di scansione mescolati. `foto-illeggibile.jpg` non serve: non essendo
       un'immagine, la libreria Foto non la importa nemmeno e il picker non la
