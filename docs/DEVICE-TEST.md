@@ -258,7 +258,8 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 
 Se il servizio è spento questi sei **non devono comparire** nel catalogo.
 
-- [ ] **Repair PDF** — su un file danneggiato
+- [x] **Repair PDF** — su `danneggiato.pdf` (troncato, PDFKit non lo apriva):
+      riparato. Prova anche che il giro completo del proxy funziona dal telefono
 - [ ] **Sanitize PDF**
 - [ ] **PDF to Word**
 - [ ] **PDF to PowerPoint**
