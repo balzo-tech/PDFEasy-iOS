@@ -211,23 +211,32 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 
 ### Modificare
 
-- [x] **Sign PDF** — firma inserita e salvata (`relazione 2_firmata.pdf`): resta
-      un'annotazione, quindi si può riaprire e correggere
-- [ ] Le altre due sorgenti (**da immagine**, **da fotocamera**) e il **tema chiaro**,
-      dove la firma deve restare nera su foglio bianco
+- [x] **Sign PDF** — firma disegnata, inserita e salvata (`relazione 2_firmata.pdf`):
+      resta un'annotazione, quindi si può riaprire e correggere
+- [ ] **Firma da immagine e da fotocamera** — non arrivava mai: il ritaglio scrive
+      l'immagine attraverso un binding e chiude la schermata nello stesso istante,
+      SwiftUI applica quella scrittura al giro dopo, e la chiusura buttava via la
+      callback un attimo prima. Corretto il 2026-07-31 con quattro test (`6a8f706`),
+      **da riprovare**
+- [ ] La firma in **tema chiaro**: deve restare nera su foglio bianco. Dal
+      2026-07-31 il tema si cambia dentro l'app (Impostazioni ▸ Aspetto), senza
+      toccare quello del telefono
 - [x] **Fill in a form** — `modulo.pdf`, quattro campi e una casella: i valori
       digitati sono nel PDF salvato e si vedono nel file esportato, casella
       compresa
-- [ ] **Add text** — posizionamento e salvataggio.
-      ⚠️ Due difetti il 2026-07-31, corretti e da riprovare: la barra sopra la
-      tastiera era una **striscia vuota** (conteneva solo le parole suggerite, che
-      arrivano dal modulo dei dati personali e quasi sempre non ci sono), e un
-      riquadro in basso finiva **sotto la tastiera** senza modo di raggiungerlo —
-      la pagina non si sposta di proposito, perché muoverla sposterebbe il sistema
-      di coordinate del trascinamento. Ora la barra porta un «Fatto» che chiude la
-      tastiera e restituisce tutta la pagina
-- [ ] **Make Searchable (OCR)** — su una scansione vera; barra di avanzamento; il
-      testo diventa selezionabile; su un PDF **già ricercabile** deve dirlo e non toccarlo
+- [x] **Add text** — rifatto il 2026-07-31 e approvato: sotto la pagina c'è la
+      barra con **colori, carattere, A− / A+ e cestino** al posto del contatore
+      (salito sulla pagina come pastiglia), e il riquadro segue lo stile dell'app.
+      A− / A+ scalano il riquadro, perché il carattere viene ingrandito per
+      riempirlo: il riquadro *è* la dimensione.
+      Prima erano emersi: la barra sopra la tastiera vuota (conteneva solo le
+      parole suggerite) e invisibile su PDF a fondo nero, e un riquadro in basso
+      irraggiungibile sotto la tastiera — «Fatto» sulla barra la chiude e
+      restituisce la pagina
+- [x] **Make Searchable (OCR)** — funziona. ⚠️ Da provare su un documento fatto di
+      **immagini**: un PDF creato al computer ha già il testo e l'app risponde
+      giustamente che è già ricercabile. In cartella c'è `finta-scansione.pdf`,
+      che di testo non ne ha
 - [x] **Page numbers** — provati da soli: funzionano. In `contratto-v1-punto5.pdf`
       non ce n'era traccia, ma il tool non c'entrava: non erano stati applicati.
       Restano due test scritti per quel sospetto (`306f877`), che coprono i numeri
@@ -249,10 +258,10 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       verdognola dietro «Strumenti» e «Fatto»: lo sfondo della sheet si fermava alla
       lista, così la barra faceva da vetro sull'**editor sottostante**. Corretto e
       **verificato sul device**
-- [ ] **Il menu che si apre dal basso** (Strumenti ▸ Firma PDF, Aggiungi testo o
-      Rendi ricercabile → «File / Scansiona») aveva lo stesso difetto: il contenuto
-      dipinge il proprio sfondo, ma quello che il detent lascia scoperto restava
-      vetro. Ora lo sfondo è della **sheet** (`presentationBackground`). Da riprovare
+- [x] **Il menu che si apre dal basso** (Strumenti ▸ Firma PDF, Aggiungi testo o
+      Rendi ricercabile → «File / Scansiona»): lo sfondo è a posto
+- [ ] Lo stesso menu **nella lingua del telefono**: era in inglese ovunque, erano
+      `String` semplici. Corretto il 2026-07-31 (`2bd614d`), da riprovare
 
 ### Proteggere
 
@@ -332,6 +341,10 @@ Se il servizio è spento questi sei **non devono comparire** nel catalogo.
 - [ ] Deeplink `pdfprostaging://`
 
 ## 10. Casi d'errore, in italiano e in spagnolo
+
+- [ ] **Tema dell'app** (Impostazioni ▸ Aspetto): Sistema, Sempre chiaro, Sempre
+      scuro. Deve valere su tutta l'app — sheet e schermate dei tool comprese — e
+      restare dopo un riavvio, senza toccare il tema del telefono
 
 - [ ] Foglio firma: i tre tab dicono «Disegno / Da immagine / Da fotocamera»
 - [ ] Negare l'accesso alla fotocamera in Impostazioni e riprovare
