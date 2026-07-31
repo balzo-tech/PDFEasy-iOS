@@ -235,14 +235,19 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [ ] Su un PDF **senza** password → «già sbloccato»
 - [ ] **PDF permissions** — limita stampa e copia; uscendo a metà e rientrando il
       campo password dev'essere **vuoto**
-- [ ] **Redact PDF** («Oscura PDF», in Proteggi) — i box nella posizione giusta su
-      pagine **ruotate** e a vari zoom; il contenuto sotto non è più recuperabile.
-      ⚠️ Il 2026-07-31 la banda nera **non seguiva il dito**: la pagina era spinta
-      contro il bordo inferiore da un doppio centraggio (un `.offset` non muove il
-      layout, quindi il frame la ricentrava sopra all'offset che già centrava) e
-      ogni box cadeva mezzo spazio vuoto più in là. Corretto, da riprovare.
-      Verifica finale: dopo «Applica», il dato oscurato **non deve più essere
-      estraibile** dal file — a occhio un rettangolo disegnato sopra è identico
+- [x] **Redact PDF** («Oscura PDF», in Proteggi) — provato su `ruotato.pdf`, una
+      banda per pagina a 90°, 180°, 270° e 0°: **tutte e quattro cadono dove
+      servono**, e i cinque dati finti non sono più estraibili dal file
+      (`ruotato-redacted.pdf`). Le pagine oscurate diventano immagini e le
+      rotazioni risultano azzerate: è la conseguenza normale del rendering, il
+      contenuto si vede con lo stesso orientamento di prima.
+      ⚠️ Ci è voluto un fix: la banda nera **non seguiva il dito**, perché la pagina
+      era spinta contro il bordo inferiore da un doppio centraggio (un `.offset`
+      non muove il layout, quindi il frame la ricentrava sopra all'offset che già
+      centrava) e ogni box cadeva mezzo spazio vuoto più in là (`3a2c4b3`).
+      ⚠️ Da sapere per l'uso: la garanzia sta nella **conversione in immagine**, non
+      nel box. Un frammento di lettera lasciato scoperto al bordo della banda non
+      è estraibile ma resta **visibile** — conviene trascinare più larghi del testo
 
 ### Esportare e leggere
 
