@@ -371,6 +371,7 @@
 		E5FBC6A7C2D9471BA5D4A426 /* PdfPageNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8CB76B2BB4D3695AF5D52 /* PdfPageNumberViewModel.swift */; };
 		E6BFEFEAA0A876DCBFF77701 /* ScanIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 977195E1B05F257EEF705AF7 /* ScanIntents.swift */; };
 		E7C4A1B209F3486D8A2C0102 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = E7C4A1B209F3486D8A2C0101 /* FirebaseAppCheck */; };
+		E7C4A1B209F3486D8A2C0202 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = E7C4A1B209F3486D8A2C0201 /* FirebaseRemoteConfig */; };
 		E7DC622DB4A8BBAFED1D253B /* PdfWebImportViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA32C92F5D63567E2EC98234 /* PdfWebImportViewModelTests.swift */; };
 		EA094BD1F3E65F32E9BE1747 /* PdfConvertViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */; };
 		EA488508BC0123744C866132 /* ArchiveFilingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D2B1368B6FEF557204D2A /* ArchiveFilingUITests.swift */; };
@@ -848,6 +849,7 @@
 				895FE2D229D7392F00A99D5B /* OrderedCollections in Frameworks */,
 				89CD7BAB29D32CE5003F1C3A /* FirebaseAnalyticsSwift in Frameworks */,
 				E7C4A1B209F3486D8A2C0102 /* FirebaseAppCheck in Frameworks */,
+				E7C4A1B209F3486D8A2C0202 /* FirebaseRemoteConfig in Frameworks */,
 				8A11AT0100000000000001 /* AppleAttribution in Frameworks */,
 				8991485629E85DE500DD01F2 /* CombineExt in Frameworks */,
 				89CD7BAD29D32CE5003F1C3A /* FirebaseCrashlytics in Frameworks */,
@@ -1914,6 +1916,7 @@
 				89CD7BA729D32C72003F1C3A /* Factory */,
 				89CD7BAA29D32CE5003F1C3A /* FirebaseAnalyticsSwift */,
 				E7C4A1B209F3486D8A2C0101 /* FirebaseAppCheck */,
+				E7C4A1B209F3486D8A2C0201 /* FirebaseRemoteConfig */,
 				89CD7BAC29D32CE5003F1C3A /* FirebaseCrashlytics */,
 				89923E6629D437F500E246FC /* FirebasePerformance */,
 				895FE2CF29D7392F00A99D5B /* Collections */,
@@ -3488,8 +3491,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = exactVersion;
+				version = 10.29.0;
 			};
 		};
 		8A11AT0100000000000003 /* XCRemoteSwiftPackageReference "grogu-ios" */ = {
@@ -3567,6 +3570,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8A11AT0100000000000003 /* XCRemoteSwiftPackageReference "grogu-ios" */;
 			productName = AppleAttribution;
+		};
+		E7C4A1B209F3486D8A2C0201 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89CD7BA929D32CE5003F1C3A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
 		};
 		E7C4A1B209F3486D8A2C0101 /* FirebaseAppCheck */ = {
 			isa = XCSwiftPackageProductDependency;
