@@ -26,10 +26,11 @@ final class ImageToPdfTests: XCTestCase {
     /// A picture that is unmistakably not blank: solid red, big enough to be
     /// scaled down on its way into the page.
     private func makePhoto(size: CGSize = CGSize(width: 2400, height: 1800),
-                           orientation: UIImage.Orientation = .up) -> UIImage {
+                           orientation: UIImage.Orientation = .up,
+                           colour: UIColor = .red) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         let flat = renderer.image { context in
-            UIColor.red.setFill()
+            colour.setFill()
             context.fill(CGRect(origin: .zero, size: size))
         }
         guard orientation != .up else { return flat }
@@ -293,6 +294,34 @@ final class ImageToPdfTests: XCTestCase {
             }
             self.wait(for: [expectation], timeout: 10)
             try report(label, try XCTUnwrap(result))
+        }
+    }
+
+    /// Reported from the phone: "Image to PDF does not let me pick more than one
+    /// photo". The picker was asking for a single `PhotosPickerItem`; what it hands
+    /// over now is a list, and each picture has to become its own page **in the
+    /// order they were chosen** — a set of photos of a contract is not a document
+    /// if page three comes first.
+    func testEveryPhotoBecomesItsOwnPageInTheOrderTheyWerePicked() throws {
+        let colours: [UIColor] = [.red, .green, .blue]
+        let document = PDFDocument()
+        for colour in colours {
+            PDFUtility.appendImageToPdfDocument(pdfDocument: document,
+                                                uiImage: self.makePhoto(colour: colour))
+        }
+
+        XCTAssertEqual(document.pageCount, colours.count,
+                       "three photos did not make three pages")
+        for (index, colour) in colours.enumerated() {
+            var expected: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
+            colour.getRed(&expected.r, green: &expected.g, blue: &expected.b, alpha: &expected.a)
+            let pixel = try self.centrePixel(of: PDFUtility.generatePageImage(
+                try XCTUnwrap(document.page(at: index))
+            ))
+            XCTAssertEqual(CGFloat(pixel.r) / 255, expected.r, accuracy: 0.15,
+                           "page \(index + 1) is not the \(index + 1)th photo — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
+            XCTAssertEqual(CGFloat(pixel.g) / 255, expected.g, accuracy: 0.15,
+                           "page \(index + 1) is not the \(index + 1)th photo — r\(pixel.r) g\(pixel.g) b\(pixel.b)")
         }
     }
 

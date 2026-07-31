@@ -9,6 +9,7 @@ import Foundation
 import Factory
 import SwiftUI
 import PhotosUI
+import PDFKit
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {
@@ -221,16 +222,21 @@ public class HomeViewModel : ObservableObject {
     @Published var importFileOption: ImportFileOption? = nil
     
     @Published var imagePickerShow: Bool = false
-    @Published var imageSelection: PhotosPickerItem? = nil {
+    /// Every photo chosen, in the order they were chosen: "Image to PDF" makes one
+    /// page per picture, and picking them one at a time is not what anyone means by
+    /// turning photos into a document.
+    @Published var imageSelections: [PhotosPickerItem] = [] {
         didSet {
-            if let imageSelection {
-                let progress = self.loadTransferable(from: imageSelection)
-                self.asyncImageLoading = AsyncOperation(status: .loading(progress))
-            } else {
+            guard !self.imageSelections.isEmpty else {
                 self.asyncImageLoading = AsyncOperation(status: .empty)
+                return
             }
+            self.loadImages(from: self.imageSelections)
         }
     }
+    /// More than a scanner's worth of pages in one go is a mistake, not a wish, and
+    /// each photo is decoded at full size on its way to a page.
+    static let maxPhotoSelectionCount: Int = 50
     
     @Published var asyncImageLoading: AsyncOperation<(), SharedUnderlyingError> = AsyncOperation(status: .empty)
     
@@ -600,24 +606,44 @@ public class HomeViewModel : ObservableObject {
         }
     }
     
-    private func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
-        return imageSelection.loadTransferable(type: PickedImage.self) { result in
-            DispatchQueue.main.async {
-                guard imageSelection == self.imageSelection else {
-                    print("Failed to get the selected item.")
-                    return
+    /// One page per photo, built as the photos arrive rather than collected first:
+    /// fifty pictures at the size a phone camera writes them are more bitmap than
+    /// the app is allowed to hold at once, and only one is needed at a time.
+    ///
+    /// A photo the library cannot hand over does not take the others down with it —
+    /// the document is only refused if *nothing* could be read.
+    private func loadImages(from selections: [PhotosPickerItem]) {
+        let progress = Progress(totalUnitCount: Int64(selections.count))
+        self.asyncImageLoading = AsyncOperation(status: .loading(progress))
+        Task { @MainActor in
+            let pdfDocument = PDFDocument()
+            var failure: Error?
+            for selection in selections {
+                // A second pick made while this one is still loading wins: its
+                // pages would otherwise arrive in the middle of these.
+                guard selections == self.imageSelections else { return }
+                do {
+                    if let picked = try await selection.loadTransferable(type: PickedImage.self) {
+                        PDFUtility.appendImageToPdfDocument(pdfDocument: pdfDocument,
+                                                            uiImage: picked.uiImage)
+                    }
+                } catch {
+                    failure = error
                 }
-                switch result {
-                case .success(let image?):
-                    self.asyncImageLoading = AsyncOperation(status: .data(()))
-                    self.convertUiImageToPdf(uiImage: image.uiImage, filename: nil)
-                case .success(nil):
-                    self.asyncImageLoading = AsyncOperation(status: .empty)
-                case .failure(let error):
-                    let convertedError = SharedUnderlyingError.convertError(fromError: error)
-                    self.asyncImageLoading = AsyncOperation(status: .error(convertedError))
-                }
+                progress.completedUnitCount += 1
             }
+            guard pdfDocument.pageCount > 0 else {
+                if let failure {
+                    self.asyncImageLoading = AsyncOperation(
+                        status: .error(SharedUnderlyingError.convertError(fromError: failure))
+                    )
+                } else {
+                    self.asyncImageLoading = AsyncOperation(status: .empty)
+                }
+                return
+            }
+            self.asyncImageLoading = AsyncOperation(status: .data(()))
+            self.asyncPdf = AsyncOperation(status: .data(Pdf(pdfDocument: pdfDocument)))
         }
     }
     

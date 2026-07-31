@@ -91,7 +91,8 @@ struct ToolsView: View {
         }
         // Photo gallery picker
         .photosPicker(isPresented: self.$viewModel.imagePickerShow,
-                      selection: self.$viewModel.imageSelection,
+                      selection: self.$viewModel.imageSelections,
+                      maxSelectionCount: HomeViewModel.maxPhotoSelectionCount,
                       matching: .images)
         .asyncView(asyncOperation: self.$viewModel.asyncPdf,
                    loadingView: { AnimationType.pdf.view })
