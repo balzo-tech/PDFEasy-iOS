@@ -226,10 +226,10 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       tastiera e restituisce tutta la pagina
 - [ ] **Make Searchable (OCR)** — su una scansione vera; barra di avanzamento; il
       testo diventa selezionabile; su un PDF **già ricercabile** deve dirlo e non toccarlo
-- [ ] **Page numbers** — ancora da provare. In `contratto-v1-punto5.pdf` non ce
-      n'era traccia, ma il tool non c'entrava: non erano stati applicati. Restano
-      due test scritti per quel sospetto (`306f877`), che coprono i numeri prima e
-      dopo l'inversione dei colori
+- [x] **Page numbers** — provati da soli: funzionano. In `contratto-v1-punto5.pdf`
+      non ce n'era traccia, ma il tool non c'entrava: non erano stati applicati.
+      Restano due test scritti per quel sospetto (`306f877`), che coprono i numeri
+      prima e dopo l'inversione dei colori
 - [x] **Watermark** — «Balzo» in diagonale su tutte le pagine di
       `contratto-v1-punto5.pdf`, e il testo del documento resta selezionabile.
       Dal 2026-07-31 la filigrana finisce su una **copia**
