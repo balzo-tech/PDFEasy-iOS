@@ -328,9 +328,9 @@ class PdfEditViewModel: ObservableObject {
     /// in the tool panel that a simulator cannot deliver:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string watermark
     /// Values: `pageNumbers`, `watermark`, `metadata`, `tools`, `reorder`, `split`,
-    /// `extract`, `export`, `compress`, `permissions`, `addText`. Page numbers, watermark and
-    /// permissions are premium, so `debugPremium -bool YES` is needed too; split and
-    /// extract need a document of more than one page.
+    /// `extract`, `export`, `compress`, `permissions`, `addText`, `signature`. Page
+    /// numbers, watermark and permissions are premium, so `debugPremium -bool YES` is
+    /// needed too; split and extract need a document of more than one page.
     @MainActor
     private func openDebugSheetIfNeeded() {
         // The editor's `onAppear` runs again every time a pushed tool is popped,
@@ -349,6 +349,7 @@ class PdfEditViewModel: ObservableObject {
         case "compress": self.startCompress()
         case "permissions": self.startPermissions()
         case "addText": self.showFillForm()
+        case "signature": self.showAddSignature()
         default: break
         }
     }

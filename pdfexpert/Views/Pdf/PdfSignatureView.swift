@@ -95,9 +95,10 @@ struct PdfSignatureView: View {
                 .frame(width: parentGeometryReader.size.width,
                        height: parentGeometryReader.size.height)
             }
+            // No title here: this is the signature screen, and the one it used to
+            // set — copied from the text tool — won over the right one outside,
+            // so signing said "Tap where you wish to add text".
             .background(ColorPalette.primaryBG)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Tap where you wish to add text")
             Spacer()
         }
     }
