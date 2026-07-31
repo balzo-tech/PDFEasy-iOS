@@ -117,7 +117,15 @@ struct PdfRedactEditorView: View {
                             .offset(x: currentRect.minX, y: currentRect.minY)
                     }
                 }
-                .frame(width: geometry.size.width, height: geometry.size.height)
+                // `.topLeading`, and it matters: an `.offset` moves what is drawn
+                // but not the layout, so this ZStack measures the page image and
+                // a centring frame would slide it down by half the spare height —
+                // on top of the offset that had already centred it. The page ended
+                // up against the bottom edge, and every box was drawn that same
+                // half-gap away from the finger that drew it.
+                .frame(width: geometry.size.width,
+                       height: geometry.size.height,
+                       alignment: .topLeading)
                 .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 2)

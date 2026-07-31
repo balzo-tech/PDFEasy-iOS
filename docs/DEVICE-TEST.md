@@ -235,8 +235,14 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [ ] Su un PDF **senza** password → «già sbloccato»
 - [ ] **PDF permissions** — limita stampa e copia; uscendo a metà e rientrando il
       campo password dev'essere **vuoto**
-- [ ] **Redact PDF** — i box nella posizione giusta su pagine **ruotate** e a vari zoom;
-      il contenuto sotto non è più recuperabile
+- [ ] **Redact PDF** («Oscura PDF», in Proteggi) — i box nella posizione giusta su
+      pagine **ruotate** e a vari zoom; il contenuto sotto non è più recuperabile.
+      ⚠️ Il 2026-07-31 la banda nera **non seguiva il dito**: la pagina era spinta
+      contro il bordo inferiore da un doppio centraggio (un `.offset` non muove il
+      layout, quindi il frame la ricentrava sopra all'offset che già centrava) e
+      ogni box cadeva mezzo spazio vuoto più in là. Corretto, da riprovare.
+      Verifica finale: dopo «Applica», il dato oscurato **non deve più essere
+      estraibile** dal file — a occhio un rettangolo disegnato sopra è identico
 
 ### Esportare e leggere
 
