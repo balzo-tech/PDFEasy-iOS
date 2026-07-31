@@ -147,6 +147,13 @@ struct PdfEditToolPanel: View {
             .searchable(text: self.$query, prompt: Text("Search tools"))
             .navigationTitle("Tools")
             .navigationBarTitleDisplayMode(.inline)
+            // The sheet's own background stops at the scroll view, so the bar was
+            // left to glass over whatever is behind it — which here is the editor,
+            // tinted tool buttons and all. The title sat on a greenish band that
+            // belongs to no palette. Given a background of its own it reads as part
+            // of this sheet again.
+            .toolbarBackground(ColorPalette.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { self.dismiss() }

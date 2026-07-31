@@ -244,6 +244,13 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       Flatten deve averne **0** con la firma ancora visibile. Vale anche per
       `modulo.pdf` compilato, dove i campi non devono più essere modificabili
 
+- [ ] **Il pannello Strumenti dell'editor** — la barra in cima aveva una fascia
+      verdognola dietro «Strumenti» e «Fatto»: lo sfondo della sheet si fermava alla
+      lista, così la barra faceva da vetro sull'**editor sottostante** e ne prendeva
+      le tinte. Le è stato dato uno sfondo suo il 2026-07-31.
+      ⚠️ **Non verificato**: il pannello non si apre dai flag di debug, quindi la
+      correzione è stata scritta ma mai vista
+
 ### Proteggere
 
 - [ ] **Protect PDF** — password; riaprendolo la chiede
