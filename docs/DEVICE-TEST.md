@@ -226,13 +226,20 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       tastiera e restituisce tutta la pagina
 - [ ] **Make Searchable (OCR)** — su una scansione vera; barra di avanzamento; il
       testo diventa selezionabile; su un PDF **già ricercabile** deve dirlo e non toccarlo
-- [ ] **Page numbers**
-- [ ] **Watermark** — dal 2026-07-31 la filigrana finisce su una **copia**
+- [ ] **Page numbers** — ⚠️ in `contratto-v1-punto5.pdf` **non c'è traccia** di
+      numeri: confrontando riga per riga con l'originale l'unica aggiunta è la
+      filigrana. Da rifare per capire se non è stato applicato o se il tool non fa
+      nulla
+- [x] **Watermark** — «Balzo» in diagonale su tutte le pagine di
+      `contratto-v1-punto5.pdf`, e il testo del documento resta selezionabile.
+      Dal 2026-07-31 la filigrana finisce su una **copia**
       (`nome-watermarked`) e il documento aperto resta pulito, con l'alert che lo
       dice. Prima sostituiva il documento, e non c'è modo di togliere una filigrana:
       è disegnata *dentro* la pagina, non appoggiata sopra come annotazione (è ciò
       che tiene il testo selezionabile). Da riprovare
-- [ ] **Invert colors**
+- [x] **Invert colors** — su `contratto-v1-punto5.pdf`: sfondo nero e testo bianco
+      su tutte le pagine. Applicato **dopo** la filigrana, che infatti risulta
+      grigia su nero: l'ordine conta
 - [ ] **Flatten PDF** — su `relazione 2_firmata.pdf`, che ha **1 annotazione**: dopo
       Flatten deve averne **0** con la firma ancora visibile. Vale anche per
       `modulo.pdf` compilato, dove i campi non devono più essere modificabili
