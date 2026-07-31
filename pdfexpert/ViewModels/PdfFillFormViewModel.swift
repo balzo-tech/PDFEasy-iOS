@@ -48,7 +48,10 @@ class PdfFillFormViewModel: ObservableObject {
         }
     }
     @Published var suggestedFields: SuggestedFields? = nil
-    
+    /// Colour and face for the text being placed. Kept between one box and the
+    /// next: filling a form means writing the same kind of thing several times.
+    @Published var style: TextAnnotationStyle = TextAnnotationStyle()
+
     var pageViewSize: CGSize = .zero
     /// The annotation the editor asked to edit, waiting for the view's size.
     private var pendingEdit: (pageIndex: Int, bounds: CGRect)? = nil
@@ -218,6 +221,37 @@ class PdfFillFormViewModel: ObservableObject {
         self.unsavedChangesExist = true
     }
     
+    /// A− / A+ from the bar. The font is grown to fill the box, so the size of the
+    /// text *is* the size of the box: scaling it around its own centre leaves the
+    /// text where it was put and only changes how big it is.
+    @MainActor
+    func scaleEditedText(by factor: CGFloat) {
+        guard self.editedPageIndex != nil else { return }
+        let rect = self.currentTextResizableViewData.rect
+        guard rect.width > 0, rect.height > 0 else { return }
+        let width = max(Self.minimumTextSize.width,
+                        min(rect.width * factor, self.pageViewSize.width))
+        let height = max(Self.minimumTextSize.height,
+                         min(rect.height * factor, self.pageViewSize.height))
+        let centre = CGPoint(x: rect.midX, y: rect.midY)
+        var scaled = CGRect(x: centre.x - width / 2,
+                            y: centre.y - height / 2,
+                            width: width,
+                            height: height)
+        // Keep it on the page: growing something near an edge should push it back
+        // in rather than half of it off.
+        if self.pageViewSize != .zero {
+            scaled.origin.x = min(max(0, scaled.origin.x), max(0, self.pageViewSize.width - width))
+            scaled.origin.y = min(max(0, scaled.origin.y), max(0, self.pageViewSize.height - height))
+        }
+        self.currentTextResizableViewData = TextResizableViewData(
+            text: self.currentTextResizableViewData.text,
+            rect: scaled
+        )
+    }
+
+    private static let minimumTextSize = CGSize(width: 24, height: 14)
+
     func onConfirmButtonPressed() {
         if self.editedPageIndex != nil {
             self.applyCurrentEditedTextAnnotation()
@@ -255,8 +289,8 @@ class PdfFillFormViewModel: ObservableObject {
         let bounds = self.convertRect(self.currentTextResizableViewData.rect, viewSize: self.pageViewSize, toPage: page)
         let annotation = PDFAnnotation.create(with: self.currentTextResizableViewData.text,
                                               forBounds: bounds,
-                                              textColor: .black,
-                                              fontName: K.Misc.DefaultAnnotationTextFontName,
+                                              textColor: self.style.color.uiColor,
+                                              fontName: self.style.font.fontName,
                                               withProperties: nil)
         annotation.page = page
         self.annotations.append(annotation)

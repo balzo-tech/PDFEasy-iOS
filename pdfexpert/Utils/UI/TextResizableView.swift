@@ -15,6 +15,67 @@ struct TextResizableViewData {
     var rect: CGRect
 }
 
+// MARK: - Style
+
+/// How a piece of added text looks. The size is not in here on purpose: the font
+/// is grown to fill the box (`UIFont.font(named:fitting:into:)`), so the box *is*
+/// the size — which is why the bar's A− / A+ scale the box rather than a number.
+struct TextAnnotationStyle: Equatable {
+    var color: TextAnnotationColor = .black
+    var font: TextAnnotationFont = .sans
+}
+
+enum TextAnnotationColor: String, CaseIterable, Identifiable {
+    case black, blue, red, green, white
+
+    var id: Self { self }
+
+    var uiColor: UIColor {
+        switch self {
+        case .black: return UIColor(white: 0.06, alpha: 1)
+        case .blue: return UIColor(red: 0.04, green: 0.39, blue: 0.91, alpha: 1)
+        case .red: return UIColor(red: 0.84, green: 0.17, blue: 0.17, alpha: 1)
+        case .green: return UIColor(red: 0.09, green: 0.53, blue: 0.35, alpha: 1)
+        // For stamping over a dark scan or a photo. Given a ring in the bar so it
+        // is visible against the sheet.
+        case .white: return UIColor(white: 1, alpha: 1)
+        }
+    }
+
+    var color: Color { Color(self.uiColor) }
+}
+
+enum TextAnnotationFont: String, CaseIterable, Identifiable {
+    case sans, serif, mono, hand
+
+    var id: Self { self }
+
+    /// Falls back to the app's default when a face is missing from the device —
+    /// `UIFont(name:size:)` answers nil and the helper would silently switch to
+    /// the system font anyway, so this keeps the PDF and the preview in step.
+    var fontName: String {
+        let preferred: String
+        switch self {
+        case .sans: preferred = K.Misc.DefaultAnnotationTextFontName
+        case .serif: preferred = "Times New Roman"
+        case .mono: preferred = "Courier New"
+        case .hand: preferred = "Bradley Hand"
+        }
+        return UIFont(name: preferred, size: 12) != nil
+            ? preferred
+            : K.Misc.DefaultAnnotationTextFontName
+    }
+
+    var title: String {
+        switch self {
+        case .sans: return String(localized: "Sans")
+        case .serif: return String(localized: "Serif")
+        case .mono: return String(localized: "Typewriter")
+        case .hand: return String(localized: "Handwritten")
+        }
+    }
+}
+
 struct TextResizableView: View {
     
     enum FocusField: Hashable {
@@ -128,7 +189,18 @@ struct TextResizableView: View {
                             }
                             .contentShape(Rectangle())
                             .frame(width: self.computedSize.width, height: self.computedSize.height)
-                            .background(Rectangle().stroke(self.color, lineWidth: self.borderWidth))
+                            // A rounded, tinted box rather than a heavy square
+                            // outline: it is the same shape language as the rest
+                            // of the app, and the wash makes it findable on a busy
+                            // page without hiding what is under it.
+                            .background {
+                                RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
+                                    .fill(self.color.opacity(0.10))
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
+                                            .strokeBorder(self.color, lineWidth: self.borderWidth)
+                                    }
+                            }
                             .position(self.computedCenter)
                             // `highPriorityGesture`, and a minimum distance: the
                             // box is a `TextField`, and a text field's own gesture
@@ -256,15 +328,13 @@ struct TextResizableView: View {
     }
 
     private func getResizeHandle(parentViewSize: CGSize) -> some View {
-        ZStack {
-            Circle()
-                .frame(width: self.handleSize, height: self.handleSize)
-                .foregroundColor(.white)
-            Image(systemName: "arrow.up.left.and.arrow.down.right.circle.fill")
-                .resizable()
-                .frame(width: self.handleSize, height: self.handleSize)
-                .foregroundColor(self.color)
-        }
+        Image(systemName: "arrow.up.left.and.arrow.down.right")
+            .font(.system(size: self.handleSize * 0.42, weight: .bold))
+            .foregroundStyle(.white)
+            .frame(width: self.handleSize, height: self.handleSize)
+            .background(self.color, in: .circle)
+            .overlay { Circle().strokeBorder(.white.opacity(0.9), lineWidth: 1.5) }
+            .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
         .frame(width: self.handleTapSize, height: self.handleTapSize)
         .contentShape(Circle())
         .position(CGPoint(x: self.computedCenter.x + self.computedSize.width / 2,
@@ -279,15 +349,13 @@ struct TextResizableView: View {
     
     private func getDeleteButton(parentViewSize: CGSize) -> some View {
         Button(action: { self.deleteCallback() }) {
-            ZStack {
-                Circle()
-                    .frame(width: self.handleSize, height: self.handleSize)
-                    .foregroundColor(.white)
-                Image(systemName: "trash.circle.fill")
-                    .resizable()
-                    .frame(width: self.handleSize, height: self.handleSize)
-                    .foregroundColor(self.color)
-            }
+            Image(systemName: "xmark")
+                .font(.system(size: self.handleSize * 0.42, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: self.handleSize, height: self.handleSize)
+                .background(ColorPalette.danger, in: .circle)
+                .overlay { Circle().strokeBorder(.white.opacity(0.9), lineWidth: 1.5) }
+                .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
         }
         .frame(width: self.handleTapSize, height: self.handleTapSize)
         .contentShape(Circle())
@@ -306,6 +374,118 @@ struct TextResizableView: View {
     private func updateFilteredSuggestedWords() {
         self.filteredSuggestedWords = self.suggestedWords
             .filter { $0.hasPrefix(self.data.text) && !self.data.text.isEmpty && $0 != self.data.text }
+    }
+}
+
+// MARK: - The bar under the page
+
+/// Colour, face and size for the text being placed, in the strip that used to hold
+/// the page counter. The counter moved up onto the page as a badge — the editor
+/// already shows it that way — because these three are what you reach for while
+/// writing, and they were not reachable at all.
+struct TextStyleBar: View {
+
+    @Binding var style: TextAnnotationStyle
+    /// Nil while nothing is being edited: the size buttons and the bin have
+    /// nothing to act on, so they are disabled rather than hidden — a bar that
+    /// changes shape under the thumb is worse than one with a dim button.
+    let isEditing: Bool
+    let onGrow: () -> Void
+    let onShrink: () -> Void
+    let onDelete: () -> Void
+
+    var body: some View {
+        HStack(spacing: DS.Spacing.md) {
+            self.colors
+            Divider().frame(height: 22)
+            self.fontMenu
+            Divider().frame(height: 22)
+            self.sizeButtons
+            Spacer(minLength: 0)
+            Button(action: self.onDelete) {
+                Image(systemName: "trash")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(self.isEditing ? ColorPalette.danger : ColorPalette.textTertiary)
+            }
+            .disabled(!self.isEditing)
+        }
+        .padding(.horizontal, DS.Spacing.md)
+        .padding(.vertical, DS.Spacing.sm)
+        .background(ColorPalette.surfaceElevated, in: .rect(cornerRadius: DS.Radius.control, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: DS.Radius.control, style: .continuous)
+                .strokeBorder(ColorPalette.separator, lineWidth: 1)
+        }
+    }
+
+    private var colors: some View {
+        HStack(spacing: DS.Spacing.xs) {
+            ForEach(TextAnnotationColor.allCases) { color in
+                Button {
+                    self.style.color = color
+                } label: {
+                    Circle()
+                        .fill(color.color)
+                        .frame(width: 22, height: 22)
+                        .overlay {
+                            // Every swatch keeps a hairline so white is visible on
+                            // the sheet; the chosen one gets a ring outside it.
+                            Circle().strokeBorder(ColorPalette.separator, lineWidth: 1)
+                        }
+                        .overlay {
+                            if self.style.color == color {
+                                Circle()
+                                    .strokeBorder(ColorPalette.accent, lineWidth: 2)
+                                    .frame(width: 30, height: 30)
+                            }
+                        }
+                        .frame(width: 30, height: 30)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(verbatim: color.rawValue))
+            }
+        }
+    }
+
+    private var fontMenu: some View {
+        Menu {
+            Picker(selection: self.$style.font) {
+                ForEach(TextAnnotationFont.allCases) { font in
+                    Text(font.title).tag(font)
+                }
+            } label: {
+                EmptyView()
+            }
+        } label: {
+            // A symbol rather than "Aa" set in the chosen face: inside a `Menu`
+            // label SwiftUI reserves the styling of what it is given, and the two
+            // letters came out invisible. The face is shown where it matters, in
+            // the box on the page.
+            HStack(spacing: 3) {
+                Image(systemName: "textformat")
+                    .font(.system(size: 17, weight: .medium))
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 9, weight: .semibold))
+            }
+            .foregroundStyle(ColorPalette.textPrimary)
+            .contentShape(.rect)
+        }
+        .accessibilityLabel(Text("Font"))
+    }
+
+    private var sizeButtons: some View {
+        HStack(spacing: DS.Spacing.sm) {
+            Button(action: self.onShrink) {
+                Image(systemName: "textformat.size.smaller")
+                    .font(.system(size: 16, weight: .semibold))
+            }
+            Button(action: self.onGrow) {
+                Image(systemName: "textformat.size.larger")
+                    .font(.system(size: 16, weight: .semibold))
+            }
+        }
+        .foregroundStyle(self.isEditing ? ColorPalette.textPrimary : ColorPalette.textTertiary)
+        .disabled(!self.isEditing)
     }
 }
 

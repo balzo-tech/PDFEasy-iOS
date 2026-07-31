@@ -5203,6 +5203,28 @@
         }
       }
     },
+    "Font" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Font"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fuente"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carattere"
+          }
+        }
+      }
+    },
     "Font size" : {
       "localizations" : {
         "en" : {
@@ -5808,6 +5830,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Griglia"
+          }
+        }
+      }
+    },
+    "Handwritten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handwritten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manuscrito"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manoscritto"
           }
         }
       }
@@ -11057,6 +11101,28 @@
         }
       }
     },
+    "Sans" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lineal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lineare"
+          }
+        }
+      }
+    },
     "Save" : {
       "localizations" : {
         "en" : {
@@ -11707,6 +11773,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Separa le parole chiave con le virgole"
+          }
+        }
+      }
+    },
+    "Serif" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serif"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con serifa"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con grazie"
           }
         }
       }
@@ -14269,6 +14357,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scrivi il tuo messaggio..."
+          }
+        }
+      }
+    },
+    "Typewriter" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typewriter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina de escribir"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macchina da scrivere"
           }
         }
       }

@@ -56,20 +56,38 @@ struct PdfFillFormView: View {
                         .position(x: parentGeometryReader.size.width / 2, y: parentGeometryReader.size.height / 2)
                         .frame(width: parentGeometryReader.size.width,
                                height: parentGeometryReader.size.height)
+                        .overlay(alignment: .top) {
+                            if self.viewModel.pageImages.count > 1 {
+                                Text("\(self.viewModel.pageIndex + 1) of \(self.viewModel.pageImages.count)")
+                                    .font(forCategory: .caption1)
+                                    .foregroundStyle(ColorPalette.textPrimary)
+                                    .padding(.horizontal, DS.Spacing.sm)
+                                    .padding(.vertical, 6)
+                                    .floatingGlassCapsule(interactive: false)
+                                    .padding(.top, DS.Spacing.xs)
+                                    .animation(DS.Motion.quick, value: self.viewModel.pageIndex)
+                            }
+                        }
                     }
                     .background(ColorPalette.primaryBG)
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationTitle("Tap where you wish to add text")
                     Spacer()
                 }
-                self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
-                                 totalPages: self.viewModel.pageImages.count)
-                Spacer().frame(height: 50)
+                // What used to be here was the page counter, which says nothing
+                // you cannot see and left colour, face and size unreachable. The
+                // counter is a badge over the page now, like the editor's.
+                TextStyleBar(style: self.$viewModel.style,
+                             isEditing: self.viewModel.editedPageIndex != nil,
+                             onGrow: { self.viewModel.scaleEditedText(by: 1.2) },
+                             onShrink: { self.viewModel.scaleEditedText(by: 1 / 1.2) },
+                             onDelete: { self.viewModel.onDeleteAnnotationPressed() })
+                Spacer().frame(height: DS.Spacing.md)
                 self.getDefaultButton(text: "Finish", onButtonPressed: {
                     self.viewModel.onConfirmButtonPressed()
                     self.dismiss()
                 })
-                Spacer().frame(height: 60)
+                Spacer().frame(height: DS.Spacing.xl)
             }
             .padding([.leading, .trailing], 16)
             .ignoresSafeArea(.keyboard)
@@ -110,12 +128,12 @@ struct PdfFillFormView: View {
         }
         if self.viewModel.editedPageIndex == pageIndex {
             TextResizableView(data: self.$viewModel.currentTextResizableViewData,
-                              fontName: K.Misc.DefaultAnnotationTextFontName,
-                              fontColor: .black,
-                              color: .orange,
-                              borderWidth: 4,
+                              fontName: self.viewModel.style.font.fontName,
+                              fontColor: self.viewModel.style.color.uiColor,
+                              color: ColorPalette.accent,
+                              borderWidth: 1.5,
                               minSize: CGSize(width: 5, height: 5),
-                              handleSize: 25,
+                              handleSize: 28,
                               handleTapSize: 50,
                               suggestedWords: self.viewModel.suggestedFields?.fields ?? [],
                               deleteCallback: self.viewModel.onDeleteAnnotationPressed)
@@ -131,7 +149,11 @@ struct PdfFillFormView: View {
                 let position = CGPoint(x: annotationBounds.origin.x + annotationBounds.size.width / 2,
                                        y: annotationBounds.origin.y + annotationBounds.size.height / 2)
                 Text(annotation.contents ?? "")
-                    .font(Font(UIFont.font(named: K.Misc.DefaultAnnotationTextFontName,
+                    // The face the annotation was written with, not the default:
+                    // once text can be set in a serif or a handwriting face, a
+                    // preview that ignores it is showing the wrong document.
+                    .font(Font(UIFont.font(named: annotation.font?.familyName
+                                           ?? K.Misc.DefaultAnnotationTextFontName,
                                            fitting: annotation.contents ?? "",
                                            into: annotationBounds.size,
                                            with: [:],

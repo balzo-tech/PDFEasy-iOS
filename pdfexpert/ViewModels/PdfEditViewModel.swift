@@ -328,7 +328,7 @@ class PdfEditViewModel: ObservableObject {
     /// in the tool panel that a simulator cannot deliver:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string watermark
     /// Values: `pageNumbers`, `watermark`, `metadata`, `tools`, `reorder`, `split`,
-    /// `extract`, `export`, `compress`, `permissions`. Page numbers, watermark and
+    /// `extract`, `export`, `compress`, `permissions`, `addText`. Page numbers, watermark and
     /// permissions are premium, so `debugPremium -bool YES` is needed too; split and
     /// extract need a document of more than one page.
     @MainActor
@@ -348,6 +348,7 @@ class PdfEditViewModel: ObservableObject {
         case "export": self.startExport()
         case "compress": self.startCompress()
         case "permissions": self.startPermissions()
+        case "addText": self.showFillForm()
         default: break
         }
     }
