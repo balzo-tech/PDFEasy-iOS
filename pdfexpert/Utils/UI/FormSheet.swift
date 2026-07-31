@@ -155,6 +155,12 @@ extension View {
                 content()
                     .presentationDetents([.height(size.height)])
                     .presentationDragIndicator(.visible)
+                    // The sheet itself, not just the content inside it. A form
+                    // sheet's content paints its own background over its intrinsic
+                    // height; whatever the detent leaves over stayed glass, and on
+                    // iOS 26 glass takes its colour from what is behind — over a
+                    // dark editor that reads as a broken panel.
+                    .presentationBackground(ColorPalette.background)
             }
         }
     }
@@ -169,6 +175,7 @@ extension View {
                 content(item)
                     .presentationDetents([.height(item.viewSize.height)])
                     .presentationDragIndicator(.visible)
+                    .presentationBackground(ColorPalette.background)
             }
         }
     }

@@ -163,6 +163,11 @@ struct TextResizableView: View {
                             // page back, and tapping the box brings it up again.
                             .toolbar {
                                 ToolbarItem(placement: .keyboard) {
+                                    // Opaque, and not a material: the bar sits over
+                                    // the page being edited, and over a dark page it
+                                    // had nothing of its own to be seen against —
+                                    // the report was that on a black PDF the bar
+                                    // vanished, Done and all.
                                     HStack(spacing: DS.Spacing.sm) {
                                         if !self.filteredSuggestedWords.isEmpty {
                                             ScrollView(.horizontal, showsIndicators: false) {
@@ -187,7 +192,12 @@ struct TextResizableView: View {
                                             self.focusedField = .none
                                         }
                                         .fontWeight(.semibold)
+                                        .foregroundStyle(ColorPalette.accent)
                                     }
+                                    .padding(.horizontal, DS.Spacing.sm)
+                                    .padding(.vertical, DS.Spacing.xxs)
+                                    .frame(maxWidth: .infinity)
+                                    .background(ColorPalette.surfaceElevated)
                                 }
                             }
                             .onChange(of: self.data.text) { _ in

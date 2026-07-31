@@ -211,8 +211,10 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 
 ### Modificare
 
-- [ ] **Sign PDF** — firma disegnata, da immagine, da fotocamera; **in tema chiaro**
-      la firma resta nera su foglio bianco
+- [x] **Sign PDF** — firma inserita e salvata (`relazione 2_firmata.pdf`): resta
+      un'annotazione, quindi si può riaprire e correggere
+- [ ] Le altre due sorgenti (**da immagine**, **da fotocamera**) e il **tema chiaro**,
+      dove la firma deve restare nera su foglio bianco
 - [x] **Fill in a form** — `modulo.pdf`, quattro campi e una casella: i valori
       digitati sono nel PDF salvato e si vedono nel file esportato, casella
       compresa
@@ -240,25 +242,32 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [x] **Invert colors** — su `contratto-v1-punto5.pdf`: sfondo nero e testo bianco
       su tutte le pagine. Applicato **dopo** la filigrana, che infatti risulta
       grigia su nero: l'ordine conta
-- [ ] **Flatten PDF** — su `relazione 2_firmata.pdf`, che ha **1 annotazione**: dopo
-      Flatten deve averne **0** con la firma ancora visibile. Vale anche per
-      `modulo.pdf` compilato, dove i campi non devono più essere modificabili
+- [x] **Flatten PDF** — `relazione 2_firmata.pdf` è passato da **1 annotazione a 0**
+      con la firma ancora al suo posto e il testo ancora selezionabile
 
-- [ ] **Il pannello Strumenti dell'editor** — la barra in cima aveva una fascia
+- [x] **Il pannello Strumenti dell'editor** — la barra in cima aveva una fascia
       verdognola dietro «Strumenti» e «Fatto»: lo sfondo della sheet si fermava alla
-      lista, così la barra faceva da vetro sull'**editor sottostante** e ne prendeva
-      le tinte. Le è stato dato uno sfondo suo il 2026-07-31.
-      ⚠️ **Non verificato**: il pannello non si apre dai flag di debug, quindi la
-      correzione è stata scritta ma mai vista
+      lista, così la barra faceva da vetro sull'**editor sottostante**. Corretto e
+      **verificato sul device**
+- [ ] **Il menu che si apre dal basso** (Strumenti ▸ Firma PDF, Aggiungi testo o
+      Rendi ricercabile → «File / Scansiona») aveva lo stesso difetto: il contenuto
+      dipinge il proprio sfondo, ma quello che il detent lascia scoperto restava
+      vetro. Ora lo sfondo è della **sheet** (`presentationBackground`). Da riprovare
 
 ### Proteggere
 
-- [ ] **Protect PDF** — password; riaprendolo la chiede
-- [ ] Proteggere un PDF **già protetto** → messaggio in italiano, non in inglese
+- [x] **Protect PDF** — `una-pagina_protetto.pdf`: risulta cifrato e si apre solo
+      con la password
+- [x] Proteggere un PDF **già protetto** → errore corretto
 - [x] **Unlock PDF** — `protetto-prova1234.pdf` (password `prova1234`) si sblocca
-- [ ] Su un PDF **senza** password → «già sbloccato»
-- [ ] **PDF permissions** — limita stampa e copia; uscendo a metà e rientrando il
-      campo password dev'essere **vuoto**
+- [x] Su un PDF **senza** password → messaggio in italiano, «già sbloccato»
+- [ ] **PDF permissions** — scrivi la password (senza, la conferma resta spenta),
+      spegni «Consenti stampa» e «Consenti copia», conferma; poi apri il file in
+      Anteprima sul Mac e verifica che stampa e selezione siano bloccate.
+      Il pezzo sulla sicurezza: riapri il tool, **scrivi qualcosa nel campo
+      password**, esci a metà, rientra — il campo dev'essere **vuoto**.
+      ✅ Che i due interruttori tornino accesi riaprendo è corretto: il form riparte
+      da «tutto permesso»
 - [x] **Redact PDF** («Oscura PDF», in Proteggi) — provato su `ruotato.pdf`, una
       banda per pagina a 90°, 180°, 270° e 0°: **tutte e quattro cadono dove
       servono**, e i cinque dati finti non sono più estraibili dal file
@@ -275,8 +284,11 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 
 ### Esportare e leggere
 
-- [ ] **Export PDF as…** — immagini, testo, foto incorporate
-- [ ] **Read PDF** — lettore a schermo intero, annotazioni, salva/scarta
+- [x] **Export PDF as…** — testo (29.276 caratteri, contenuto giusto) e immagini
+      (12 JPG + 12 PNG) da `solo-testo-12-pagine.pdf`
+- [ ] Esportare le **foto incorporate**: quel documento non ne ha, per questo diceva
+      che non ce n'erano. Usa `con-immagini.pdf`, che ne porta tre vere
+- [x] **Read PDF** — `leggi_pdf.pdf`: due pagine e **7 annotazioni** salvate
 
 ### Solo con il servizio online acceso
 
