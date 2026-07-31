@@ -99,7 +99,9 @@ struct MainSidebarView: View {
             }
         }
         .listStyle(.sidebar)
-        .navigationTitle("PDF Easy")
+        // The app's own name, from one place: this said "PDF Easy" — the name it
+        // had two names ago — to every iPad in every language.
+        .navigationTitle(K.Misc.AppTitle)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: self.onShowSettings) {

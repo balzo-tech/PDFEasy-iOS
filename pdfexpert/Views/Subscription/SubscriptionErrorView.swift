@@ -28,7 +28,7 @@ struct SubscriptionErrorView: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
             Spacer()
-            self.getDefaultButton(text: "Retry",
+            self.getDefaultButton(text: String(localized: "Retry"),
                                   onButtonPressed: self.onButtonPressed)
         }
         .padding([.leading, .trailing], 16)

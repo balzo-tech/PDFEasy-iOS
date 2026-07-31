@@ -32,7 +32,7 @@ struct PdfSignatureCanvasView: View {
             Spacer().frame(height: 40)
             self.saveButton
             Spacer().frame(height: 20)
-            self.getDefaultButton(text: "Confirm",
+            self.getDefaultButton(text: String(localized: "Confirm"),
                                   enabled: self.viewModel.confirmAllowed,
                                   onButtonPressed: { self.viewModel.onConfirmButtonPressed() })
         }

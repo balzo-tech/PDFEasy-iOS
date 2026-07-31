@@ -76,7 +76,7 @@ struct SuggestedFieldsFormView: View {
     private var footerView: some View {
         VStack(spacing: 0) {
             Spacer()
-            self.getDefaultButton(text: "Finish", onButtonPressed: {
+            self.getDefaultButton(text: String(localized: "Finish"), onButtonPressed: {
                 self.viewModel.onConfirmButtonPressed()
                 self.dismiss()
             })

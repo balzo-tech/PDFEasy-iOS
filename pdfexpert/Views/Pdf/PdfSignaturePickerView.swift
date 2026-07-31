@@ -119,7 +119,7 @@ struct PdfSignaturePickerView: View {
                 .foregroundColor(ColorPalette.signatureInk)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
-            self.getDefaultButton(text: "Retry",
+            self.getDefaultButton(text: String(localized: "Retry"),
                                   onButtonPressed: self.viewModel.refresh)
             Spacer()
         }

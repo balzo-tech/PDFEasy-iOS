@@ -83,7 +83,7 @@ struct PdfFillFormView: View {
                              onShrink: { self.viewModel.scaleEditedText(by: 1 / 1.2) },
                              onDelete: { self.viewModel.onDeleteAnnotationPressed() })
                 Spacer().frame(height: DS.Spacing.md)
-                self.getDefaultButton(text: "Finish", onButtonPressed: {
+                self.getDefaultButton(text: String(localized: "Finish"), onButtonPressed: {
                     self.viewModel.onConfirmButtonPressed()
                     self.dismiss()
                 })

@@ -93,7 +93,7 @@ struct PreReviewPopupLowRateView: View {
                     .frame(height: 100)
                 }
                 Spacer().frame(height: 20)
-                self.getDefaultButton(text: "Send Feedback") {
+                self.getDefaultButton(text: String(localized: "Send Feedback")) {
                     self.onSendFeedback(self.feedbackText)
                 }
             }

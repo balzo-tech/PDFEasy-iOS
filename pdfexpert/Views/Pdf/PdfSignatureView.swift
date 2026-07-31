@@ -26,7 +26,7 @@ struct PdfSignatureView: View {
                 self.pageCounter(currentPageIndex: self.viewModel.pageIndex,
                                  totalPages: self.viewModel.pageImages.count)
                 Spacer().frame(height: 50)
-                self.getDefaultButton(text: "Finish", onButtonPressed: {
+                self.getDefaultButton(text: String(localized: "Finish"), onButtonPressed: {
                     self.viewModel.onConfirmButtonPressed()
                     self.dismiss()
                 })
