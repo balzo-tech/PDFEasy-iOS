@@ -174,10 +174,12 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       corretto. La tabella esce scomposta, che è il comportamento previsto
 - [ ] **Create PDF** — documento vuoto
 - [ ] **Import PDF** — da File
-- [ ] **Da un'altra app** — condividere un `.docx` (o un PDF, o una foto) da Mail,
-      File o Safari: dal 2026-07-31 l'app dichiara i tipi documento, quindi deve
-      comparire «Copia su PDF Pro»; il file arriva, si converte da sé e si apre
-      nell'editor. Prima non compariva per niente che non fosse un PDF
+- [x] **Da un'altra app, condividendo** — un `.docx` da File: «Copia su PDF Pro»
+      compare, il file arriva, si converte e si apre. Prima non compariva per
+      niente che non fosse un PDF (`relazione 2.pdf`)
+- [ ] **Da un'altra app, «Apri con»** — la voce del menu contestuale di File
+      mancava: vuole `LSSupportsOpeningDocumentsInPlace`, aggiunta il 2026-07-31.
+      Da riprovare con un `.docx` e con un PDF
 - [ ] **Nuovo ▸ Converti da qualsiasi file** — la guida in tre passi, rifatta il
       2026-07-31: i testi devono essere **nella lingua del telefono** (erano in
       inglese in ogni lingua), lo swipe deve andare avanti e indietro, «Ho capito»
@@ -194,7 +196,8 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [x] **Split PDF** — su `una-pagina.pdf` dice l'errore e non apre niente
 - [x] **Extract pages** — idem sul PDF di una pagina
 - [ ] **Rotate PDF** — una pagina e **tutte**; anche dalla tab Strumenti su file vero
-- [ ] **Remove blank pages**
+- [x] **Remove blank pages** — `con-pagine-bianche.pdf`: da 6 pagine a 3, tolta
+      anche quella che conteneva **soli spazi**
 - [x] **Compare PDFs** — `contratto-v1` (3 pagine) contro `contratto-v2` (4): «2
       pagine modificate», la pagina inserita riconosciuta come «esiste solo nella
       versione modificata», e il diff a parole giusto (12.000,00 → 15.000,00,
