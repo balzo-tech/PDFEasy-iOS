@@ -315,11 +315,16 @@ extension StirlingService: TargetType {
         switch self {
         case let .process(operation, fileData, filename, _, _):
             let uploadFilename = Self.uploadFilename(from: filename, operation: operation)
-            let formData = MultipartFormData(provider: .data(fileData),
-                                             name: "fileInput",
-                                             fileName: uploadFilename,
-                                             mimeType: Self.mimeType(forFilename: uploadFilename))
-            return .uploadMultipart([formData])
+            var parts = [MultipartFormData(provider: .data(fileData),
+                                           name: "fileInput",
+                                           fileName: uploadFilename,
+                                           mimeType: Self.mimeType(forFilename: uploadFilename))]
+            // The file alone is not a valid request for most of these endpoints —
+            // see `StirlingOperation.formFields`.
+            parts += operation.formFields.map {
+                MultipartFormData(provider: .data(Data($0.value.utf8)), name: $0.name)
+            }
+            return .uploadMultipart(parts)
         }
     }
 

@@ -135,10 +135,63 @@ final class StirlingApiManagerTests: XCTestCase {
         guard case .uploadMultipart(let parts) = self.target(.pdfToWord).task else {
             return XCTFail("expected an uploadMultipart task")
         }
-        XCTAssertEqual(parts.count, 1)
         XCTAssertEqual(parts.first?.name, "fileInput")
         XCTAssertEqual(parts.first?.fileName, "document.pdf")
         XCTAssertEqual(parts.first?.mimeType, "application/pdf")
+    }
+
+    /// Stirling's OpenAPI declares a required field on five of these endpoints;
+    /// asked directly, **two of them enforce it**: `pdf/word` and
+    /// `pdf/presentation` answer 400 when only the file is attached, and the app
+    /// was attaching only the file. The rest answer 200 either way — the fields are
+    /// sent anyway because `outputFormat` decides whether a `.docx` or an `.odt`
+    /// comes back, and the app has an opinion about that.
+    ///
+    /// Both the list and the 400s were measured, not assumed:
+    /// `curl https://api.stirling.com/v1/api-docs` for the schema, and
+    /// `docker run -p 8081:8080 stirlingtools/stirling-pdf` — no key needed — to
+    /// see which endpoints actually refuse.
+    func testEveryOperationSendsTheFieldsStirlingRequires() {
+        let expected: [StirlingOperation: [String: String]] = [
+            .pdfToWord: ["outputFormat": "docx"],
+            .pdfToPresentation: ["outputFormat": "pptx"],
+            .pdfToCsv: ["pageNumbers": "all"],
+            .pdfToPdfa: ["outputFormat": "pdfa"],
+            .sanitize: ["removeJavaScript": "true",
+                        "removeEmbeddedFiles": "true",
+                        "removeXMPMetadata": "false",
+                        "removeMetadata": "false",
+                        "removeLinks": "false",
+                        "removeFonts": "false"],
+            .repair: [:],
+            .fileToPdf: [:],
+        ]
+
+        for operation in StirlingOperation.allCases {
+            guard case .uploadMultipart(let parts) = self.target(operation).task else {
+                XCTFail("\(operation) does not upload a multipart form")
+                continue
+            }
+            let fields = parts.dropFirst().reduce(into: [String: String]()) { fields, part in
+                guard case .data(let data) = part.provider else {
+                    return XCTFail("\(operation): \(part.name) is not sent as data")
+                }
+                fields[part.name] = String(decoding: data, as: UTF8.self)
+            }
+            XCTAssertEqual(fields, expected[operation],
+                           "\(operation) is not sending what Stirling asks for")
+        }
+    }
+
+    /// The promise on the tile is "strip scripts and attachments" — not "strip the
+    /// links", which would break a document's own table of contents, and not
+    /// "strip the fonts", which would change how it reads.
+    func testSanitizeRemovesScriptsAndAttachmentsAndNothingElse() {
+        let fields = Dictionary(uniqueKeysWithValues: StirlingOperation.sanitize.formFields.map { ($0.name, $0.value) })
+        XCTAssertEqual(fields["removeJavaScript"], "true")
+        XCTAssertEqual(fields["removeEmbeddedFiles"], "true")
+        XCTAssertEqual(fields["removeLinks"], "false")
+        XCTAssertEqual(fields["removeFonts"], "false")
     }
 
     func testUploadFilenameEnforcesPdfExtension() {

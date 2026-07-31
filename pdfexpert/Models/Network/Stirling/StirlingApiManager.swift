@@ -36,6 +36,42 @@ enum StirlingOperation: String, CaseIterable {
     /// What the proxy is asked for. The worker keeps the table of Stirling paths,
     /// so these names have to match the keys in `proxy/src/upstream.ts`.
     var proxyName: String { self.rawValue }
+
+    /// What Stirling wants in the form besides the file itself.
+    ///
+    /// Five endpoints declare fields as required in the OpenAPI; **two of them
+    /// mean it**. Measured against Stirling 2.14 with only the file attached:
+    /// `pdf/word` and `pdf/presentation` answer **400**, the rest answer 200 and
+    /// fall back to their own defaults. So the two conversions were broken and the
+    /// others were merely implicit — `outputFormat` decides whether a `.docx` or an
+    /// `.odt` comes back, and that is not a decision to leave to the server.
+    ///
+    /// The list comes from the service's own OpenAPI
+    /// (`curl https://api.stirling.com/v1/api-docs`), and the 400s from asking it
+    /// directly — `docker run -p 8081:8080 stirlingtools/stirling-pdf`, which needs
+    /// no key and answers the same way.
+    var formFields: [(name: String, value: String)] {
+        switch self {
+        case .pdfToWord: return [("outputFormat", "docx")]
+        case .pdfToPresentation: return [("outputFormat", "pptx")]
+        // Stirling's CSV export takes a page range; "all" is its own default.
+        case .pdfToCsv: return [("pageNumbers", "all")]
+        // `pdfa` is the plain flavour. The others (`pdfa-1`, `pdfa-2b`, `pdfx`…)
+        // are stricter archival profiles nobody in the app asks for.
+        case .pdfToPdfa: return [("outputFormat", "pdfa")]
+        // "Strip scripts and attachments" is what the tool promises, so those two
+        // are on and nothing else is: dropping links would break a document's own
+        // table of contents, and dropping fonts would change how it reads.
+        case .sanitize:
+            return [("removeJavaScript", "true"),
+                    ("removeEmbeddedFiles", "true"),
+                    ("removeXMPMetadata", "false"),
+                    ("removeMetadata", "false"),
+                    ("removeLinks", "false"),
+                    ("removeFonts", "false")]
+        case .repair, .fileToPdf: return []
+        }
+    }
 }
 
 /// A successful Stirling response: the raw processed document plus the file
