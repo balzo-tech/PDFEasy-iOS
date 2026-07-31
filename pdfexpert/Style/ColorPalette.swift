@@ -115,3 +115,59 @@ class ColorPalette {
     static let buttonGradientStart = accent
     static let buttonGradientEnd = accentSecondary
 }
+
+// MARK: - Theme
+
+//  Light or dark, decided in the app rather than in the phone's settings.
+//
+//  The palette has always answered to the system appearance, which is the right
+//  default; what was missing was a way to look at the other one without changing
+//  the whole phone — a fair thing to want from a document app you may be reading
+//  in bed, and the only way to check a light-theme signature without leaving.
+//
+//  Stored in `@AppStorage` rather than in `CacheManager`: it is a preference about
+//  presentation, read by the root view and by nothing else.
+//
+//  It lives in this file, and not in one of its own, because the project lists its
+//  sources by hand: a new file means editing the project, and this belongs next to
+//  the palette anyway.
+
+enum AppTheme: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    var id: Self { self }
+
+    /// `nil` hands the decision back to the system, which is what `.system` means.
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+
+    var title: String {
+        switch self {
+        // "Light" and "Dark" on their own are already in the catalog, as the
+        // compression presets — Italian reads them "Leggera" and would have named
+        // the light theme after a file size. These say what they do instead.
+        case .system: return String(localized: "System")
+        case .light: return String(localized: "Always light")
+        case .dark: return String(localized: "Always dark")
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .system: return "iphone"
+        case .light: return "sun.max"
+        case .dark: return "moon"
+        }
+    }
+
+    /// The one key everything reads. `AppStorage` needs a plain literal, so it is
+    /// here rather than being spelled out at each use.
+    static let storageKey = "appTheme"
+}

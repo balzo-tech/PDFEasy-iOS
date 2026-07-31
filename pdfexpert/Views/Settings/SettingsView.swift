@@ -21,6 +21,8 @@ struct SettingsView: View {
 
     @Injected(\.store) private var store
 
+    @AppStorage(AppTheme.storageKey) private var theme: AppTheme = .system
+
     @State private var isPremium: Bool = false
     @State private var subscriptionShow: Bool = false
     @State private var restoreInProgress: Bool = false
@@ -53,6 +55,21 @@ struct SettingsView: View {
                 .disabled(self.restoreInProgress)
             } header: {
                 Text("Subscription")
+            }
+
+            Section {
+                Picker(selection: self.$theme) {
+                    ForEach(AppTheme.allCases) { theme in
+                        Label(theme.title, systemImage: theme.systemImage).tag(theme)
+                    }
+                } label: {
+                    Text("Theme")
+                }
+                .pickerStyle(.menu)
+            } header: {
+                Text("Appearance")
+            } footer: {
+                Text("System follows your phone. The other two stay put, whatever the phone does.")
             }
 
             Section {

@@ -14,9 +14,15 @@ struct ContentView: View {
     @Injected(\.store) var store
     @Injected(\.configService) var configService
 
+    /// Read here, at the root, so the choice reaches every sheet and cover the app
+    /// puts on screen — they are children of this window, not of the view that
+    /// presented them.
+    @AppStorage(AppTheme.storageKey) private var theme: AppTheme = .system
+
     var body: some View {
         self.content
             .background(ColorPalette.primaryBG)
+            .preferredColorScheme(self.theme.colorScheme)
             .reviewFlowView(flow: self.coordinator.reviewFlow)
             // The tracking prompt used to be asked here, on every activation.
             // It is asked once at the end of the onboarding now, where the tour
