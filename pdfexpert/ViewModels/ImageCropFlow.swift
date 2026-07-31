@@ -74,15 +74,22 @@ class ImageCropFlow: ObservableObject {
         }
     }
 
+    /// The cropper has left the screen — by Done or by Cancel, this cannot tell.
+    ///
+    /// It does NOT drop the callback there and then. Mantis sets the cropped image
+    /// through a binding and dismisses in the same breath, and SwiftUI applies that
+    /// write on its next pass, so the dismissal is seen *first*: clearing here threw
+    /// away the callback a moment before the crop arrived, and the signature sheet
+    /// came back empty every time. One runloop later the write has landed.
     func onCropViewDismiss() {
-        self.onCropCompleted(image: nil)
+        DispatchQueue.main.async { [weak self] in
+            self?.onImageCropped = nil
+        }
     }
 
     private func onCropCompleted(image: UIImage?) {
-        guard !self.isLoadingSource else { return }
-        if let image {
-            self.onImageCropped?(image)
-        }
+        guard !self.isLoadingSource, let image else { return }
+        self.onImageCropped?(image)
         self.onImageCropped = nil
     }
 }
