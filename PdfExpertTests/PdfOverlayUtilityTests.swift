@@ -110,6 +110,40 @@ final class PdfOverlayUtilityTests: XCTestCase {
         XCTAssertFalse(string.contains("DRAFT"), "source page must not gain the watermark")
     }
 
+    /// Page numbers, then inverted colours — the order used on the device round of
+    /// 2026-07-31, where the finished document had no numbers at all: not faint
+    /// against the dark background, absent from the extracted text too.
+    ///
+    /// Both steps rebuild the page, so the numbers have to survive the second one.
+    func testPageNumbersSurviveColorInversion() {
+        let document = makeTextPdf(pageTexts: ["Alpha", "Bravo", "Charlie"])
+        guard let numbered = PdfOverlayUtility.addPageNumbers(to: document, style: PageNumberStyle()) else {
+            return XCTFail("expected a numbered document")
+        }
+        guard let inverted = PdfCleanupUtility.invertColors(of: numbered) else {
+            return XCTFail("expected an inverted document")
+        }
+        for index in 0..<3 {
+            let string = inverted.page(at: index)?.string ?? ""
+            XCTAssertTrue(string.contains("\(index + 1)"),
+                          "page \(index + 1) lost its number through the inversion: \(string)")
+        }
+    }
+
+    /// And the other way round: inverting first must not stop the numbers from being
+    /// stamped afterwards.
+    func testPageNumbersCanBeAddedAfterColorInversion() {
+        let document = makeTextPdf(pageTexts: ["Alpha", "Bravo"])
+        guard let inverted = PdfCleanupUtility.invertColors(of: document),
+              let numbered = PdfOverlayUtility.addPageNumbers(to: inverted, style: PageNumberStyle()) else {
+            return XCTFail("expected both steps to produce a document")
+        }
+        for index in 0..<2 {
+            XCTAssertTrue((numbered.page(at: index)?.string ?? "").contains("\(index + 1)"),
+                          "page \(index + 1) has no number after being inverted first")
+        }
+    }
+
     /// A 90°-rotated portrait page must come out landscape (its rotated dimensions
     /// are preserved through the redraw) and still carry the page-number overlay.
     func testRotatedPageKeepsLandscapeDimensions() {
