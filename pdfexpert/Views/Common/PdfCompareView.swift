@@ -156,10 +156,16 @@ struct PdfCompareResultView: View {
                     }
                 } else {
                     VStack(spacing: DS.Spacing.sm) {
-                        Picker("", selection: self.$mode) {
+                        // Label as a view rather than `Picker("")`: an empty title
+                        // is still a localizable key, and every string extraction
+                        // writes a blank entry into the catalog that the
+                        // localization lint then reports.
+                        Picker(selection: self.$mode) {
                             ForEach(Mode.allCases) { mode in
                                 Text(mode.title).tag(mode)
                             }
+                        } label: {
+                            EmptyView()
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal, DS.Spacing.md)
