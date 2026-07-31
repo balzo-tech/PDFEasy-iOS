@@ -153,10 +153,10 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       grassetto, corsivo, elenco puntato e numerato, tabella con i bordi, tutto reso
       e selezionabile. L'interruzione di pagina non è stata rispettata, ma il salto
       l'ha perso `textutil` scrivendo il `.doc`, non l'app.
-      ⚠️ Il `.docx` non si poteva nemmeno scegliere: il picker chiedeva
+      Il **`.docx`** non si poteva nemmeno scegliere: il picker chiedeva
       `com.microsoft.word.doc`, che è **Word 97**, e `.docx` è un tipo a sé che non
-      vi conforma. Corretto il 2026-07-31, con un test che tiene insieme le due
-      liste. Da riprovare
+      vi conforma. Corretto il 2026-07-31 con un test che tiene insieme le due
+      liste, e riprovato dal picker: funziona
 - [x] **Excel to PDF** — `fatture.pdf`: le righe e i due fogli ci sono e sono
       leggibili; **si perdono la formattazione** (intestazione colorata → grigia) e
       le larghezze di colonna. È la fedeltà dichiarata in `DocumentRenderUtility`:
@@ -177,13 +177,10 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
 - [x] **Da un'altra app, condividendo** — un `.docx` da File: «Copia su PDF Pro»
       compare, il file arriva, si converte e si apre. Prima non compariva per
       niente che non fosse un PDF (`relazione 2.pdf`)
-- [ ] **Da un'altra app, «Apri con»** — la voce del menu contestuale di File
-      mancava: vuole `LSSupportsOpeningDocumentsInPlace`, aggiunta il 2026-07-31.
-      Da riprovare con un `.docx` e con un PDF
-- [ ] **Nuovo ▸ Converti da qualsiasi file** — la guida in tre passi, rifatta il
-      2026-07-31: i testi devono essere **nella lingua del telefono** (erano in
-      inglese in ogni lingua), lo swipe deve andare avanti e indietro, «Ho capito»
-      chiude. In simulatore:
+- [x] **Da un'altra app, «Apri con»** — la voce del menu contestuale di File
+      mancava (`LSSupportsOpeningDocumentsInPlace`): aggiunta e funzionante
+- [x] **Nuovo ▸ Converti da qualsiasi file** — la guida in tre passi, rifatta il
+      2026-07-31: in italiano e funzionante. In simulatore si riapre con
       `xcrun simctl spawn booted defaults write <bundle-id> debugImportTutorial -int 0..2`
 
 ### Organizzare
