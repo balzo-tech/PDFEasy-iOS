@@ -37,37 +37,40 @@ extension OptionListView {
     
     @ViewBuilder static func getImportView(forImportOptionGroup importOptionGroup: ImportOptionGroup,
                                            importViewCallback: @escaping (ImportOption) -> ()) -> some View {
-        OptionListView(title: "Import from", items: importOptionGroup.options.map { importOption in
+        // `OptionItem.title` is a plain `String`, which reaches `Text` through the
+        // verbatim initialiser: a literal here is English in every language, which
+        // is what the sheet was showing.
+        OptionListView(title: String(localized: "Import from"), items: importOptionGroup.options.map { importOption in
             let callback = { importViewCallback(importOption) }
             switch importOption {
             case .camera:
-                return OptionItem(title: "Camera",
+                return OptionItem(title: String(localized: "Camera"),
                                   imageName: "camera",
                                   callBack: callback)
             case .gallery:
-                return OptionItem(title: "Gallery",
+                return OptionItem(title: String(localized: "Gallery"),
                                   imageName: "gallery",
                                   callBack: callback)
             case .scan:
-                return OptionItem(title: "Scan a file",
+                return OptionItem(title: String(localized: "Scan a file"),
                            imageName: "scan",
                            callBack: callback)
             case .file(let fileSource):
                 switch fileSource {
                 case .google:
-                    return OptionItem(title: "Google Drive",
+                    return OptionItem(title: String(localized: "Google Drive"),
                                imageName: "home_file_source_google",
                                callBack: callback)
                 case .dropbox:
-                    return OptionItem(title: "Dropbox",
+                    return OptionItem(title: String(localized: "Dropbox"),
                                imageName: "home_file_source_dropbox",
                                callBack: callback)
                 case .icloud:
-                    return OptionItem(title: "iCloud",
+                    return OptionItem(title: String(localized: "iCloud"),
                                imageName: "home_file_source_icloud",
                                callBack: callback)
                 case .files:
-                    return OptionItem(title: "Files",
+                    return OptionItem(title: String(localized: "Files"),
                                imageName: "home_file_source_files",
                                callBack: callback)
                 }

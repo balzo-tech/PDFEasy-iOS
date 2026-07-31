@@ -79,8 +79,19 @@ LOCALIZING_PATTERNS = [
 # `return "…"` bodies that look like prose rather than an identifier. The literal
 # has to end the statement, but closing braces may follow it — a one-line
 # accessor (`var x: String { return "…" }`) is the same bug as a switch case.
+#
+# The second pattern is for the app's own little models that carry a `title: String`
+# to a `Text`. A literal there is the same bug and the `return` rule cannot see it:
+# it sits in the middle of an initialiser call, not at the end of a statement. It
+# has now shipped twice — the import guide read English in every language, and so
+# did the "Import from" sheet — so the types are listed rather than guessed. Only
+# these: `title:` on its own would hit every App Intent `@Parameter`, which takes a
+# `LocalizedStringResource` and is already localized.
+TITLE_CARRYING_TYPES = ("OptionItem", "ImportTutorialItem", "OnboardingItem", "DisclamerItem")
+
 RAW_STRING_PATTERNS = [
     rf"\breturn\s+{LIT}\s*\}}*\s*(?://.*)?$",
+    rf"\b(?:{'|'.join(TITLE_CARRYING_TYPES)})\(\s*title:\s*{LIT}",
 ]
 
 # Declarations whose type localizes a bare literal on its own, so a `return "…"`
@@ -91,6 +102,9 @@ SELF_LOCALIZING_TYPES = ("LocalizedStringResource", "LocalizedStringKey")
 
 # The enclosing declaration's type: `var foo: T {` or `func foo(…) -> T {`.
 DECLARATION_TYPE = re.compile(r"\b(?:var\s+\w+\s*:|->)\s*([A-Za-z0-9_.<>\[\]?]+)")
+
+# Where a preview begins, in either spelling.
+PREVIEW_START = re.compile(r"#Preview\b|:\s*PreviewProvider\b")
 
 # Files whose prose strings are never shown to anyone, with the reason.
 ALLOWED_FILES = {
@@ -220,9 +234,23 @@ def check_sources() -> list[Finding]:
             with open(path) as handle:
                 lines = handle.readlines()
             enclosing_type = ""
+            # Depth of braces still open inside a preview, or None outside one.
+            # A preview's strings are seen by nobody but Xcode's canvas, so a
+            # literal there is not a missed translation — the comment above this
+            # loop has always said so, but nothing acted on it.
+            preview_depth = None
             for number, line in enumerate(lines, start=1):
                 # Comments and previews are not shipped text.
                 if line.lstrip().startswith("//"):
+                    continue
+
+                if preview_depth is None:
+                    if PREVIEW_START.search(line):
+                        preview_depth = 0
+                if preview_depth is not None:
+                    preview_depth += line.count("{") - line.count("}")
+                    if preview_depth <= 0:
+                        preview_depth = None
                     continue
 
                 declaration = DECLARATION_TYPE.search(line)

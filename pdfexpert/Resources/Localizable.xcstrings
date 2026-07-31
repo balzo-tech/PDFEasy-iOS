@@ -3857,6 +3857,28 @@
         }
       }
     },
+    "Dropbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dropbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dropbox"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dropbox"
+          }
+        }
+      }
+    },
     "Duplicate page" : {
       "localizations" : {
         "en" : {
@@ -5486,6 +5508,28 @@
         }
       }
     },
+    "Gallery" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gallery"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Galería"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Galleria"
+          }
+        }
+      }
+    },
     "Get ${scan}" : {
       "localizations" : {
         "es" : {
@@ -5720,6 +5764,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buona qualità, molto più piccolo"
+          }
+        }
+      }
+    },
+    "Google Drive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Drive"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Drive"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Drive"
           }
         }
       }
@@ -5986,6 +6052,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Orizzontale"
+          }
+        }
+      }
+    },
+    "iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
           }
         }
       }
@@ -11362,6 +11450,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scansiona un documento, trasforma le foto in PDF o importa un file per iniziare."
+          }
+        }
+      }
+    },
+    "Scan a file" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan a file"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escanea un documento"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scansiona un documento"
           }
         }
       }
