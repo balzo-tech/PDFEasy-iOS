@@ -16,7 +16,7 @@ struct PdfSignatureCanvasView: View {
     /// Matches the sheet size `PdfSignatureProviderFlowView` picks, which is
     /// chosen by idiom rather than by size class because a form sheet keeps its
     /// own fixed dimensions.
-    private var isPad: Bool { UIDevice.current.userInterfaceIdiom == .pad }
+    private var hasRoomForCanvas: Bool { UIDevice.hasDesktopClassLayout }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,7 +28,7 @@ struct PdfSignatureCanvasView: View {
             self.tabsView
             Spacer().frame(height: 10)
             Spacer()
-            self.contentView.frame(height: self.isPad ? 260 : 120)
+            self.contentView.frame(height: self.hasRoomForCanvas ? 260 : 120)
             Spacer().frame(height: 40)
             self.saveButton
             Spacer().frame(height: 20)
@@ -88,7 +88,7 @@ struct PdfSignatureCanvasView: View {
                     PencilKitView(canvasView: self.$viewModel.canvasView,
                                   backgroundColor: ColorPalette.signatureSheet,
                                   inkColor: .black,
-                                  showsToolPicker: self.isPad,
+                                  showsToolPicker: self.hasRoomForCanvas,
                                   onSaved: {})
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     ColorPalette.signatureInkSecondary.opacity(0.35).frame(height: 1)

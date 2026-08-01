@@ -25,7 +25,14 @@ struct RootShellView: View {
     @InjectedObject(\.homeViewModel) private var tools
     @InjectedObject(\.chatPdfSelectionViewModel) private var chat
 
-    private var isRegularWidth: Bool { self.horizontalSizeClass == .regular }
+    /// The Mac keeps the split whatever the window is doing. A narrow window
+    /// there reports a compact size class exactly as an iPad in Slide Over does,
+    /// and the tab bar it would swap in is a phone control: it would bury the
+    /// folders behind a chip bar and drop the sidebar the whole layout is built
+    /// around, on a machine that can always widen the window instead.
+    private var isRegularWidth: Bool { UIDevice.isMac || self.horizontalSizeClass == .regular }
+
+    @State private var isDropTargeted: Bool = false
 
     var body: some View {
         Group {
@@ -34,6 +41,9 @@ struct RootShellView: View {
             } else {
                 MainTabView(archive: self.archive, tools: self.tools, chat: self.chat)
             }
+        }
+        .droppedFileImport(isTargeted: self.$isDropTargeted) { url in
+            self.mainCoordinator.handleOpenUrl(url: url)
         }
         .pdfEditFlowView(pdfEditFlowData: self.$mainCoordinator.pdfEditFlowData)
         .settingsView(showSettings: self.$mainCoordinator.settingsShow)

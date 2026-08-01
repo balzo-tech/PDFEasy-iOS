@@ -229,12 +229,19 @@ class MainCoordinator: ObservableObject {
     /// app's storage for good unless it is removed, and one opened in place lives
     /// behind a security-scoped door that is only open for this call.
     private func stagedCopy(of url: URL) -> URL? {
-        let destination = FileManager.default.temporaryDirectory
-            .appendingPathComponent("incoming-\(UUID().uuidString)")
-            .appendingPathExtension(url.pathExtension)
+        // The unique name goes on the *folder*, and the file keeps the one it
+        // arrived with. It used to be the other way round, and that name is not
+        // private to this function: it is what the password prompt asks about,
+        // what is sent to the conversion service, and what the saved document
+        // ends up called. Opening a contract from the Finder produced a document
+        // named "incoming-301ACA79-2AF1-4763-B0B4-5D9467590767".
+        let folder = FileManager.default.temporaryDirectory
+            .appendingPathComponent("incoming-\(UUID().uuidString)", isDirectory: true)
+        let destination = folder.appendingPathComponent(url.lastPathComponent)
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         do {
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
             try FileManager.default.copyItem(at: url, to: destination)
         } catch {
             debugPrint(for: self, message: "Could not stage the incoming file. Error: \(error)")

@@ -14,10 +14,6 @@ struct PopupView<PopupContent: View>: ViewModifier {
     let tapToDismiss: Bool
     var popupContent: () -> PopupContent
     
-    private var screen: CGRect {
-        return UIScreen.main.bounds
-    }
-
     func body(content: Content) -> some View {
         content
             .overlay(
@@ -36,8 +32,13 @@ struct PopupView<PopupContent: View>: ViewModifier {
                         }
                         .transition(.move(edge: .bottom))
                     }
-                }.frame(width: self.screen.width,
-                        height: self.screen.height)
+                }
+                // Fills whatever it is laid over — the root view, so the whole
+                // window. It used to be given the size of `UIScreen.main`, which
+                // is the display: on a Mac, and on an iPad in Stage Manager or
+                // Slide Over, that is a good deal larger than the window, and
+                // the popup ended up centred on a rectangle nobody can see.
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeOut, value: self.isPresenting)
             )

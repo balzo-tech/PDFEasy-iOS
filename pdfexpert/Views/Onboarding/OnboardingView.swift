@@ -45,6 +45,10 @@ struct OnboardingView: View {
         }
         .padding(.top, DS.Spacing.md)
         .padding(.bottom, DS.Spacing.xxl)
+        // Same reason as the welcome screen before it: in a window the tour is
+        // a column in the middle, not a page stretched from edge to edge with a
+        // Continue button as wide as the desk.
+        .readableColumn()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(ColorPalette.background)
         .contentShape(.rect)

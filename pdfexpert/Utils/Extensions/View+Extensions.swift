@@ -130,7 +130,9 @@ extension View {
                                       @ViewBuilder actions: () -> A) -> some View where A : View {
         // This platform branching is needed because, on iPad, confirmationDialog brokes interaction subsequent modals
         // See: http://openradar.appspot.com/radar?id=5597349300666368
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        // On the Mac an alert is the right shape regardless: an action sheet
+        // rising from the bottom of a window belongs to a phone.
+        if UIDevice.hasDesktopClassLayout {
             self.alert(title, isPresented: isPresented, actions: actions)
         } else {
             self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility, actions: actions)

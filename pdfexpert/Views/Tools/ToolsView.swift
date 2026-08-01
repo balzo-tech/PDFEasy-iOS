@@ -170,19 +170,35 @@ struct ToolsView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
             SectionHeaderView(title: String(localized: "Quick actions"))
                 .padding(.horizontal, DS.Spacing.md)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: DS.Spacing.xs) {
-                    ForEach(ToolUsageTracker.quickActions(from: self.tools)) { tool in
-                        QuickActionView(title: tool.title,
-                                        systemImage: tool.systemImage,
-                                        tint: tool.tint) {
-                            self.perform(tool)
-                        }
-                    }
+            if UIDevice.hasDesktopClassLayout {
+                // In a split view's middle column the five actions do not fit on
+                // one line, and a row that scrolls sideways ends mid-icon with
+                // no thumb to flick it along. Wrapping shows all of them.
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 82), spacing: DS.Spacing.xs)],
+                          alignment: .leading,
+                          spacing: DS.Spacing.sm) {
+                    self.quickActionTiles
                 }
                 .padding(.horizontal, DS.Spacing.md)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: DS.Spacing.xs) {
+                        self.quickActionTiles
+                    }
+                    .padding(.horizontal, DS.Spacing.md)
+                }
+                .scrollClipDisabled()
             }
-            .scrollClipDisabled()
+        }
+    }
+
+    @ViewBuilder private var quickActionTiles: some View {
+        ForEach(ToolUsageTracker.quickActions(from: self.tools)) { tool in
+            QuickActionView(title: tool.title,
+                            systemImage: tool.systemImage,
+                            tint: tool.tint) {
+                self.perform(tool)
+            }
         }
     }
 

@@ -24,7 +24,7 @@ class SharedStorage {
     static let schema = "pdfpro://"
     #endif
     
-    private static let appGroup = "group.eu.balzo.pdfexpert"
+    private static let appGroup = AppGroupIdentifier.current
     private static let userDefaults = UserDefaults(suiteName: appGroup)
     
     static var cacheDirectory: URL? {

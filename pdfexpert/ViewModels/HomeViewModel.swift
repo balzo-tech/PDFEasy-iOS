@@ -543,7 +543,12 @@ public class HomeViewModel : ObservableObject {
     @MainActor
     func importPdf(pdfUrl: URL) {
         guard let pdf = Pdf(pdfUrl: pdfUrl) else {
-            assertionFailure("Missing expected file for give url")
+            // A file that will not open is not a programming mistake: it is a
+            // truncated download, a damaged attachment, something with a .pdf
+            // on the end that never was one. The assertion that used to be here
+            // took the app down in debug and did nothing at all in release —
+            // where opening a damaged file simply appeared to do nothing.
+            self.asyncPdf = AsyncOperation(status: .error(.urlToPdfConversionError))
             return
         }
         

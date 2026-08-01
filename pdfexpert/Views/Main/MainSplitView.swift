@@ -106,6 +106,11 @@ struct MainSplitView: View {
                 } description: {
                     Text("Choose a PDF and the conversation appears here.")
                 }
+                // The colour has to be given the whole column first: painted
+                // straight onto the placeholder it covers only the text, and
+                // what shows up is a dark rectangle floating in the middle of a
+                // column of another colour.
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(ColorPalette.background)
             }
         }

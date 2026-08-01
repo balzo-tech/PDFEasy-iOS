@@ -146,7 +146,7 @@ extension View {
     @ViewBuilder public func formSheet<Content: View>(isPresented: Binding<Bool>,
                                                       size: CGSize,
                                                       @ViewBuilder content: @escaping () -> Content) -> some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if UIDevice.hasDesktopClassLayout {
             self.background(FormSheet(show: isPresented,
                                       size: size,
                                       content: content))
@@ -167,7 +167,7 @@ extension View {
     
     @ViewBuilder public func formSheet<Content: View, Item: FormSheetItem>(item: Binding<Item?>,
                                                                           @ViewBuilder content: @escaping (Item) -> Content) -> some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if UIDevice.hasDesktopClassLayout {
             self.background(FormSheetIdentifiable(item: item,
                                                   content: content))
         } else {

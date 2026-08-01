@@ -40,11 +40,24 @@ class ArchiveViewModel: ObservableObject {
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
     
-    let syncMonitor = SyncMonitor.shared
-    
     private var cancelBag = Set<AnyCancellable>()
-    
+
     init() {
+        // Reaching for the monitor builds a CloudKit container there and then,
+        // and a process without the iCloud entitlement — a locally signed
+        // development build — is answered with an exception rather than an
+        // error. There is no import to watch in that case anyway.
+        if !PersistenceController.isCloudKitDisabledForDevelopment {
+            self.observeCloudKitImport()
+        }
+
+        // Refresh the pdf list every time the pdf edit flow is dismissed
+        self.mainCoordinator.$pdfEditFlowData.filter { $0 == nil }.sink { data in
+            self.refresh()
+        }.store(in: &self.cancelBag)
+    }
+
+    private func observeCloudKitImport() {
         SyncMonitor.shared.$importState.sink { [weak self] importState in
             switch importState {
             case .inProgress:
@@ -59,11 +72,6 @@ class ArchiveViewModel: ObservableObject {
                 self?.isLoading = false
             }
             self?.updateView()
-        }.store(in: &self.cancelBag)
-        
-        // Refresh the pdf list every time the pdf edit flow is dismissed
-        self.mainCoordinator.$pdfEditFlowData.filter { $0 == nil }.sink { data in
-            self.refresh()
         }.store(in: &self.cancelBag)
     }
     

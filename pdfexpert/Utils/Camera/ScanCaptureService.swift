@@ -206,17 +206,45 @@ final class ScanCaptureService: NSObject, ObservableObject {
         }
     }
 
+    /// The camera to scan a page with.
+    ///
+    /// On a phone that is the back camera, preferring the dual wide one: it
+    /// focuses closer than the plain wide camera, which is exactly the distance
+    /// a page is held at.
+    ///
+    /// A Mac has no camera pointed anywhere near a document — the built-in one
+    /// faces the person sitting at it. What it does have, from macOS 14, is the
+    /// iPhone offered over Continuity Camera, which appears here as an ordinary
+    /// capture device and is the only one in the room that can see a page. It is
+    /// picked first when it is around; the webcam is what is left otherwise.
+    private static func preferredCaptureDevice() -> AVCaptureDevice? {
+        #if targetEnvironment(macCatalyst)
+        if #available(macCatalyst 17.0, *) {
+            let discovery = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [.continuityCamera, .external, .builtInWideAngleCamera],
+                mediaType: .video,
+                position: .unspecified
+            )
+            if let continuity = discovery.devices.first(where: { $0.deviceType == .continuityCamera }) {
+                return continuity
+            }
+            return discovery.devices.first ?? AVCaptureDevice.default(for: .video)
+        }
+        return AVCaptureDevice.default(for: .video)
+        #else
+        return AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(for: .video)
+        #endif
+    }
+
     /// Runs on `sessionQueue`.
     private func configureSessionOnQueue() -> Bool {
         self.session.beginConfiguration()
 
         self.session.sessionPreset = .photo
 
-        // The dual wide camera focuses closer than the plain wide one, which is
-        // exactly the distance a page is held at.
-        let device = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back)
-            ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-            ?? AVCaptureDevice.default(for: .video)
+        let device = Self.preferredCaptureDevice()
 
         guard let device,
               let input = try? AVCaptureDeviceInput(device: device),

@@ -15,7 +15,7 @@ struct PdfSignatureProviderFlowView: ViewModifier {
     /// The iPad one is deliberately generous: signing with a Pencil in a 385pt
     /// box produces an initial, not a signature.
     private static var signatureCreationSize: CGSize {
-        UIDevice.current.userInterfaceIdiom == .pad
+        UIDevice.hasDesktopClassLayout
             ? CGSize(width: 620, height: 560)
             : CGSize(width: 400, height: 385)
     }

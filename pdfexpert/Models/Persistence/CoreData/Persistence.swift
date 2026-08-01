@@ -101,25 +101,53 @@ class PersistenceController {
             privateStoreDescription.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
             privateStoreDescription.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
             
-            let cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: CloudKitContainerIdentifier)
-            
-            cloudKitContainerOptions.databaseScope = .private
-            privateStoreDescription.cloudKitContainerOptions = cloudKitContainerOptions
+            if Self.isCloudKitDisabledForDevelopment {
+                // A build signed ad-hoc, without a provisioning profile, carries no
+                // iCloud entitlement, and CloudKit answers that by trapping deep
+                // inside the mirroring delegate's own queue — nothing the store
+                // loader below can catch. Asking for the mirroring at all is what
+                // has to be skipped. Only ever true in a debug build told to.
+                print("#\(#function): CloudKit mirroring disabled by PDFPRO_DISABLE_CLOUDKIT.")
+                self.isCloudKitEnabled = false
+            } else {
+                let cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: CloudKitContainerIdentifier)
+
+                cloudKitContainerOptions.databaseScope = .private
+                privateStoreDescription.cloudKitContainerOptions = cloudKitContainerOptions
+            }
             
             /**
              Load the persistent stores.
+
+             A failure here used to be fatal, which is only defensible while
+             CloudKit is guaranteed to be there. It is not on the Mac: the
+             mirroring delegate refuses to start when the iCloud container is
+             unreachable — no account signed in, an entitlement the local build
+             was not granted — and the whole archive would be unreachable
+             because the sync half of it is. The documents live in the local
+             store either way, so a second attempt without mirroring keeps the
+             app usable and simply stops syncing.
              */
+            var loadFailure: Error?
             self.container.loadPersistentStores(completionHandler: { (loadedStoreDescription, error) in
                 guard error == nil else {
-                    fatalError("#\(#function): Failed to load persistent stores:\(error!)")
-                }
-                guard let cloudKitContainerOptions = loadedStoreDescription.cloudKitContainerOptions else {
+                    loadFailure = error
                     return
                 }
-                if cloudKitContainerOptions.databaseScope == .private {
-                    self._privatePersistentStore = self.container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
-                }
+                self.assignPrivateStore(from: loadedStoreDescription)
             })
+
+            if let loadFailure {
+                print("#\(#function): CloudKit-backed store unavailable, falling back to a local-only store: \(loadFailure)")
+                self.isCloudKitEnabled = false
+                privateStoreDescription.cloudKitContainerOptions = nil
+                self.container.loadPersistentStores(completionHandler: { (loadedStoreDescription, error) in
+                    guard error == nil else {
+                        fatalError("#\(#function): Failed to load persistent stores:\(error!)")
+                    }
+                    self.assignPrivateStore(from: loadedStoreDescription)
+                })
+            }
             
             /**
              Run initializeCloudKitSchema() once to update the CloudKit schema every time you change the Core Data model.
@@ -168,6 +196,24 @@ class PersistenceController {
     private var _privatePersistentStore: NSPersistentStore?
     var privatePersistentStore: NSPersistentStore {
         return _privatePersistentStore!
+    }
+
+    /// False when the store had to be loaded without CloudKit mirroring. What
+    /// the user writes stays on this device until the app is launched again
+    /// somewhere the container answers.
+    private(set) var isCloudKitEnabled: Bool = true
+
+    static var isCloudKitDisabledForDevelopment: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.environment["PDFPRO_DISABLE_CLOUDKIT"] == "1"
+        #else
+        false
+        #endif
+    }
+
+    private func assignPrivateStore(from description: NSPersistentStoreDescription) {
+        guard let url = description.url else { return }
+        self._privatePersistentStore = self.container.persistentStoreCoordinator.persistentStore(for: url)
     }
     
     lazy var cloudKitContainer: CKContainer = {

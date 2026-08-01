@@ -23,6 +23,12 @@ struct ContentView: View {
         self.content
             .background(ColorPalette.primaryBG)
             .preferredColorScheme(self.theme.colorScheme)
+            .configuresMacWindow()
+            .onAppear {
+                #if DEBUG
+                DebugWindowCapture.startIfRequested()
+                #endif
+            }
             .reviewFlowView(flow: self.coordinator.reviewFlow)
             // The tracking prompt used to be asked here, on every activation.
             // It is asked once at the end of the onboarding now, where the tour

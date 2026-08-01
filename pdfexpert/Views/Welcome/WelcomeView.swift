@@ -24,7 +24,7 @@ struct WelcomeView: View {
                 .font(forCategory: .largeTitle)
                 .foregroundStyle(ColorPalette.textPrimary)
                 .multilineTextAlignment(.center)
-            Text("The PDF editor for iPhone and iPad")
+            self.subtitle
                 .font(forCategory: .body1)
                 .foregroundStyle(ColorPalette.textSecondary)
                 .multilineTextAlignment(.center)
@@ -35,8 +35,25 @@ struct WelcomeView: View {
         .padding(.horizontal, DS.Spacing.xl)
         .padding(.top, DS.Spacing.xxl)
         .padding(.bottom, DS.Spacing.xxl)
+        // A window is wider than any phone, and a full-width Start button in it
+        // reads as a phone control stretched to fit.
+        .readableColumn()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(ColorPalette.background)
+    }
+}
+
+extension WelcomeView {
+
+    /// The line under the title names the machine the app is running on. Left as
+    /// it was, the Mac would be greeted by an app introducing itself as being
+    /// for a phone and a tablet.
+    @ViewBuilder private var subtitle: some View {
+        if UIDevice.isMac {
+            Text("The PDF editor for your Mac")
+        } else {
+            Text("The PDF editor for iPhone and iPad")
+        }
     }
 }
 

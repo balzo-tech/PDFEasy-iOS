@@ -54,7 +54,7 @@ extension View {
                                  fileTypes: [UTType],
                                  multipleSelection: Bool = false,
                                  onPickedFiles: @escaping FilePickerCallback) -> some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if UIDevice.hasDesktopClassLayout {
             self.sheet(isPresented: isPresented) {
                 FilePicker(fileTypes: fileTypes, multipleSelection: multipleSelection, onPickedFiles: onPickedFiles)
             }
@@ -74,7 +74,7 @@ extension View {
     @ViewBuilder func filePicker<Item: FilePickerTypeProvider>(item: Binding<Item?>,
                                                                multipleSelection: Bool = false,
                                                                onPickedFiles: @escaping FilePickerCallback) -> some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if UIDevice.hasDesktopClassLayout {
             self.sheet(item: item) {
                 FilePicker(fileTypes: $0.fileTypes, multipleSelection: multipleSelection, onPickedFiles: onPickedFiles)
             }

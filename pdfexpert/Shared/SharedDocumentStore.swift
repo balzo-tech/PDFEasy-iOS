@@ -34,7 +34,7 @@ struct SharedDocument: Codable, Identifiable, Hashable {
 
 enum SharedDocumentStore {
 
-    static let appGroup = "group.eu.balzo.pdfexpert"
+    static let appGroup = AppGroupIdentifier.current
     /// How many documents the widget may show at most.
     static let maxDocuments = 6
 
