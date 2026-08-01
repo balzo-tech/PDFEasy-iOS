@@ -236,9 +236,12 @@ class DocumentScanViewModel: ObservableObject {
         self.update(pageAt: self.currentPageIndex) { $0.rotation = $0.rotation.turnedClockwise() }
     }
 
-    /// "3 pages", for the button that leaves the camera.
+    /// "3 pages", for the button that leaves the camera — and "1 page" when
+    /// there is one, which the count on its own got wrong in every language.
     var pageCountText: String {
-        String(localized: "\(self.pages.count) pages")
+        self.pages.count == 1
+            ? String(localized: "1 page")
+            : String(localized: "\(self.pages.count) pages")
     }
 
     func setFilter(_ filter: ScanFilter, forPageAt index: Int) {

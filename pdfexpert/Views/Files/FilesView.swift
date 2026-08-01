@@ -396,7 +396,9 @@ struct FilesView: View {
 extension Pdf {
 
     var pageCountText: String {
-        String(localized: "\(self.pageCount) pages")
+        self.pageCount == 1
+            ? String(localized: "1 page")
+            : String(localized: "\(self.pageCount) pages")
     }
 }
 

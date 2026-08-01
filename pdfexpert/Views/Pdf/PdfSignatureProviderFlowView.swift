@@ -28,7 +28,7 @@ struct PdfSignatureProviderFlowView: ViewModifier {
                        size: Self.signatureCreationSize) {
                 PdfSignatureCanvasView(viewModel: Container.shared.pdfSignatureCanvasViewModel({
                     self.flow.onSignatureSelected(signature: $0)
-                }))
+                }), onClose: { self.flow.showSignatureCreation = false })
                 .background(ColorPalette.signatureSheet)
             }.formSheet(isPresented: self.$flow.showSignaturePicker,
                         size: CGSize(width: 400, height: 700)) {

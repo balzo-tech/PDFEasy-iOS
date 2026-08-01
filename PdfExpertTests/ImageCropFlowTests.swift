@@ -28,9 +28,13 @@ final class ImageCropFlowTests: XCTestCase {
         super.tearDown()
     }
 
+    /// `presentsCropper` is asked for explicitly: its default is off on the Mac,
+    /// where Mantis draws nothing, and every test below is about the cropper
+    /// being presented — they would all pass vacuously under Mac Catalyst.
     private func makeFlow() -> ImageCropFlow {
         ImageCropFlow(presentationSettleDelay: Self.settleDelay,
-                      presentationCheckDelay: Self.checkDelay)
+                      presentationCheckDelay: Self.checkDelay,
+                      presentsCropper: true)
     }
 
     private func makeImage(_ side: CGFloat) -> UIImage {
@@ -38,6 +42,23 @@ final class ImageCropFlowTests: XCTestCase {
             UIColor.black.setFill()
             context.fill(CGRect(x: 0, y: 0, width: side, height: side))
         }
+    }
+
+    // MARK: - Without a cropper
+
+    /// The Mac has no working cropper — Mantis draws a black rectangle there —
+    /// so the picture is handed straight back rather than lost to a screen with
+    /// no way out. Nothing is presented, and nothing stays armed.
+    func testWithoutACropperTheImageIsDeliveredWhole() {
+        let flow = ImageCropFlow(presentationSettleDelay: Self.settleDelay,
+                                 presentationCheckDelay: Self.checkDelay,
+                                 presentsCropper: false)
+        let image = self.makeImage(10)
+        var reported: UIImage?
+        flow.startFlow(image: image, onImageCropped: { reported = $0 })
+
+        XCTAssertIdentical(reported, image, "the picture never came back")
+        XCTAssertFalse(flow.cropperShow, "a cropper that draws nothing was asked for anyway")
     }
 
     // MARK: - Getting the crop back

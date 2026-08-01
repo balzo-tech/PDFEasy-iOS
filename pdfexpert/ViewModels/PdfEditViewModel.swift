@@ -864,6 +864,12 @@ class PdfEditViewModel: ObservableObject {
             } else if result.wasAlreadySearchable {
                 self.toolOutcomeAlertTitle = String(localized: "Info")
                 self.toolOutcomeAlertMessage = String(localized: "Your PDF is already searchable. You can search and select its text as it is.")
+            } else if result.alreadySearchablePageCount > 0 {
+                // Some pages carried text and the rest — a photo, a blank scan —
+                // gave Vision nothing. Saying only "no text was recognized" hid
+                // the part that was already searchable and read like a failure.
+                self.toolOutcomeAlertTitle = String(localized: "Info")
+                self.toolOutcomeAlertMessage = String(localized: "\(result.alreadySearchablePageCount) pages were already searchable. No text was recognized on the remaining \(result.unrecognizedPageCount).")
             } else {
                 self.toolOutcomeAlertTitle = String(localized: "Info")
                 self.toolOutcomeAlertMessage = String(localized: "No text was recognized in your PDF.")

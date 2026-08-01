@@ -59,10 +59,17 @@ class ImageCropFlow: ObservableObject {
     /// honest sign that SwiftUI never presented what was asked for.
     private var cropperDidAppear: Bool = false
 
+    /// False on the Mac, where Mantis draws nothing — see `startFlow`. Injected
+    /// rather than asked of `UIDevice` at the point of use, so the tests can
+    /// still exercise the presentation dance while running on Mac Catalyst.
+    private let presentsCropper: Bool
+
     init(presentationSettleDelay: TimeInterval = 0.45,
-         presentationCheckDelay: TimeInterval = 0.6) {
+         presentationCheckDelay: TimeInterval = 0.6,
+         presentsCropper: Bool = !UIDevice.isMac) {
         self.presentationSettleDelay = presentationSettleDelay
         self.presentationCheckDelay = presentationCheckDelay
+        self.presentsCropper = presentsCropper
     }
 
     func startFlow(
@@ -76,6 +83,21 @@ class ImageCropFlow: ObservableObject {
         self.cropShapeType = cropShapeType
         self.presetFixedRatioType = presetFixedRatioType
         self.type = type
+
+        // ⚠️ Mantis draws nothing on the Mac. Its crop view never gets a layout
+        // there, so what appears is the controller's black background with no
+        // image, no handles and no toolbar: Escape is the only way out, and the
+        // picture taken a second earlier is lost with it. Since the cropper is
+        // the only step between the camera or the photo library and a signature,
+        // that made signing from an image impossible on the Mac.
+        // Keeping the picture whole beats losing it to a screen nobody can use;
+        // the crop comes back when Mantis lays itself out under Catalyst.
+        if !self.presentsCropper {
+            self.onImageCropped = nil
+            onImageCropped(image)
+            return
+        }
+
         self.onImageCropped = onImageCropped
         self.cropperDidAppear = false
         self.presentCropper(attempt: 0)

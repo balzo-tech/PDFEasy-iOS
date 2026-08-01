@@ -35,16 +35,20 @@ final class EditorNavigationUITests: XCTestCase {
     /// Every tool that answers with a pushed screen, and the title of the screen
     /// it must open. The two differ often enough to be worth writing down —
     /// "Split PDF" opens "Split pages into ranges".
-    private static let pushedTools: [(tool: String, title: String)] = [
-        ("reorderPages", "Reorder pages"),
-        ("split", "Split pages into ranges"),
-        ("extractPages", "Extract pages"),
-        ("pageNumbers", "Page numbers"),
-        ("watermark", "Watermark"),
-        ("compress", "Compress PDF"),
-        ("export", "Export PDF as…"),
-        ("permissions", "PDF permissions"),
-        ("metadata", "Document info"),
+    ///
+    /// The third field is what to type into the panel's search when the tile is
+    /// below the fold — it is the *tool's* name, which is not always the name of
+    /// the screen it opens: "Split PDF" opens "Split pages into ranges".
+    private static let pushedTools: [(tool: String, title: String, query: String)] = [
+        ("reorderPages", "Reorder pages", "Reorder"),
+        ("split", "Split pages into ranges", "Split"),
+        ("extractPages", "Extract pages", "Extract"),
+        ("pageNumbers", "Page numbers", "Page numbers"),
+        ("watermark", "Watermark", "Watermark"),
+        ("compress", "Compress PDF", "Compress"),
+        ("export", "Export PDF as…", "Export"),
+        ("permissions", "PDF permissions", "permissions"),
+        ("metadata", "Document info", "Document info"),
     ]
 
     override func setUpWithError() throws {
@@ -77,9 +81,9 @@ final class EditorNavigationUITests: XCTestCase {
         self.openTheFirstDocument()
 
         for tool in Self.pushedTools {
-            self.openFromPanel(tool.tool)
+            self.openFromPanel(tool.tool, searchingFor: tool.query)
 
-            if !self.app.navigationBars[tool.title].waitForExistence(timeout: 10) {
+            if !self.screenIsShowing(tool.title) {
                 print("UITREE-BEGIN\n\(self.app.debugDescription)\nUITREE-END")
                 return XCTFail("\(tool.tool) did not open \(tool.title)")
             }
@@ -97,10 +101,13 @@ final class EditorNavigationUITests: XCTestCase {
         self.launch()
         self.openTheFirstDocument()
 
-        for tool in ["invertColors", "removeBlankPages"] {
-            self.openFromPanel(tool)
+        for (tool, query) in [("invertColors", "Invert"), ("removeBlankPages", "Remove blank")] {
+            self.openFromPanel(tool, searchingFor: query)
 
-            let ok = self.app.alerts.buttons["Ok"]
+            // Asked for by its button and not through `app.alerts`: on Mac
+            // Catalyst a SwiftUI `.alert` comes through the tree as a *Sheet*,
+            // so `app.alerts` is empty while the alert is plainly on screen.
+            let ok = self.app.buttons["Ok"].firstMatch
             XCTAssertTrue(ok.waitForExistence(timeout: 30), "\(tool) said nothing back")
             self.tap(ok)
 
@@ -116,11 +123,12 @@ final class EditorNavigationUITests: XCTestCase {
         self.openTheFirstDocument()
 
         for _ in 0..<2 {
-            self.openFromPanel("compress")
-            XCTAssertTrue(self.app.navigationBars["Compress PDF"].waitForExistence(timeout: 10))
+            self.openFromPanel("compress", searchingFor: "Compress")
+            XCTAssertTrue(self.screenIsShowing("Compress PDF"))
             self.tapBack(from: "Compress PDF")
             XCTAssertTrue(self.editorIsShowing)
-            XCTAssertFalse(self.app.alerts.element.exists, "backing out of Compress said something")
+            XCTAssertFalse(self.app.buttons["Ok"].firstMatch.exists,
+                           "backing out of Compress said something")
         }
     }
 
@@ -131,9 +139,9 @@ final class EditorNavigationUITests: XCTestCase {
         self.launch(premium: false)
         self.openTheFirstDocument()
 
-        self.openFromPanel("watermark")
+        self.openFromPanel("watermark", searchingFor: "Watermark")
 
-        XCTAssertTrue(self.app.navigationBars["Watermark"].waitForExistence(timeout: 10),
+        XCTAssertTrue(self.screenIsShowing("Watermark"),
                       "the tool did not open for a non-subscriber")
         XCTAssertFalse(self.app.buttons["Continue"].firstMatch.exists,
                        "the paywall is still in front of the tool")
@@ -214,13 +222,23 @@ final class EditorNavigationUITests: XCTestCase {
         let card = self.app.buttons["Meeting notes.pdf"].firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 30), "the seeded archive never appeared")
         self.tap(card)
+
+        // On a phone the card opens the editor outright, and this returns here.
+        // In the desktop split — Mac, and an iPad in three columns — a card only
+        // fills the *detail* column with a preview, and the editor is one press
+        // further: the Edit button in that column's toolbar. Without this the
+        // whole bundle fails on Mac at "the document did not open", which reads
+        // like a broken archive and is only a different shape.
+        if self.editorBar.buttons["Tools"].waitForExistence(timeout: 5) { return }
+        self.tap(self.app.buttons["Edit"].firstMatch)
+
         XCTAssertTrue(self.editorIsShowing, "the document did not open")
     }
 
     /// Opens the panel and taps a tool's tile, scrolling the grid to it if it
     /// starts below the fold — the panel holds sixteen tiles and a phone shows
     /// about eight.
-    private func openFromPanel(_ tool: String) {
+    private func openFromPanel(_ tool: String, searchingFor query: String) {
         let wrench = self.editorBar.buttons["Tools"]
         XCTAssertTrue(wrench.waitForExistence(timeout: 10), "the tool panel button is missing")
         self.tap(wrench)
@@ -229,8 +247,14 @@ final class EditorNavigationUITests: XCTestCase {
 
         let tile = self.app.buttons["editorTool.\(tool)"]
         guard tile.waitForExistence(timeout: 10) else {
-            print("UITREE-BEGIN\n\(self.app.debugDescription)\nUITREE-END")
-            return XCTFail("\(tool) is not in the panel")
+            // Not in the tree at all, because the grid is lazy and this tile is
+            // below the fold. On a phone the drag further down brings it into
+            // being; on Mac it cannot, and this is not a broken panel. The sheet
+            // there is a small box in the middle of a large window — about five
+            // tiles of sixteen — and the drag below is normalised to the
+            // *window*, so it starts outside the panel and scrolls nothing.
+            // The panel's own search reaches any tile on either shape.
+            return self.pickBySearching(tool, query: query)
         }
         // Dragged by coordinate rather than through `scrollViews`: three scroll
         // views are in the tree at once — the archive's grid, the editor's
@@ -255,9 +279,15 @@ final class EditorNavigationUITests: XCTestCase {
         let wrench = self.editorBar.buttons["Tools"]
         XCTAssertTrue(wrench.waitForExistence(timeout: 10), "the tool panel button is missing")
         self.tap(wrench)
+        XCTAssertTrue(self.app.searchFields["Search tools"].waitForExistence(timeout: 10),
+                      "the tool panel did not open")
+        self.pickBySearching(tool, query: query)
+    }
 
+    /// Types into the panel's search and taps what comes back. The panel is
+    /// already open.
+    private func pickBySearching(_ tool: String, query: String) {
         let search = self.app.searchFields["Search tools"]
-        XCTAssertTrue(search.waitForExistence(timeout: 10), "the tool panel did not open")
         self.tap(search)
         search.typeText(query)
 
@@ -277,12 +307,25 @@ final class EditorNavigationUITests: XCTestCase {
     /// to list first.
     private func tapBack(from title: String) {
         let bar = self.app.navigationBars[title]
-        XCTAssertTrue(bar.waitForExistence(timeout: 10), "\(title) has no navigation bar")
-        // Aimed at the chevron, not the middle: the back button is as wide as
-        // the title it carries, and its centre sits over the editor's own title
-        // menu on the screen underneath.
-        let back = bar.buttons.element(boundBy: 0)
-        back.coordinate(withNormalizedOffset: CGVector(dx: 0.12, dy: 0.5)).tap()
+        if bar.waitForExistence(timeout: 5) {
+            // Aimed at the chevron, not the middle: the back button is as wide as
+            // the title it carries, and its centre sits over the editor's own title
+            // menu on the screen underneath.
+            let back = bar.buttons.element(boundBy: 0)
+            back.coordinate(withNormalizedOffset: CGVector(dx: 0.12, dy: 0.5)).tap()
+            return
+        }
+        // Mac: the tool's bar is the window's toolbar, whose leading item is a
+        // plain "Back" button — narrow, and safe to hit in the middle.
+        self.tap(self.app.buttons["Back"].firstMatch)
+    }
+
+    /// A tool's screen, recognised by its title. On a phone the title sits in a
+    /// navigation bar; on Mac Catalyst it becomes the *window's* own title, and
+    /// there is no navigation bar to find.
+    private func screenIsShowing(_ title: String) -> Bool {
+        if self.app.navigationBars[title].waitForExistence(timeout: 10) { return true }
+        return self.app.windows[title].exists
     }
 
     /// Above the panel's floating search field, which overlaps the last row of
@@ -291,8 +334,17 @@ final class EditorNavigationUITests: XCTestCase {
         self.app.windows.firstMatch.frame.maxY - 110
     }
 
-    /// The editor's own navigation bar, titled with the document.
-    private var editorBar: XCUIElement { self.app.navigationBars["Meeting notes.pdf"] }
+    /// The editor's own bar, titled with the document.
+    ///
+    /// On Mac Catalyst there is no such navigation bar: the same items are
+    /// hoisted into the *window's* toolbar, several groups deep, and asking for
+    /// a navigation bar there finds the archive's one behind the editor — or
+    /// nothing. Scoping to the toolbar instead keeps every `editorBar.buttons`
+    /// lookup in this file working on both shapes.
+    private var editorBar: XCUIElement {
+        let bar = self.app.navigationBars["Meeting notes.pdf"]
+        return bar.exists ? bar : self.app.toolbars.firstMatch
+    }
 
     /// The document, recognised by the button that opens the tool panel — the
     /// one control the editor has and its tool screens do not.

@@ -13,6 +13,11 @@ struct PdfSignatureCanvasView: View {
 
     @StateObject var viewModel: PdfSignatureCanvasViewModel
 
+    /// Closes the sheet. A form sheet on the Mac cannot be dragged away, clicked
+    /// out of, or dismissed with Escape: without this the only way out of the
+    /// signature sheet was to quit the app.
+    let onClose: () -> Void
+
     /// Matches the sheet size `PdfSignatureProviderFlowView` picks, which is
     /// chosen by idiom rather than by size class because a form sheet keeps its
     /// own fixed dimensions.
@@ -20,10 +25,23 @@ struct PdfSignatureCanvasView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("Add Signature")
-                .font(forCategory: .body1)
-                .foregroundColor(ColorPalette.secondaryBG)
-                .frame(maxWidth: .infinity)
+            ZStack {
+                Text("Add Signature")
+                    .font(forCategory: .body1)
+                    .foregroundColor(ColorPalette.secondaryBG)
+                    .frame(maxWidth: .infinity)
+                HStack {
+                    Button(action: self.onClose) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(ColorPalette.signatureInkSecondary)
+                            .frame(width: 32, height: 32)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel(Text("Close"))
+                    Spacer()
+                }
+            }
             Spacer().frame(height: 10)
             self.tabsView
             Spacer().frame(height: 10)
@@ -203,6 +221,7 @@ struct PdfSignatureCanvasView_Previews: PreviewProvider {
     
     static var previews: some View {
         PdfSignatureCanvasView(viewModel: Container.shared
-            .pdfSignatureCanvasViewModel({ _ in print("Confirm button pressed") }))
+            .pdfSignatureCanvasViewModel({ _ in print("Confirm button pressed") }),
+                               onClose: { print("Close button pressed") })
     }
 }

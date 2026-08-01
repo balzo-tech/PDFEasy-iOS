@@ -1919,6 +1919,7 @@
 				89CD7A9429D32855003F1C3A /* Resources */,
 				895C1BB82A04FA53005EA190 /* Embed Foundation Extensions */,
 				89923E6429D437B400E246FC /* ShellScript */,
+				A1B2C3D4E5F600000000B001 /* Name the app on the Mac menu bar */,
 			);
 			buildRules = (
 			);
@@ -2107,6 +2108,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A1B2C3D4E5F600000000B001 /* Name the app on the Mac menu bar */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Name the app on the Mac menu bar";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$IS_MACCATALYST\" != \"YES\" ]; then exit 0; fi\n# The Mac menu bar reads CFBundleName, and GENERATE_INFOPLIST_FILE writes\n# PRODUCT_NAME into it whatever the Info.plist says — so every menu said\n# \"PdfExpert\". Neither the input plist nor INFOPLIST_KEY_CFBundleName wins\n# against the generator; correcting the built plist does.\nPLIST=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleName $DISPLAY_NAME\" \"$PLIST\" || \\\n  /usr/libexec/PlistBuddy -c \"Add :CFBundleName string $DISPLAY_NAME\" \"$PLIST\"\n";
+		};
 		89923E6429D437B400E246FC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2899,6 +2919,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
@@ -3039,6 +3060,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
@@ -3241,6 +3263,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
@@ -3292,6 +3315,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";

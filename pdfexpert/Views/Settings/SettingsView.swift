@@ -69,7 +69,10 @@ struct SettingsView: View {
             } header: {
                 Text("Appearance")
             } footer: {
-                Text("System follows your phone. The other two stay put, whatever the phone does.")
+                // The Mac has no phone to follow, and said so anyway.
+                Text(UIDevice.isMac
+                     ? String(localized: "System follows your Mac. The other two stay put, whatever the Mac does.")
+                     : String(localized: "System follows your phone. The other two stay put, whatever the phone does."))
             }
 
             Section {
