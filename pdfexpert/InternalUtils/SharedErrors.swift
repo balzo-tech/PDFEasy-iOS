@@ -49,8 +49,15 @@ enum PdfError: LocalizedError, UnderlyingError {
     
     var errorDescription: String? {
         switch self {
-        case .unknownError, .urlToPdfConversionError:
+        case .unknownError:
             return String(localized: "Internal Error. Please try again later")
+        // A file that will not open is not an internal error: it is a truncated
+        // download, a damaged attachment, something with a .pdf on the end that
+        // never was one. Sharing the wording with `unknownError` asked the user
+        // to try again at something that will never work, and blamed the app
+        // for the file.
+        case .urlToPdfConversionError:
+            return String(localized: "This file could not be opened. It may be damaged, or not a PDF.")
         case .underlyingError(let errorMessage): return errorMessage
         case .wrongPassword: return String(localized: "Wrong Password")
         }

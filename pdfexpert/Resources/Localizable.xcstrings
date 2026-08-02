@@ -1158,6 +1158,28 @@
         }
       }
     },
+    "This file could not be opened. It may be damaged, or not a PDF." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This file could not be opened. It may be damaged, or not a PDF."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido abrir este archivo: puede estar dañado o no ser un PDF."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile aprire questo file: potrebbe essere danneggiato o non essere un PDF."
+          }
+        }
+      }
+    },
     "annotate" : {
       "localizations" : {
         "en" : {

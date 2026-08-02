@@ -251,10 +251,12 @@ file danneggiato apre un alert in una finestra propria. Il difetto sospettato
 | `relazione.docx` | ❌ *«This document could not be converted on your device»* |
 | 366 test unitari su Mac Catalyst | ✅ 0 fallimenti |
 
-**Difetto — un file rotto dice «Internal Error. Please try again later».**
-`SharedErrors.swift:52` fa condividere a `urlToPdfConversionError` la stringa di
-`unknownError`. Si chiede di riprovare una cosa che non riuscirà mai, e si dà la
-colpa all'app invece che al file. **Vale anche su iPhone.**
+~~**Difetto — un file rotto dice «Internal Error. Please try again later».**~~
+**Corretto il 2 agosto**: `urlToPdfConversionError` condivideva la stringa di
+`unknownError`, così si chiedeva di riprovare una cosa che non riuscirà mai e si
+dava la colpa all'app invece che al file. Ora dice «This file could not be
+opened. It may be damaged, or not a PDF.», in tre lingue, con un test che impedisce
+ai due casi di ritrovarsi con la stessa frase. **Valeva anche su iPhone.**
 
 **Difetto — su Mac i formati Office non si convertono mai.** Non è il singolo
 file: `.txt` passa dallo stesso motore e funziona, quindi WebKit e
@@ -431,9 +433,9 @@ confermate ridimensionando davvero la finestra)*
       posto. *Resta da vedere il pannello di sistema vero e proprio, che si
       raggiunge da abbonato — il test si ferma al paywall.*
 - [ ] «Salva su File» dal pannello di condivisione scrive davvero su disco.
-- [!] **Apri `danneggiato.pdf`**: l'avviso **compare** — il difetto aperto in 3.1
-      non esiste. Ma il messaggio è «Internal Error. Please try again later»,
-      che è sbagliato per un file rotto. Vedi 3.2.
+- [x] **Apri `danneggiato.pdf`**: l'avviso compare, e dal 2 agosto **dice la cosa
+      giusta** — «This file could not be opened. It may be damaged, or not a
+      PDF.» invece di «Internal Error. Please try again later». Vedi 3.2.
 - [!] **Apri `fatture.xlsx` e aspetta**: ora dice perché non ce l'ha fatta
       («could not be converted on your device»), ma su Mac **non ce la farà
       mai** — vedi 3.2. Il ripiego online non parte: proxy non configurato.

@@ -277,4 +277,20 @@ final class PdfUtilityTests: XCTestCase {
         })
         XCTAssertTrue(PDFUtility.pageIsBlank(page))
     }
+
+    // MARK: - What the user is told about a file that will not open
+
+    /// A damaged file used to be reported as "Internal Error. Please try again
+    /// later": the app took the blame for the file, and asked for a retry that
+    /// could never work. The two cases must not share their wording again.
+    func testAnUnreadableFileIsNotReportedAsAnInternalError() {
+        let unreadable = PdfError.urlToPdfConversionError.errorDescription
+        let internalError = PdfError.unknownError.errorDescription
+
+        XCTAssertNotNil(unreadable)
+        XCTAssertNotEqual(unreadable, internalError,
+                          "a file that will not open is not an internal error")
+        XCTAssertFalse(unreadable?.lowercased().contains("try again") ?? true,
+                       "nothing is gained by retrying a damaged file")
+    }
 }
