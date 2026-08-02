@@ -1,35 +1,54 @@
 #!/bin/bash
-# Distribuisce le slide esportate sulle localizzazioni della scheda, in
+# Distribuisce le slide sulle localizzazioni della scheda, in
 # fastlane/screenshots/<locale>/.
 #
-#   ./place-shots.sh
+#   ./place-shots.sh                 # da incoming/ (le immagini fatte a mano)
+#   ./place-shots.sh out             # da out/ (quelle montate dal simulatore)
 #
-# La scheda è in quattordici lingue, l'app in tre: ogni localizzazione prende le
-# slide della propria lingua quando ci sono, quelle inglesi quando non ci sono.
-# «Niente» non è un'opzione — una localizzazione senza screenshot non si può
-# mandare in review.
+# Le immagini di iPhone e iPad finiscono nella stessa cartella: deliver le
+# smista da solo in base alla misura, e dentro ogni misura le ordina per nome —
+# per questo si chiamano iphone_1… e ipad_1….
+#
+# Su App Store Connect solo en-US ha screenshot propri: le altre tredici lingue
+# ereditano da lui. Qui se ne caricano tre — le lingue in cui l'app e' davvero
+# tradotta — e le altre undici continuano a ereditare l'inglese.
 set -e
 cd "$(dirname "$0")"
 
-# locale di App Store Connect : lingua della cattura.
-# Le prime cinque sono le lingue vere; le altre nove leggono l'inglese perché
-# l'app non parla la loro.
-MAP="en-US:en en-GB:en en-CA:en it:it es-MX:es \
-     ar-SA:en fr-CA:en fr-FR:en ko:en pt-BR:en ru:en vi:en zh-Hans:en zh-Hant:en"
-
+SOURCE="${1:-incoming}"
 DEST="../screenshots"
+
+# locale di App Store Connect : lingua della cattura
+MAP="en-US:en it:it es-MX:es"
 
 for pair in $MAP; do
   locale="${pair%%:*}"
   lang="${pair##*:}"
-  src="out/$lang"
-
-  [ -d "$src" ] || { echo "manca $src — lancia prima ./make-screenshots.sh $lang"; exit 1; }
 
   mkdir -p "$DEST/$locale"
-  rm -f "$DEST/$locale"/screenshot_*.png
-  cp "$src"/screenshot_*.png "$DEST/$locale/"
-  echo "$locale  ←  $lang"
+  rm -f "$DEST/$locale"/iphone_*.png "$DEST/$locale"/ipad_*.png \
+        "$DEST/$locale"/screenshot_*.png
+
+  n=0
+  if [ -d "$SOURCE/$lang/iphone" ]; then
+    for f in "$SOURCE/$lang/iphone"/*.png; do
+      n=$((n+1)); cp "$f" "$DEST/$locale/iphone_$n.png"
+    done
+  elif [ -d "$SOURCE/$lang" ]; then
+    # out/<lang>/ non ha sottocartelle: sono solo slide da iPhone.
+    for f in "$SOURCE/$lang"/*.png; do
+      n=$((n+1)); cp "$f" "$DEST/$locale/iphone_$n.png"
+    done
+  fi
+
+  m=0
+  if [ -d "$SOURCE/$lang/ipad" ]; then
+    for f in "$SOURCE/$lang/ipad"/*.png; do
+      m=$((m+1)); cp "$f" "$DEST/$locale/ipad_$m.png"
+    done
+  fi
+
+  echo "$locale  ←  $lang   $n iPhone, $m iPad"
 done
 
 echo

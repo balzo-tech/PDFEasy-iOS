@@ -10,9 +10,18 @@ app_identifier("eu.balzo.pdfexpert")
 # The binary is uploaded by `fastlane beta`, not from here.
 skip_binary_upload(true)
 
-# Screenshots are managed in the web UI. Without this, an empty
-# fastlane/screenshots directory would read as "remove them all".
-skip_screenshots(true)
+# Since 2026-08-02 the screenshots come from here too: fastlane/screenshots/
+# holds en-US, it and es-MX — the three languages the app is translated into —
+# with the iPhone and the iPad set side by side in each. The other eleven
+# languages have no folder and no screenshots of their own on App Store Connect:
+# they inherit en-US, which is why leaving them out is not the same as blanking
+# them.
+skip_screenshots(false)
+
+# Replaces the set instead of adding to it. Both device sizes have to be in the
+# folder when this runs — uploading only the iPhone ones would take the iPad
+# ones away, and a version cannot be submitted without them.
+overwrite_screenshots(true)
 skip_app_version_update(false)
 
 # No HTML preview waiting for a keypress: this lane has to run unattended.

@@ -3,3 +3,10 @@ build/
 raw/
 shots/
 out/
+
+# Le catture dell'iPad si rifanno con ./ipad-ready.sh e il test; incoming/ tiene
+# le immagini montate fuori di qui. Insieme fanno un centinaio di megabyte di
+# PNG che non hanno niente da fare in un repository — la copia buona sta su App
+# Store Connect. Il README di incoming/ resta, perche' dice dove vanno i file.
+ipad-shots/
+incoming/*/

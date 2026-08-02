@@ -333,14 +333,25 @@ final class StoreScreenshotsUITests: XCTestCase {
         self.app.launch()
     }
 
-    /// The tab bar on a phone; on the desktop split the same sections are rows
-    /// in the sidebar, which answer to the same labels.
+    /// The tab bar on a phone; on an iPad or the desktop split the same sections
+    /// are rows in the sidebar.
+    ///
+    /// Same labels, different kind of element: a sidebar row reaches the tree as
+    /// static text, not as a button, so asking for a button by name finds
+    /// nothing at all on an iPad. Three ways in, in the order they exist.
     private func show(_ tab: Tab) {
         let name = self.t(tab.rawValue)
-        let bar = self.app.tabBars.firstMatch
-        let inBar = bar.buttons[name]
-        self.tap(inBar.waitForExistence(timeout: 10) ? inBar
-                                                     : self.app.buttons[name].firstMatch)
+
+        let inBar = self.app.tabBars.firstMatch.buttons[name]
+        if inBar.waitForExistence(timeout: 10) { return self.tap(inBar) }
+
+        let asButton = self.app.buttons[name].firstMatch
+        if asButton.exists { return self.tap(asButton) }
+
+        let asRow = self.app.staticTexts[name].firstMatch
+        XCTAssertTrue(asRow.waitForExistence(timeout: 10),
+                      "\(name) is neither a tab, a button nor a sidebar row")
+        self.tap(asRow)
     }
 
     private func openTheFirstDocument() {
