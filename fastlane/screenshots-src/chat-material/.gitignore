@@ -1,0 +1,3 @@
+# I PDF si rigenerano dagli .html con Chrome (vedi README), e la copia che conta
+# sta nel bundle dell'app: pdfexpert/Resources/Test/contract-*.pdf
+*.pdf

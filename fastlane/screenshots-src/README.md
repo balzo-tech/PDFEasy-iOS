@@ -1,17 +1,20 @@
 # Gli screenshot dell'App Store
 
-Sei immagini 1290×2796, rifatte con un comando:
+Diciotto immagini 1290×2796 — sei slide per ognuna delle tre lingue in cui
+l'app è tradotta — rifatte con un comando:
 
 ```sh
-./make-screenshots.sh          # → out/screenshot_1.png … screenshot_6.png
+./make-screenshots.sh          # en it es → out/<lingua>/screenshot_1.png …
+./make-screenshots.sh it       # una lingua sola
+./place-shots.sh               # le distribuisce sulle 14 localizzazioni della scheda
 ```
 
-Sotto il cofano: `StoreScreenshotsUITests` guida l'app nel simulatore e fotografa
+Sotto il cofano: `StoreScreenshotsUITests` guida l'app sul telefono e fotografa
 le schermate, `pull-shots.sh` le tira fuori dal result bundle, `index.html` le
 monta con titolo e sfondo, `export.sh` esporta i PNG con Chrome headless.
 
-Per cambiare i testi si edita `index.html` e si rilancia `./export.sh` — non
-serve rifotografare.
+Per cambiare i testi si edita l'oggetto `TEXT` in `index.html` e si rilancia
+`./export.sh` — non serve rifotografare.
 
 ## Perché sono fatti così
 
@@ -26,25 +29,35 @@ L'ordine segue le intenzioni di ricerca, non l'organigramma dell'app: SCAN e
 CONVERT per prime perché sono ciò che la gente cerca — l'89% dei download arriva
 dalla ricerca — poi SIGN (il motivo per cui si paga), EDIT, PROTECT e ASK.
 
-## La sesta va presa a mano
+## Le tre lingue, e le altre undici
+
+L'app è tradotta in **inglese, italiano e spagnolo**; la scheda esiste in
+quattordici lingue. `place-shots.sh` dà a ogni localizzazione le slide della
+propria lingua quando ci sono e quelle inglesi quando non ci sono: una
+localizzazione senza screenshot non si può mandare in review, quindi lasciarne
+qualcuna vuota non è un'opzione.
+
+La parola grossa cambia lunghezza da una lingua all'altra — SCAN sono quattro
+lettere, SCANSIONA nove — e a 168px la seconda esce dal margine. Il layout non
+ha un corpo per lingua scritto a mano, che si sfalserebbe alla prima traduzione
+ritoccata: cerca il corpo più grande in cui entra **la più lunga delle sei
+parole** e lo dà a tutte, così i sei titoli di una lingua restano della stessa
+misura.
+
+## Perché tutte e sei si prendono dal telefono
 
 ChatPDF passa dal proxy, e il proxy vuole l'`originalTransactionId` di StoreKit
-prima di rispondere. In simulatore quella transazione non esiste — `-debugPremium`
-apre i gate dell'app ma non ne inventa una — quindi la conversazione si ferma su
-«This feature is part of the subscription». Va catturata da un telefono con
-abbonamento attivo, sbloccato e con la modalità sviluppatore accesa:
+prima di rispondere. In simulatore quella transazione non esiste —
+`-debugPremium` apre i gate dell'app ma non ne inventa una — quindi la
+conversazione si ferma su «This feature is part of the subscription».
 
-```sh
-xcodebuild test -project ../../pdfexpert.xcodeproj -scheme PdfExpert \
-  -configuration "Production Debug" \
-  -destination 'platform=iOS,name=<telefono>' \
-  -only-testing:PdfExpertUITests/StoreScreenshotsUITests/testTakesTheChatScreenshot \
-  -resultBundlePath build/chat.xcresult -allowProvisioningUpdates
-./pull-shots.sh build/chat.xcresult && ./export.sh
-```
+Quella schermata va presa da un telefono con abbonamento attivo, e da lì viene
+il resto: mischiare cinque catture da simulatore e una da device dentro la
+stessa lingua dà sei slide con l'ora e la batteria che non combaciano.
 
-In alternativa si mette a mano uno screenshot in `shots/6.png` e si lancia
-`./export.sh`.
+Il prezzo è che la status bar non è più governabile: non c'è un
+`simctl status_bar override` per un telefono vero. Prima di lanciare, batteria
+sopra l'80%, Non disturbare acceso, telefono sbloccato e collegato.
 
 ## Le trappole già pagate
 
@@ -53,8 +66,10 @@ In alternativa si mette a mano uno screenshot in `shots/6.png` e si lancia
   raggiungono toccando la barra.
 - **La firma non è nel pannello**: sta nella barra sotto la pagina, insieme ad
   Aggiungi pagina, Aggiungi testo e Compila modulo. Si tocca per etichetta.
-- **La camera non esiste in simulatore**: la schermata «scan» è la review che la
-  segue, aperta con `-debugStartScan` e `-debugScanPages`.
+- **Le etichette sono tradotte**: il test naviga per testo, quindi in italiano e
+  spagnolo cerca le stringhe di quelle lingue. La tabella sta in cima a
+  `StoreScreenshotsUITests`, copiata da `Localizable.xcstrings`; se una
+  traduzione cambia nel catalogo va cambiata anche lì, o il test fallisce.
 - **Le pagine finte dello scanner** disegnavano righe grigie: ora renderizzano il
   PDF di test del bundle, perché un placeholder in vetrina si vede che è un
   placeholder.

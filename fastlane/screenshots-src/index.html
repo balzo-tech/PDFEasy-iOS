@@ -51,8 +51,12 @@
     width: 100%;
   }
 
-  /* Una parola sola, enorme: è l'unica cosa leggibile nella miniatura di ricerca. */
+  /* Una parola sola, enorme: è l'unica cosa leggibile nella miniatura di ricerca.
+     `inline-block` perché il fit-to-width in fondo alla pagina deve poter
+     misurare la parola, non la colonna che la contiene: SCAN sono quattro
+     lettere, SCANSIONA nove, e a 168px la seconda esce dal margine. */
   h1 {
+    display: inline-block;
     font-size: 168px;
     line-height: .92;
     font-weight: 800;
@@ -228,10 +232,85 @@
 </section>
 
 <script>
-  // ?only=N isola una slide a dimensione piena: è così che export.sh cattura i PNG.
-  var only = new URLSearchParams(location.search).get("only");
+  var params = new URLSearchParams(location.search);
+
+  // I testi delle altre due lingue in cui l'app è tradotta. L'inglese sta nel
+  // markup qui sopra e non si tocca: se questo script non gira, le slide
+  // restano quelle inglesi invece di uscire vuote.
+  //
+  // Sono i titoli della vetrina, non le stringhe dell'app: vanno letti come li
+  // legge chi cerca "scanner pdf" nel proprio store, non tradotti alla lettera.
+  var TEXT = {
+    it: {
+      kicker: "Novità",
+      slides: [
+        ["Scansiona", "Qualsiasi foglio in un PDF nitido,<br>in due secondi"],
+        ["Converti",  "Foto, Word, Excel<br>e altri 20 formati"],
+        ["Firma",     "Disegnala una volta,<br>riusala su ogni file"],
+        ["Modifica",  "Testo, pagine, unisci, comprimi —<br>36 strumenti, senza filigrana"],
+        ["Proteggi",  "Blocca un file con password<br>prima di inviarlo"],
+        ["Chiedi",    "Chatta con qualsiasi PDF<br>e ottieni la risposta"]
+      ]
+    },
+    es: {
+      kicker: "Nuevo",
+      slides: [
+        ["Escanea",   "Cualquier papel en un PDF nítido,<br>en dos segundos"],
+        ["Convierte", "Fotos, Word, Excel<br>y 20 formatos más"],
+        ["Firma",     "Dibújala una vez,<br>úsala en cada archivo"],
+        ["Edita",     "Texto, páginas, unir, comprimir —<br>36 herramientas, sin marca de agua"],
+        ["Protege",   "Bloquea un archivo con contraseña<br>antes de enviarlo"],
+        ["Pregunta",  "Habla con cualquier PDF<br>y obtén la respuesta"]
+      ]
+    }
+  };
+
+  // ?lang=xx sceglie la lingua; le catture stanno in shots/<lang>/N.png, una
+  // cartella per lingua, perché l'app dentro al telefono parla quella lingua.
+  var lang = params.get("lang") || "en";
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll(".slide").forEach(function (slide, i) {
+    var img = slide.querySelector(".screen img");
+    if (img) img.src = "shots/" + lang + "/" + (i + 1) + ".png";
+
+    var text = TEXT[lang];
+    if (!text) return;
+    slide.querySelector("h1").innerHTML = text.slides[i][0];
+    slide.querySelector("h2").innerHTML = text.slides[i][1];
+    var kicker = slide.querySelector(".kicker");
+    if (kicker) kicker.textContent = text.kicker;
+  });
+
+  // L'anteprima rimpicciolisce le slide con `zoom`, e misurare sotto zoom dà
+  // numeri che non c'entrano: si toglie prima di misurare. Le slide di troppo
+  // però restano fino a dopo la misura — servono tutte e sei per decidere il
+  // corpo del titolo.
+  var only = params.get("only");
+  if (only) document.body.classList.remove("preview");
+
+  // La parola grossa deve stare nel margine in ogni lingua. Invece di un
+  // font-size a mano per lingua, che si sfalsa alla prima traduzione ritoccata,
+  // si cerca il corpo più grande in cui **la parola più lunga delle sei** entra,
+  // e lo si dà a tutte: una misura per lingua, non una per slide. Sei titoli di
+  // corpo diverso, visti in fila sulla scheda, si leggono come sei errori.
+  var titles = Array.prototype.slice.call(document.querySelectorAll(".copy h1"));
+  var size = 168;
+  var fits = function (h) {
+    var copy = h.closest(".copy");
+    var room = copy.clientWidth
+             - parseFloat(getComputedStyle(copy).paddingLeft)
+             - parseFloat(getComputedStyle(copy).paddingRight);
+    return h.offsetWidth <= room;
+  };
+  while (size > 96 && !titles.every(fits)) {
+    size -= 4;
+    titles.forEach(function (h) { h.style.fontSize = size + "px"; });
+  }
+
+  // Solo adesso si butta via il resto: ?only=N isola una slide a dimensione
+  // piena, ed è così che export.sh cattura i PNG.
   if (only) {
-    document.body.classList.remove("preview");
     document.querySelectorAll(".slide").forEach(function (s, i) {
       if (i !== Number(only) - 1) s.remove();
     });

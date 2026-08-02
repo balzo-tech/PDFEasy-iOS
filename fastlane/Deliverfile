@@ -29,7 +29,17 @@ automatic_release(false)
 run_precheck_before_submit(false)
 precheck_include_in_app_purchases(false)
 
-# Only the two text fields are ours. Anything not listed here keeps whatever is
-# on App Store Connect, so a locale we have not translated yet is left as it is
-# rather than being blanked.
+# Whatever has a .txt in fastlane/metadata/<locale>/ is ours; anything without
+# one keeps what is on App Store Connect, so a locale we have not translated yet
+# is left as it is rather than being blanked.
+#
+# Since 2026-08-02 that is five fields, not two: name, subtitle and keywords
+# joined description and release_notes. Until then the page was called
+# "PDF Pro Scan Image & Documents" and subtitled "Convert, Edit, Read & Sign
+# PDF" in all fourteen languages, English included where it belonged and not
+# where it did not — the two fields search weighs most, in English, on an
+# Italian or Korean store page.
+#
+# Name, subtitle and keywords are frozen while a version is in review: they go
+# up with the next version that is still editable.
 overwrite_screenshots(false)

@@ -154,11 +154,18 @@ class ArchiveViewModel: ObservableObject {
             }
         }
         guard (try? self.repository.getDoPdfExist()) == false else { return }
-        let names = ["Rental agreement", "Invoice 2026-07", "Scanned receipt", "Passport scan", "Meeting notes"]
+        // The lease goes last, so it lands at the top of the archive: it is the
+        // one the store screenshots open, and the only one of the five that is
+        // not Lorem ipsum. The other four are only ever a list behind it.
+        var toSave: [(name: String, pdf: Pdf?)] = ["Invoice 2026-07", "Scanned receipt",
+                                                   "Passport scan", "Meeting notes"]
+            .map { ($0, K.Test.DebugPdf) }
+        toSave.append((K.Test.DebugContractFilename, K.Test.DebugContractPdf))
+
         var saved: [Pdf] = []
-        for name in names {
-            guard var pdf = K.Test.DebugPdf else { return }
-            pdf.updateFilename("\(name).pdf")
+        for entry in toSave {
+            guard var pdf = entry.pdf else { return }
+            pdf.updateFilename("\(entry.name).pdf")
             if let stored = try? self.repository.savePdf(pdf: pdf) {
                 saved.append(stored)
             }

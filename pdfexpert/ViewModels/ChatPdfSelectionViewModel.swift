@@ -76,11 +76,15 @@ class ChatPdfSelectionViewModel: ObservableObject {
         // opening the import sheet, which is the only way to reach the chat from
         // a UI test: the file picker cannot be driven, and the scanner hands over
         // photographed pages, which carry no extractable text — the chat refuses
-        // those, and rightly so. The test document is used rather than the first
-        // one in the archive because on a real phone the archive is full of scans.
+        // those, and rightly so. The bundled document is used rather than the
+        // first one in the archive because on a real phone the archive is full
+        // of scans.
+        //
+        // It is the lease, not `test.pdf`: the answer has to quote something,
+        // and an answer about Lorem ipsum is not a screenshot anyone can read.
         //   xcrun simctl spawn booted defaults write <bundle-id> debugChatWithArchive -bool YES
         if UserDefaults.standard.bool(forKey: "debugChatWithArchive"),
-           let pdf = K.Test.DebugPdf {
+           let pdf = K.Test.DebugContractPdf {
             Task { @MainActor in self.uploadPdf(pdf: pdf) }
             return
         }

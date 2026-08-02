@@ -29,8 +29,80 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// flag sets the tab in the coordinator's `init`, and something downstream
     /// puts it back on Files before the screen settles — the first run of this
     /// bundle photographed the archive three times over.
+    ///
+    /// The raw values are the English labels; `show(_:)` translates them.
     private enum Tab: String {
         case files = "Files", tools = "Tools", chat = "ChatPDF", scanner = "Scanner"
+    }
+
+    // MARK: - Which language we are photographing
+
+    /// One of the app's three languages, chosen from the environment:
+    ///
+    ///     TEST_RUNNER_SHOT_LANG=it xcodebuild test …
+    ///
+    /// The `TEST_RUNNER_` prefix is how xcodebuild hands a variable to the test
+    /// process; it arrives here without it.
+    ///
+    /// The store page exists in fourteen languages but the app is translated
+    /// into three, so three sets of pictures is all there is to take; the other
+    /// eleven pages fall back to the English set.
+    private var language: String {
+        ProcessInfo.processInfo.environment["SHOT_LANG"] ?? "en"
+    }
+
+    /// The labels this file navigates by, in the two languages that are not
+    /// English.
+    ///
+    /// Copied from `Localizable.xcstrings` rather than read out of it: a test
+    /// bundle cannot see the app's catalogue at runtime. The cost is that a
+    /// translation changed in the catalogue and not here makes the run fail —
+    /// which is the right failure, because the alternative is photographing
+    /// whatever screen the app happened to land on.
+    private static let labels: [String: [String: String]] = [
+        "Files":                ["it": "File",                      "es": "Archivos"],
+        "Tools":                ["it": "Strumenti",                 "es": "Herramientas"],
+        "Scanner":              ["it": "Scanner",                   "es": "Escáner"],
+        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF"],
+        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF"],
+        "Add Signature":        ["it": "Aggiungi firma",            "es": "Añadir firma"],
+        "Drawing":              ["it": "Disegno",                   "es": "Dibujo"],
+        "Confirm":              ["it": "Conferma",                  "es": "Confirmar"],
+        "Finish":               ["it": "Fine",                      "es": "Finalizar"],
+        "Sign in here":         ["it": "Firma qui",                 "es": "Firma aquí"],
+        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas"],
+        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje..."],
+        "Edit":                 ["it": "Modifica",                  "es": "Editar"],
+        "Password":             ["it": "Password",                  "es": "Contraseña"],
+        "Tap where you wish to sign": ["it": "Tocca dove vuoi firmare",
+                                       "es": "Toca donde quieras firmar"],
+    ]
+
+    /// The document the screenshots are taken over: a lease agreement, seeded
+    /// at the top of the archive, named in the language it is written in. It
+    /// shows in the editor's title bar, so it has to match what the app saved.
+    private var contract: String {
+        switch self.language {
+        case "it": return "Contratto di locazione.pdf"
+        case "es": return "Contrato de arrendamiento.pdf"
+        default:   return "Rental agreement.pdf"
+        }
+    }
+
+    /// The question the chat answers, asked in the language of the run. The
+    /// answer comes back in whatever language it was asked in, which is the
+    /// whole point of taking this shot three times.
+    private static let chatQuestions = [
+        "en": "What is this document about?",
+        "it": "Di cosa parla questo documento?",
+        "es": "¿De qué trata este documento?",
+    ]
+
+    /// English in, the running language out. Words that are the same in all
+    /// three — "ChatPDF" — are not in the table and come back untouched.
+    private func t(_ english: String) -> String {
+        guard self.language != "en" else { return english }
+        return Self.labels[english]?[self.language] ?? english
     }
 
     override func setUpWithError() throws {
@@ -71,7 +143,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         // one of the four edits that live in the bar under the page.
         self.launch()
         self.openTheFirstDocument()
-        self.tap(self.app.buttons["Sign PDF"].firstMatch)
+        self.tap(self.app.buttons[self.t("Sign PDF")].firstMatch)
         self.drawASignature()
         self.settle()
         self.shoot("03-sign")
@@ -80,7 +152,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         self.launch()
         self.openTheFirstDocument()
         self.openToolPanel()
-        self.tapTile("password", searchingFor: "Password")
+        self.tapTile("password", searchingFor: self.t("Password"))
         self.settle()
         self.shoot("05-protect")
 
@@ -102,8 +174,8 @@ final class StoreScreenshotsUITests: XCTestCase {
         self.show(.chat)
         // With the flag on, this button starts the conversation on the bundled
         // test document instead of opening the import sheet.
-        self.tap(self.app.buttons["Choose a PDF"].firstMatch)
-        self.ask("What is this document about?")
+        self.tap(self.app.buttons[self.t("Choose a PDF")].firstMatch)
+        self.ask(Self.chatQuestions[self.language] ?? Self.chatQuestions["en"]!)
         self.settle()
         self.shoot("06-ask")
     }
@@ -115,21 +187,25 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// line — a single drag draws a stroke as straight as a ruler, which is not
     /// what a signature looks like.
     private func drawASignature() {
-        XCTAssertTrue(self.app.buttons["Finish"].firstMatch.waitForExistence(timeout: 15),
+        XCTAssertTrue(self.app.buttons[self.t("Finish")].firstMatch.waitForExistence(timeout: 15),
                       "the signature screen did not open")
-        self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.42)).tap()
+        // Low on the page, in the white under the last clause. 0.42 was chosen
+        // when the document was Lorem ipsum and any spot would do; on a contract
+        // it put the signature straight through the rent and deposit clauses,
+        // which is not where anyone signs anything.
+        self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.63)).tap()
 
-        XCTAssertTrue(self.app.staticTexts["Add Signature"].waitForExistence(timeout: 15),
+        XCTAssertTrue(self.app.staticTexts[self.t("Add Signature")].waitForExistence(timeout: 15),
                       "tapping the page did not open the signature sheet")
-        self.tap(self.app.buttons["Drawing"].firstMatch)
+        self.tap(self.app.buttons[self.t("Drawing")].firstMatch)
 
-        let confirm = self.app.buttons["Confirm"].firstMatch
+        let confirm = self.app.buttons[self.t("Confirm")].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 15), "the drawing canvas did not open")
 
         // Anchored to the "Sign in here" caption that sits directly under the
         // canvas, not to Confirm: between the two there are the "Memorize
         // signature" toggle and two spacers, and drawing there draws nothing.
-        let caption = self.app.staticTexts["Sign in here"].firstMatch
+        let caption = self.app.staticTexts[self.t("Sign in here")].firstMatch
         XCTAssertTrue(caption.waitForExistence(timeout: 10), "the drawing canvas is not showing")
         let canvasBottom = caption.frame.minY - 10
         let canvasTop = canvasBottom - 96
@@ -163,7 +239,26 @@ final class StoreScreenshotsUITests: XCTestCase {
 
         // Finish puts the signature into the document. Without it the shot shows
         // the signature still selected, inside its resize handles.
-        self.tap(self.app.buttons["Finish"].firstMatch)
+        //
+        // Not `firstMatch`: four screens in this app have a button called
+        // Finish — fill-widget, fill-form and suggested-fields, besides this one
+        // — and they are all in the tree at once. `firstMatch` was picking one
+        // of the others, which dismissed the signature screen and threw the
+        // signature away: the store shot came out with a clean page and the test
+        // passed, because every step had worked and nothing checked the result.
+        // The one that belongs to this screen is the wide button at the bottom.
+        let finish = self.app.buttons
+            .matching(NSPredicate(format: "label == %@", self.t("Finish")))
+            .allElementsBoundByIndex
+            .max { $0.frame.minY < $1.frame.minY }
+        XCTAssertNotNil(finish, "no Finish button anywhere in the tree")
+        self.tap(finish!)
+
+        // The result, not the journey: the signature screen has to be gone. It
+        // is the only evidence that the signature was kept rather than dropped.
+        XCTAssertTrue(self.app.staticTexts[self.t("Tap where you wish to sign")]
+                        .waitForNonExistence(timeout: 10),
+                      "Finish did not close the signature screen — the signature was discarded")
     }
 
     // MARK: - ChatPDF
@@ -178,8 +273,9 @@ final class StoreScreenshotsUITests: XCTestCase {
         // `TextField(axis: .vertical)` reaches the tree as a text view, not a
         // text field, and which of the two it is has changed between releases —
         // so both are accepted.
-        let asView = self.app.textViews["Type your Message..."].firstMatch
-        let asField = self.app.textFields["Type your Message..."].firstMatch
+        let placeholder = self.t("Type your Message...")
+        let asView = self.app.textViews[placeholder].firstMatch
+        let asField = self.app.textFields[placeholder].firstMatch
         let field: XCUIElement
         if asView.waitForExistence(timeout: 90) {
             field = asView
@@ -207,7 +303,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         let answered = NSPredicate(format: "count > 0")
         let replies = self.app.staticTexts.matching(NSPredicate(
             format: "NOT (label CONTAINS[c] %@) AND NOT (label CONTAINS[c] %@)",
-            question, "Type your Message"))
+            question, placeholder))
         self.expectation(for: answered, evaluatedWith: replies)
         self.waitForExpectations(timeout: 120)
     }
@@ -215,17 +311,24 @@ final class StoreScreenshotsUITests: XCTestCase {
     // MARK: - Getting there
 
     /// A fresh install every time, so the archive is seeded, onboarding is out
-    /// of the way, premium is on (no paywall in the picture) and the language is
-    /// English — the store page these go on is the US one.
+    /// of the way, premium is on (no paywall in the picture) and the app speaks
+    /// the language this run is photographing.
     private func launch(extraArguments: [String] = []) {
-        // Five of the six are taken on a simulator that is in light mode; the
-        // phone this runs on for the sixth may not be, and a dark shot among
+        // The phone this runs on may be in dark mode, and one dark shot among
         // five light ones looks like a mistake on the store page.
         XCUIDevice.shared.appearance = .light
         self.app = XCUIApplication()
-        self.app.launchArguments = ["-AppleLanguages", "(en)",
+        // `debugResetArchive` matters here more than anywhere else: a UI test
+        // installs the app fresh but keeps the container, and the seed skips a
+        // non-empty archive. Without it the Italian run opened the English
+        // archive left behind by the run before — same five documents, wrong
+        // language, and the contract in the picture would have been the wrong
+        // one.
+        self.app.launchArguments = ["-AppleLanguages", "(\(self.language))",
+                                    "-AppleLocale", self.language,
                                     "-onboardingShown", "YES",
                                     "-debugSeedArchive", "YES",
+                                    "-debugResetArchive", "YES",
                                     "-debugPremium", "YES"] + extraArguments
         self.app.launch()
     }
@@ -233,26 +336,62 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// The tab bar on a phone; on the desktop split the same sections are rows
     /// in the sidebar, which answer to the same labels.
     private func show(_ tab: Tab) {
+        let name = self.t(tab.rawValue)
         let bar = self.app.tabBars.firstMatch
-        let inBar = bar.buttons[tab.rawValue]
+        let inBar = bar.buttons[name]
         self.tap(inBar.waitForExistence(timeout: 10) ? inBar
-                                                     : self.app.buttons[tab.rawValue].firstMatch)
+                                                     : self.app.buttons[name].firstMatch)
     }
 
     private func openTheFirstDocument() {
-        let card = self.app.buttons["Meeting notes.pdf"].firstMatch
+        let card = self.app.buttons[self.contract].firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 30), "the seeded archive never appeared")
         self.tap(card)
 
-        if self.editorBar.buttons["Tools"].waitForExistence(timeout: 5) { return }
-        self.tap(self.app.buttons["Edit"].firstMatch)   // desktop split: one press further
+        // The editor is open when its own bar, titled with the file name, shows
+        // up. Not the tool button: in some languages that button is not there at
+        // all, folded into the overflow menu — see `openToolPanel`.
+        if self.app.navigationBars[self.contract].waitForExistence(timeout: 8) { return }
+        self.tap(self.app.buttons[self.t("Edit")].firstMatch)   // desktop split: one press further
     }
 
+    /// The wrench that opens the tool panel, when it is on screen at all.
+    ///
+    /// Two buttons answer to this name and only one of them is the wrench: the
+    /// Tools *tab* sits at the bottom and stays in the tree behind the open
+    /// document, so anything that matches by name alone eventually presses the
+    /// tab and leaves the editor. The wrench lives in the bar at the top, hence
+    /// the cut-off.
+    private var toolButton: XCUIElement? {
+        self.app.buttons
+            .matching(NSPredicate(format: "label == %@", self.t("Tools")))
+            .allElementsBoundByIndex
+            .first { $0.frame.minY < 200 }
+    }
+
+    /// Opens the tool panel, going through the overflow menu when the bar has
+    /// folded the wrench into it.
+    ///
+    /// Italian and Spanish labels are longer than the English ones, the editor's
+    /// bar runs out of room, and the toolbar collapses what does not fit into an
+    /// "Altro" menu. So the wrench is a button in English and a row in a menu in
+    /// the other two — the same screen, reached two different ways, and the
+    /// reason this test only ever failed in the languages nobody ran first.
     private func openToolPanel() {
-        let wrench = self.editorBar.buttons["Tools"]
-        XCTAssertTrue(wrench.waitForExistence(timeout: 15), "the tool panel button is missing")
-        self.tap(wrench)
-        XCTAssertTrue(self.app.searchFields["Search tools"].waitForExistence(timeout: 15),
+        if let wrench = self.toolButton {
+            self.tap(wrench)
+        } else {
+            let overflow = self.app.buttons["OverflowBarButtonItem"].firstMatch
+            XCTAssertTrue(overflow.waitForExistence(timeout: 10),
+                          "neither the tool button nor the overflow menu is on screen")
+            self.tap(overflow)
+
+            let inMenu = self.app.buttons[self.t("Tools")].firstMatch
+            XCTAssertTrue(inMenu.waitForExistence(timeout: 10),
+                          "the overflow menu opened but has no tool row")
+            self.tap(inMenu)
+        }
+        XCTAssertTrue(self.app.searchFields[self.t("Search tools")].waitForExistence(timeout: 15),
                       "the tool panel did not open")
     }
 
@@ -268,16 +407,11 @@ final class StoreScreenshotsUITests: XCTestCase {
         guard let query else {
             return XCTFail("\(tool) is not in the panel and no search term was given")
         }
-        let search = self.app.searchFields["Search tools"]
+        let search = self.app.searchFields[self.t("Search tools")]
         self.tap(search)
         search.typeText(query)
         XCTAssertTrue(tile.waitForExistence(timeout: 10), "searching for \(query) did not find \(tool)")
         self.tap(tile)
-    }
-
-    private var editorBar: XCUIElement {
-        let bar = self.app.navigationBars["Meeting notes.pdf"]
-        return bar.exists ? bar : self.app.toolbars.firstMatch
     }
 
     // MARK: - Taking the picture

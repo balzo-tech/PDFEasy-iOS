@@ -41,7 +41,46 @@ struct K {
             guard let testPdfDocument = DebugPdfDocument else { return nil }
             return Pdf(pdfDocument: testPdfDocument)
         }
-        
+
+        // MARK: - The document that goes on the App Store page
+
+        /// A lease agreement, one per language the app speaks.
+        ///
+        /// `test.pdf` is Lorem ipsum, which is fine for exercising layouts and
+        /// wrong for the store: the signature, the editor and the password
+        /// screens are all photographed over a document, and fake Latin in a
+        /// screenshot reads as a mock-up of an app rather than an app. This one
+        /// is a contract with real clauses and real figures, so the picture
+        /// shows the thing the app is for.
+        ///
+        /// The same file is the one to open in ChatPDF for the sixth shot — the
+        /// answer quotes the deposit and the notice period straight out of it.
+        static var DebugContractName: String {
+            let code = Locale.current.language.languageCode?.identifier ?? "en"
+            return ["it", "es"].contains(code) ? "contract-\(code)" : "contract-en"
+        }
+
+        static var DebugContractDocument: PDFDocument? {
+            guard let url = Bundle.main.url(forResource: DebugContractName, withExtension: "pdf"),
+                  let data = try? Data(contentsOf: url) else { return nil }
+            return PDFDocument(data: data)
+        }
+
+        static var DebugContractPdf: Pdf? {
+            guard let document = DebugContractDocument else { return nil }
+            return Pdf(pdfDocument: document)
+        }
+
+        /// What the contract is called in the archive, in the language it is
+        /// written in. It ends up in the editor's title bar, in the picture.
+        static var DebugContractFilename: String {
+            switch Locale.current.language.languageCode?.identifier {
+            case "it": return "Contratto di locazione"
+            case "es": return "Contrato de arrendamiento"
+            default:   return "Rental agreement"
+            }
+        }
+
         struct ChatPdf {
             static let UseMock = false
             static let NetworkStubsDelay = 1.0

@@ -11,6 +11,7 @@
 		01B36A41FD65CBF057C77820 /* PdfMarkdownImportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF719042ABAEB9A02F2A21A0 /* PdfMarkdownImportViewModel.swift */; };
 		0303F8BFD6915F3A95F6EA33 /* PdfCompressUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F0F52B481D297B421A74EC /* PdfCompressUtility.swift */; };
 		046CB96395CA5A4D822D76CA /* MainSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD02A2AFA02B35E25414789 /* MainSidebarView.swift */; };
+		07D43DCF1056470FE710713E /* contract-en.pdf in Resources */ = {isa = PBXBuildFile; fileRef = BCF87C0FC14CD5269B3B82DB /* contract-en.pdf */; };
 		0954744597C2246A373636CB /* ScanCameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF590D73544CE9E518C2AE8 /* ScanCameraPreview.swift */; };
 		0B353C38845F4AC19A6D434B /* PdfTitleUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4384D65DC8EC49A89C7979E2 /* PdfTitleUtility.swift */; };
 		0DEF9EB225D554D91A8CA034 /* ScanImageProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70736180CA61F13C8AD9D616 /* ScanImageProcessorTests.swift */; };
@@ -26,6 +27,7 @@
 		2874F250AA05FD88CA0E80DC /* DocumentDropDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553E2070C0DA8C80A503957 /* DocumentDropDestination.swift */; };
 		29314965C39F60D7B45CD469 /* PdfMarkdownImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546644E7201C33A0304DB80B /* PdfMarkdownImportView.swift */; };
 		29FE9504A3F58952463549AB /* PdfCompressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFA51296A73FDFA9F94E741 /* PdfCompressView.swift */; };
+		2D47A64A5887CFE3814EEE7D /* contract-it.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 5290640908BD1A532BA437DE /* contract-it.pdf */; };
 		2E8335470DCB20BE2EBD1B40 /* PdfCleanupUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6122CD802552BE96019419CD /* PdfCleanupUtility.swift */; };
 		2E83C7993BC8C89DA052909F /* EditorRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9F8F0B969538C08FAED7E7 /* EditorRoute.swift */; };
 		2F1743C48BC2401A8B242C54 /* PdfPermissionsUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFCD3B9E018C23C99E6EF738 /* PdfPermissionsUtility.swift */; };
@@ -44,6 +46,7 @@
 		3FD249AECD41CD616097B792 /* PhotoLibrarySaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69B1F3743727DA07A4DA8A4 /* PhotoLibrarySaver.swift */; };
 		406278C322014143B1151FA1 /* PdfUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */; };
 		437028E1F0DB00419857B9E8 /* StirlingApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */; };
+		43BDD49B7ECFC044D6B5DEA0 /* contract-es.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2DDFCB3D5400DFCF301EFB42 /* contract-es.pdf */; };
 		46F054ECB917A10EC54D16E7 /* PdfAnnotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14FF9709A641E3F5C6DED28 /* PdfAnnotationTests.swift */; };
 		49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */; };
 		49685A878BBA7FFF559ADCCF /* OfficeImportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5406EC92E539D0412B2B8DF /* OfficeImportCoordinator.swift */; };
@@ -461,6 +464,7 @@
 		264B643D94F580903A7855D2 /* OfficeImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OfficeImportView.swift; sourceTree = "<group>"; };
 		299AC4ACFAB2D49B8DDBC1EA /* FileDropImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileDropImport.swift; sourceTree = "<group>"; };
 		29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		2DDFCB3D5400DFCF301EFB42 /* contract-es.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-es.pdf"; sourceTree = "<group>"; };
 		2E1052E3D0B0AE78AE6DC91A /* RootShellView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootShellView.swift; path = ../../../pdfexpert/Views/Main/RootShellView.swift; sourceTree = "<group>"; };
 		2FC8E774753D8BF0BA1375B6 /* PdfAdvancedToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolView.swift; sourceTree = "<group>"; };
 		31A56A520C1AA285C2FEA012 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
@@ -481,6 +485,7 @@
 		4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		487A5A6F6F32B19ABB984CD6 /* PdfRedactUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactUtility.swift; sourceTree = "<group>"; };
 		4B6401AC744A4271821CDB87 /* PdfMetadataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMetadataViewModel.swift; sourceTree = "<group>"; };
+		5290640908BD1A532BA437DE /* contract-it.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-it.pdf"; sourceTree = "<group>"; };
 		546644E7201C33A0304DB80B /* PdfMarkdownImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfMarkdownImportView.swift; sourceTree = "<group>"; };
 		56A81EC5B02CCFB0FAEFCFF8 /* PdfPermissionsUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsUtilityTests.swift; sourceTree = "<group>"; };
 		5A3BAA028F5A791EAA31A3B1 /* DocumentActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentActions.swift; sourceTree = "<group>"; };
@@ -777,6 +782,7 @@
 		B9174E633BB07ACAF38D957F /* CDFolder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CDFolder.swift; sourceTree = "<group>"; };
 		BB067620CD38E3679DD4926B /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		BCF590D73544CE9E518C2AE8 /* ScanCameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanCameraPreview.swift; sourceTree = "<group>"; };
+		BCF87C0FC14CD5269B3B82DB /* contract-en.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-en.pdf"; sourceTree = "<group>"; };
 		BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUsageTracker.swift; sourceTree = "<group>"; };
 		BF7ECBFF6B0754689D031066 /* Folder+Persistable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Folder+Persistable.swift"; sourceTree = "<group>"; };
 		BFAFD3A0352EF7AFBDD1F7FF /* PdfProCommands.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PdfProCommands.swift; path = ../../pdfexpert/Application/PdfProCommands.swift; sourceTree = "<group>"; };
@@ -1053,6 +1059,9 @@
 			isa = PBXGroup;
 			children = (
 				893C8FE029DEDAF4000E35BD /* test.pdf */,
+				BCF87C0FC14CD5269B3B82DB /* contract-en.pdf */,
+				5290640908BD1A532BA437DE /* contract-it.pdf */,
+				2DDFCB3D5400DFCF301EFB42 /* contract-es.pdf */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -2090,6 +2099,9 @@
 				89D79E062A654DC80086A8E5 /* Poppins-MediumItalic.ttf in Resources */,
 				89CD7B3329D329B1003F1C3A /* Assets.xcassets in Resources */,
 				702EFD3C7CCEAD86C6D04FB0 /* Localizable.xcstrings in Resources */,
+				07D43DCF1056470FE710713E /* contract-en.pdf in Resources */,
+				2D47A64A5887CFE3814EEE7D /* contract-it.pdf in Resources */,
+				43BDD49B7ECFC044D6B5DEA0 /* contract-es.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
