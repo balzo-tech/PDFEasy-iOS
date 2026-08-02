@@ -29,6 +29,7 @@
 		2E8335470DCB20BE2EBD1B40 /* PdfCleanupUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6122CD802552BE96019419CD /* PdfCleanupUtility.swift */; };
 		2E83C7993BC8C89DA052909F /* EditorRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9F8F0B969538C08FAED7E7 /* EditorRoute.swift */; };
 		2F1743C48BC2401A8B242C54 /* PdfPermissionsUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFCD3B9E018C23C99E6EF738 /* PdfPermissionsUtility.swift */; };
+		30A6298473DD6FE2D32625C8 /* StoreScreenshotsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6822D366D4284E0E07506 /* StoreScreenshotsUITests.swift */; };
 		3165F92A7BF1AFEE39FC1509 /* SharedDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC23C6D694EBBF58C9441D7 /* SharedDocumentStore.swift */; };
 		3440EB15072B89E2823AA249 /* PdfCompareUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BEE9FC9379E84E9F6B8184 /* PdfCompareUtilityTests.swift */; };
 		360F9836D75296B43DBED466 /* AnnotationIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F517771E9337646B0F2A813 /* AnnotationIdentityTests.swift */; };
@@ -761,6 +762,7 @@
 		AAD905A352026CF62BB13FCF /* ToolsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		AB4F7DE4951E883FDB48B652 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADCA9A5C36A9D1E235CAD1D8 /* ArchiveOrganizerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArchiveOrganizerView.swift; sourceTree = "<group>"; };
+		AED6822D366D4284E0E07506 /* StoreScreenshotsUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreScreenshotsUITests.swift; sourceTree = "<group>"; };
 		B195271BEEC0385779003266 /* PdfPermissionsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsViewModel.swift; sourceTree = "<group>"; };
 		B1A0C4E1F0724A1B93D50101 /* SubscriptionPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPaywallView.swift; sourceTree = "<group>"; };
 		B1A0C4E1F0724A1B93D50201 /* SubscriptionPlanCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPlanCardView.swift; sourceTree = "<group>"; };
@@ -973,6 +975,7 @@
 				C1718ABBFD8979D43AE590BD /* ScannerSaveUITests.swift */,
 				A1B2C3D40001SIGPHOTO0001 /* SignatureFromPhotoUITests.swift */,
 				A1B2C3D40003LOCALISE0003 /* LocalisationUITests.swift */,
+				AED6822D366D4284E0E07506 /* StoreScreenshotsUITests.swift */,
 			);
 			name = PdfExpertUITests;
 			path = PdfExpertUITests;
@@ -2108,25 +2111,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A1B2C3D4E5F600000000B001 /* Name the app on the Mac menu bar */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Name the app on the Mac menu bar";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ \"$IS_MACCATALYST\" != \"YES\" ]; then exit 0; fi\n# The Mac menu bar reads CFBundleName, and GENERATE_INFOPLIST_FILE writes\n# PRODUCT_NAME into it whatever the Info.plist says — so every menu said\n# \"PdfExpert\". Neither the input plist nor INFOPLIST_KEY_CFBundleName wins\n# against the generator; correcting the built plist does.\nPLIST=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleName $DISPLAY_NAME\" \"$PLIST\" || \\\n  /usr/libexec/PlistBuddy -c \"Add :CFBundleName string $DISPLAY_NAME\" \"$PLIST\"\n";
-		};
 		89923E6429D437B400E246FC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2184,6 +2168,25 @@
 			shellPath = /bin/sh;
 			shellScript = "bash \"${SRCROOT}/pdfexpert/Scripts/generate_secrets.sh\"\n";
 		};
+		A1B2C3D4E5F600000000B001 /* Name the app on the Mac menu bar */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Name the app on the Mac menu bar";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$IS_MACCATALYST\" != \"YES\" ]; then exit 0; fi\n# The Mac menu bar reads CFBundleName, and GENERATE_INFOPLIST_FILE writes\n# PRODUCT_NAME into it whatever the Info.plist says — so every menu said\n# \"PdfExpert\". Neither the input plist nor INFOPLIST_KEY_CFBundleName wins\n# against the generator; correcting the built plist does.\nPLIST=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleName $DISPLAY_NAME\" \"$PLIST\" || \\\n  /usr/libexec/PlistBuddy -c \"Add :CFBundleName string $DISPLAY_NAME\" \"$PLIST\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2209,6 +2212,7 @@
 				78F6462C3AD1FDF5635BC02E /* ScannerSaveUITests.swift in Sources */,
 				A1B2C3D40002SIGPHOTO0002 /* SignatureFromPhotoUITests.swift in Sources */,
 				A1B2C3D40004LOCALISE0004 /* LocalisationUITests.swift in Sources */,
+				30A6298473DD6FE2D32625C8 /* StoreScreenshotsUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2599,6 +2603,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
@@ -2625,6 +2630,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
@@ -2652,6 +2658,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
@@ -2680,6 +2687,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2748,6 +2756,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3461,6 +3470,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
@@ -3488,6 +3498,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3520,6 +3531,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
+				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF Pro — App Store screenshots</title>
+<style>
+  :root {
+    --w: 1290px;
+    --h: 2796px;
+    --ink: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #15161a;
+    font-family: "SF Pro Display", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Una slide = un file PNG da caricare su App Store Connect. */
+  .slide {
+    width: var(--w);
+    height: var(--h);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    isolation: isolate;
+  }
+
+  /* Fondali: il primo paio deve staccare in miniatura, quindi scuro pieno.
+     I competitor stanno tutti su rosso o bianco: il blu profondo ci distingue. */
+  .bg-deep   { background: linear-gradient(165deg, #0A1836 0%, #123A7A 55%, #0B2350 100%); }
+  .bg-signal { background: linear-gradient(165deg, #0B2350 0%, #1D5BD6 60%, #0F2F6B 100%); }
+  .bg-ink    { background: linear-gradient(165deg, #07101F 0%, #14243F 100%); }
+
+  /* Alone luminoso dietro al telefono: dà profondità senza rubare attenzione. */
+  .slide::before {
+    content: "";
+    position: absolute;
+    width: 1500px; height: 1500px;
+    left: 50%; top: 46%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(90,160,255,.35) 0%, rgba(90,160,255,0) 62%);
+    z-index: -1;
+  }
+
+  .copy {
+    padding: 150px 90px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Una parola sola, enorme: è l'unica cosa leggibile nella miniatura di ricerca. */
+  h1 {
+    font-size: 168px;
+    line-height: .92;
+    font-weight: 800;
+    letter-spacing: -6px;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin-top: 34px;
+    font-size: 62px;
+    line-height: 1.16;
+    font-weight: 500;
+    color: rgba(255,255,255,.82);
+    letter-spacing: -1px;
+  }
+
+  /* Cornice del telefono. La schermata dentro deve restare dritta e intera:
+     i device inclinati e tagliati non si leggono a 100px di larghezza. */
+  .phone {
+    /* 840x1825 tiene il rapporto delle catture (1320x2868): con qualunque altra
+       misura `cover` mangerebbe i bordi laterali della UI. */
+    margin-top: 110px;
+    width: 840px;
+    height: 1825px;
+    border-radius: 96px;
+    background: #0d0d0f;
+    padding: 16px;
+    box-shadow:
+      0 0 0 3px rgba(255,255,255,.14),
+      0 70px 120px rgba(0,0,0,.55);
+    position: relative;
+  }
+  .phone.tilt { transform: rotate(-4deg); }
+
+  .screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 82px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+  }
+  .screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    position: relative;
+    z-index: 1;          /* copre il segnaposto quando la cattura c'è */
+  }
+
+  /* Segnaposto: resta visibile finché non arriva la cattura vera. */
+  .screen .todo {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px;
+    font-size: 44px;
+    line-height: 1.4;
+    color: #6b7280;
+    background: repeating-linear-gradient(45deg, #f3f4f6, #f3f4f6 30px, #e9ebef 30px, #e9ebef 60px);
+  }
+
+  /* Etichetta opzionale sopra al titolo (prova sociale, novità). */
+  .kicker {
+    display: inline-block;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #7FD4FF;
+    border: 3px solid rgba(127,212,255,.45);
+    border-radius: 999px;
+    padding: 16px 38px;
+    margin-bottom: 40px;
+  }
+
+  /* Anteprima a video: in export ogni slide viene ritagliata a dimensione piena. */
+  body.preview { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; }
+  body.preview .slide { zoom: .22; }
+</style>
+</head>
+<body class="preview">
+
+<!-- 1 — la ricerca che porta gli utenti è "scan": questa è la prima cosa che vedono -->
+<section class="slide bg-deep">
+  <div class="copy">
+    <h1>Scan</h1>
+    <h2>Any paper into a sharp PDF,<br>in two seconds</h2>
+  </div>
+  <div class="phone tilt">
+    <div class="screen">
+      <img src="shots/1.png" alt="" onerror="this.style.display='none'">
+      <div class="todo">1 — fotocamera dello scanner<br>con il bordo del foglio riconosciuto</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 — seconda intenzione di ricerca: convertire foto e file in PDF -->
+<section class="slide bg-signal">
+  <div class="copy">
+    <h1>Convert</h1>
+    <h2>Photos, Word, Excel<br>and 20 more formats</h2>
+  </div>
+  <div class="phone">
+    <div class="screen">
+      <img src="shots/2.png" alt="" onerror="this.style.display='none'">
+      <div class="todo">2 — schermata di conversione<br>con la griglia dei formati</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — la firma è il motivo per cui si paga: chiude il lavoro dentro l'app -->
+<section class="slide bg-ink">
+  <div class="copy">
+    <h1>Sign</h1>
+    <h2>Draw it once,<br>reuse it on every file</h2>
+  </div>
+  <div class="phone">
+    <div class="screen">
+      <img src="shots/3.png" alt="" onerror="this.style.display='none'">
+      <div class="todo">3 — firma appoggiata su un contratto</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 — il set di strumenti: dice "qui finisci il lavoro", non serve altra app -->
+<section class="slide bg-deep">
+  <div class="copy">
+    <h1>Edit</h1>
+    <h2>Text, pages, merge, compress —<br>36 tools, no watermark</h2>
+  </div>
+  <div class="phone">
+    <div class="screen">
+      <img src="shots/4.png" alt="" onerror="this.style.display='none'">
+      <div class="todo">4 — griglia degli strumenti dell'editor</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — la privacy vende in questa categoria: i file sono documenti personali -->
+<section class="slide bg-ink">
+  <div class="copy">
+    <h1>Protect</h1>
+    <h2>Password-lock a file<br>before you send it</h2>
+  </div>
+  <div class="phone">
+    <div class="screen">
+      <img src="shots/5.png" alt="" onerror="this.style.display='none'">
+      <div class="todo">5 — schermata della password sul documento</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 — quello che i competitor non hanno: chiedere al documento -->
+<section class="slide bg-signal">
+  <div class="copy">
+    <span class="kicker">New</span>
+    <h1>Ask</h1>
+    <h2>Chat with any PDF<br>and get the answer</h2>
+  </div>
+  <div class="phone">
+    <div class="screen">
+      <img src="shots/6.png" alt="" onerror="this.style.display='none'">
+      <div class="todo">6 — chat con una risposta sul documento</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ?only=N isola una slide a dimensione piena: è così che export.sh cattura i PNG.
+  var only = new URLSearchParams(location.search).get("only");
+  if (only) {
+    document.body.classList.remove("preview");
+    document.querySelectorAll(".slide").forEach(function (s, i) {
+      if (i !== Number(only) - 1) s.remove();
+    });
+  }
+</script>
+</body>
+</html>

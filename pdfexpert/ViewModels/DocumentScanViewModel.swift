@@ -156,11 +156,33 @@ class DocumentScanViewModel: ObservableObject {
 
     private static func debugCapture(pageNumber: Int) -> UIImage {
         let size = CGSize(width: 900, height: 1200)
+        let paper = CGRect(x: 110, y: 120, width: 700, height: 960)
         return UIGraphicsImageRenderer(size: size).image { context in
             UIColor(white: 0.12, alpha: 1).setFill()
             context.fill(CGRect(origin: .zero, size: size))
             UIColor(white: 0.97, alpha: 1).setFill()
-            context.fill(CGRect(x: 110, y: 120, width: 700, height: 960))
+            context.fill(paper)
+
+            // The bundled test document, drawn as if photographed: it is a real
+            // page — headings, paragraphs, a chart — where drawn grey bars only
+            // ever looked like drawn grey bars. The store screenshots are taken
+            // from this screen, and a placeholder reads as a placeholder.
+            if let document = K.Test.DebugPdfDocument,
+               document.pageCount > 0,
+               let page = document.page(at: (pageNumber - 1) % document.pageCount) {
+                let bounds = page.bounds(for: .mediaBox)
+                let scale = min(paper.width / bounds.width, paper.height / bounds.height)
+                context.cgContext.saveGState()
+                context.cgContext.translateBy(x: paper.minX, y: paper.minY)
+                context.cgContext.scaleBy(x: scale, y: scale)
+                // PDF pages are drawn bottom-up.
+                context.cgContext.translateBy(x: 0, y: bounds.height)
+                context.cgContext.scaleBy(x: 1, y: -1)
+                page.draw(with: .mediaBox, to: context.cgContext)
+                context.cgContext.restoreGState()
+                return
+            }
+
             let title = "Debug page \(pageNumber)" as NSString
             title.draw(at: CGPoint(x: 160, y: 190),
                        withAttributes: [.font: UIFont.boldSystemFont(ofSize: 44),

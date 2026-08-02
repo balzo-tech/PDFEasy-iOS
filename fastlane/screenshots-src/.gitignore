@@ -1,0 +1,5 @@
+# Materiale di lavorazione: si rigenera con ./make-screenshots.sh
+build/
+raw/
+shots/
+out/

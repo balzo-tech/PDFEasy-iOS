@@ -69,8 +69,22 @@ class ChatPdfSelectionViewModel: ObservableObject {
     func onAppear() {
         self.analyticsManager.track(event: .reportScreen(.chatPdfSelection))
     }
-    
+
     func getPdfButtonPressed() {
+        #if DEBUG
+        // Starts the conversation on the bundled test document instead of
+        // opening the import sheet, which is the only way to reach the chat from
+        // a UI test: the file picker cannot be driven, and the scanner hands over
+        // photographed pages, which carry no extractable text — the chat refuses
+        // those, and rightly so. The test document is used rather than the first
+        // one in the archive because on a real phone the archive is full of scans.
+        //   xcrun simctl spawn booted defaults write <bundle-id> debugChatWithArchive -bool YES
+        if UserDefaults.standard.bool(forKey: "debugChatWithArchive"),
+           let pdf = K.Test.DebugPdf {
+            Task { @MainActor in self.uploadPdf(pdf: pdf) }
+            return
+        }
+        #endif
         self.trackPdfSelection()
         if self.store.isPremium.value {
             self.importOptionGroup = .fileAndScan
