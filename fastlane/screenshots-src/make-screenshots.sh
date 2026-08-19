@@ -3,7 +3,11 @@
 # tradotta: guida l'app nel simulatore, fotografa le schermate, le monta nel
 # layout ed esporta i PNG in out/<lingua>/.
 #
-#   ./make-screenshots.sh            # en it es
+# Le lingue sono cinque dal 19 agosto 2026, da quando l'app parla anche tedesco e
+# francese: prima la Germania vedeva la pagina inglese, e le campagne tedesche
+# mandavano la gente su una scheda che non parlava la loro lingua.
+#
+#   ./make-screenshots.sh            # en it es de fr
 #   ./make-screenshots.sh it         # una lingua sola
 #
 # Serve Xcode e il simulatore "iPhone 17 Pro Max" (1320x2868, il display da 6,9").
@@ -20,7 +24,7 @@ cd "$(dirname "$0")"
 PROJECT="$(cd ../.. && pwd)/pdfexpert.xcodeproj"
 DEVICE="iPhone 17 Pro Max"
 BUNDLE="eu.balzo.pdfexpert"
-LANGS="${*:-en it es}"
+LANGS="${*:-en it es de fr}"
 
 UDID=$(xcrun simctl list devices available | grep "$DEVICE (" | head -1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
 [ -n "$UDID" ] || { echo "simulatore '$DEVICE' non trovato"; exit 1; }

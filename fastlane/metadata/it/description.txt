@@ -24,7 +24,7 @@ Un'interfaccia costruita per lo schermo grande, un widget nella schermata Home e
 PRIVACY PER IMPOSTAZIONE PREDEFINITA
 Scansione, conversione e modifica avvengono sul dispositivo: per farle, i tuoi documenti non vengono caricati da nessuna parte. Due funzioni usano un servizio online sicuro, e solo quando sei tu a chiederle — fare domande su un documento e le poche conversioni che un iPhone non può eseguire da solo.
 
-Disponibile in italiano, inglese e spagnolo.
+Disponibile in italiano, inglese, francese, spagnolo e tedesco.
 
 ABBONAMENTO PDF PRO
 L'abbonamento sblocca la condivisione, l'esportazione e la stampa dei documenti, senza limiti di quantità. Sono disponibili un piano settimanale e uno annuale, ed entrambi cominciano con una prova gratuita.

@@ -24,7 +24,7 @@ A layout made for the larger screen, a Home Screen widget, and Shortcuts support
 PRIVACY BY DEFAULT
 Scanning, conversion and editing happen on your device: your documents are not uploaded to do them. Two features do use a secure online service, and only when you ask for them — asking questions about a document, and the few conversions an iPhone cannot do on its own.
 
-Available in English, Italian and Spanish.
+Available in English, French, German, Italian and Spanish.
 
 PDF PRO SUBSCRIPTION
 A subscription unlocks sharing, exporting and printing your documents, with no limit on how many. Weekly and yearly plans are available, and both start with a free trial.

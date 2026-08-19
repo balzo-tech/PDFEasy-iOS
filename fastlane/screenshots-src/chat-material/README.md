@@ -16,10 +16,12 @@ motivo per cui uno chiederebbe a un PDF invece di leggerlo.
 | en | `Rental agreement.pdf` | Boston, dollari |
 | it | `Contratto di locazione.pdf` | Milano, euro |
 | es | `Contrato de arrendamiento.pdf` | Città del Messico, pesos — la scheda spagnola è `es-MX` |
+| de | `Mietvertrag.pdf` | Berlino, euro |
+| fr | `Contrat de location.pdf` | Parigi, euro |
 
-I dati sono gli stessi in tutti e tre — due mensilità di cauzione, tre mesi di
-preavviso — così le tre risposte si somigliano e le tre slide sembrano la stessa
-schermata in tre lingue, che è quello che sono.
+I dati sono gli stessi in tutte e cinque — due mensilità di cauzione, tre mesi di
+preavviso — così le risposte si somigliano e le slide sembrano la stessa
+schermata in cinque lingue, che è quello che sono.
 
 Si rigenerano da `en.html` / `it.html` / `es.html` con Chrome:
 
@@ -39,6 +41,8 @@ un muro di testo che nella miniatura non si legge.
 | en | `What's the deposit and the notice period?` |
 | it | `Quanto è la cauzione e il preavviso?` |
 | es | `¿Cuánto es el depósito y el preaviso?` |
+| de | `Wie hoch ist die Kaution und die Kündigungsfrist?` |
+| fr | `Quel est le dépôt de garantie et le préavis ?` |
 
 La risposta attesa cita due cifre — due mensilità e tre mesi — e sta in tre o
 quattro righe. Se esce più lunga di mezzo schermo, rifai la domanda: la bolla

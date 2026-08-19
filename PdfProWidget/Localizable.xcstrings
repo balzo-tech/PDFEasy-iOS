@@ -3,10 +3,22 @@
   "strings": {
     "%lld pages": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Seiten"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld páginas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pages"
           }
         },
         "it": {
@@ -19,10 +31,22 @@
     },
     "Merge": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusammenfügen"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Combinar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fusionner"
           }
         },
         "it": {
@@ -35,10 +59,22 @@
     },
     "No documents yet": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Dokumente"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Todavía no hay documentos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas encore de documents"
           }
         },
         "it": {
@@ -51,10 +87,22 @@
     },
     "Photos": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotos"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Fotos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
           }
         },
         "it": {
@@ -67,10 +115,22 @@
     },
     "Quick actions": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schnellaktionen"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Acciones rápidas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions rapides"
           }
         },
         "it": {
@@ -83,10 +143,22 @@
     },
     "Recent": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Recientes"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Récents"
           }
         },
         "it": {
@@ -99,10 +171,22 @@
     },
     "Recent documents": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt benutzte Dokumente"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Documentos recientes"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documents récents"
           }
         },
         "it": {
@@ -115,10 +199,22 @@
     },
     "Scan": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scannen"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Escanear"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Numériser"
           }
         },
         "it": {
@@ -131,10 +227,22 @@
     },
     "Sign": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unterschreiben"
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Firmar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signer"
           }
         },
         "it": {
@@ -147,10 +255,22 @@
     },
     "Start a scan or a conversion straight from the Home Screen.": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starten Sie einen Scan oder eine Konvertierung direkt vom Home-Bildschirm."
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Inicia un escaneo o una conversión directamente desde la pantalla de inicio."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lancez une numérisation ou une conversion directement depuis l'écran d'accueil."
           }
         },
         "it": {
@@ -163,10 +283,22 @@
     },
     "Your latest PDFs, one tap away.": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ihre neuesten PDFs, nur ein Tippen entfernt."
+          }
+        },
         "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Tus últimos PDF, a un toque de distancia."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos derniers PDF, à portée de doigt."
           }
         },
         "it": {

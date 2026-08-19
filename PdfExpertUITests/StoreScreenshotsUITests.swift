@@ -60,22 +60,24 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// which is the right failure, because the alternative is photographing
     /// whatever screen the app happened to land on.
     private static let labels: [String: [String: String]] = [
-        "Files":                ["it": "File",                      "es": "Archivos"],
-        "Tools":                ["it": "Strumenti",                 "es": "Herramientas"],
-        "Scanner":              ["it": "Scanner",                   "es": "Escáner"],
-        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF"],
-        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF"],
-        "Add Signature":        ["it": "Aggiungi firma",            "es": "Añadir firma"],
-        "Drawing":              ["it": "Disegno",                   "es": "Dibujo"],
-        "Confirm":              ["it": "Conferma",                  "es": "Confirmar"],
-        "Finish":               ["it": "Fine",                      "es": "Finalizar"],
-        "Sign in here":         ["it": "Firma qui",                 "es": "Firma aquí"],
-        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas"],
-        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje..."],
-        "Edit":                 ["it": "Modifica",                  "es": "Editar"],
-        "Password":             ["it": "Password",                  "es": "Contraseña"],
+        "Files":                ["it": "File",                      "es": "Archivos", "de": "Dateien", "fr": "Fichiers"],
+        "Tools":                ["it": "Strumenti",                 "es": "Herramientas", "de": "Werkzeuge", "fr": "Outils"],
+        "Scanner":              ["it": "Scanner",                   "es": "Escáner", "de": "Scanner", "fr": "Scanner"],
+        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF", "de": "PDF unterschreiben", "fr": "Signer le PDF"],
+        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF", "de": "Ein PDF wählen", "fr": "Choisir un PDF"],
+        "Add Signature":        ["it": "Aggiungi firma",            "es": "Añadir firma", "de": "Unterschrift hinzufügen", "fr": "Ajouter une signature"],
+        "Drawing":              ["it": "Disegno",                   "es": "Dibujo", "de": "Zeichnung", "fr": "Dessin"],
+        "Confirm":              ["it": "Conferma",                  "es": "Confirmar", "de": "Bestätigen", "fr": "Confirmer"],
+        "Finish":               ["it": "Fine",                      "es": "Finalizar", "de": "Abschließen", "fr": "Terminer"],
+        "Sign in here":         ["it": "Firma qui",                 "es": "Firma aquí", "de": "Hier unterschreiben", "fr": "Signez ici"],
+        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas", "de": "Werkzeuge suchen", "fr": "Rechercher des outils"],
+        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje...", "de": "Schreiben Sie Ihre Nachricht...", "fr": "Écrivez votre message..."],
+        "Edit":                 ["it": "Modifica",                  "es": "Editar", "de": "Bearbeiten", "fr": "Modifier"],
+        "Password":             ["it": "Password",                  "es": "Contraseña", "de": "Passwort", "fr": "Mot de passe"],
         "Tap where you wish to sign": ["it": "Tocca dove vuoi firmare",
-                                       "es": "Toca donde quieras firmar"],
+                                       "es": "Toca donde quieras firmar",
+                                       "de": "Tippen Sie dorthin, wo Sie unterschreiben möchten",
+                                       "fr": "Touchez l'endroit où vous voulez signer"],
     ]
 
     /// The document the screenshots are taken over: a lease agreement, seeded
@@ -85,6 +87,8 @@ final class StoreScreenshotsUITests: XCTestCase {
         switch self.language {
         case "it": return "Contratto di locazione.pdf"
         case "es": return "Contrato de arrendamiento.pdf"
+        case "de": return "Mietvertrag.pdf"
+        case "fr": return "Contrat de location.pdf"
         default:   return "Rental agreement.pdf"
         }
     }
@@ -96,6 +100,8 @@ final class StoreScreenshotsUITests: XCTestCase {
         "en": "What is this document about?",
         "it": "Di cosa parla questo documento?",
         "es": "¿De qué trata este documento?",
+        "de": "Worum geht es in diesem Dokument?",
+        "fr": "De quoi parle ce document ?",
     ]
 
     /// English in, the running language out. Words that are the same in all

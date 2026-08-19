@@ -24,7 +24,7 @@ Uma interface pensada para a tela grande, um widget na Tela de Início e suporte
 PRIVACIDADE POR PADRÃO
 Digitalizar, converter e editar acontece no seu aparelho: para isso, seus documentos não são enviados a lugar nenhum. Dois recursos usam um serviço on-line seguro, e só quando você pede — fazer perguntas sobre um documento e as poucas conversões que um iPhone não consegue fazer sozinho.
 
-Disponível em inglês, italiano e espanhol.
+Disponível em inglês, francês, alemão, italiano e espanhol.
 
 ASSINATURA PDF PRO
 A assinatura libera compartilhar, exportar e imprimir seus documentos, sem limite de quantidade. Há um plano semanal e um anual, e os dois começam com um período de teste gratuito.
