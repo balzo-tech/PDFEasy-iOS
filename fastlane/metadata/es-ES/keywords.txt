@@ -1,0 +1,1 @@
+escanear,escaner,unir,comprimir,dividir,girar,formulario,contraseña,foto,ocr,archivos,convertidor
