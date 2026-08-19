@@ -76,3 +76,23 @@ sopra l'80%, Non disturbare acceso, telefono sbloccato e collegato.
 - **I documenti scansionati non si possono chattare**: sono immagini senza testo
   estraibile, e la chat li rifiuta. Per questo `debugChatWithArchive` parte dal
   PDF di test e non dal primo documento dell'archivio.
+
+## L'iPad non si automatizza (provato il 19 agosto 2026)
+
+`make-screenshots.sh` guida solo l'iPhone. La tentazione è puntare lo stesso
+test su un simulatore iPad, e in effetti **il test passa**: la nota in
+`ipad-ready.sh` che dice che su iPad non arriva è vecchia, `show()` cerca già le
+voci come `staticTexts` e la sidebar la trova. Quello che non funziona è la
+fotografia:
+
+- **la cattura esce ruotata di 90°.** Impostare `XCUIDevice.shared.orientation`
+  gira l'app ma non il buffer del display, che resta verticale: si ottiene una
+  schermata orizzontale dentro un PNG verticale;
+- **l'app non riempie lo schermo.** Su iPadOS 26 parte in una finestra
+  flottante, con lo sfondo di sistema tutto intorno.
+
+Nessuno dei due si corregge nel layout, quindi le sei slide iPad restano da
+fare a mano con `./ipad-ready.sh <lingua>` e Cmd+S nel Simulator. Al 19 agosto
+mancano per il tedesco e per il francese: le due lingue hanno gli iPhone e non
+gli iPad, mentre `es-ES` è a posto perché ha ricevuto le immagini spagnole già
+esistenti.

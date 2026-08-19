@@ -9,9 +9,12 @@
 # smista da solo in base alla misura, e dentro ogni misura le ordina per nome —
 # per questo si chiamano iphone_1… e ipad_1….
 #
-# Su App Store Connect solo en-US ha screenshot propri: le altre tredici lingue
-# ereditano da lui. Qui se ne caricano tre — le lingue in cui l'app e' davvero
-# tradotta — e le altre undici continuano a ereditare l'inglese.
+# Su App Store Connect una lingua senza screenshot propri eredita quelli di
+# en-US. Qui si riempiono le localizzazioni delle lingue in cui l'app e' davvero
+# tradotta; le altre continuano a ereditare l'inglese.
+#
+# es-ES prende le stesse immagini di es-MX: e' la stessa lingua, e la Spagna e'
+# il mercato che compriamo di piu' — leggeva la vetrina inglese su iPad.
 set -e
 cd "$(dirname "$0")"
 
@@ -19,7 +22,7 @@ SOURCE="${1:-incoming}"
 DEST="../screenshots"
 
 # locale di App Store Connect : lingua della cattura
-MAP="en-US:en it:it es-MX:es"
+MAP="en-US:en it:it es-MX:es es-ES:es de-DE:de fr-FR:fr"
 
 for pair in $MAP; do
   locale="${pair%%:*}"
