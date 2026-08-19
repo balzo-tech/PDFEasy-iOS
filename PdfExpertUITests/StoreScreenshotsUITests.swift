@@ -195,10 +195,21 @@ final class StoreScreenshotsUITests: XCTestCase {
     private func drawASignature() {
         XCTAssertTrue(self.app.buttons[self.t("Finish")].firstMatch.waitForExistence(timeout: 15),
                       "the signature screen did not open")
-        // Low on the page, in the white under the last clause. 0.42 was chosen
-        // when the document was Lorem ipsum and any spot would do; on a contract
-        // it put the signature straight through the rent and deposit clauses,
-        // which is not where anyone signs anything.
+        // Scroll to the end of the page first. The contract signs on the last
+        // two lines of page one, and without this the tap lands halfway up the
+        // document: 0.63 put the signature across the rent and deposit clauses,
+        // which is not where anyone signs anything — and the picture is meant to
+        // show a signed contract, not a scribbled one.
+        // Low on the page, in the white under the last clause.
+        //
+        // The signature still lands across the rent clause rather than on the
+        // signing lines at the foot of the page, and that is not the tap: the
+        // editor opens fitted to the width, so those lines are simply not on
+        // screen. Neither `swipeUp` nor `pinch` moves the PDF view — the
+        // synthesized gestures do not reach it — so getting there needs a way
+        // to open the document fitted to the page, not another gesture. Until
+        // then the shipped Italian and Spanish shots of this slide are the ones
+        // made by hand, and they are better than what this produces.
         self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.63)).tap()
 
         XCTAssertTrue(self.app.staticTexts[self.t("Add Signature")].waitForExistence(timeout: 15),
@@ -224,15 +235,21 @@ final class StoreScreenshotsUITests: XCTestCase {
                                      dy: canvasBottom - (canvasBottom - canvasTop) * dy))
         }
 
-        // Short segments rather than long ones: each drag draws a straight line,
-        // and a signature made of four long lines looks like a lightning bolt.
+        // Each drag draws a straight segment, so a signature is a curve sampled
+        // often enough that the corners stop showing. Listing the points by hand
+        // gave a zigzag — eight points across the whole canvas is a lightning
+        // bolt, whatever the spacing — so they are sampled off three curves
+        // instead: an opening loop, a body of decaying waves, and a stroke that
+        // rises and crosses back, which is what a written name does.
+        func sample(_ n: Int, _ f: (CGFloat) -> (CGFloat, CGFloat)) -> [(CGFloat, CGFloat)] {
+            (0...n).map { f(CGFloat($0) / CGFloat(n)) }
+        }
         let strokes: [[(CGFloat, CGFloat)]] = [
-            [(0.02, 0.30), (0.06, 0.70), (0.10, 0.78), (0.14, 0.55),
-             (0.17, 0.30), (0.20, 0.48), (0.24, 0.66), (0.28, 0.52)],
-            [(0.32, 0.40), (0.36, 0.62), (0.40, 0.70), (0.44, 0.50),
-             (0.48, 0.34), (0.52, 0.52), (0.56, 0.64)],
-            [(0.60, 0.58), (0.65, 0.36), (0.70, 0.56), (0.75, 0.66),
-             (0.80, 0.48), (0.86, 0.40), (0.94, 0.46)],
+            sample(14) { t in (0.03 + 0.20 * t, 0.26 + 0.52 * sin(.pi * t)) },
+            sample(22) { t in (0.22 + 0.44 * t,
+                               0.44 + 0.28 * sin(3 * .pi * t) * (1 - 0.4 * t)) },
+            sample(12) { t in (0.64 + 0.31 * t,
+                               0.32 + 0.34 * t - 0.36 * sin(.pi * t)) },
         ]
         for stroke in strokes {
             for (from, to) in zip(stroke, stroke.dropFirst()) {
