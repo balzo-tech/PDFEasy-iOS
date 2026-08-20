@@ -11,17 +11,29 @@ app_identifier("eu.balzo.pdfexpert")
 skip_binary_upload(true)
 
 # Since 2026-08-02 the screenshots come from here too: fastlane/screenshots/
-# holds en-US, it and es-MX — the three languages the app is translated into —
-# with the iPhone and the iPad set side by side in each. The other eleven
-# languages have no folder and no screenshots of their own on App Store Connect:
-# they inherit en-US, which is why leaving them out is not the same as blanking
-# them.
+# holds a folder per language the app is translated into — en-US, it, es-MX,
+# es-ES and, since 2026-08-20, de-DE — with the iPhone and the iPad set side by
+# side in each. The languages without a folder have no screenshots of their own
+# on App Store Connect: they inherit en-US, which is why leaving them out is not
+# the same as blanking them.
+#
+# German ships five slides rather than six. The sixth is the chat, and it can
+# only be shot on a phone with a live subscription (see
+# screenshots-src/chat-material/): App Store takes anything from one to ten, so
+# five real slides beat six with a placeholder in them.
 skip_screenshots(false)
 
-# Replaces the set instead of adding to it. Both device sizes have to be in the
-# folder when this runs — uploading only the iPhone ones would take the iPad
-# ones away, and a version cannot be submitted without them.
-overwrite_screenshots(true)
+# Adds to what is on the page instead of replacing it. An upload cannot take
+# away a slide that is already up there, which is the point: this lane runs
+# unattended, and a folder that happens to be half-filled — a language mid-run,
+# a device size not shot yet — would otherwise blank a set that a version cannot
+# be submitted without.
+#
+# The price is that it also cannot re-upload: giving a language that already has
+# its slides the same six again adds six more, and the slot tops out at ten. To
+# change a set that is already up there, clear it on App Store Connect first, or
+# upload that one language on its own with the `only` option of the lane.
+overwrite_screenshots(false)
 skip_app_version_update(false)
 
 # No HTML preview waiting for a keypress: this lane has to run unattended.
@@ -51,4 +63,3 @@ precheck_include_in_app_purchases(false)
 #
 # Name, subtitle and keywords are frozen while a version is in review: they go
 # up with the next version that is still editable.
-overwrite_screenshots(false)
