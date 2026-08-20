@@ -21,7 +21,12 @@ skip_binary_upload(true)
 # only be shot on a phone with a live subscription (see
 # screenshots-src/chat-material/): App Store takes anything from one to ten, so
 # five real slides beat six with a placeholder in them.
-skip_screenshots(false)
+# Text only. The screenshots in fastlane/screenshots/ are uploaded on purpose,
+# by a person, not as a side effect of correcting a sentence: this lane runs
+# unattended and adds rather than replaces, so a run meant for the description
+# would quietly hand a language ten more slides. Flip this to false for the run
+# that is actually meant to carry pictures.
+skip_screenshots(true)
 
 # Adds to what is on the page instead of replacing it. An upload cannot take
 # away a slide that is already up there, which is the point: this lane runs
