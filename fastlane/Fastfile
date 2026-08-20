@@ -161,6 +161,17 @@ platform :ios do
     # Options come from fastlane/Deliverfile, as for iOS: no binary, no
     # screenshots, no submission. `platform` is what sends this to the Mac page
     # rather than the iPhone one.
+    #
+    # ⚠️ The release notes do not go up, and that is not a bug here: this is the
+    # first version on the platform, and App Store Connect answers a write to
+    # `whatsNew` with 409 STATE_ERROR, "cannot be edited at this time" — there is
+    # nothing to be new against. The texts stay in metadata-mac/ for the second
+    # Mac version, which will take them.
+    #
+    # ⚠️ Nor does `app_version` create a version that is not there: the Mac page
+    # is born as 1.0 and deliver writes into whatever is open for editing. Ours
+    # was moved to 1.28 with a PATCH on /v1/appStoreVersions before uploading a
+    # binary, because the version has to match what ships.
     upload_to_app_store(
       api_key: app_store_connect_api_key(
         key_id: ENV.fetch("ASC_KEY_ID"),
@@ -168,7 +179,16 @@ platform :ios do
         key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
       ),
       platform: "osx",
-      metadata_path: File.expand_path("metadata-mac", __dir__)
+      metadata_path: File.expand_path("metadata-mac", __dir__),
+      # Without this deliver writes to whichever version is open for editing on
+      # the Mac page — and that page starts life at 1.0, a number that belongs to
+      # no binary. The version has to match what gets uploaded, so it is read
+      # from the project rather than typed here.
+      # `get_version_number` without a configuration stops to ask which one, and
+      # this project has four — in a non-interactive run that is a crash, not a
+      # question. Production Release is the one that ships.
+      app_version: get_version_number(xcodeproj: XCODEPROJ, target: "PdfExpert",
+                                      configuration: PRODUCTION_CONFIG)
     )
   end
 
