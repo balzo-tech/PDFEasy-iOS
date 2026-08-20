@@ -1,24 +1,8 @@
-Es la actualización más grande que ha tenido PDF Pro: casi todas las partes de la app se han rehecho.
+PDF PRO AHORA TAMBIÉN EN MAC
+La misma app en la pantalla grande: barra lateral, lista de documentos y página en paralelo, un menú Archivo con atajos de teclado y arrastrar y soltar. Es una compra universal: la suscripción comprada en el iPhone ya está pagada en el Mac, y tus documentos te esperan allí a través de iCloud.
 
-UN ESCÁNER PROPIO
-El escaneo con la cámara ya está integrado: el contorno sigue el papel, el disparo se produce cuando tu mano se detiene y los escaneos llegan a su propia pestaña.
+AHORA EN ALEMÁN Y FRANCÉS
+Cinco idiomas, junto al inglés, el italiano y el español.
 
-UN ARCHIVO EN EL QUE SE PUEDE BUSCAR
-Carpetas y etiquetas, y una búsqueda que mira dentro del texto de tus documentos en lugar de solo en su nombre. Todo se sincroniza con tu cuenta de iCloud.
-
-UN EDITOR QUE NO SE QUEDA ATRÁS
-Los documentos largos y los escaneos se abren de inmediato y se desplazan con fluidez: las páginas se dibujan a medida que llegas a ellas. Una sola lista de herramientas, una barra de páginas que sigue al documento y cada herramienta en su propia pantalla en vez de un montón de paneles.
-
-MÁS HERRAMIENTAS
-Gira un documento entero, compara dos PDF, comprime con ajustes que dicen a qué renuncias, oculta información, escucha el texto en voz alta y deja que la app proponga el nombre del archivo a partir del propio documento.
-
-TODO REDISEÑADO
-Un aspecto nuevo en toda la app, una interfaz pensada para iPad, un widget en la pantalla de inicio y compatibilidad con Siri y Atajos.
-
-PREGÚNTALE AL DOCUMENTO
-El chat se ha rehecho: respuestas más claras, preguntas sugeridas y un formato por fin legible.
-
-AHORA TAMBIÉN EN ESPAÑOL
-Junto al inglés y el italiano.
-
-Además, arranques más rápidos, sincronización con iCloud más estable y una larga lista de correcciones.
+CORRECCIONES
+Un PDF dañado o incompleto culpaba a la app y pedía volver a intentarlo; ahora dice qué le pasa al archivo. Hacer buscable (OCR) decía que no se había reconocido ningún texto en documentos cuyas páginas ya se podían buscar. Y el escáner contaba «1 páginas».

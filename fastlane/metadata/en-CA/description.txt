@@ -18,8 +18,8 @@ Get the short version of a long report, or the one answer you were looking for, 
 A TOOLBOX, NOT A MENU
 Merge, split, compress with a preset that says what it costs, protect with a password, redact what should not be read, compare two versions, read a document aloud.
 
-BUILT FOR IPAD, TOO
-A layout made for the larger screen, a Home Screen widget, and Shortcuts support so scanning or converting can be one tap or one phrase to Siri.
+ON IPAD AND ON MAC, TOO
+A layout made for the larger screen, and on the Mac a real window: sidebar, document list and page side by side, a File menu with keyboard shortcuts, and drag and drop. It is a Universal Purchase, so one subscription covers your iPhone, your iPad and your Mac. Plus a Home Screen widget and Shortcuts support, so scanning or converting can be one tap or one phrase to Siri.
 
 PRIVACY BY DEFAULT
 Scanning, conversion and editing happen on your device: your documents are not uploaded to do them. Two features do use a secure online service, and only when you ask for them — asking questions about a document, and the few conversions an iPhone cannot do on its own.

@@ -1,24 +1,8 @@
-Dies ist das größte Update, das PDF Pro je hatte. Fast jeder Teil der App wurde neu gebaut.
+PDF PRO GIBT ES JETZT AUCH FÜR MAC
+Dieselbe App auf dem großen Bildschirm: Seitenleiste, Dokumentliste und Seite nebeneinander, ein Ablage-Menü mit Tastaturkurzbefehlen und Drag & Drop. Es ist ein universeller Kauf — ein auf dem iPhone abgeschlossenes Abo ist auf dem Mac bereits bezahlt, und Ihre Dokumente warten dort über iCloud.
 
-EIN EIGENER SCANNER
-Das Scannen mit der Kamera ist jetzt eingebaut: die Kontur folgt der Seite, der Auslöser wird gedrückt, sobald Ihre Hand ruhig ist, und Scans landen in ihrem eigenen Tab.
+JETZT AUF DEUTSCH UND FRANZÖSISCH
+Fünf Sprachen, neben Englisch, Italienisch und Spanisch.
 
-EIN ARCHIV, DAS SICH DURCHSUCHEN LÄSST
-Ordner und Tags, und eine Suche, die in den Text Ihrer Dokumente schaut statt nur auf deren Namen. Alles wird über Ihren iCloud-Account synchronisiert.
-
-EIN EDITOR, DER MITHÄLT
-Lange Dokumente und Scans öffnen sich sofort und bleiben beim Blättern flüssig — Seiten werden gezeichnet, sobald Sie sie erreichen. Eine Werkzeugliste, eine Seitenleiste, die dem Dokument folgt, und jedes Werkzeug auf seinem eigenen Bildschirm statt auf einem Stapel von Blättern.
-
-MEHR WERKZEUGE
-Ein ganzes Dokument drehen, zwei PDFs vergleichen, mit Voreinstellungen komprimieren, die sagen, worauf Sie verzichten, schwärzen, vorlesen lassen, und die App einen Dateinamen aus dem Dokument selbst vorschlagen lassen.
-
-NEU GESTALTET
-Ein neues Aussehen überall, ein Layout für das iPad, ein Home-Bildschirm-Widget sowie Unterstützung für Siri und Kurzbefehle.
-
-FRAGEN SIE IHR DOKUMENT
-Der Chat wurde neu gebaut: klarere Antworten, vorgeschlagene Fragen und eine Formatierung, die sich wirklich lesen lässt.
-
-JETZT AUF SPANISCH
-Neben Englisch und Italienisch.
-
-Dazu schnellere Starts, stabilere iCloud-Synchronisierung und eine lange Liste von Korrekturen.
+BEHOBEN
+Bei einer beschädigten oder unvollständigen PDF gab die App sich selbst die Schuld und bat um einen neuen Versuch; jetzt sagt sie, was mit der Datei nicht stimmt. Durchsuchbar machen (OCR) meldete, es sei kein Text erkannt worden — auch bei Dokumenten, deren Seiten bereits durchsuchbar waren. Und der Scanner zählte „1 Seiten".

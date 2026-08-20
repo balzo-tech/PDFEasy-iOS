@@ -1,24 +1,8 @@
-É a maior atualização que o PDF Pro já teve: quase toda parte do app foi refeita.
+O PDF PRO AGORA TAMBÉM NO MAC
+O mesmo app na tela grande: barra lateral, lista de documentos e página lado a lado, um menu Arquivo com atalhos de teclado e arrastar e soltar. É uma compra universal — a assinatura feita no iPhone já está paga no Mac, e seus documentos estão lá pelo iCloud.
 
-UM SCANNER NOSSO
-A digitalização pela câmera agora é integrada: o contorno acompanha a folha, o disparo acontece quando sua mão para e as digitalizações chegam em uma aba própria.
+AGORA EM ALEMÃO E FRANCÊS
+Cinco idiomas, ao lado de inglês, italiano e espanhol.
 
-UM ARQUIVO EM QUE DÁ PARA BUSCAR
-Pastas e etiquetas, e uma busca que olha dentro do texto dos seus documentos em vez de só no nome. Tudo sincroniza pela sua conta do iCloud.
-
-UM EDITOR QUE ACOMPANHA
-Documentos longos e digitalizações abrem na hora e continuam fluidos enquanto você rola: as páginas são desenhadas conforme você chega nelas. Uma única lista de ferramentas, uma barra de páginas que segue o documento e cada ferramenta na própria tela, em vez de uma pilha de painéis.
-
-MAIS FERRAMENTAS
-Gire um documento inteiro, compare dois PDFs, comprima com predefinições que dizem do que você está abrindo mão, oculte informações, ouça o texto em voz alta e deixe o app sugerir o nome do arquivo a partir do próprio documento.
-
-TUDO REDESENHADO
-Um visual novo em todas as telas, uma interface pensada para o iPad, um widget na Tela de Início e suporte à Siri e aos Atalhos.
-
-PERGUNTE AO DOCUMENTO
-O chat foi refeito: respostas mais claras, perguntas sugeridas e uma formatação finalmente legível.
-
-AGORA TAMBÉM EM ESPANHOL
-Ao lado do inglês e do italiano.
-
-Além disso: aberturas mais rápidas, sincronização com o iCloud mais estável e uma longa lista de correções.
+CORREÇÕES
+Um PDF danificado ou incompleto culpava o app e pedia para tentar de novo; agora ele diz qual é o problema do arquivo. Tornar pesquisável (OCR) dizia que nenhum texto foi reconhecido em documentos cujas páginas já podiam ser pesquisadas. E o scanner contava "1 páginas".

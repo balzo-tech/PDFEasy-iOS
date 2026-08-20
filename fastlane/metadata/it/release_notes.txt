@@ -1,24 +1,8 @@
-È il più grande aggiornamento che PDF Pro abbia mai avuto: quasi ogni parte dell'app è stata rifatta.
+PDF PRO ORA È ANCHE SU MAC
+La stessa app sullo schermo grande: barra laterale, elenco dei documenti e pagina affiancati, un menu File con le scorciatoie da tastiera e il trascinamento. È un acquisto unico — l'abbonamento comprato su iPhone è già pagato anche sul Mac, e i tuoi documenti sono lì tramite iCloud.
 
-UNO SCANNER TUTTO NOSTRO
-La scansione con la fotocamera ora è integrata: il contorno segue il foglio, lo scatto parte quando la mano è ferma e le scansioni finiscono in una scheda dedicata.
+ORA IN TEDESCO E FRANCESE
+Cinque lingue, insieme a inglese, italiano e spagnolo.
 
-UN ARCHIVIO IN CUI SI CERCA DAVVERO
-Cartelle ed etichette, e una ricerca che guarda dentro il testo dei documenti invece che solo nel nome. Tutto si sincronizza tramite il tuo account iCloud.
-
-UN EDITOR CHE STA AL PASSO
-Documenti lunghi e scansioni si aprono subito e restano fluidi mentre scorri: le pagine vengono disegnate man mano che le raggiungi. Un solo elenco di strumenti, una barra delle pagine che segue il documento e ogni strumento sulla propria schermata invece che in una pila di pannelli.
-
-PIÙ STRUMENTI
-Ruota un intero documento, confronta due PDF, comprimi con preset che dicono a cosa stai rinunciando, oscura, fatti leggere il testo ad alta voce e lascia che sia l'app a proporre il nome del file a partire dal documento.
-
-TUTTO RIDISEGNATO
-Un aspetto nuovo in ogni schermata, un'interfaccia pensata per iPad, un widget nella schermata Home e il supporto a Siri e ai Comandi rapidi.
-
-CHIEDI AL DOCUMENTO
-La chat è stata rifatta: risposte più chiare, domande suggerite e una formattazione finalmente leggibile.
-
-ORA ANCHE IN SPAGNOLO
-Accanto a italiano e inglese.
-
-E poi avvii più rapidi, sincronizzazione iCloud più stabile e una lunga serie di correzioni.
+CORREZIONI
+Un PDF danneggiato o incompleto dava la colpa all'app e chiedeva di riprovare; ora dice qual è il problema del file. Rendi ricercabile (OCR) diceva che non era stato riconosciuto alcun testo anche su documenti le cui pagine erano già ricercabili. E lo scanner contava «1 pagine».
