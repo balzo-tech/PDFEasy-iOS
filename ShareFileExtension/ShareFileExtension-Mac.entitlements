@@ -10,5 +10,13 @@
 	<array>
 		<string>$(TeamIdentifierPrefix)group.eu.balzo.pdfexpert</string>
 	</array>
+	<!-- Same keychain group as the app. On iOS it is implicit; on macOS it has
+	     to be written down, and without it anything asking the keychain fails
+	     with `SecItemCopyMatching (-34018)` — which is how Firebase
+	     Installations, and with it Remote Config, died in the app itself. -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)eu.balzo.pdfexpert</string>
+	</array>
 </dict>
 </plist>

@@ -22,6 +22,7 @@
 		13FD1373F5BA64EE157165C1 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */; };
 		16F40C137D04793DA6A54123 /* PdfEditAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608C4DDAAB480C6A5BE8315D /* PdfEditAlerts.swift */; };
 		1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */; };
+		9A1CFE3D74B02E85D1A70C41 /* RemoteConfigStartupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */; };
 		1FDE3812AF18F5B83EC3B88B /* ScanFilterPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C83EFDC7E71F6B1337FEEC /* ScanFilterPickerView.swift */; };
 		21A7D6A776857C428DCA4C0B /* ArchiveFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738F3D7C38FC2535EF7DB213 /* ArchiveFilterTests.swift */; };
 		2473648B07EC4B7DCCB0D1FE /* DocumentTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5B05C3170D6CAE7D56A7BF /* DocumentTileView.swift */; };
@@ -815,6 +816,7 @@
 		E4DB81D716DFDF26CAF87B7B /* PdfPermissionsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsView.swift; sourceTree = "<group>"; };
 		E59873EC4BAF39378788F6B6 /* ToolScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolScreen.swift; sourceTree = "<group>"; };
 		E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatUsageTrackerTests.swift; sourceTree = "<group>"; };
+		3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteConfigStartupTests.swift; sourceTree = "<group>"; };
 		E955A450F02101DFDD8D553A /* ScannedPage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScannedPage.swift; sourceTree = "<group>"; };
 		E9828836133DF7554F050F37 /* RecentDocumentsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecentDocumentsWidget.swift; sourceTree = "<group>"; };
 		E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerMock.swift; sourceTree = "<group>"; };
@@ -1826,6 +1828,7 @@
 				6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */,
 				3CE9B8BA6CA858E0E790D321 /* PdfAdvancedToolViewModelTests.swift */,
 				E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */,
+				3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */,
 				A1B2C3D4E5F600000000A006 /* ObfuscatedSecretTests.swift */,
 				D7849D91F2705FFE55B8408A /* StirlingApiManagerTests.swift */,
 				08CEB49EF337CFDB9967BCC2 /* DocumentRenderUtilityTests.swift */,
@@ -2555,6 +2558,7 @@
 				EA094BD1F3E65F32E9BE1747 /* PdfConvertViewModelTests.swift in Sources */,
 				62FEA205766D8EF339E4FA71 /* PdfAdvancedToolViewModelTests.swift in Sources */,
 				1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */,
+				9A1CFE3D74B02E85D1A70C41 /* RemoteConfigStartupTests.swift in Sources */,
 				3CC5712E6C5B85CB8E55FC00 /* StirlingApiManagerTests.swift in Sources */,
 				AEE68613BD8214E4C8230938 /* DocumentRenderUtilityTests.swift in Sources */,
 				E7DC622DB4A8BBAFED1D253B /* PdfWebImportViewModelTests.swift in Sources */,

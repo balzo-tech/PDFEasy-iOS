@@ -265,9 +265,57 @@ documenti Office, che è una capacità del WebKit **di iOS** e su macOS non
 esiste — esattamente quello che l'intestazione di `DocumentRenderUtility.swift`
 dà per scontato («iOS renders Office, iWork, RTF and HTML natively»). Quindi
 Word/Excel/PowerPoint → PDF è morto in partenza su Mac, e il ripiego online non
-parte perché il proxy non è configurato. **I 366 test verdi non lo coprivano:
-nessun test converte davvero un `.docx`** — ci sono solo HTML e la lista di
-estensioni.
+parte. ⚠️ **La causa scritta qui il 1 agosto — «il proxy non è configurato» — era
+sbagliata**, corretta il 20 agosto: il Worker è deployato e vivo
+(`/health` risponde `200 {"ok":true}`, e `/v1/chat` senza credenziali risponde
+`401 app_check_invalid`, cioè fa esattamente il suo mestiere). Quello che manca
+è **l'indirizzo**: `K.Proxy.DefaultBaseUrl` è la stringa vuota per scelta, e il
+valore vero arriva da Remote Config (`proxy_base_url`). Sul Mac quel fetch **non
+è mai riuscito**: nel database di Remote Config del container Staging
+(`…/Application Support/Google/RemoteConfig/RemoteConfig.sqlite3`) le tabelle
+`main` e `main_active` hanno **zero righe** e non c'è alcun metadato di fetch,
+mentre i default in-app ci sono tutti — `proxy_base_url` fra loro, vuoto. Con
+quella stringa vuota `StirlingApiManagerImpl.isAvailable` resta `false`, e con
+lui spariscono sia il ripiego per l'Office sia gli strumenti online dal catalogo
+(`ToolCatalog.swift:314`).
+
+**È un difetto di Catalyst, provato incrociando le due piattaforme** lo stesso
+giorno, con lo stesso codice e lo stesso progetto Firebase staging (dove
+`proxy_base_url` e `stirling_api_enabled` **sono pubblicati**, verificato con
+`firebase remoteconfig:get`):
+
+| | Remote Config scaricata | `proxy_base_url` |
+|---|---|---|
+| iPhone 17 Pro Max, simulatore | **5 valori, attivi** | l'indirizzo giusto |
+| Mac Catalyst | **0, nessun fetch mai** | vuoto |
+
+**Erano due difetti in fila, corretti entrambi il 20 agosto.** Serviva togliere
+tutti e due: il primo impediva alla richiesta di partire, il secondo le
+impediva di riuscire.
+
+1. **La richiesta non partiva.** Il fetch stava attaccato a un solo posto —
+   `ContentView.swift`, sulla notifica `UIApplication.didBecomeActiveNotification`
+   — e sul Mac quella riga non scattava mai, né con l'app in primo piano né
+   uscendo e rientrando. Ora `ConfigService.start()` la chiede **all'avvio**, da
+   `AppDelegate.didFinishLaunchingWithOptions`, e l'attivazione resta solo un
+   modo per aggiornarla. Sette test in `RemoteConfigStartupTests.swift`, fra cui
+   quello che lega il valore mancante al sintomo: con l'indirizzo vuoto
+   `StirlingApiManager.isAvailable` è `false`, con l'indirizzo scaricato torna
+   `true`.
+2. **La richiesta falliva sul portachiavi.** Appena partita, si fermava su
+   `SecItemCopyMatching (-34018)`, cioè *entitlement mancante*: su iOS il gruppo
+   di portachiavi è implicito, su macOS va scritto. Senza, **Firebase
+   Installations non ottiene l'ID**, e con lui cadono Remote Config, Analytics e
+   Sessions — tre righe di errore che nel log si leggono una sotto l'altra.
+   Aggiunto `keychain-access-groups` a `PdfExpert-Mac.entitlements`.
+
+Verificato dopo: sul Mac il database di Remote Config passa da **zero a cinque
+valori**, `proxy_base_url` compreso. ⚠️ Nota di metodo per chi ripete la prova:
+i `print` finiscono in uno stdout bufferato e spariscono quando il processo
+viene ucciso — o si passa da `script -q`, oppure si guarda il database, che non
+mente.
+**I 366 test verdi non lo coprivano: nessun test converte davvero un `.docx`** —
+ci sono solo HTML e la lista di estensioni.
 
 **Difetto — iCloud non sincronizza.** Il log ripete `CKErrorDomain Code=2`,
 `CKInternalErrorDomain Code=1011` e *«Never successfully initialized»*. L'app
@@ -438,7 +486,8 @@ confermate ridimensionando davvero la finestra)*
       PDF.» invece di «Internal Error. Please try again later». Vedi 3.2.
 - [!] **Apri `fatture.xlsx` e aspetta**: ora dice perché non ce l'ha fatta
       («could not be converted on your device»), ma su Mac **non ce la farà
-      mai** — vedi 3.2. Il ripiego online non parte: proxy non configurato.
+      mai** — vedi 3.2. Il ripiego online non parte, ma **non perché il proxy
+      manchi**: è vivo. Sul Mac non arriva il suo indirizzo da Remote Config.
 - [x] Il documento importato **si chiama come il file**, non `incoming-…`:
       confermato dal titolo della finestra e dall'alert della password.
       ⚠️ **In archivio non è ancora verificato**: aprire un file dal Finder lo
@@ -610,3 +659,48 @@ chiusura in alto a sinistra, come quello che il selettore delle firme aveva già
   fissa, più stretti della finestra.
 - **`Passport scan`** dei test seminati ora porta una firma e una filigrana di
   prova: sono dati del contenitore Staging, si rigenerano cancellandolo.
+
+---
+
+## 7. Il giro del 20 agosto, prima della 1.28
+
+Rifatto su `main` (1.28 build 1), non più sul branch: il Mac è in `main` da
+`73ec4e3`. Serviva sapere se le due lingue nuove e i lavori di agosto avessero
+rotto qualcosa su Catalyst.
+
+| Prova | Esito |
+|---|---|
+| Build Mac Catalyst (`Staging Debug`) | ✅ zero errori |
+| 368 test unitari su Mac Catalyst | ✅ 0 fallimenti (erano 367) |
+| `EditorNavigationUITests`, 6 test | ✅ 6 su 6, in 11 minuti |
+| Interfaccia in **francese** e **tedesco** | ✅ tradotta, nessun testo tagliato |
+
+**Le lingue nuove arrivano anche sul Mac.** `Localizable.xcstrings` è passato da
+3 a **5 lingue** (en, es, it, fr, de) e la sezione 5 di questo documento va letta
+con quel numero. Guardate in fotografia: sidebar (`Dateien`/`Fichiers`,
+`Nicht abgelegt`/`Non classés`, `Ordner und Tags`), ricerca strumenti, azioni
+rapide e lista completa degli strumenti. Il tedesco è la lingua a rischio e
+regge: `PDF zusammenfügen` e `PDF unterschreiben` vanno a capo sotto l'icona
+senza rompere la griglia delle azioni rapide.
+
+**Restano verdi le due righe che contano**:
+`testSharingShowsThePaywallCarryingTheRenewalNotice` e
+`testThePaywallOffersTheYearlyPlanPreselectedAndNoMonthlyOne`.
+
+⚠️ **Una trappola nuova per chi fa fotografare l'app a se stessa** (sezione 3.2):
+`PDFPRO_CAPTURE_DIR` **non può stare fuori dal container**. L'App Sandbox rifiuta
+`/tmp` e le cartelle di lavoro con errore 513 «Operation not permitted», e il
+fallimento si legge **solo nel log**: l'app parte, il giro sembra riuscito e non
+c'è nessun PNG. Va usata
+`~/Library/Containers/eu.balzo.pdfexpert.staging/Data/tmp/`, copiando i file
+fuori a fine giro.
+
+Non ancora ripetute in questo giro, e ancora aperte dalla sezione 6.6: l'icona
+macOS vera, ⌃⌘S, la misura fissa del pannello strumenti e del foglio della firma,
+la conversione Office, e iCloud — il log di Staging ripete ancora
+`CKErrorDomain Code=2`.
+
+**Una diagnosi vecchia corretta il 20 agosto**: il proxy *è* configurato e vivo
+dal 29 luglio. Quello che non arriva sul Mac è `proxy_base_url` da Remote
+Config, e senza quello l'app si comporta come se il servizio non esistesse.
+Dettagli e come verificarlo in 3.2.

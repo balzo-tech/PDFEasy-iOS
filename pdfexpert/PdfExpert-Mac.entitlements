@@ -37,5 +37,14 @@
 	<array>
 		<string>$(TeamIdentifierPrefix)group.eu.balzo.pdfexpert</string>
 	</array>
+	<!-- On iOS the keychain group is implicit; on macOS it has to be written
+	     down, and without it every Firebase service that needs an Installation
+	     ID dies on `SecItemCopyMatching (-34018)` — Remote Config first, and
+	     with it the proxy address, so ChatPDF and the online tools disappear
+	     from the Mac app. Analytics and Sessions were failing on the same line. -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)eu.balzo.pdfexpert</string>
+	</array>
 </dict>
 </plist>

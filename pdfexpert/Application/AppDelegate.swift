@@ -27,6 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // ProjectInfo Validation
         ProjectInfo.validate()
 
+        // The remote configuration is asked for here, at launch, and not only
+        // when the app becomes active: on Mac Catalyst that notification never
+        // arrives, and the app spent whole sessions on in-app defaults — with an
+        // empty proxy URL, which quietly removes ChatPDF, the online tools and
+        // the fallback for Office files. See `ConfigService.start()`.
+        Container.shared.configService().start()
+
         // Apple Search Ads attribution. Started only with a real key: `configure`
         // is idempotent and cannot be undone, so an empty one would leave the SDK
         // running against nothing for the rest of the session. It captures the
