@@ -1,0 +1,1 @@
+Nuevo: escáner de cámara integrado, carpetas y etiquetas, y una búsqueda que lee dentro de tus PDF, no solo el nombre de los archivos.

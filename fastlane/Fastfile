@@ -144,4 +144,53 @@ platform :ios do
       end
     end
   end
+
+  # --- Metadata, macOS -----------------------------------------------------
+  desc "Upload the macOS store listing, in every language"
+  lane :metadata_mac do
+    # Same app, second store page. With Universal Purchase the Mac listing is a
+    # page of its own — its own description, its own release notes, its own
+    # screenshots — and it starts out empty: adding the platform on App Store
+    # Connect copies the keywords across and nothing else.
+    #
+    # The texts live in fastlane/metadata-mac/, built from the iOS ones by
+    # rewriting the seven lines that would be false on a Mac (see the header of
+    # the generator). Everything else is word for word the reviewed iOS text, so
+    # the two pages tell the same story.
+    #
+    # Options come from fastlane/Deliverfile, as for iOS: no binary, no
+    # screenshots, no submission. `platform` is what sends this to the Mac page
+    # rather than the iPhone one.
+    upload_to_app_store(
+      api_key: app_store_connect_api_key(
+        key_id: ENV.fetch("ASC_KEY_ID"),
+        issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+        key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
+      ),
+      platform: "osx",
+      metadata_path: File.expand_path("metadata-mac", __dir__)
+    )
+  end
+
+  desc "Show what `metadata_mac` would upload, without contacting Apple"
+  lane :metadata_mac_check do
+    limits = { "description" => 4000, "release_notes" => 4000, "promotional_text" => 170 }
+    dir = File.expand_path("metadata-mac", __dir__)
+    Dir.children(dir).sort.each do |locale|
+      path = File.join(dir, locale)
+      next unless File.directory?(path)
+      limits.each_key do |field|
+        file = File.join(path, "#{field}.txt")
+        unless File.exist?(file)
+          UI.important("#{locale}/#{field}.txt — missing, this locale keeps what is on App Store Connect")
+          next
+        end
+        size = File.read(file).length
+        if size > limits[field]
+          UI.user_error!("#{locale}/#{field}.txt — #{size} characters, over the #{limits[field]} limit")
+        end
+        UI.success("#{locale}/#{field}.txt — #{size} characters")
+      end
+    end
+  end
 end

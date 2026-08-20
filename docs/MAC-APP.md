@@ -73,6 +73,24 @@ che compaia una finestra. Con il profilo vero non serve e non va usata.
 Il costo di un target nativo sarebbe stato riscrivere la UI, i 42 file che usano
 UIKit, la fotocamera e il ritaglio. Settimane, non una notte.
 
+⚠️ **Provato per davvero il 20 agosto, e la risposta è la stessa.** Nella lista
+delle destinazioni di Xcode «Mac» e «Mac (Mac Catalyst)» sembrano due modi di
+spuntare la stessa casella; togliendo `SUPPORTS_MACCATALYST` e aggiungendo
+`macosx` a `SUPPORTED_PLATFORMS`, il build muore **alla prima dipendenza**:
+
+```
+Mantis/Sources/Mantis/Angle.swift:9:8: error: unable to resolve module dependency: 'UIKit'
+```
+
+**UIKit non esiste su macOS nativo** — solo su iOS e su Catalyst. Oggi lo
+importano **44 file** dell'app (24 usi di `UIApplication`, 18 di `UIDevice`, 14
+view rappresentate da view controller, 12 render grafici), più PencilKit per la
+firma e **Mantis**, che è una libreria solo-iOS e per questo è la prima a
+cadere. Da sapere anche: cambiare la destinazione tocca **solo il target
+principale**, e widget, estensione di condivisione e i due target di test
+restano Catalyst — il progetto finisce in due stati diversi. Si torna indietro
+con `git checkout -- pdfexpert.xcodeproj/project.pbxproj`.
+
 **Il codice Swift ha compilato per Catalyst senza un solo errore** al primo
 tentativo. Tutto quello che segue è adattamento, non porting.
 

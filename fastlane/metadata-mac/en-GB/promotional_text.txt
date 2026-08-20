@@ -1,0 +1,1 @@
+New: a camera scanner built right in, folders and tags, and search that reads inside your PDFs — not just their file names.

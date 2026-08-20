@@ -1,0 +1,1 @@
+digitalizar,juntar,comprimir,dividir,girar,formulário,senha,foto,word,ocr,página,texto

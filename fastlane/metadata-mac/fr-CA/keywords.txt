@@ -1,0 +1,1 @@
+numériser,fusionner,compresser,diviser,pivoter,formulaire,mot de passe,photo,page,ocr
