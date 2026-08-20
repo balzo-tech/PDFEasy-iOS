@@ -4,6 +4,13 @@
 #
 #   ./place-shots.sh                 # da incoming/ (le immagini fatte a mano)
 #   ./place-shots.sh out             # da out/ (quelle montate dal simulatore)
+#   ./place-shots.sh out de          # una lingua sola
+#
+# **La lingua sola non e' un vezzo.** Senza, lo script riscrive tutte e sei le
+# localizzazioni dalla stessa sorgente: lanciato su out/ oggi, butterebbe via le
+# slide iPad di en/it/es — che out/ non ha — e la firma della terza slide,
+# l'unica fatta a mano che cade dove un contratto si firma davvero. Quando si
+# aggiunge una lingua, si nomina quella lingua.
 #
 # Le immagini di iPhone e iPad finiscono nella stessa cartella: deliver le
 # smista da solo in base alla misura, e dentro ogni misura le ordina per nome —
@@ -19,6 +26,7 @@ set -e
 cd "$(dirname "$0")"
 
 SOURCE="${1:-incoming}"
+ONLY="${2:-}"
 DEST="../screenshots"
 
 # locale di App Store Connect : lingua della cattura
@@ -27,6 +35,8 @@ MAP="en-US:en it:it es-MX:es es-ES:es de-DE:de fr-FR:fr"
 for pair in $MAP; do
   locale="${pair%%:*}"
   lang="${pair##*:}"
+  [ -n "$ONLY" ] && [ "$lang" != "$ONLY" ] && continue
+  [ -d "$SOURCE/$lang" ] || { echo "$locale  —  niente in $SOURCE/$lang, lascio stare"; continue; }
 
   mkdir -p "$DEST/$locale"
   rm -f "$DEST/$locale"/iphone_*.png "$DEST/$locale"/ipad_*.png \

@@ -163,11 +163,13 @@ class DocumentScanViewModel: ObservableObject {
             UIColor(white: 0.97, alpha: 1).setFill()
             context.fill(paper)
 
-            // The bundled test document, drawn as if photographed: it is a real
-            // page — headings, paragraphs, a chart — where drawn grey bars only
-            // ever looked like drawn grey bars. The store screenshots are taken
-            // from this screen, and a placeholder reads as a placeholder.
-            if let document = K.Test.DebugPdfDocument,
+            // The bundled lease, drawn as if photographed: a page in the
+            // language the app is running in, where drawn grey bars only ever
+            // looked like drawn grey bars and the Lorem ipsum test document
+            // looked like what it is. The store screenshots are taken from this
+            // screen — it is the first slide on the page, the one people see in
+            // search results — and a placeholder reads as a placeholder.
+            if let document = K.Test.DebugContractDocument ?? K.Test.DebugPdfDocument,
                document.pageCount > 0,
                let page = document.page(at: (pageNumber - 1) % document.pageCount) {
                 let bounds = page.bounds(for: .mediaBox)

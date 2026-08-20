@@ -92,6 +92,32 @@
   }
   .phone.tilt { transform: rotate(-4deg); }
 
+  /* La misura dell'iPad. Lo slot di App Store vuole 2048x2732 (o quella misura
+     girata) e la cattura del simulatore e' 2064x2752: stesso rapporto 3:4,
+     quindi la cornice la tiene tale e quale e `cover` non taglia niente.
+     Tutto il resto e' il layout dell'iPhone ingrandito: stessi fondali, stesso
+     titolo di una parola, stesso ordine. Sulla scheda le due misure si vedono
+     una accanto all'altra, e devono sembrare la stessa vetrina. */
+  body.ipad { --w: 2048px; --h: 2732px; }
+  body.ipad .copy { padding: 170px 140px 0; }
+  body.ipad h1 { font-size: 210px; letter-spacing: -8px; }
+  body.ipad h2 { font-size: 76px; margin-top: 40px; }
+  body.ipad .kicker { font-size: 50px; padding: 20px 46px; margin-bottom: 46px; }
+  body.ipad .phone {
+    margin-top: 120px;
+    width: 1500px;
+    height: 1987px;
+    border-radius: 54px;
+    padding: 20px;
+  }
+  /* L'iPad sta dritto anche nella prima slide: inclinato, la sidebar sul bordo
+     sinistro entra nell'ombra e la schermata si legge peggio, che e' il
+     contrario di quello che deve fare. */
+  body.ipad .phone.tilt { transform: none; }
+  body.ipad .screen { border-radius: 36px; }
+  body.ipad .slide::before { width: 2400px; height: 2400px; }
+  body.ipad .screen .todo { font-size: 60px; }
+
   .screen {
     width: 100%;
     height: 100%;
@@ -292,9 +318,17 @@
   var lang = params.get("lang") || "en";
   document.documentElement.lang = lang;
 
+  // ?device=ipad monta le stesse slide nella misura dell'iPad, con le catture
+  // che vengono da un'altra cartella: quelle dell'iPhone escono dal test
+  // (shots/), quelle dell'iPad dallo stesso test puntato su un simulatore iPad
+  // (ipad-shots/), dove l'app disegna la sidebar invece della tab bar.
+  var ipad = params.get("device") === "ipad";
+  var shots = ipad ? "ipad-shots/" : "shots/";
+  if (ipad) document.body.classList.add("ipad");
+
   document.querySelectorAll(".slide").forEach(function (slide, i) {
     var img = slide.querySelector(".screen img");
-    if (img) img.src = "shots/" + lang + "/" + (i + 1) + ".png";
+    if (img) img.src = shots + lang + "/" + (i + 1) + ".png";
 
     var text = TEXT[lang];
     if (!text) return;
@@ -317,7 +351,11 @@
   // e lo si dà a tutte: una misura per lingua, non una per slide. Sei titoli di
   // corpo diverso, visti in fila sulla scheda, si leggono come sei errori.
   var titles = Array.prototype.slice.call(document.querySelectorAll(".copy h1"));
-  var size = 168;
+  // Il corpo di partenza si legge dal CSS invece di essere riscritto qui:
+  // l'iPad parte da un titolo piu' grande, e un 168 stampato nel codice lo
+  // avrebbe rimpicciolito a ogni giro senza che si vedesse perche'.
+  var size = parseFloat(getComputedStyle(titles[0]).fontSize);
+  var floor = size * 96 / 168;
   var fits = function (h) {
     var copy = h.closest(".copy");
     var room = copy.clientWidth
@@ -325,7 +363,7 @@
              - parseFloat(getComputedStyle(copy).paddingRight);
     return h.offsetWidth <= room;
   };
-  while (size > 96 && !titles.every(fits)) {
+  while (size > floor && !titles.every(fits)) {
     size -= 4;
     titles.forEach(function (h) { h.style.fontSize = size + "px"; });
   }

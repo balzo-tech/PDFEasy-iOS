@@ -65,15 +65,12 @@ final class StoreScreenshotsUITests: XCTestCase {
         "Scanner":              ["it": "Scanner",                   "es": "Escáner", "de": "Scanner", "fr": "Scanner"],
         "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF", "de": "PDF unterschreiben", "fr": "Signer le PDF"],
         "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF", "de": "Ein PDF wählen", "fr": "Choisir un PDF"],
-        "Add Signature":        ["it": "Aggiungi firma",            "es": "Añadir firma", "de": "Unterschrift hinzufügen", "fr": "Ajouter une signature"],
-        "Drawing":              ["it": "Disegno",                   "es": "Dibujo", "de": "Zeichnung", "fr": "Dessin"],
-        "Confirm":              ["it": "Conferma",                  "es": "Confirmar", "de": "Bestätigen", "fr": "Confirmer"],
         "Finish":               ["it": "Fine",                      "es": "Finalizar", "de": "Abschließen", "fr": "Terminer"],
-        "Sign in here":         ["it": "Firma qui",                 "es": "Firma aquí", "de": "Hier unterschreiben", "fr": "Signez ici"],
         "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas", "de": "Werkzeuge suchen", "fr": "Rechercher des outils"],
         "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje...", "de": "Schreiben Sie Ihre Nachricht...", "fr": "Écrivez votre message..."],
         "Edit":                 ["it": "Modifica",                  "es": "Editar", "de": "Bearbeiten", "fr": "Modifier"],
         "Password":             ["it": "Password",                  "es": "Contraseña", "de": "Passwort", "fr": "Mot de passe"],
+        "Your Signatures":      ["it": "Le tue firme",              "es": "Tus firmas", "de": "Ihre Unterschriften", "fr": "Vos signatures"],
         "Tap where you wish to sign": ["it": "Tocca dove vuoi firmare",
                                        "es": "Toca donde quieras firmar",
                                        "de": "Tippen Sie dorthin, wo Sie unterschreiben möchten",
@@ -90,6 +87,19 @@ final class StoreScreenshotsUITests: XCTestCase {
         case "de": return "Mietvertrag.pdf"
         case "fr": return "Contrat de location.pdf"
         default:   return "Rental agreement.pdf"
+        }
+    }
+
+    /// The tenant of the lease, in the language of the run: the name the seeded
+    /// signature is written in. A German lease signed "Daniele Marchi" is the
+    /// kind of detail nobody notices until it is on the store page.
+    private var signatory: String {
+        switch self.language {
+        case "it": return "Daniele Marchi"
+        case "es": return "Daniel Marchena"
+        case "de": return "Daniel Markwart"
+        case "fr": return "Daniel Marchand"
+        default:   return "Daniel R. Marsh"
         }
     }
 
@@ -150,7 +160,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         self.launch()
         self.openTheFirstDocument()
         self.tap(self.app.buttons[self.t("Sign PDF")].firstMatch)
-        self.drawASignature()
+        self.signTheContract()
         self.settle()
         self.shoot("03-sign")
 
@@ -188,77 +198,82 @@ final class StoreScreenshotsUITests: XCTestCase {
 
     // MARK: - Signing
 
-    /// Draws a signature and puts it on the page: tap the page, pick Drawing,
-    /// scribble on the PencilKit canvas, confirm. Four strokes rather than one
-    /// line — a single drag draws a stroke as straight as a ruler, which is not
-    /// what a signature looks like.
-    private func drawASignature() {
+    /// Signs the contract: tap the page, then take the signature the app already
+    /// has.
+    ///
+    /// It has one because the app was launched with `-debugSeedSignature`, and
+    /// that is the whole trick. Drawing one from here means synthesized drags,
+    /// and a drag draws a straight segment: the last attempt sampled three
+    /// curves and still came out as a scribble laid across the rent clause,
+    /// next to Italian and Spanish slides carrying a real signature. A saved one
+    /// is written in Snell Roundhand, reads as a name, and is identical in every
+    /// language — and picking it is what the slide promises anyway: draw it
+    /// once, reuse it on every file.
+    private func signTheContract() {
         XCTAssertTrue(self.app.buttons[self.t("Finish")].firstMatch.waitForExistence(timeout: 15),
                       "the signature screen did not open")
-        // Scroll to the end of the page first. The contract signs on the last
-        // two lines of page one, and without this the tap lands halfway up the
-        // document: 0.63 put the signature across the rent and deposit clauses,
-        // which is not where anyone signs anything — and the picture is meant to
-        // show a signed contract, not a scribbled one.
         // Low on the page, in the white under the last clause.
         //
-        // The signature still lands across the rent clause rather than on the
-        // signing lines at the foot of the page, and that is not the tap: the
-        // editor opens fitted to the width, so those lines are simply not on
-        // screen. Neither `swipeUp` nor `pinch` moves the PDF view — the
-        // synthesized gestures do not reach it — so getting there needs a way
-        // to open the document fitted to the page, not another gesture. Until
-        // then the shipped Italian and Spanish shots of this slide are the ones
-        // made by hand, and they are better than what this produces.
+        // Not as low as a contract is actually signed, and on the phone that is
+        // not the tap: the editor opens fitted to the width, so the signing
+        // lines at the foot of the page are not on screen at all, and neither
+        // `swipeUp` nor `pinch` moves the PDF view — the synthesized gestures do
+        // not reach it. On the iPad the whole page is visible and the white
+        // margin sits at 0.86, but tapping there opens nothing at all, so both
+        // devices sign at 0.63 until the editor can be opened fitted to the page.
+        // Nothing scrolls the PDF view from a test — not `swipeUp`, not a slow
+        // press-and-drag, not `pinch`. The page has to fit on screen by being
+        // short enough, which is why the lease is one page: its signing lines
+        // are in the picture, and the signature can be put on them.
         self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.63)).tap()
 
-        XCTAssertTrue(self.app.staticTexts[self.t("Add Signature")].waitForExistence(timeout: 15),
-                      "tapping the page did not open the signature sheet")
-        self.tap(self.app.buttons[self.t("Drawing")].firstMatch)
+        let title = self.app.staticTexts[self.t("Your Signatures")]
+        XCTAssertTrue(title.waitForExistence(timeout: 15),
+                      "tapping the page did not open the signature picker — was the app seeded?")
 
-        let confirm = self.app.buttons[self.t("Confirm")].firstMatch
-        XCTAssertTrue(confirm.waitForExistence(timeout: 15), "the drawing canvas did not open")
+        // The saved signature is a row in a List: it comes through as a cell
+        // holding an image, with no label of its own, so it has to be taken by
+        // position. Not `cells.firstMatch`, though — on an iPad the archive
+        // sidebar is still in the tree behind the sheet, and its first row comes
+        // first: tapping it chose nothing, the picker stayed open, and Finish
+        // then closed a screen that had no signature on it. The rows that belong
+        // to this sheet are the ones under its title.
+        let saved = self.app.cells.allElementsBoundByIndex
+            .filter { $0.frame.minY > title.frame.maxY && $0.frame.width > 0 }
+            .min { $0.frame.minY < $1.frame.minY }
+        XCTAssertNotNil(saved, "the picker is open but the seeded signature is not in it")
+        self.tap(saved!)
 
-        // Anchored to the "Sign in here" caption that sits directly under the
-        // canvas, not to Confirm: between the two there are the "Memorize
-        // signature" toggle and two spacers, and drawing there draws nothing.
-        let caption = self.app.staticTexts[self.t("Sign in here")].firstMatch
-        XCTAssertTrue(caption.waitForExistence(timeout: 10), "the drawing canvas is not showing")
-        let canvasBottom = caption.frame.minY - 10
-        let canvasTop = canvasBottom - 96
-        let left = confirm.frame.minX + 40
-        let width = confirm.frame.width - 110
-
-        func point(_ dx: CGFloat, _ dy: CGFloat) -> XCUICoordinate {
-            self.app.coordinate(withNormalizedOffset: .zero)
-                .withOffset(CGVector(dx: left + width * dx,
-                                     dy: canvasBottom - (canvasBottom - canvasTop) * dy))
-        }
-
-        // Each drag draws a straight segment, so a signature is a curve sampled
-        // often enough that the corners stop showing. Listing the points by hand
-        // gave a zigzag — eight points across the whole canvas is a lightning
-        // bolt, whatever the spacing — so they are sampled off three curves
-        // instead: an opening loop, a body of decaying waves, and a stroke that
-        // rises and crosses back, which is what a written name does.
-        func sample(_ n: Int, _ f: (CGFloat) -> (CGFloat, CGFloat)) -> [(CGFloat, CGFloat)] {
-            (0...n).map { f(CGFloat($0) / CGFloat(n)) }
-        }
-        let strokes: [[(CGFloat, CGFloat)]] = [
-            sample(14) { t in (0.03 + 0.20 * t, 0.26 + 0.52 * sin(.pi * t)) },
-            sample(22) { t in (0.22 + 0.44 * t,
-                               0.44 + 0.28 * sin(3 * .pi * t) * (1 - 0.4 * t)) },
-            sample(12) { t in (0.64 + 0.31 * t,
-                               0.32 + 0.34 * t - 0.36 * sin(.pi * t)) },
-        ]
-        for stroke in strokes {
-            for (from, to) in zip(stroke, stroke.dropFirst()) {
-                point(from.0, from.1).press(forDuration: 0.04, thenDragTo: point(to.0, to.1))
-            }
-        }
-
-        XCTAssertTrue(confirm.isEnabled, "the canvas did not register the drawing")
-        self.tap(confirm)
+        // The app drops a new signature in the middle of the PDF view — the tap
+        // chose the page, not the spot — so it is dragged down onto the signing
+        // lines while it is still selected.
+        //
+        // The numbers are measured off a capture rather than reasoned about. The
+        // grab is at 0.43, where the middle of the PDF view falls — the toolbar
+        // under it is taller than the title bar above, so it is not the middle
+        // of the screen. The drop is above the tenant's signing line and over
+        // its column: dragging to (0.5, 0.66) landed the ink under the line and
+        // between the two columns, which is 0.09 low and half a column left.
+        // On the iPad the page is drawn beside a thumbnail rail rather than
+        // across the whole width, and the toolbars take a smaller share of a
+        // taller screen: both ends of the drag move.
+        // The signature is a wide, shallow strip — a fifth of a page across and
+        // barely 4% of the screen tall — so the grab has to be measured off a
+        // capture, not reasoned about: a few points high and it takes the page
+        // instead, the signature is dropped, and Finish closes on nothing.
+        // Both pairs are read off a capture of the run before: where the ink
+        // came out, and where the tenant's signing line is. They differ between
+        // the two devices because the iPad draws the page beside a thumbnail
+        // rail and gives its toolbars a smaller share of a taller screen.
+        let wideScreen = self.app.frame.width / self.app.frame.height > 0.7
+        let grab = wideScreen ? CGVector(dx: 0.51, dy: 0.495) : CGVector(dx: 0.50, dy: 0.43)
+        let drop = wideScreen ? CGVector(dx: 0.68, dy: 0.66) : CGVector(dx: 0.68, dy: 0.57)
+        self.app.coordinate(withNormalizedOffset: grab)
+            .press(forDuration: 0.25,
+                   thenDragTo: self.app.coordinate(withNormalizedOffset: drop))
+        // The drag ends in a spring-back animation, and tapping Finish through
+        // it dismissed the screen without keeping the signature.
+        self.settle()
 
         // Finish puts the signature into the document. Without it the shot shows
         // the signature still selected, inside its resize handles.
@@ -340,6 +355,11 @@ final class StoreScreenshotsUITests: XCTestCase {
         // The phone this runs on may be in dark mode, and one dark shot among
         // five light ones looks like a mistake on the store page.
         XCUIDevice.shared.appearance = .light
+        // The orientation is not set from here. `XCUIDevice.shared.orientation`
+        // turns the app without turning the display buffer: the capture then
+        // comes out with a landscape screen drawn sideways inside a portrait
+        // PNG. The simulator has to be standing up before the run instead —
+        // `xcrun simctl shutdown` and boot it again puts it back.
         self.app = XCUIApplication()
         // `debugResetArchive` matters here more than anywhere else: a UI test
         // installs the app fresh but keeps the container, and the seed skips a
@@ -352,7 +372,11 @@ final class StoreScreenshotsUITests: XCTestCase {
                                     "-onboardingShown", "YES",
                                     "-debugSeedArchive", "YES",
                                     "-debugResetArchive", "YES",
-                                    "-debugPremium", "YES"] + extraArguments
+                                    "-debugPremium", "YES",
+                                    // A signature in the store, so the signing
+                                    // shot picks a written one instead of
+                                    // dragging a scribble onto the contract.
+                                    "-debugSeedSignature", self.signatory] + extraArguments
         self.app.launch()
     }
 

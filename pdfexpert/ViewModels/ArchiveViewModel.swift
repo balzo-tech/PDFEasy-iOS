@@ -109,6 +109,7 @@ class ArchiveViewModel: ObservableObject {
         self.analyticsManager.track(event: .reportScreen(.files))
         #if DEBUG
         self.seedDebugArchiveIfNeeded()
+        self.seedDebugSignatureIfNeeded()
         #endif
         self.refresh()
         #if DEBUG
@@ -184,6 +185,56 @@ class ArchiveViewModel: ObservableObject {
             let tags = [index.isMultiple(of: 2) ? urgent : nil, index % 3 == 0 ? year : nil].compactMap { $0 }
             _ = try? self.repository.setTags(tags, for: pdf)
         }
+    }
+
+    /// Puts one signature in the store before the first screen appears, so the
+    /// App Store shots can show a signature that looks written.
+    ///
+    /// The alternative was drawing one in the app from the test, and a
+    /// synthesized drag draws a straight segment: eight of them in a row read as
+    /// a scribble across the contract, wherever they land. With a signature
+    /// already saved the app offers it instead of an empty canvas — which is
+    /// also what the slide claims, that you draw it once and reuse it.
+    ///
+    /// The name is the tenant of the lease being photographed, so it comes in on
+    /// the command line rather than being written here:
+    ///   xcrun simctl launch booted <bundle-id> -debugSeedSignature "Daniel Markwart"
+    private func seedDebugSignatureIfNeeded() {
+        guard let name = UserDefaults.standard.string(forKey: "debugSeedSignature"),
+              false == name.isEmpty else { return }
+
+        // The container outlives a run, and a signature is not a document:
+        // `debugResetArchive` empties the archive and leaves the signatures
+        // alone. Without this the German shot would be signed by whoever the
+        // run before it photographed — an Italian name on a Berlin lease.
+        if UserDefaults.standard.bool(forKey: "debugResetArchive") {
+            try? self.repository.delete(signatures: (try? self.repository.loadSignatures()) ?? [])
+        }
+        guard (try? self.repository.getDoSignatureExist()) == false else { return }
+
+        // Snell Roundhand ships with the system, so the ink is drawn here rather
+        // than carried as a PNG that would have to live in the bundle, be added
+        // to the target by hand, and be redrawn for every language.
+        let font = UIFont(name: "SnellRoundhand-Bold", size: 160) ?? .italicSystemFont(ofSize: 160)
+        let text = NSAttributedString(string: name,
+                                      attributes: [.font: font, .foregroundColor: UIColor.black])
+        let ink = text.size()
+        // A new signature is laid across 70% of the page width whatever it is
+        // — `startingSignatureWidthOverPdfViewWidth` in PdfSignatureViewModel —
+        // so a name that fills its image comes out as wide as the page and reads
+        // as a stamp. The ink is drawn small inside a wide transparent image
+        // instead: most of what gets scaled to that 70% is margin, and what
+        // shows is the size a person would sign.
+        let canvas = CGSize(width: ink.width * 2.2, height: ink.height * 1.5)
+        let format = UIGraphicsImageRendererFormat.default()
+        // The page has to show through around the ink: an opaque signature lands
+        // on the contract as a white box with a name in it.
+        format.opaque = false
+        let image = UIGraphicsImageRenderer(size: canvas, format: format).image { _ in
+            text.draw(at: CGPoint(x: (canvas.width - ink.width) / 2,
+                                  y: (canvas.height - ink.height) / 2))
+        }
+        _ = try? self.repository.saveSignature(signature: Signature(image: image))
     }
     #endif
     

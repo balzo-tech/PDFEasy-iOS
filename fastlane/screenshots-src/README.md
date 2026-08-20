@@ -77,22 +77,77 @@ sopra l'80%, Non disturbare acceso, telefono sbloccato e collegato.
   estraibile, e la chat li rifiuta. Per questo `debugChatWithArchive` parte dal
   PDF di test e non dal primo documento dell'archivio.
 
-## L'iPad non si automatizza (provato il 19 agosto 2026)
+## L'iPad
 
-`make-screenshots.sh` guida solo l'iPhone. La tentazione è puntare lo stesso
-test su un simulatore iPad, e in effetti **il test passa**: la nota in
-`ipad-ready.sh` che dice che su iPad non arriva è vecchia, `show()` cerca già le
-voci come `staticTexts` e la sidebar la trova. Quello che non funziona è la
-fotografia:
+Lo stesso test, puntato su un simulatore iPad, fa le sue cinque catture:
 
-- **la cattura esce ruotata di 90°.** Impostare `XCUIDevice.shared.orientation`
-  gira l'app ma non il buffer del display, che resta verticale: si ottiene una
-  schermata orizzontale dentro un PNG verticale;
-- **l'app non riempie lo schermo.** Su iPadOS 26 parte in una finestra
-  flottante, con lo sfondo di sistema tutto intorno.
+```sh
+TEST_RUNNER_SHOT_LANG=de xcodebuild test \
+  -project ../../pdfexpert.xcodeproj -scheme PdfExpert \
+  -configuration "Production Debug" \
+  -destination "platform=iOS Simulator,name=iPad Pro 13-inch (M5)" \
+  -only-testing:PdfExpertUITests/StoreScreenshotsUITests/testTakesTheStoreScreenshots \
+  -resultBundlePath build/shots-de-ipad.xcresult
+```
 
-Nessuno dei due si corregge nel layout, quindi le sei slide iPad restano da
-fare a mano con `./ipad-ready.sh <lingua>` e Cmd+S nel Simulator. Al 19 agosto
-mancano per il tedesco e per il francese: le due lingue hanno gli iPhone e non
-gli iPad, mentre `es-ES` è a posto perché ha ricevuto le immagini spagnole già
-esistenti.
+Le catture si tirano fuori come per l'iPhone e vanno in `ipad-shots/<lingua>/`,
+poi si montano nello stesso layout:
+
+```sh
+DEVICE=ipad SLIDES=5 ./export.sh de      # → out/de/ipad/screenshot_1.png …
+```
+
+`?device=ipad` cambia la slide a 2048x2732 e va a prendere le catture in
+`ipad-shots/` invece che in `shots/`; fondali, titoli e ordine restano quelli
+dell'iPhone, perché sulla scheda le due misure si vedono una accanto all'altra.
+
+**Si fotografa in verticale.** La nota che c'era qui il 19 agosto — cattura
+ruotata di 90°, app in una finestra flottante — veniva dall'aver forzato
+l'orientamento orizzontale: `XCUIDevice.shared.orientation` gira l'app ma non il
+buffer del display. Lasciato in verticale non succede niente di tutto questo: la
+cattura esce 2064x2752, l'app riempie lo schermo, e 2048x2732 è una delle misure
+che lo slot iPad accetta. Le slide inglesi, italiane e spagnole caricate sono
+orizzontali perché fatte a mano prima di scoprirlo: dentro una localizzazione
+l'orientamento è coerente, ed è l'unica cosa che conta.
+
+**Il simulatore deve stare in piedi.** Un simulatore conserva l'orientamento in
+cui lo si è lasciato, e un iPad coricato riporta una finestra 1376x1032 mentre
+la cattura esce lo stesso 1032x1376: da quel momento ogni coordinata normalizzata
+del test punta altrove rispetto a quello che si vede nella foto, e il giro
+fallisce sul primo tocco che deve essere preciso. Non si corregge da dentro il
+test — `XCUIDevice.shared.orientation` gira l'app e non il buffer, e la cattura
+esce con lo schermo disegnato di traverso. Si spegne e si riaccende:
+
+```sh
+xcrun simctl shutdown "iPad Pro 13-inch (M5)" && xcrun simctl boot "iPad Pro 13-inch (M5)"
+```
+
+## La firma
+
+Non si disegna: un drag sintetizzato traccia un segmento dritto, e otto in fila
+sono uno scarabocchio in mezzo al contratto, dovunque cadano. L'app viene
+lanciata con una firma già in archivio — `-debugSeedSignature "Daniel Markwart"`,
+il conduttore del contratto di quella lingua — così toccando la pagina propone
+il suo elenco invece di una tela vuota, che poi è quello che promette la slide:
+disegnala una volta, riusala.
+
+L'inchiostro è Snell Roundhand, un font di sistema, disegnato piccolo dentro
+un'immagine larga e trasparente: l'app stende ogni firma nuova sul 70% della
+larghezza della pagina, e un nome che riempie la propria immagine ne esce grande
+come un timbro.
+
+Dove finisce **non** lo decide il tocco: l'app la posa al centro della vista, e
+il tocco sceglie solo la pagina. Il test la trascina da lì sulla riga del
+conduttore, con due paia di coordinate misurate su una cattura — una per
+l'iPhone, una per l'iPad, che disegna la pagina di fianco alle miniature. È per
+questo che il contratto sta in **una pagina sola**: se il piede non entra nella
+schermata, non c'è nessun posto giusto dove metterla.
+
+Due trappole pagate qui:
+
+- **`cells.firstMatch` non è la firma.** Su iPad la sidebar dell'archivio resta
+  nell'albero dietro al foglio e la sua prima riga viene prima: il tocco non
+  sceglieva niente, l'elenco restava aperto e Finish chiudeva una schermata
+  senza firma sopra. Le righe del foglio sono quelle sotto il suo titolo.
+- **Il gesto va lasciato assestare.** Toccare Finish dentro l'animazione di
+  rilascio del trascinamento chiude la schermata buttando via la firma.
