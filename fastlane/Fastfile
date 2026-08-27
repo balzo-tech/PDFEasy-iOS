@@ -53,6 +53,34 @@ platform :ios do
     )
   end
 
+  desc "Run the unit tests on Mac Catalyst"
+  lane :test_mac do
+    lint
+    # ⚠️ **No shortcut on signing works here**, and both were tried on 2026-08-27:
+    # `CODE_SIGNING_ALLOWED=NO` builds but does not run — macOS refuses to load
+    # Lottie.framework with "Trying to load an unsigned library" — and ad-hoc
+    # signing (`CODE_SIGN_IDENTITY="-"`, which is what the iOS lane uses on a
+    # simulator) is rejected by the entitlements: iCloud and App Groups "require
+    # signing with a development certificate".
+    #
+    # So this signs for real. `-allowProvisioningUpdates` is what makes it work
+    # from a terminal: the Mac Catalyst profiles are already in Xcode's cache,
+    # and without the flag xcodebuild will not go looking for them.
+    #
+    # PDFPRO_DISABLE_CLOUDKIT reaches the app as TEST_RUNNER_ — that prefix is
+    # how xcodebuild passes an environment variable through to the app under
+    # test rather than to the runner.
+    sh("xcodebuild", "test",
+       "-project", "../#{XCODEPROJ}",
+       "-scheme", STAGING_SCHEME,
+       "-configuration", STAGING_CONFIG,
+       "-destination", "platform=macOS,variant=Mac Catalyst,arch=arm64",
+       "-derivedDataPath", "../DerivedData",
+       "-allowProvisioningUpdates",
+       "TEST_RUNNER_PDFPRO_DISABLE_CLOUDKIT=1",
+       "-only-testing:PdfExpertTests")
+  end
+
   # --- Distribution ---------------------------------------------------------
   desc "Build a signed Production archive and upload it to TestFlight"
   lane :beta do
@@ -98,6 +126,42 @@ platform :ios do
     )
   end
 
+  desc "Build a signed Mac Catalyst archive and upload it to App Store Connect (no auto-submit)"
+  lane :release_mac do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_filepath: ENV["ASC_KEY_FILEPATH"]
+    )
+    # Same target, same bundle id, same version — Universal Purchase means the
+    # Mac build is a second binary on the same App Store record, not a second
+    # app. What changes is the destination and the export method: `mac-application`
+    # would produce something to hand out directly; the store wants `app-store`.
+    build_app(
+      project: XCODEPROJ,
+      scheme: PRODUCTION_SCHEME,
+      configuration: PRODUCTION_CONFIG,
+      destination: "generic/platform=macOS,variant=Mac Catalyst",
+      catalyst_platform: "macos",
+      export_method: "app-store",
+      output_name: "PdfExpert-mac"
+    )
+    upload_to_app_store(
+      api_key: api_key,
+      app_identifier: PRODUCTION_BUNDLE_ID,
+      platform: "osx",
+      # Text and pictures go up with `metadata_mac` and `screenshots_mac`, by a
+      # person who meant to send them. This lane carries the binary and nothing
+      # else — the same split the iOS `release` lane keeps.
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: false,
+      automatic_release: false,
+      precheck_include_in_app_purchases: false,
+      force: true
+    )
+  end
+
   # --- Metadata -------------------------------------------------------------
   desc "Upload the App Store description and release notes, in every language"
   lane :metadata do
@@ -115,6 +179,38 @@ platform :ios do
         issuer_id: ENV.fetch("ASC_ISSUER_ID"),
         key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
       )
+    )
+  end
+
+  desc "Upload the Mac screenshots (and nothing else)"
+  lane :screenshots_mac do
+    # Deliberately a lane of its own, and deliberately not part of `metadata_mac`:
+    # the Deliverfile keeps `skip_screenshots(true)` so an unattended text upload
+    # can never hand a language ten more slides. Pictures go up when someone
+    # means to send pictures.
+    #
+    # ⚠️ `overwrite_screenshots` is true here, unlike the Deliverfile default.
+    # The Mac slot tops out at ten and deliver *adds*: running this twice without
+    # it leaves eight slides where four were meant to be. True replaces the set,
+    # which is what re-running a screenshot upload is for.
+    upload_to_app_store(
+      api_key: app_store_connect_api_key(
+        key_id: ENV.fetch("ASC_KEY_ID"),
+        issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+        key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
+      ),
+      platform: "osx",
+      screenshots_path: File.expand_path("screenshots-mac", __dir__),
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: false,
+      overwrite_screenshots: true,
+      submit_for_review: false,
+      automatic_release: false,
+      run_precheck_before_submit: false,
+      force: true,
+      app_version: get_version_number(xcodeproj: XCODEPROJ, target: "PdfExpert",
+                                      configuration: PRODUCTION_CONFIG)
     )
   end
 

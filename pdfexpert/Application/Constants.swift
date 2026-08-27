@@ -83,6 +83,28 @@ struct K {
             }
         }
 
+        /// The four documents that fill the archive behind the contract.
+        ///
+        /// They are only ever read as a list of names in the picture, but a list
+        /// of English names under an Italian sidebar is exactly the detail that
+        /// makes a store page look machine-made. Same reasoning as
+        /// `DebugContractFilename`, and the same reason they are not in the
+        /// string catalog: they are stage props, not interface.
+        static var DebugSeedFilenames: [String] {
+            switch Locale.current.language.languageCode?.identifier {
+            case "it": return ["Fattura 2026-07", "Ricevuta scansionata",
+                               "Scansione passaporto", "Verbale riunione"]
+            case "es": return ["Factura 2026-07", "Recibo escaneado",
+                               "Escaneo del pasaporte", "Acta de reunión"]
+            case "de": return ["Rechnung 2026-07", "Gescannter Beleg",
+                               "Passscan", "Besprechungsnotizen"]
+            case "fr": return ["Facture 2026-07", "Reçu scanné",
+                               "Scan du passeport", "Notes de réunion"]
+            default:   return ["Invoice 2026-07", "Scanned receipt",
+                               "Passport scan", "Meeting notes"]
+            }
+        }
+
         struct ChatPdf {
             static let UseMock = false
             static let NetworkStubsDelay = 1.0

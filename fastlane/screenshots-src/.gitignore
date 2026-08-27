@@ -4,6 +4,9 @@ raw/
 shots/
 out/
 
+# Lo stesso per il Mac, che si rifa' con ./mac-shots.sh
+out-mac/
+
 # Le catture dell'iPad si rifanno con ./ipad-ready.sh e il test; incoming/ tiene
 # le immagini montate fuori di qui. Insieme fanno un centinaio di megabyte di
 # PNG che non hanno niente da fare in un repository — la copia buona sta su App

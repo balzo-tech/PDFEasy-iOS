@@ -158,8 +158,7 @@ class ArchiveViewModel: ObservableObject {
         // The lease goes last, so it lands at the top of the archive: it is the
         // one the store screenshots open, and the only one of the five that is
         // not Lorem ipsum. The other four are only ever a list behind it.
-        var toSave: [(name: String, pdf: Pdf?)] = ["Invoice 2026-07", "Scanned receipt",
-                                                   "Passport scan", "Meeting notes"]
+        var toSave: [(name: String, pdf: Pdf?)] = K.Test.DebugSeedFilenames
             .map { ($0, K.Test.DebugPdf) }
         toSave.append((K.Test.DebugContractFilename, K.Test.DebugContractPdf))
 

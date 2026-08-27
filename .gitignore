@@ -68,6 +68,8 @@ pdfexpert/Generated/ObfuscatedSecrets.swift
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
+# Lo stesso per il Mac: 2880x1800 l'una, e si rifanno con screenshots-src/mac-shots.sh
+fastlane/screenshots-mac/**/*.png
 fastlane/test_output
 fastlane/README.md
 # App Store Connect API credentials. fastlane loads fastlane/.env on its own,
@@ -85,3 +87,10 @@ fastlane/*.p8
 # keys, and a key in the repository is a key in every clone of it. What the
 # worker actually reads is the Cloudflare secret, uploaded from this file.
 proxy/.secrets/
+
+# App Store Server API key (an "In-App Purchase" key from Users and Access →
+# Integrations — not the App Store Connect key in fastlane/, which cannot read
+# subscriptions). It answers what no report answers in time: whether a trial
+# converted, and how many minutes after starting it the renewal was switched off.
+# Apple lets you download a key once, so the copy lives here and never leaves.
+.secrets/

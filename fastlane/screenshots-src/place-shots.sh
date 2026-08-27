@@ -29,6 +29,17 @@ SOURCE="${1:-incoming}"
 ONLY="${2:-}"
 DEST="../screenshots"
 
+# `./place-shots.sh mac` prende le slide del Mac da out-mac/ e le mette in una
+# cartella tutta loro: la scheda macOS e' una piattaforma diversa sullo stesso
+# record, e deliver la carica con `platform: "osx"` e uno screenshots_path suo.
+# Mescolarle con quelle iPhone significherebbe offrire un 2880x1800 a un
+# telefono, che e' un rifiuto immediato.
+if [ "$SOURCE" = "mac" ]; then
+  SOURCE="out-mac"
+  DEST="../screenshots-mac"
+  PREFISSO="mac_"
+fi
+
 # locale di App Store Connect : lingua della cattura
 MAP="en-US:en it:it es-MX:es es-ES:es de-DE:de fr-FR:fr"
 
@@ -40,7 +51,17 @@ for pair in $MAP; do
 
   mkdir -p "$DEST/$locale"
   rm -f "$DEST/$locale"/iphone_*.png "$DEST/$locale"/ipad_*.png \
-        "$DEST/$locale"/screenshot_*.png
+        "$DEST/$locale"/screenshot_*.png "$DEST/$locale"/mac_*.png
+
+  if [ -n "$PREFISSO" ]; then
+    n=0
+    for f in "$SOURCE/$lang"/mac_*.png; do
+      [ -e "$f" ] || continue
+      n=$((n+1)); cp "$f" "$DEST/$locale/mac_$n.png"
+    done
+    echo "$locale  ←  $lang   $n Mac"
+    continue
+  fi
 
   n=0
   if [ -d "$SOURCE/$lang/iphone" ]; then

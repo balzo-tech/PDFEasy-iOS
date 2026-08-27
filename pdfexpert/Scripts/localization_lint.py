@@ -122,6 +122,14 @@ ALLOWED_RAW_STRINGS = {
         "same reason: the name a scan is offered before the user types one. The "
         "formatter is pinned to en_US_POSIX so a scan taken abroad still sorts "
         "next to the others",
+    "Contratto di locazione":
+        "stage prop, not UI: the name of the fake contract that appears in the "
+        "store screenshots. It is switched on the capture language on purpose, "
+        "so the picture and the document inside it speak the same language",
+    "Contrato de arrendamiento": "same stage prop, in Spanish",
+    "Mietvertrag": "same stage prop, in German",
+    "Contrat de location": "same stage prop, in French",
+    "Rental agreement": "same stage prop, the fallback for every other language",
 }
 
 
