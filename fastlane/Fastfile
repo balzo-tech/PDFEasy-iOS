@@ -119,6 +119,13 @@ platform :ios do
     upload_to_app_store(
       api_key: api_key,
       app_identifier: PRODUCTION_BUNDLE_ID,
+      # ⚠️ **Not optional, and not obvious**: the Deliverfile sets
+      # `skip_binary_upload(true)` — right for the text lanes, which run
+      # unattended and must not be able to change what ships. deliver reads that
+      # file here too, so without this line the lane archives, exports an ipa,
+      # says "finished successfully" and uploads nothing but the metadata. That
+      # is exactly what happened on 2026-08-27.
+      skip_binary_upload: false,
       submit_for_review: false,
       automatic_release: false,
       precheck_include_in_app_purchases: false,
@@ -126,6 +133,44 @@ platform :ios do
     )
   end
 
+  desc "Upload an ipa that has already been built, without archiving again"
+  lane :upload_ipa do |options|
+    # The archive takes minutes and the upload can fail on its own — a network
+    # drop, a duplicate build number, a certificate. Rebuilding an identical
+    # binary to retry an upload is waste, so the two halves can be run apart.
+    upload_to_app_store(
+      api_key: app_store_connect_api_key(
+        key_id: ENV.fetch("ASC_KEY_ID"),
+        issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+        key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
+      ),
+      app_identifier: PRODUCTION_BUNDLE_ID,
+      ipa: options[:ipa] || "PdfExpert.ipa",
+      skip_binary_upload: false,
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: false,
+      automatic_release: false,
+      run_precheck_before_submit: false,
+      force: true
+    )
+  end
+
+  # ⚠️ **This lane archives but cannot yet export**, and the reason is an account
+  # permission rather than anything in the project. Distributing on the Mac App
+  # Store needs two certificates iOS does not — "Mac App Distribution" and "Mac
+  # Installer Distribution", the second to sign the .pkg — and neither exists in
+  # the keychain. Asking xcodebuild to make them with -allowProvisioningUpdates
+  # and the App Store Connect key answers "Cloud signing permission error": the
+  # key can upload builds, not mint certificates.
+  #
+  # Two ways out, both a person's to take:
+  #   - Xcode → Organizer → Distribute App on the archive this lane leaves in
+  #     ~/Library/Developer/Xcode/Archives/. Signed in as the account holder,
+  #     Xcode creates both certificates itself;
+  #   - or create them once on developer.apple.com, after which this lane runs
+  #     end to end.
+  # The archive step works and is worth keeping: it is the slow half.
   desc "Build a signed Mac Catalyst archive and upload it to App Store Connect (no auto-submit)"
   lane :release_mac do
     api_key = app_store_connect_api_key(
@@ -152,9 +197,13 @@ platform :ios do
       platform: "osx",
       # Text and pictures go up with `metadata_mac` and `screenshots_mac`, by a
       # person who meant to send them. This lane carries the binary and nothing
-      # else — the same split the iOS `release` lane keeps.
+      # else.
       skip_metadata: true,
       skip_screenshots: true,
+      # See the note in `release`: the Deliverfile skips the binary, and without
+      # this the lane would upload nothing at all.
+      skip_binary_upload: false,
+      pkg: "PdfExpert-mac.pkg",
       submit_for_review: false,
       automatic_release: false,
       precheck_include_in_app_purchases: false,
