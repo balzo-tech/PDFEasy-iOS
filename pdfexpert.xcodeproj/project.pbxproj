@@ -12,17 +12,15 @@
 		0303F8BFD6915F3A95F6EA33 /* PdfCompressUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F0F52B481D297B421A74EC /* PdfCompressUtility.swift */; };
 		046CB96395CA5A4D822D76CA /* MainSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD02A2AFA02B35E25414789 /* MainSidebarView.swift */; };
 		07D43DCF1056470FE710713E /* contract-en.pdf in Resources */ = {isa = PBXBuildFile; fileRef = BCF87C0FC14CD5269B3B82DB /* contract-en.pdf */; };
-		12CE72F84FB5A5D67BCD1DCB /* contract-de.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2C99BFA614BC527BD06C9913 /* contract-de.pdf */; };
-		8AD335DC7C937B1E5E8283C9 /* contract-fr.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6D22770F54E7EFFD67EF7696 /* contract-fr.pdf */; };
 		0954744597C2246A373636CB /* ScanCameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF590D73544CE9E518C2AE8 /* ScanCameraPreview.swift */; };
 		0B353C38845F4AC19A6D434B /* PdfTitleUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4384D65DC8EC49A89C7979E2 /* PdfTitleUtility.swift */; };
 		0DEF9EB225D554D91A8CA034 /* ScanImageProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70736180CA61F13C8AD9D616 /* ScanImageProcessorTests.swift */; };
 		119C2D21F8F37B6A381A8D24 /* ToolCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D945D88CB0FACAE63B3AC7 /* ToolCatalog.swift */; };
+		12CE72F84FB5A5D67BCD1DCB /* contract-de.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2C99BFA614BC527BD06C9913 /* contract-de.pdf */; };
 		13970F9FC7A0D0AD0B8B77CC /* DocumentActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3BAA028F5A791EAA31A3B1 /* DocumentActions.swift */; };
 		13FD1373F5BA64EE157165C1 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */; };
 		16F40C137D04793DA6A54123 /* PdfEditAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608C4DDAAB480C6A5BE8315D /* PdfEditAlerts.swift */; };
 		1D82224F1404C67FB0CE0238 /* ChatUsageTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */; };
-		9A1CFE3D74B02E85D1A70C41 /* RemoteConfigStartupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */; };
 		1FDE3812AF18F5B83EC3B88B /* ScanFilterPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C83EFDC7E71F6B1337FEEC /* ScanFilterPickerView.swift */; };
 		21A7D6A776857C428DCA4C0B /* ArchiveFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738F3D7C38FC2535EF7DB213 /* ArchiveFilterTests.swift */; };
 		2473648B07EC4B7DCCB0D1FE /* DocumentTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5B05C3170D6CAE7D56A7BF /* DocumentTileView.swift */; };
@@ -315,6 +313,7 @@
 		8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */; };
 		8A11AT0100000000000008 /* PdfAppendAndShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */; };
 		8A11AT010000000000000A /* PersistenceDeduplicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */; };
+		8AD335DC7C937B1E5E8283C9 /* contract-fr.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6D22770F54E7EFFD67EF7696 /* contract-fr.pdf */; };
 		8BC87E3E724AA00D98B588EC /* ScannerHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBC5EB81CDB62042F5ADF3E /* ScannerHomeView.swift */; };
 		8C58845487DB57B29AD64D5E /* PdfPermissionsUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A81EC5B02CCFB0FAEFCFF8 /* PdfPermissionsUtilityTests.swift */; };
 		8DE1EB0F98BD0881640B8E41 /* PdfCompareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864300D493DC03B817DB865 /* PdfCompareViewModel.swift */; };
@@ -325,6 +324,7 @@
 		93AD6385EBC6085F40FD12DF /* DocumentDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14717C322B01398A86C431B4 /* DocumentDetector.swift */; };
 		953ABDF423CD923B5ADCA290 /* RootShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1052E3D0B0AE78AE6DC91A /* RootShellView.swift */; };
 		99C1926D9E0BCC1EE621A360 /* PdfWebImportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A66784A35E726993125997F /* PdfWebImportViewModel.swift */; };
+		9A1CFE3D74B02E85D1A70C41 /* RemoteConfigStartupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */; };
 		9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */; };
 		9DC4C1642296B1764C7D1174 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7887A98265D88D87F8D58BC /* DesignSystem.swift */; };
 		A0D48C2DB73F4373D8D3DDD5 /* PdfPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B195271BEEC0385779003266 /* PdfPermissionsViewModel.swift */; };
@@ -392,8 +392,8 @@
 		ED04324D5751F10FF0DD4D0C /* DocumentScanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B11B96C9AD602AD7E86ED6 /* DocumentScanViewModel.swift */; };
 		EFEAB40753F782DDEF4FAE1D /* Tag+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A130C45F0AE3DB1011B31E35 /* Tag+Persistable.swift */; };
 		F5AEA6C96103E1F70DFC4FFB /* MacWindowSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1126C3388FA967AFDF1C8790 /* MacWindowSupport.swift */; };
-		F5D2B7C310A4597E9B3D0102 /* AppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */; };
-		F5D2B7C310A4597E9B3D0202 /* ProxyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */; };
+		F5D2B7C310A4597E9B3D0102 /* ../Proxy/AppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0101 /* ../Proxy/AppCheckProviderFactory.swift */; };
+		F5D2B7C310A4597E9B3D0202 /* ../Proxy/ProxyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0201 /* ../Proxy/ProxyCredentials.swift */; };
 		F6924B5618834A8A2E0D31B1 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979C29D2C39489CDE3B1B29A /* Folder.swift */; };
 		F844F1753C60D4BD27E9B6C3 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD905A352026CF62BB13FCF /* ToolsView.swift */; };
 /* End PBXBuildFile section */
@@ -466,8 +466,9 @@
 		2038AF30BF498F30CFFCD311 /* PdfProWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = PdfProWidget.entitlements; sourceTree = "<group>"; };
 		264B643D94F580903A7855D2 /* OfficeImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OfficeImportView.swift; sourceTree = "<group>"; };
 		299AC4ACFAB2D49B8DDBC1EA /* FileDropImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileDropImport.swift; sourceTree = "<group>"; };
-		29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		2DDFCB3D5400DFCF301EFB42 /* contract-es.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-es.pdf"; sourceTree = "<group>"; };
+		29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		2C99BFA614BC527BD06C9913 /* contract-de.pdf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.pdf; path = "contract-de.pdf"; sourceTree = "<group>"; };
+		2DDFCB3D5400DFCF301EFB42 /* contract-es.pdf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.pdf; path = "contract-es.pdf"; sourceTree = "<group>"; };
 		2E1052E3D0B0AE78AE6DC91A /* RootShellView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootShellView.swift; path = ../../../pdfexpert/Views/Main/RootShellView.swift; sourceTree = "<group>"; };
 		2FC8E774753D8BF0BA1375B6 /* PdfAdvancedToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolView.swift; sourceTree = "<group>"; };
 		31A56A520C1AA285C2FEA012 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
@@ -478,6 +479,7 @@
 		3C9F8F0B969538C08FAED7E7 /* EditorRoute.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorRoute.swift; sourceTree = "<group>"; };
 		3CE9B8BA6CA858E0E790D321 /* PdfAdvancedToolViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolViewModelTests.swift; sourceTree = "<group>"; };
 		3DABE1700A4543531088792D /* ScanGeometryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanGeometryTests.swift; sourceTree = "<group>"; };
+		3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteConfigStartupTests.swift; sourceTree = "<group>"; };
 		3F9B9BF13B20A579E20B3AA3 /* PdfConvertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertViewModel.swift; sourceTree = "<group>"; };
 		42CBC6496C308494982DBF43 /* FilesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		42DBD8755216D9D4FB53A30D /* PdfWebImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfWebImportView.swift; sourceTree = "<group>"; };
@@ -488,7 +490,7 @@
 		4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		487A5A6F6F32B19ABB984CD6 /* PdfRedactUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactUtility.swift; sourceTree = "<group>"; };
 		4B6401AC744A4271821CDB87 /* PdfMetadataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMetadataViewModel.swift; sourceTree = "<group>"; };
-		5290640908BD1A532BA437DE /* contract-it.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-it.pdf"; sourceTree = "<group>"; };
+		5290640908BD1A532BA437DE /* contract-it.pdf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.pdf; path = "contract-it.pdf"; sourceTree = "<group>"; };
 		546644E7201C33A0304DB80B /* PdfMarkdownImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfMarkdownImportView.swift; sourceTree = "<group>"; };
 		56A81EC5B02CCFB0FAEFCFF8 /* PdfPermissionsUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsUtilityTests.swift; sourceTree = "<group>"; };
 		5A3BAA028F5A791EAA31A3B1 /* DocumentActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentActions.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 		6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertViewModelTests.swift; sourceTree = "<group>"; };
 		68B11B96C9AD602AD7E86ED6 /* DocumentScanViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentScanViewModel.swift; sourceTree = "<group>"; };
 		6A52150A28D508C6685117CC /* DebugWindowCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DebugWindowCapture.swift; sourceTree = "<group>"; };
+		6D22770F54E7EFFD67EF7696 /* contract-fr.pdf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.pdf; path = "contract-fr.pdf"; sourceTree = "<group>"; };
 		6D745BFF18DE814B941CF384 /* GlobalSearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GlobalSearchView.swift; sourceTree = "<group>"; };
 		6E21E1357DF36431385C0EAD /* QuickActionsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickActionsWidget.swift; sourceTree = "<group>"; };
 		6F68728D1C787B176CB1AB6B /* PdfFileIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfFileIntents.swift; sourceTree = "<group>"; };
@@ -783,11 +786,9 @@
 		B741298CFD66C4AA2310F784 /* OcrUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OcrUtility.swift; path = ../../pdfexpert/InternalUtils/OcrUtility.swift; sourceTree = "<group>"; };
 		B7887A98265D88D87F8D58BC /* DesignSystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		B9174E633BB07ACAF38D957F /* CDFolder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CDFolder.swift; sourceTree = "<group>"; };
-		BB067620CD38E3679DD4926B /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		BB067620CD38E3679DD4926B /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		BCF590D73544CE9E518C2AE8 /* ScanCameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanCameraPreview.swift; sourceTree = "<group>"; };
-		BCF87C0FC14CD5269B3B82DB /* contract-en.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-en.pdf"; sourceTree = "<group>"; };
-		2C99BFA614BC527BD06C9913 /* contract-de.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-de.pdf"; sourceTree = "<group>"; };
-		6D22770F54E7EFFD67EF7696 /* contract-fr.pdf */ = {isa = PBXFileReference; includeInIndex = 1; path = "contract-fr.pdf"; sourceTree = "<group>"; };
+		BCF87C0FC14CD5269B3B82DB /* contract-en.pdf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.pdf; path = "contract-en.pdf"; sourceTree = "<group>"; };
 		BD3CA8B2448C9B5035DDB68E /* ChatUsageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUsageTracker.swift; sourceTree = "<group>"; };
 		BF7ECBFF6B0754689D031066 /* Folder+Persistable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Folder+Persistable.swift"; sourceTree = "<group>"; };
 		BFAFD3A0352EF7AFBDD1F7FF /* PdfProCommands.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PdfProCommands.swift; path = ../../pdfexpert/Application/PdfProCommands.swift; sourceTree = "<group>"; };
@@ -816,7 +817,6 @@
 		E4DB81D716DFDF26CAF87B7B /* PdfPermissionsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsView.swift; sourceTree = "<group>"; };
 		E59873EC4BAF39378788F6B6 /* ToolScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolScreen.swift; sourceTree = "<group>"; };
 		E7839205706E47E609A90FD1 /* ChatUsageTrackerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatUsageTrackerTests.swift; sourceTree = "<group>"; };
-		3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteConfigStartupTests.swift; sourceTree = "<group>"; };
 		E955A450F02101DFDD8D553A /* ScannedPage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScannedPage.swift; sourceTree = "<group>"; };
 		E9828836133DF7554F050F37 /* RecentDocumentsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecentDocumentsWidget.swift; sourceTree = "<group>"; };
 		E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StirlingApiManagerMock.swift; sourceTree = "<group>"; };
@@ -825,8 +825,8 @@
 		EF6FDA188D47B9D2F495EFC9 /* PdfToolEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfToolEntity.swift; sourceTree = "<group>"; };
 		EFCD3B9E018C23C99E6EF738 /* PdfPermissionsUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsUtility.swift; sourceTree = "<group>"; };
 		F5742172FA7238E8CDB2AA56 /* AppGroupIdentifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppGroupIdentifier.swift; sourceTree = "<group>"; };
-		F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/AppCheckProviderFactory.swift; sourceTree = "<group>"; };
-		F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/ProxyCredentials.swift; sourceTree = "<group>"; };
+		F5D2B7C310A4597E9B3D0101 /* ../Proxy/AppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/AppCheckProviderFactory.swift; sourceTree = "<group>"; };
+		F5D2B7C310A4597E9B3D0201 /* ../Proxy/ProxyCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/ProxyCredentials.swift; sourceTree = "<group>"; };
 		F80058F70B9C08B8ADAFD3A4 /* PdfExpertShortcuts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfExpertShortcuts.swift; sourceTree = "<group>"; };
 		FA32C92F5D63567E2EC98234 /* PdfWebImportViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfWebImportViewModelTests.swift; sourceTree = "<group>"; };
 		FAEA8F82BE8846117E2D0B81 /* PdfUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfUtilityTests.swift; sourceTree = "<group>"; };
@@ -912,7 +912,6 @@
 				C37982093A0CF2D89A907DB5 /* Models */,
 				C95D0C7CC027E2AE1093A3AF /* Utils */,
 			);
-			name = pdfexpert;
 			path = pdfexpert;
 			sourceTree = "<group>";
 		};
@@ -927,7 +926,6 @@
 				608C4DDAAB480C6A5BE8315D /* PdfEditAlerts.swift */,
 				7C07C24D9158C55FAB874680 /* PdfPageReorderView.swift */,
 			);
-			name = Pdf;
 			path = Pdf;
 			sourceTree = "<group>";
 		};
@@ -937,7 +935,6 @@
 				B4807DA710D777CC83C2F180 /* CommonControls.swift */,
 				98EC3A7137C6581334095286 /* ToolTileView.swift */,
 			);
-			name = Components;
 			path = Components;
 			sourceTree = "<group>";
 		};
@@ -951,7 +948,6 @@
 				C0D6989FE8D5E01C705E98BF /* PdfRedactViewModel.swift */,
 				68B11B96C9AD602AD7E86ED6 /* DocumentScanViewModel.swift */,
 			);
-			name = ViewModels;
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
@@ -965,7 +961,6 @@
 				AB4F7DE4951E883FDB48B652 /* Info.plist */,
 				BB067620CD38E3679DD4926B /* Localizable.xcstrings */,
 			);
-			name = PdfProWidget;
 			path = PdfProWidget;
 			sourceTree = "<group>";
 		};
@@ -974,7 +969,6 @@
 			children = (
 				E955A450F02101DFDD8D553A /* ScannedPage.swift */,
 			);
-			name = Entities;
 			path = Entities;
 			sourceTree = "<group>";
 		};
@@ -989,7 +983,6 @@
 				A1B2C3D40003LOCALISE0003 /* LocalisationUITests.swift */,
 				AED6822D366D4284E0E07506 /* StoreScreenshotsUITests.swift */,
 			);
-			name = PdfExpertUITests;
 			path = PdfExpertUITests;
 			sourceTree = "<group>";
 		};
@@ -1002,7 +995,6 @@
 				E4DB81D716DFDF26CAF87B7B /* PdfPermissionsView.swift */,
 				D32F5A6A3F6405B6ED0D305E /* PdfRedactView.swift */,
 			);
-			name = Common;
 			path = Common;
 			sourceTree = "<group>";
 		};
@@ -1011,7 +1003,6 @@
 			children = (
 				C4B9FF21B5BE8333D1705F4B /* ScanCaptureService.swift */,
 			);
-			name = Camera;
 			path = Camera;
 			sourceTree = "<group>";
 		};
@@ -1699,7 +1690,6 @@
 				7BC23C6D694EBBF58C9441D7 /* SharedDocumentStore.swift */,
 				F5742172FA7238E8CDB2AA56 /* AppGroupIdentifier.swift */,
 			);
-			name = Shared;
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -1711,7 +1701,6 @@
 				AAD905A352026CF62BB13FCF /* ToolsView.swift */,
 				9B4AFD22DD157CBABC095FBB /* ToolDetailView.swift */,
 			);
-			name = Tools;
 			path = Tools;
 			sourceTree = "<group>";
 		};
@@ -1726,7 +1715,6 @@
 				5ABFCA8EB7C5F85177FBF5D0 /* ScanFlowView.swift */,
 				FEBC5EB81CDB62042F5ADF3E /* ScannerHomeView.swift */,
 			);
-			name = Scan;
 			path = Scan;
 			sourceTree = "<group>";
 		};
@@ -1750,7 +1738,6 @@
 				14717C322B01398A86C431B4 /* DocumentDetector.swift */,
 				B69B1F3743727DA07A4DA8A4 /* PhotoLibrarySaver.swift */,
 			);
-			name = InternalUtils;
 			path = InternalUtils;
 			sourceTree = "<group>";
 		};
@@ -1762,7 +1749,6 @@
 				5A3BAA028F5A791EAA31A3B1 /* DocumentActions.swift */,
 				4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */,
 			);
-			name = Files;
 			path = Files;
 			sourceTree = "<group>";
 		};
@@ -1772,7 +1758,6 @@
 				6114701416B44EBE8F63A11E /* FilesFilterBar.swift */,
 				ADCA9A5C36A9D1E235CAD1D8 /* ArchiveOrganizerView.swift */,
 			);
-			name = Files;
 			path = Files;
 			sourceTree = "<group>";
 		};
@@ -1785,7 +1770,6 @@
 				F80058F70B9C08B8ADAFD3A4 /* PdfExpertShortcuts.swift */,
 				977195E1B05F257EEF705AF7 /* ScanIntents.swift */,
 			);
-			name = Intents;
 			path = Intents;
 			sourceTree = "<group>";
 		};
@@ -1794,7 +1778,6 @@
 			children = (
 				4AA98D492F2E9ABF2FFE95E5 /* Entities */,
 			);
-			name = Models;
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -1803,7 +1786,6 @@
 			children = (
 				65D8CA297DC98A212D2A9695 /* Camera */,
 			);
-			name = Utils;
 			path = Utils;
 			sourceTree = "<group>";
 		};
@@ -1812,7 +1794,6 @@
 			children = (
 				B7887A98265D88D87F8D58BC /* DesignSystem.swift */,
 			);
-			name = Style;
 			path = Style;
 			sourceTree = "<group>";
 		};
@@ -1852,7 +1833,6 @@
 				EE6498F5D0225CCE67211E67 /* ImageToPdfTests.swift */,
 				8F517771E9337646B0F2A813 /* AnnotationIdentityTests.swift */,
 			);
-			name = PdfExpertTests;
 			path = PdfExpertTests;
 			sourceTree = "<group>";
 		};
@@ -1867,7 +1847,6 @@
 				A0DF43470CC215E720315838 /* Scan */,
 				08FB64603CDA2969EA908C6E /* Pdf */,
 			);
-			name = Views;
 			path = Views;
 			sourceTree = "<group>";
 		};
@@ -1876,8 +1855,8 @@
 			children = (
 				A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */,
 				C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */,
-				F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */,
-				F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */,
+				F5D2B7C310A4597E9B3D0201 /* ../Proxy/ProxyCredentials.swift */,
+				F5D2B7C310A4597E9B3D0101 /* ../Proxy/AppCheckProviderFactory.swift */,
 				E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */,
 			);
 			path = Stirling;
@@ -1888,7 +1867,6 @@
 			children = (
 				6D745BFF18DE814B941CF384 /* GlobalSearchView.swift */,
 			);
-			name = Search;
 			path = Search;
 			sourceTree = "<group>";
 		};
@@ -2210,7 +2188,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$IS_MACCATALYST\" != \"YES\" ]; then exit 0; fi\n# The Mac menu bar reads CFBundleName, and GENERATE_INFOPLIST_FILE writes\n# PRODUCT_NAME into it whatever the Info.plist says — so every menu said\n# \"PdfExpert\". Neither the input plist nor INFOPLIST_KEY_CFBundleName wins\n# against the generator; correcting the built plist does.\nPLIST=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleName $DISPLAY_NAME\" \"$PLIST\" || \\\n  /usr/libexec/PlistBuddy -c \"Add :CFBundleName string $DISPLAY_NAME\" \"$PLIST\"\n";
+			shellScript = "if [ \"$IS_MACCATALYST\" != \"YES\" ]; then exit 0; fi\n# The Mac menu bar reads CFBundleName, and GENERATE_INFOPLIST_FILE writes\n# PRODUCT_NAME into it whatever the Info.plist says — so every menu said\n# \"PdfExpert\". Neither the input plist nor INFOPLIST_KEY_CFBundleName wins\n# against the generator; correcting the built plist does.\nPLIST=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleName $DISPLAY_NAME\" \"$PLIST\" || \\\n  /usr/libexec/PlistBuddy -c \"Add :CFBundleName string $DISPLAY_NAME\" \"$PLIST\"\n\n# The Mac App Store rejects the package outright without a category:\n# \"The product archive is invalid. The Info.plist must contain a\n# LSApplicationCategoryType key\" (error 90242, hit on 2026-08-27). iOS never\n# asks for it, which is why nobody missed it. INFOPLIST_KEY_LSApplicationCategoryType\n# is set on all four configurations and does not survive the generator either —\n# same story as CFBundleName above, same cure.\n# productivity, not utilities: it is what the App Store page says.\nCATEGORY=public.app-category.productivity\n/usr/libexec/PlistBuddy -c \"Set :LSApplicationCategoryType $CATEGORY\" \"$PLIST\" || \\\n  /usr/libexec/PlistBuddy -c \"Add :LSApplicationCategoryType string $CATEGORY\" \"$PLIST\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2338,8 +2316,8 @@
 				879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */,
 				437028E1F0DB00419857B9E8 /* StirlingApiManager.swift in Sources */,
 				D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */,
-				F5D2B7C310A4597E9B3D0202 /* ProxyCredentials.swift in Sources */,
-				F5D2B7C310A4597E9B3D0102 /* AppCheckProviderFactory.swift in Sources */,
+				F5D2B7C310A4597E9B3D0202 /* ../Proxy/ProxyCredentials.swift in Sources */,
+				F5D2B7C310A4597E9B3D0102 /* ../Proxy/AppCheckProviderFactory.swift in Sources */,
 				9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */,
 				E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */,
 				894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */,
@@ -2955,6 +2933,7 @@
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
@@ -3096,6 +3075,7 @@
 				INFOPLIST_FILE = PdfExpert/Resources/Staging/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
@@ -3299,6 +3279,7 @@
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
@@ -3351,6 +3332,7 @@
 				INFOPLIST_FILE = PdfExpert/Resources/Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(DISPLAY_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(DISPLAY_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app need to access your camera in order to scan documents or to take pictures to convert to pdf";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recording sound annotations requires the microphone.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Saving a scan as images adds the pages to your photo library.";
