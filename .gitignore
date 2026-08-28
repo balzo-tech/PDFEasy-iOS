@@ -94,3 +94,8 @@ proxy/.secrets/
 # converted, and how many minutes after starting it the renewal was switched off.
 # Apple lets you download a key once, so the copy lives here and never leaves.
 .secrets/
+
+# Built app bundles. The archives themselves are already ignored above as .ipa
+# and .dSYM; this catches the exported bundle that `build_app` and the debug
+# capture leave in the working tree — 30 MB that look like source to git status.
+*.app/
