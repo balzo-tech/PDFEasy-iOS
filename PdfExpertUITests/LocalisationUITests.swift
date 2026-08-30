@@ -55,9 +55,7 @@ final class LocalisationUITests: XCTestCase {
                       "la schermata della firma non si è aperta, o il suo bottone non è tradotto")
 
         self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.45)).tap()
-
-        XCTAssertTrue(self.app.staticTexts["Aggiungi firma"].waitForExistence(timeout: 15),
-                      "il foglio della firma non è arrivato")
+        self.openSignatureCreation()
         for tab in ["Disegno", "Da immagine", "Da fotocamera"] {
             XCTAssertTrue(self.app.buttons[tab].firstMatch.exists, "manca il tab «\(tab)»")
         }
@@ -131,7 +129,7 @@ final class LocalisationUITests: XCTestCase {
         self.tap(self.app.buttons["Firma PDF"].firstMatch)
         XCTAssertTrue(self.app.buttons["Fine"].firstMatch.waitForExistence(timeout: 15))
         self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.45)).tap()
-        XCTAssertTrue(self.app.staticTexts["Aggiungi firma"].waitForExistence(timeout: 15))
+        self.openSignatureCreation()
 
         let confirm = self.app.buttons["Conferma"].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 10))
@@ -211,6 +209,20 @@ final class LocalisationUITests: XCTestCase {
     }
 
     // MARK: - Getting there
+
+    /// A tap on the page opens the creation sheet only when nothing has been signed
+    /// before; once a signature is saved it opens the library ("Le tue firme")
+    /// instead, and the way on is "Aggiungi nuova firma". Signatures outlive a test
+    /// run — they are in the store, which the simulator keeps — so which screen
+    /// appears depends on what ran earlier. Both are handled rather than assuming an
+    /// empty library, which is what used to make these tests fail on a second run.
+    private func openSignatureCreation(file: StaticString = #filePath, line: UInt = #line) {
+        if self.app.staticTexts["Le tue firme"].firstMatch.waitForExistence(timeout: 5) {
+            self.tap(self.app.buttons["Aggiungi nuova firma"].firstMatch)
+        }
+        XCTAssertTrue(self.app.staticTexts["Aggiungi firma"].waitForExistence(timeout: 15),
+                      "il foglio della firma non è arrivato", file: file, line: line)
+    }
 
     private func openTheFirstDocument() {
         let card = self.app.buttons["Meeting notes.pdf"].firstMatch

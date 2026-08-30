@@ -68,11 +68,7 @@ final class SignatureFromPhotoUITests: XCTestCase {
                       "the signature screen did not open")
 
         self.app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.45)).tap()
-
-        guard self.app.staticTexts["Add Signature"].waitForExistence(timeout: 15) else {
-            print("UITREE-BEGIN\n\(self.app.debugDescription)\nUITREE-END")
-            return XCTFail("tapping the page did not open the signature sheet")
-        }
+        self.openSignatureCreation()
         for source in ["Drawing", "From Image", "From Camera"] {
             XCTAssertTrue(self.app.buttons[source].firstMatch.exists, "\(source) is not offered")
         }
@@ -89,6 +85,24 @@ final class SignatureFromPhotoUITests: XCTestCase {
         self.tap(card)
         XCTAssertTrue(self.app.navigationBars["Meeting notes.pdf"].buttons["Tools"].waitForExistence(timeout: 15),
                       "the document did not open")
+    }
+
+    /// A tap on the page opens the creation sheet only when nothing has been signed
+    /// before; once a signature is saved it opens the library instead, and the way
+    /// on is "Add new signature". Signatures outlive a test run — they are in the
+    /// store, which the simulator keeps — so which of the two screens appears
+    /// depends on what ran earlier. Both are handled rather than assuming an empty
+    /// library, which is what used to make these tests fail on a second run.
+    private func openSignatureCreation(file: StaticString = #filePath, line: UInt = #line) {
+        let library = self.app.staticTexts["Your Signatures"].firstMatch
+        if library.waitForExistence(timeout: 5) {
+            self.tap(self.app.buttons["Add new signature"].firstMatch)
+        }
+        guard self.app.staticTexts["Add Signature"].waitForExistence(timeout: 15) else {
+            print("UITREE-BEGIN\n\(self.app.debugDescription)\nUITREE-END")
+            return XCTFail("tapping the page did not open the signature sheet",
+                           file: file, line: line)
+        }
     }
 
     private func tap(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
