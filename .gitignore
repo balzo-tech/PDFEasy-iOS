@@ -59,6 +59,10 @@ Carthage/Build
 PdfExpert/**/GoogleService-Info.plist
 # Info Plist
 PdfExpert/**/Info.plist
+# ...except the app's own, which holds no secret and carries the document types the
+# app registers. The rule above only catches it because macOS is case-insensitive:
+# the sibling ShareFileExtension/Resources/*/Info.plist has always been versioned.
+!pdfexpert/Resources/*/Info.plist
 # ProjectInfo Plist
 PdfExpert/**/ProjectInfo.plist
 # Generated secrets (produced by the "Generate Secrets" build phase from the git-ignored ProjectInfo.plist)

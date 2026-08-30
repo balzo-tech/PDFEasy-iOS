@@ -73,6 +73,8 @@ struct ChatPdfSelectionView: View {
                    loadingView: { AnimationType.pdf.view })
         .asyncView(asyncOperation: self.$viewModel.asyncChatPdfSetup)
         .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
+        .showSignedDocumentInfo(self.$viewModel.signedDocument,
+                                onOpen: { self.viewModel.onSignedDocumentOpen(url: $0) })
         .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
     }

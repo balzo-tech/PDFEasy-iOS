@@ -99,6 +99,8 @@ struct ToolsView: View {
         .asyncView(asyncOperation: self.$viewModel.asyncImageLoading,
                    loadingView: { AnimationType.pdf.view })
         .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
+        .showSignedDocumentInfo(self.$viewModel.signedDocument,
+                                onOpen: { self.viewModel.onSignedDocumentOpen(url: $0) })
         .showWebImportView(viewModel: self.viewModel.pdfWebImportViewModel)
         .showMarkdownImportView(viewModel: self.viewModel.pdfMarkdownImportViewModel)
         .showPermissionsView(viewModel: self.viewModel.pdfPermissionsViewModel)

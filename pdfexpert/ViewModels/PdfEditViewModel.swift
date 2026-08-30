@@ -56,7 +56,7 @@ private enum EditAction: CaseIterable {
     case redact
 }
 
-class PdfEditViewModel: ObservableObject {
+class PdfEditViewModel: ObservableObject, SignedContainerImporting {
     
     struct InputParameter {
         let pdf: Pdf
@@ -221,6 +221,10 @@ class PdfEditViewModel: ObservableObject {
 
     // Office / iWork documents added as pages are converted on-device, with an optional
     // online fallback (see OfficeImportCoordinator). Replaces the former PSPDFKit call.
+    /// Set when a signed container has been opened: drives the sheet that shows who
+    /// signed it, before the document inside is imported.
+    @Published var signedDocument: SignedDocumentPresentation? = nil
+
     lazy var officeImportCoordinator: OfficeImportCoordinator = {
         Container.shared.officeImportCoordinator(OfficeImportCoordinator.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     }()
@@ -1017,7 +1021,21 @@ class PdfEditViewModel: ObservableObject {
     }
     
     @MainActor
-    private func convertFileByUrl(fileUrl: URL) {
+    func onSignedContainerFailure(_ error: PdfError) {
+        self.asyncPdf = AsyncOperation(status: .error(error))
+    }
+
+    @MainActor
+    func onSignedDocumentOpen(url: URL) {
+        self.signedDocument = nil
+        // Deferred so the sheet finishes dismissing before the editor is presented:
+        // two presentations in the same runloop turn and the second is dropped.
+        DispatchQueue.main.async { self.convertFileByUrl(fileUrl: url) }
+    }
+
+    @MainActor
+    func convertFileByUrl(fileUrl: URL) {
+        guard let fileUrl = self.unwrappingSignedContainer(fileUrl) else { return }
         let fileUtType = UTType(filenameExtension: fileUrl.pathExtension)
         if fileUtType?.conforms(to: .pdf) ?? false {
             self.importPdf(pdfUrl: fileUrl)

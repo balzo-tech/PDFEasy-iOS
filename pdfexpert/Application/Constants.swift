@@ -205,6 +205,14 @@ struct K {
             ].compactMap { $0 }
         }()
 
+        /// The CMS envelope `.p7m` files come wrapped in. iOS declares no type for
+        /// them, so the app imports its own (see `UTImportedTypeDeclarations` in
+        /// Info.plist) and the picker has to name it explicitly — a document type
+        /// the system does not know is greyed out in Files.
+        static let SignedContainerFileTypes: [UTType] = {
+            [UTType("public.pkcs7-mime")].compactMap { $0 }
+        }()
+
         static let ImportFileTypesForAddPage: [UTType] = {
             [
                 UTType.image,
@@ -271,13 +279,13 @@ extension ImportFileOption: FilePickerTypeProvider {
         case .word: return K.Misc.WordFileTypes
         case .excel: return [.spreadsheet]
         case .powerpoint: return [.presentation]
-        case .pdf: return [UTType.pdf]
+        case .pdf: return [UTType.pdf] + K.Misc.SignedContainerFileTypes
         case .allDocs: return [
             UTType.pdf,
             .presentation,
             .spreadsheet,
             UTType("com.apple.iwork.pages.sffpages")
-        ].compactMap { $0 } + K.Misc.WordFileTypes
+        ].compactMap { $0 } + K.Misc.WordFileTypes + K.Misc.SignedContainerFileTypes
         }
     }
  }

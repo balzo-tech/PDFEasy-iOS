@@ -216,6 +216,10 @@ class MainCoordinator: ObservableObject {
     /// arrive with an extension that promises more than it delivers.
     @MainActor
     private func canImport(_ url: URL) -> Bool {
+        // A signed container is whatever is inside it. The envelope comes off in the
+        // import path, and refusing it here would take back the whole point of
+        // declaring the type: a `.p7m` arrives from Mail, and nowhere else.
+        if SignedContainerUtility.isSignedContainer(url: url) { return true }
         if let type = UTType(filenameExtension: url.pathExtension),
            type.conforms(to: .pdf) || type.conforms(to: .image) {
             return true

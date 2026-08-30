@@ -12208,6 +12208,41 @@
         }
       }
     },
+    "Open document": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokument öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open document"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir documento"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir le document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri documento"
+          }
+        }
+      }
+    },
     "Open it to enter its password.": {
       "localizations": {
         "de": {
@@ -17492,6 +17527,111 @@
         }
       }
     },
+    "Signatures": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signaturen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signatures"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firmas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signatures"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firme"
+          }
+        }
+      }
+    },
+    "Signed by": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signiert von"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed by"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firmado por"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signé par"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firmato da"
+          }
+        }
+      }
+    },
+    "Signed document": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signiertes Dokument"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed document"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documento firmado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Document signé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documento firmato"
+          }
+        }
+      }
+    },
     "Skip": {
       "localizations": {
         "de": {
@@ -19668,6 +19808,41 @@
         }
       }
     },
+    "These are the names this file declares. The app does not check whether the signatures are still valid.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dies sind die Namen, die diese Datei angibt. Die App prüft nicht, ob die Signaturen noch gültig sind."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These are the names this file declares. The app does not check whether the signatures are still valid."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estos son los nombres que declara el archivo. La app no comprueba si las firmas siguen siendo válidas."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voici les noms déclarés par ce fichier. L'application ne vérifie pas si les signatures sont toujours valides."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questi sono i nomi dichiarati dal file. L'app non verifica se le firme sono ancora valide."
+          }
+        }
+      }
+    },
     "These two documents match, page by page.": {
       "localizations": {
         "de": {
@@ -20106,6 +20281,41 @@
         }
       }
     },
+    "This file contains only the signature. The signed document was sent separately.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Datei enthält nur die Signatur. Das signierte Dokument wurde separat gesendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This file contains only the signature. The signed document was sent separately."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este archivo solo contiene la firma. El documento firmado se envió por separado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce fichier ne contient que la signature. Le document signé a été envoyé séparément."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo file contiene solo la firma. Il documento firmato è stato inviato separatamente."
+          }
+        }
+      }
+    },
     "This file could not be opened. It may be damaged, or not a PDF.": {
       "localizations": {
         "de": {
@@ -20170,6 +20380,76 @@
           "stringUnit": {
             "state": "translated",
             "value": "Non è stato possibile leggere questo file come testo."
+          }
+        }
+      }
+    },
+    "This file does not say who signed it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Datei gibt nicht an, wer sie signiert hat."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This file does not say who signed it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este archivo no indica quién lo firmó."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce fichier n'indique pas qui l'a signé."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo file non indica chi ha firmato."
+          }
+        }
+      }
+    },
+    "This file is not a digitally signed document.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Datei ist kein digital signiertes Dokument."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This file is not a digitally signed document."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este archivo no es un documento firmado digitalmente."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce fichier n'est pas un document signé numériquement."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo file non è un documento con firma digitale."
           }
         }
       }
@@ -20306,6 +20586,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "Questa pagina è stata rimossa."
+          }
+        }
+      }
+    },
+    "This signed document could not be opened. It may be damaged.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses signierte Dokument konnte nicht geöffnet werden. Möglicherweise ist es beschädigt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This signed document could not be opened. It may be damaged."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se ha podido abrir este documento firmado. Puede estar dañado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce document signé n'a pas pu être ouvert. Il est peut-être endommagé."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato possibile aprire questo documento firmato. Potrebbe essere danneggiato."
           }
         }
       }

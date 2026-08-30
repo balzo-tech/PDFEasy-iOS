@@ -55,6 +55,8 @@ struct PdfEditAlerts: ViewModifier {
             .showUnlockView(viewModel: self.viewModel.pdfUnlockViewModel)
             .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
             .showOfficeImportAlerts(coordinator: self.viewModel.officeImportCoordinator)
+            .showSignedDocumentInfo(self.$viewModel.signedDocument,
+                                    onOpen: { self.viewModel.onSignedDocumentOpen(url: $0) })
             .showShareView(coordinator: self.viewModel.pdfShareCoordinator)
 
             // Passwords.
