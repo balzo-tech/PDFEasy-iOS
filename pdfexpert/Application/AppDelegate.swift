@@ -85,6 +85,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                          action: #selector(self.menuOpenPdf),
                          input: "o",
                          modifierFlags: .command),
+            // Next to Open, because that is what it is: the same gesture for the
+            // file the system cannot open on its own.
+            UIKeyCommand(title: String(localized: "Open Signed Document…"),
+                         action: #selector(self.menuOpenSignedDocument),
+                         input: "o",
+                         modifierFlags: [.command, .shift]),
             UIKeyCommand(title: String(localized: "Scan"),
                          action: #selector(self.menuScan),
                          input: "s",
@@ -118,7 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         switch action {
         case #selector(self.menuNewPdf), #selector(self.menuOpenPdf), #selector(self.menuScan),
              #selector(self.menuImageToPdf), #selector(self.menuMerge), #selector(self.menuSplit),
-             #selector(self.menuCompress):
+             #selector(self.menuCompress), #selector(self.menuOpenSignedDocument):
             return true
         default:
             return super.canPerformAction(action, withSender: sender)
@@ -127,6 +133,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     @objc private func menuNewPdf() { PdfProMenuActions.run(.createPdf) }
     @objc private func menuOpenPdf() { PdfProMenuActions.run(.importPdf) }
+    @objc private func menuOpenSignedDocument() { PdfProMenuActions.run(.openSignedDocument) }
     @objc private func menuScan() { PdfProMenuActions.run(.scan) }
     @objc private func menuImageToPdf() { PdfProMenuActions.run(.imageToPdf) }
     @objc private func menuMerge() { PdfProMenuActions.run(.merge) }

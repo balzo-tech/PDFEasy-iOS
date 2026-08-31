@@ -509,6 +509,7 @@ fileprivate extension HomeAction {
         case .comparePdf: return "compare_pdf"
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
+        case .openSignedDocument: return "open_signed_document"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
         case .addPassword: return "add_password"

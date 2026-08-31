@@ -59,6 +59,10 @@ enum HomeAction: Hashable, Identifiable {
     case comparePdf
 
     case importPdf
+    /// Opening a `.p7m` on purpose, rather than stumbling on one. The import path
+    /// already takes the envelope off whatever the file arrives through, but nobody
+    /// looks for a feature they have no reason to believe is there.
+    case openSignedDocument
     
     case readPdf
     
@@ -103,6 +107,7 @@ enum HomeAction: Hashable, Identifiable {
         case .compressPdf: return nil
         case .comparePdf: return nil
         case .importPdf: return .pdf
+        case .openSignedDocument: return .signedContainer
         case .readPdf: return .pdf
         case .removePassword: return .pdf
         case .addPassword: return .pdf
@@ -145,6 +150,7 @@ enum HomeAction: Hashable, Identifiable {
         case .compressPdf: return nil
         case .comparePdf: return nil
         case .importPdf: return nil
+        case .openSignedDocument: return nil
         case .readPdf: return nil
         case .removePassword: return nil
         case .addPassword: return nil
@@ -187,6 +193,7 @@ enum HomeAction: Hashable, Identifiable {
         case .compressPdf: return nil
         case .comparePdf: return nil
         case .importPdf: return nil
+        case .openSignedDocument: return nil
         case .readPdf: return nil
         case .removePassword: return .removePassword
         case .addPassword: return .addPassword
@@ -204,6 +211,8 @@ enum ImportFileOption: Hashable, Identifiable {
     case powerpoint
     case pdf
     case allDocs
+    /// Only the envelopes, for the tool that exists to open them.
+    case signedContainer
 }
 
 enum FileSource: Hashable, Identifiable {
@@ -344,7 +353,8 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         case .imageToPdf:
             self.importOptionGroup = .image
         case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword,
-                .rotatePdf, .pageNumbers, .watermark, .removeBlankPages, .flattenPdf, .invertColors:
+                .rotatePdf, .pageNumbers, .watermark, .removeBlankPages, .flattenPdf, .invertColors,
+                .openSignedDocument:
             self.openFilePicker(fileSource: .files)
         case .sign, .addText, .ocr:
             self.importOptionGroup = .fileAndScan
@@ -515,7 +525,13 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark,
                     .removeBlankPages, .flattenPdf, .invertColors:
+                // These pickers list `.p7m` too (the type is in `ImportFileOption.pdf`),
+                // and `Pdf(pdfUrl:)` cannot open an envelope: without this the file the
+                // picker just offered comes back as "this is not a PDF".
+                guard let fileUrl = self.unwrappingSignedContainer(fileUrl) else { return }
                 self.importPdf(pdfUrl: fileUrl)
+            case .openSignedDocument:
+                self.openingSignedContainer(fileUrl)
             case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
                     .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf,
                     .webToPdf, .markdownToPdf, .pdfPermissions, .redactPdf, .compressPdf, .comparePdf:

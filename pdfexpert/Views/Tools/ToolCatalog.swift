@@ -173,6 +173,20 @@ enum ToolCatalog {
                     systemImage: "tray.and.arrow.down",
                     category: .create,
                     keywords: [String(localized: "files"), String(localized: "open")]),
+            // The import path opens these wherever they turn up, but a capability
+            // with no name is a capability nobody knows about: this is the tile
+            // someone finds when they search the app for the thing their bank,
+            // notary or PEC mailbox just sent them. The wording promises reading,
+            // never validation — see `SignedDocumentView`.
+            PdfTool(action: .openSignedDocument,
+                    title: String(localized: "Open signed document"),
+                    subtitle: String(localized: "Take the PDF out of a .p7m file"),
+                    systemImage: "doc.zipper",
+                    category: .create,
+                    keywords: ["p7m", "m7m", "p7s", "cades", "pec",
+                               String(localized: "digital signature"),
+                               String(localized: "signed"),
+                               String(localized: "envelope")]),
 
             // MARK: Organize
             PdfTool(action: .merge,

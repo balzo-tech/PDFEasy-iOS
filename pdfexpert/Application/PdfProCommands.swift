@@ -90,6 +90,8 @@ struct PdfProCommands: Commands {
                 .keyboardShortcut("n", modifiers: [.command])
             Button("Open…") { PdfProMenuActions.run(.importPdf) }
                 .keyboardShortcut("o", modifiers: [.command])
+            Button("Open Signed Document…") { PdfProMenuActions.run(.openSignedDocument) }
+                .keyboardShortcut("o", modifiers: [.command, .shift])
             Button("Scan") { PdfProMenuActions.run(.scan) }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
             Button("Image to PDF") { PdfProMenuActions.run(.imageToPdf) }

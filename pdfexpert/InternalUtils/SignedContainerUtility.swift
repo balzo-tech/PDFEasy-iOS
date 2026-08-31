@@ -158,6 +158,17 @@ class SignedContainerUtility {
     /// different, which keeps the check to one line at each import site.
     static func unwrap(url: URL) throws -> SignedFile? {
         guard self.isSignedContainer(url: url) else { return nil }
+        return try self.unwrap(contentsOf: url)
+    }
+
+    /// The same, decided on the bytes instead of the name, and never nil: the file
+    /// either is an envelope or the error says it is not.
+    ///
+    /// This is the way in for the tool the user picks by name. There the extension
+    /// cannot be the gate — mail clients and cloud drives hand over
+    /// `contratto.pdf.p7m` stripped back to `contratto.pdf`, and refusing that file
+    /// would refuse exactly the one the tool exists for.
+    static func unwrap(contentsOf url: URL) throws -> SignedFile {
         let data = try Data(contentsOf: url)
         let content = try self.extractContent(from: data, filename: url.lastPathComponent)
 
@@ -399,6 +410,23 @@ extension SignedContainerImporting {
             // right here, the container itself was never the problem.
             self.onSignedContainerFailure(.urlToPdfConversionError)
             return nil
+        }
+    }
+
+    /// The explicit tool's way in, where `unwrappingSignedContainer` is the import
+    /// path's. The difference is what a file that is not an envelope means: on the
+    /// import path it means an ordinary document, and carries on; here the user
+    /// asked for a signed document by name, so it is a mistake worth a sentence
+    /// rather than a PDF that opens as if nothing had been asked.
+    @MainActor func openingSignedContainer(_ url: URL) {
+        do {
+            let unwrapped = try SignedContainerUtility.unwrap(contentsOf: url)
+            self.signedDocument = SignedDocumentPresentation(url: unwrapped.url,
+                                                             content: unwrapped.content)
+        } catch let error as SignedContainerError {
+            self.onSignedContainerFailure(.underlyingError(errorDescription: error.localizedDescription))
+        } catch {
+            self.onSignedContainerFailure(.urlToPdfConversionError)
         }
     }
 }

@@ -346,6 +346,53 @@ final class SignedContainerImportingTests: XCTestCase {
         XCTAssertEqual(spy.failures.first?.errorDescription,
                        SignedContainerError.notASignedContainer.localizedDescription)
     }
+
+    // MARK: - The explicit tool
+
+    /// The whole reason the tool reads bytes rather than names: a container that
+    /// reached the user as `contratto.pdf` — Mail and several cloud drives drop the
+    /// outer extension — is the file someone opens the tool for, and the import
+    /// path would have handed it to the PDF reader instead.
+    func testToolOpensAContainerThatLostItsExtension() throws {
+        let spy = SignedContainerImportSpy()
+        let payload = Data("%PDF-1.4 signed".utf8)
+        let url = try self.write(CMSBuilder.signedData(payload: payload), as: "contratto.pdf")
+
+        spy.openingSignedContainer(url)
+
+        let presented = try XCTUnwrap(spy.signedDocument)
+        XCTAssertEqual(try Data(contentsOf: presented.url), payload)
+        XCTAssertTrue(spy.failures.isEmpty)
+        // Still the user's next tap, exactly as on the import path.
+        XCTAssertTrue(spy.resumed.isEmpty)
+    }
+
+    /// An ordinary PDF chosen by mistake gets told what is wrong. On the import
+    /// path the same file would simply have been imported, which is the difference
+    /// between the two entry points.
+    func testToolRefusesAFileThatIsNotAnEnvelope() throws {
+        let spy = SignedContainerImportSpy()
+        let url = try self.write(Data("%PDF-1.4 plain".utf8), as: "piano.pdf")
+
+        spy.openingSignedContainer(url)
+
+        XCTAssertNil(spy.signedDocument)
+        XCTAssertEqual(spy.failures.first?.errorDescription,
+                       SignedContainerError.notASignedContainer.localizedDescription)
+    }
+
+    /// A detached `.p7s` keeps its own wording here too: nothing is damaged, the
+    /// document simply travelled separately.
+    func testToolReportsADetachedSignatureAsSuch() throws {
+        let spy = SignedContainerImportSpy()
+        let url = try self.write(CMSBuilder.signedData(payload: nil), as: "contratto.p7s")
+
+        spy.openingSignedContainer(url)
+
+        XCTAssertNil(spy.signedDocument)
+        XCTAssertEqual(spy.failures.first?.errorDescription,
+                       SignedContainerError.detachedSignature.localizedDescription)
+    }
 }
 
 // MARK: - Envelope builder

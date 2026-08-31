@@ -286,6 +286,10 @@ extension ImportFileOption: FilePickerTypeProvider {
             .spreadsheet,
             UTType("com.apple.iwork.pages.sffpages")
         ].compactMap { $0 } + K.Misc.WordFileTypes + K.Misc.SignedContainerFileTypes
+        // Nothing but envelopes: everything else in the picker would be greyed out
+        // anyway, and a list that offers PDFs to a tool that refuses them reads as
+        // a bug rather than as a filter.
+        case .signedContainer: return K.Misc.SignedContainerFileTypes
         }
     }
  }
