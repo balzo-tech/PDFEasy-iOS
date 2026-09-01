@@ -222,12 +222,27 @@ platform :ios do
     #
     # Options are in fastlane/Deliverfile. What matters there: no binary, no
     # screenshots, no submission. This lane cannot change what ships.
+    #
+    # ⚠️ `app_version` is not optional here, however much it looks it. Without
+    # it deliver works out which version it is writing to by picking up whatever
+    # .ipa happens to be lying in the project root — the *previous* release, if
+    # one was exported there — and then tries to create that version again. What
+    # comes back is "The version number has been previously used", an error
+    # about a version nobody asked it to touch. Read it from the project, which
+    # is the same place the build gets it from.
     upload_to_app_store(
       api_key: app_store_connect_api_key(
         key_id: ENV.fetch("ASC_KEY_ID"),
         issuer_id: ENV.fetch("ASC_ISSUER_ID"),
         key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
-      )
+      ),
+      # The configuration is as necessary as the target: without it the action
+      # finds four of them, asks which one — and, unattended, dies on its own
+      # question with "could not retrieve response as fastlane runs in
+      # non-interactive mode".
+      app_version: get_version_number(xcodeproj: XCODEPROJ,
+                                      target: "PdfExpert",
+                                      configuration: PRODUCTION_CONFIG)
     )
   end
 
