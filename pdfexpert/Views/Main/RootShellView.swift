@@ -47,6 +47,9 @@ struct RootShellView: View {
         }
         .pdfEditFlowView(pdfEditFlowData: self.$mainCoordinator.pdfEditFlowData)
         .settingsView(showSettings: self.$mainCoordinator.settingsShow)
+        // Presented here rather than in either shell: the button that opens it
+        // exists in both, and an iPad swaps shells while the sheet is up.
+        .showSubscriptionView(self.$mainCoordinator.subscriptionShow, onComplete: {})
         // The scanner covers everything, from every tab, because every entry
         // point into it — the tab, the tool, a widget, a shortcut — lands here.
         .fullScreenCover(isPresented: self.$mainCoordinator.scanFlowShow) {

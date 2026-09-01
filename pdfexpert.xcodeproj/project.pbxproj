@@ -348,9 +348,11 @@
 		AEFD00FD7C24645DEA1C9DD2 /* PdfCompareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC93DD3CF45280EA9129ED5 /* PdfCompareUtility.swift */; };
 		B1A0C4E1F0724A1B93D50102 /* SubscriptionPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A0C4E1F0724A1B93D50101 /* SubscriptionPaywallView.swift */; };
 		B1A0C4E1F0724A1B93D50202 /* SubscriptionPlanCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A0C4E1F0724A1B93D50201 /* SubscriptionPlanCardView.swift */; };
+		B1A0C4E1F0724A1B93D50502 /* ProUpgradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A0C4E1F0724A1B93D50501 /* ProUpgradeButton.swift */; };
 		B1A0C4E1F0724A1B93D50302 /* PaywallToolCollageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A0C4E1F0724A1B93D50301 /* PaywallToolCollageView.swift */; };
 		B1A0C4E1F0724A1B93D50402 /* SubscriptionPaywallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A0C4E1F0724A1B93D50401 /* SubscriptionPaywallViewModel.swift */; };
 		B22D61B0028D876AD1480CB2 /* EditorNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CD541326856671BDFB1D37 /* EditorNavigationUITests.swift */; };
+		B22D61B0028D876AD1480CC3 /* PaywallEntryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CD541326856671BDFB1D48 /* PaywallEntryUITests.swift */; };
 		B7C16F592296D1A34B85BF8D /* ScanGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DABE1700A4543531088792D /* ScanGeometryTests.swift */; };
 		BB362A74C71F02CBD5E95A42 /* CDTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0726D92D82FE2DF8174CDB9B /* CDTag.swift */; };
 		BB5C576A879C815D4E3C43CF /* PdfToolEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6FDA188D47B9D2F495EFC9 /* PdfToolEntity.swift */; };
@@ -516,6 +518,7 @@
 		70736180CA61F13C8AD9D616 /* ScanImageProcessorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanImageProcessorTests.swift; sourceTree = "<group>"; };
 		738F3D7C38FC2535EF7DB213 /* ArchiveFilterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArchiveFilterTests.swift; sourceTree = "<group>"; };
 		79CD541326856671BDFB1D37 /* EditorNavigationUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorNavigationUITests.swift; sourceTree = "<group>"; };
+		79CD541326856671BDFB1D48 /* PaywallEntryUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallEntryUITests.swift; sourceTree = "<group>"; };
 		7AB846D07E18986981D33398 /* PdfProWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PdfProWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BC23C6D694EBBF58C9441D7 /* SharedDocumentStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedDocumentStore.swift; sourceTree = "<group>"; };
 		7C07C24D9158C55FAB874680 /* PdfPageReorderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPageReorderView.swift; sourceTree = "<group>"; };
@@ -785,6 +788,7 @@
 		B195271BEEC0385779003266 /* PdfPermissionsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPermissionsViewModel.swift; sourceTree = "<group>"; };
 		B1A0C4E1F0724A1B93D50101 /* SubscriptionPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPaywallView.swift; sourceTree = "<group>"; };
 		B1A0C4E1F0724A1B93D50201 /* SubscriptionPlanCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPlanCardView.swift; sourceTree = "<group>"; };
+		B1A0C4E1F0724A1B93D50501 /* ProUpgradeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProUpgradeButton.swift; sourceTree = "<group>"; };
 		B1A0C4E1F0724A1B93D50301 /* PaywallToolCollageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallToolCollageView.swift; sourceTree = "<group>"; };
 		B1A0C4E1F0724A1B93D50401 /* SubscriptionPaywallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPaywallViewModel.swift; sourceTree = "<group>"; };
 		B3F0F52B481D297B421A74EC /* PdfCompressUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfCompressUtility.swift; sourceTree = "<group>"; };
@@ -984,6 +988,7 @@
 			isa = PBXGroup;
 			children = (
 				79CD541326856671BDFB1D37 /* EditorNavigationUITests.swift */,
+				79CD541326856671BDFB1D48 /* PaywallEntryUITests.swift */,
 				C3A0D5E2F1834B2CA4E60101 /* OnboardingUITests.swift */,
 				857D2B1368B6FEF557204D2A /* ArchiveFilingUITests.swift */,
 				F1A70C4E2E01A11100SIGN02 /* SignedDocumentToolUITests.swift */,
@@ -1219,6 +1224,7 @@
 				B1A0C4E1F0724A1B93D50201 /* SubscriptionPlanCardView.swift */,
 				B1A0C4E1F0724A1B93D50301 /* PaywallToolCollageView.swift */,
 				67766B42712040628D80734E /* SubscriptionRenewalNoticeView.swift */,
+				B1A0C4E1F0724A1B93D50501 /* ProUpgradeButton.swift */,
 			);
 			path = Subscription;
 			sourceTree = "<group>";
@@ -2222,6 +2228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B22D61B0028D876AD1480CB2 /* EditorNavigationUITests.swift in Sources */,
+				B22D61B0028D876AD1480CC3 /* PaywallEntryUITests.swift in Sources */,
 				C3A0D5E2F1834B2CA4E60102 /* OnboardingUITests.swift in Sources */,
 				EA488508BC0123744C866132 /* ArchiveFilingUITests.swift in Sources */,
 				F1A70C4D2E01A11100SIGN01 /* SignedDocumentToolUITests.swift in Sources */,
@@ -2357,6 +2364,7 @@
 				89460C6029DAC36600E39BAC /* SubscriptionErrorView.swift in Sources */,
 				B1A0C4E1F0724A1B93D50102 /* SubscriptionPaywallView.swift in Sources */,
 				B1A0C4E1F0724A1B93D50202 /* SubscriptionPlanCardView.swift in Sources */,
+				B1A0C4E1F0724A1B93D50502 /* ProUpgradeButton.swift in Sources */,
 				B1A0C4E1F0724A1B93D50302 /* PaywallToolCollageView.swift in Sources */,
 				B1A0C4E1F0724A1B93D50402 /* SubscriptionPaywallViewModel.swift in Sources */,
 				89BB2DBD2A7A80A8009E6738 /* PdfUnlockView.swift in Sources */,

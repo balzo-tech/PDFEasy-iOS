@@ -28,7 +28,8 @@ struct MainSplitView: View {
             MainSidebarView(archive: self.archive,
                             tab: self.$mainCoordinator.tab,
                             onManageFiling: { self.organizerShow = true },
-                            onShowSettings: { self.mainCoordinator.settingsShow = true })
+                            onShowSettings: { self.mainCoordinator.settingsShow = true },
+                            onUpgrade: { self.mainCoordinator.subscriptionShow = true })
                 // Kept narrow so all three columns still fit an iPad held in
                 // portrait; the sidebar holds short labels and folder names.
                 .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 300)

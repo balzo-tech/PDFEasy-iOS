@@ -89,6 +89,10 @@ class MainCoordinator: ObservableObject {
     @Published var path: [Route] = []
     @Published var pdfEditFlowData: PdfEditFlowData? = nil
     @Published var settingsShow: Bool = false
+    /// The paywall opened from the header, rather than by a document trying to
+    /// leave. It lives here for the same reason as `settingsShow`: both shells
+    /// show that button, and the presentation belongs to the shell above them.
+    @Published var subscriptionShow: Bool = false
     /// The document previewed in the iPad detail column, held as `Pdf.documentId`
     /// rather than as a `Pdf`: the archive hands out fresh values on every
     /// refresh and a stored struct would stop matching them.

@@ -26,6 +26,7 @@ struct MainSidebarView: View {
     @Binding var tab: MainTab
     let onManageFiling: () -> Void
     let onShowSettings: () -> Void
+    let onUpgrade: () -> Void
 
     /// Derived rather than stored: the sidebar shows what the Files grid is
     /// actually filtered to, so a filter cleared from anywhere else is reflected
@@ -108,6 +109,9 @@ struct MainSidebarView: View {
                     Label("Settings", systemImage: "gearshape")
                 }
             }
+            ToolbarItem(placement: .topBarLeading) {
+                ProUpgradeButton(onTap: self.onUpgrade)
+            }
         }
     }
 
@@ -148,7 +152,8 @@ struct MainSidebarView: View {
         MainSidebarView(archive: Container.shared.archiveViewModel(),
                         tab: .constant(.files),
                         onManageFiling: {},
-                        onShowSettings: {})
+                        onShowSettings: {},
+                    onUpgrade: {})
     } detail: {
         Color.clear
     }

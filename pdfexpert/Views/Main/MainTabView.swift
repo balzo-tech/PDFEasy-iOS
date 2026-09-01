@@ -70,6 +70,7 @@ struct MainTabView: View {
             .navigationTitle(tab.title)
             .navigationBarTitleDisplayMode(tab == .files ? .large : .inline)
             .settingsButton(showSettings: self.$mainCoordinator.settingsShow)
+            .proUpgradeButton(showSubscription: self.$mainCoordinator.subscriptionShow)
         }
     }
 }
@@ -84,6 +85,16 @@ fileprivate extension View {
                 } label: {
                     Label("Settings", systemImage: "gearshape")
                 }
+            }
+        }
+    }
+
+    /// Opposite the settings gear, on every tab: subscribing should not require
+    /// finding a locked feature first.
+    func proUpgradeButton(showSubscription: Binding<Bool>) -> some View {
+        self.toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                ProUpgradeButton { showSubscription.wrappedValue = true }
             }
         }
     }
