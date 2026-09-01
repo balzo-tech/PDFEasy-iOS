@@ -236,13 +236,7 @@ platform :ios do
         issuer_id: ENV.fetch("ASC_ISSUER_ID"),
         key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
       ),
-      # The configuration is as necessary as the target: without it the action
-      # finds four of them, asks which one — and, unattended, dies on its own
-      # question with "could not retrieve response as fastlane runs in
-      # non-interactive mode".
-      app_version: get_version_number(xcodeproj: XCODEPROJ,
-                                      target: "PdfExpert",
-                                      configuration: PRODUCTION_CONFIG)
+      app_version: marketing_version
     )
   end
 
@@ -273,8 +267,7 @@ platform :ios do
       automatic_release: false,
       run_precheck_before_submit: false,
       force: true,
-      app_version: get_version_number(xcodeproj: XCODEPROJ, target: "PdfExpert",
-                                      configuration: PRODUCTION_CONFIG)
+      app_version: marketing_version
     )
   end
 
@@ -344,11 +337,7 @@ platform :ios do
       # the Mac page — and that page starts life at 1.0, a number that belongs to
       # no binary. The version has to match what gets uploaded, so it is read
       # from the project rather than typed here.
-      # `get_version_number` without a configuration stops to ask which one, and
-      # this project has four — in a non-interactive run that is a crash, not a
-      # question. Production Release is the one that ships.
-      app_version: get_version_number(xcodeproj: XCODEPROJ, target: "PdfExpert",
-                                      configuration: PRODUCTION_CONFIG)
+      app_version: marketing_version
     )
   end
 
@@ -373,4 +362,22 @@ platform :ios do
       end
     end
   end
+end
+
+# The version number, from the one place that agrees with the binary.
+#
+# ⚠️ Not `get_version_number`. This project keeps its version in build settings
+# and has no Info.plist on disk, so that action falls back to the template
+# default — **1.0.0** — without a word about it. deliver believes what it is
+# given and `skip_app_version_update` is false, so what follows is not an error:
+# it is "Successfully set the version to '1.0.0'" and an App Store Connect
+# version that has quietly stopped being 1.30. That happened on 2026-09-01 and
+# had to be patched back by hand through the API.
+def marketing_version
+  settings = sh("xcodebuild -showBuildSettings -project ../#{XCODEPROJ} " \
+                "-target PdfExpert -configuration '#{PRODUCTION_CONFIG}' 2>/dev/null",
+                log: false)
+  version = settings[/^\s*MARKETING_VERSION\s*=\s*(.+)$/, 1]&.strip
+  UI.user_error!("could not read MARKETING_VERSION from the project") if version.to_s.empty?
+  version
 end
