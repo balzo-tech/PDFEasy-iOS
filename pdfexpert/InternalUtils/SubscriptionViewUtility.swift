@@ -168,10 +168,15 @@ let productMetaOfferedKey: String = "offered"
 
 /// The plans on sale right now.
 ///
-/// Retired products stay listed in `Products.plist` with `offered` set to false:
-/// the app still has to recognise a subscriber who bought the monthly plan back
-/// when it existed, and StoreKit only hands back the products we ask for by id.
-/// They simply no longer appear on the paywall.
+/// Products are retired by setting `offered` to false in `Products.plist`, never
+/// by deleting the entry: the app still has to recognise a subscriber who bought
+/// a plan we no longer sell, and StoreKit only hands back the products we ask
+/// for by id. They simply stop appearing on the paywall.
+///
+/// The same flag chooses between the two variants every plan has in App Store
+/// Connect — one with an introductory offer, one without. That is how the free
+/// trial came off the weekly and monthly plans without a line of code changing:
+/// `weekly.freetrial` went out, `weekly` came in.
 func getOfferedSubscriptions(products: [Product], store: Store) -> [Product] {
     return products.filter {
         guard $0.subscription != nil,

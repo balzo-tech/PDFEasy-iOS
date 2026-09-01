@@ -6,9 +6,11 @@
 //  picker — which existed to be A/B tested against each other and, between
 //  them, sold five products through a free-trial toggle nobody explained.
 //
-//  What is left is one screen with one decision on it: weekly or yearly, both
-//  opening on a free trial. The collage overhead says what is being sold, the
-//  two cards say what it costs, and the notice above the button answers the
+//  What is left is one screen with one decision on it: weekly, monthly or
+//  yearly. Only the yearly plan opens on a free trial — the shorter two charge
+//  today — so the trial is something this screen still has to offer rather than
+//  the default on every card. The collage overhead says what is being sold, the
+//  cards say what it costs, and the notice above the button answers the
 //  objection the yearly plan has to answer — that the renewal will arrive
 //  unannounced a year from now.
 //

@@ -2,9 +2,18 @@
 //  SubscriptionPaywallViewModel.swift
 //  PdfExpert
 //
-//  The paywall's one view model. It turns the plans on sale into two cards —
-//  short period first, long period second — and preselects the one that saves
-//  the customer the most, which is also the one the renewal notice speaks about.
+//  The paywall's one view model. It turns the plans on sale into one card each —
+//  shortest period first, longest last — and preselects the one that saves the
+//  customer the most, which is also the one the renewal notice speaks about.
+//
+//  How many cards there are is decided by `Products.plist` (`offered`), not
+//  here: it was two for a long time, and is three since the monthly plan came
+//  back. Nothing in this file or in the view caps the count.
+//
+//  The same flag decides which cards promise a free trial, because every plan
+//  exists in App Store Connect twice — with an introductory offer and without —
+//  and `offered` picks the variant on sale. Since 1.30 only the yearly plan is
+//  sold in its trial variant; the weekly and monthly ones charge on the spot.
 //
 
 import Foundation

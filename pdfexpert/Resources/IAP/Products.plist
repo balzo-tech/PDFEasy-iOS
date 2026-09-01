@@ -7,7 +7,7 @@
 		<key>name</key>
 		<string>standard_subscription</string>
 		<key>offered</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>monthly.freetrial</key>
 	<dict>
@@ -21,14 +21,14 @@
 		<key>name</key>
 		<string>standard_subscription</string>
 		<key>offered</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>weekly.freetrial</key>
 	<dict>
 		<key>name</key>
 		<string>standard_subscription</string>
 		<key>offered</key>
-		<true/>
+		<false/>
 	</dict>
 	<key>yearly</key>
 	<dict>

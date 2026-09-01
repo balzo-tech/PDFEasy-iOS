@@ -171,15 +171,27 @@ final class EditorNavigationUITests: XCTestCase {
         XCTAssertTrue(self.editorIsShowing, "closing the paywall left the document behind")
     }
 
-    /// The shape the paywall was rebuilt into: the yearly plan preselected, the
-    /// retired monthly one gone, and nothing else selected alongside it.
+    /// The shape of the paywall since the monthly plan came back: three cards,
+    /// the yearly one still preselected, and nothing selected alongside it.
+    ///
+    /// The monthly plan was retired once and is on sale again at 7,99 € —
+    /// deliberately above a twelfth of the yearly one, because the paywall ranks
+    /// the plans by what a year on each costs and would otherwise hand the
+    /// "Save …" badge, and the preselection with it, to the plan that brings in
+    /// a fraction of the money. Twelve monthly charges come to 95,88 €, against
+    /// 69,99 € for a year.
+    ///
+    /// That is the price of `monthly`, the variant without an introductory
+    /// offer, and it has been live since 2023: unlike `monthly.freetrial` there
+    /// is no price change to wait for, so this test no longer doubles as a
+    /// release gate.
     ///
     /// What the paywall has to sell comes from App Store Connect at run time, so
     /// this cannot insist on the weekly card being there — a product that is not
     /// yet approved simply does not arrive. It checks the weekly card only when
     /// StoreKit hands it over, and always checks the two things that are ours:
-    /// the monthly plan is off sale and exactly one card is chosen.
-    func testThePaywallOffersTheYearlyPlanPreselectedAndNoMonthlyOne() {
+    /// the monthly plan is on sale and exactly one card is chosen.
+    func testThePaywallOffersTheMonthlyPlanWithTheYearlyStillPreselected() {
         self.launch(premium: false)
         self.openTheFirstDocument()
 
@@ -194,11 +206,49 @@ final class EditorNavigationUITests: XCTestCase {
         let yearly = self.card(named: "Yearly")
         XCTAssertTrue(yearly.exists, "the yearly plan is missing")
         XCTAssertTrue(yearly.isSelected, "the yearly plan is not the one preselected")
-        XCTAssertFalse(self.card(named: "Monthly").exists, "the retired monthly plan is still on sale")
+
+        let monthly = self.card(named: "Monthly")
+        XCTAssertTrue(monthly.exists, "the monthly plan is not on sale")
+        XCTAssertFalse(monthly.isSelected, "the monthly plan took the preselection")
 
         let weekly = self.card(named: "Weekly")
         if weekly.exists {
-            XCTAssertFalse(weekly.isSelected, "both plans are selected at once")
+            XCTAssertFalse(weekly.isSelected, "two plans are selected at once")
+        }
+    }
+
+    /// The free trial is what the yearly plan has and the other two do not.
+    ///
+    /// Every plan exists in App Store Connect twice, with an introductory offer
+    /// and without, and `Products.plist` picks the variant on sale. Since 1.30
+    /// the weekly and monthly cards are the no-trial ones: they charge on the
+    /// spot, which leaves the trial as a reason to take the yearly plan rather
+    /// than something every card gives away.
+    ///
+    /// A card combines its children into a single accessibility label, so the
+    /// promise — "Try it now for free", and the length of the trial — is either
+    /// part of that label or it is not on the card at all.
+    func testOnlyTheYearlyPlanOpensOnAFreeTrial() {
+        self.launch(premium: false)
+        self.openTheFirstDocument()
+
+        self.openFromPanelBySearching("share", query: "Share")
+
+        let yearly = self.card(named: "Yearly")
+        XCTAssertTrue(yearly.waitForExistence(timeout: 15), "the yearly plan is missing")
+        XCTAssertTrue(yearly.label.localizedCaseInsensitiveContains("free"),
+                      "the yearly plan stopped offering the free trial: \(yearly.label)")
+
+        let monthly = self.card(named: "Monthly")
+        XCTAssertTrue(monthly.exists, "the monthly plan is not on sale")
+        XCTAssertFalse(monthly.label.localizedCaseInsensitiveContains("free"),
+                       "the monthly plan still promises a free trial: \(monthly.label)")
+
+        // As above: the weekly plan is checked only if StoreKit hands it over.
+        let weekly = self.card(named: "Weekly")
+        if weekly.exists {
+            XCTAssertFalse(weekly.label.localizedCaseInsensitiveContains("free"),
+                           "the weekly plan still promises a free trial: \(weekly.label)")
         }
     }
 

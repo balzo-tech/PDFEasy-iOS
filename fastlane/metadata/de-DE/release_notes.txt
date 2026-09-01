@@ -1,8 +1,4 @@
-PDF PRO GIBT ES JETZT AUCH FÜR MAC
-Dieselbe App auf dem großen Bildschirm: Seitenleiste, Dokumentliste und Seite nebeneinander, ein Ablage-Menü mit Tastaturkurzbefehlen und Drag & Drop. Es ist ein universeller Kauf — ein auf dem iPhone abgeschlossenes Abo ist auf dem Mac bereits bezahlt, und Ihre Dokumente warten dort über iCloud.
+SIGNIERTE DOKUMENTE ÖFFNEN (.p7m)
+Die Datei, die Ihnen Bank, Notar oder Behörde schickt: iOS kann sie nicht öffnen, Mail zeigt einen unbekannten Anhang, und jede Anleitung dazu endet mit „Nutzen Sie einen Computer". PDF PRO nimmt jetzt die Hülle ab, und das PDF öffnet sich wie jedes andere Dokument - aus der Dateiauswahl, aus Mail oder über „Kopieren nach PDF PRO". Vor dem Öffnen sehen Sie, wen die Hülle als Unterzeichner nennt.
 
-JETZT AUF DEUTSCH UND FRANZÖSISCH
-Fünf Sprachen, neben Englisch, Italienisch und Spanisch.
-
-BEHOBEN
-Bei einer beschädigten oder unvollständigen PDF gab die App sich selbst die Schuld und bat um einen neuen Versuch; jetzt sagt sie, was mit der Datei nicht stimmt. Durchsuchbar machen (OCR) meldete, es sei kein Text erkannt worden — auch bei Dokumenten, deren Seiten bereits durchsuchbar waren. Und der Scanner zählte „1 Seiten".
+Liest .p7m, .m7m und .p7s.

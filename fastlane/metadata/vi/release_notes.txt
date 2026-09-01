@@ -1,8 +1,4 @@
-PDF PRO GIỜ ĐÃ CÓ TRÊN MAC
-Vẫn ứng dụng đó trên màn hình lớn: thanh bên, danh sách tài liệu và trang tài liệu cạnh nhau, menu Tệp với các phím tắt, và kéo thả. Đây là một lần mua dùng chung — gói đăng ký mua trên iPhone đã được thanh toán cho Mac, và tài liệu của bạn đang chờ ở đó qua iCloud.
+MỞ TÀI LIỆU ĐÃ KÝ (.p7m)
+Tệp mà ngân hàng, công chứng viên hoặc cơ quan nhà nước gửi cho bạn: iOS không mở được, Mail hiển thị dưới dạng tệp đính kèm không xác định, và mọi hướng dẫn về việc này đều kết thúc bằng "hãy dùng máy tính". Giờ đây PDF PRO bóc lớp vỏ và tệp PDF mở ra như mọi tài liệu khác - từ trình chọn tệp, từ Mail, hoặc bằng "Sao chép vào PDF PRO". Trước khi mở, ứng dụng cho bạn biết ai được nêu là người ký trong lớp vỏ đó.
 
-GIỜ CÓ TIẾNG ĐỨC VÀ TIẾNG PHÁP
-Năm ngôn ngữ, cùng với tiếng Anh, tiếng Ý và tiếng Tây Ban Nha.
-
-ĐÃ SỬA
-Một tệp PDF hỏng hoặc thiếu dữ liệu lại đổ lỗi cho ứng dụng và bảo bạn thử lại; giờ nó cho biết tệp có vấn đề gì. Tính năng Cho phép tìm kiếm (OCR) báo không nhận ra chữ nào ngay cả với tài liệu đã tìm kiếm được. Và máy quét đếm "1 trang" sai số nhiều.
+Đọc được .p7m, .m7m và .p7s.
