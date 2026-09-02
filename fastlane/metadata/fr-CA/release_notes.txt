@@ -1,4 +1,4 @@
-OUVREZ LES DOCUMENTS SIGNÉS (.p7m)
-Le fichier que vous envoient votre banque, votre notaire ou l'administration : iOS ne sait pas l'ouvrir, Mail affiche une pièce jointe inconnue, et tous les guides se terminent par « utilisez un ordinateur ». PDF PRO retire désormais l'enveloppe et le PDF s'ouvre comme n'importe quel autre document - depuis le sélecteur de fichiers, depuis Mail ou avec « Copier vers PDF PRO ». Avant l'ouverture, il vous indique qui l'enveloppe désigne comme signataire.
+PHOTO D'IDENTITÉ, AVEC VOTRE TÉLÉPHONE
+La photo pour le passeport, la carte d'identité ou le permis, aux mesures de votre pays : 50 × 70 mm au Canada, 35 × 45 en Europe, carrée aux États-Unis. L'app trouve le visage, mesure la tête du menton au sommet des cheveux et recadre toute seule. Puis elle vous dit ce qui ne va pas avant que vous alliez imprimer : tête penchée, yeux mi-clos, ombre sur un côté du visage, fond irrégulier. Vous choisissez le fond blanc, gris clair ou bleu clair, vous déplacez le cadre si vous le souhaitez, et vous obtenez une planche avec plusieurs photos à découper.
 
-Reconnaît les fichiers .p7m, .m7m et .p7s.
+Nouveau aussi : un outil pour retirer l'arrière-plan d'une photo.

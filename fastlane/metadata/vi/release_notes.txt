@@ -1,4 +1,4 @@
-MỞ TÀI LIỆU ĐÃ KÝ (.p7m)
-Tệp mà ngân hàng, công chứng viên hoặc cơ quan nhà nước gửi cho bạn: iOS không mở được, Mail hiển thị dưới dạng tệp đính kèm không xác định, và mọi hướng dẫn về việc này đều kết thúc bằng "hãy dùng máy tính". Giờ đây PDF PRO bóc lớp vỏ và tệp PDF mở ra như mọi tài liệu khác - từ trình chọn tệp, từ Mail, hoặc bằng "Sao chép vào PDF PRO". Trước khi mở, ứng dụng cho bạn biết ai được nêu là người ký trong lớp vỏ đó.
+ẢNH THẺ, CHỤP BẰNG ĐIỆN THOẠI
+Ảnh cho hộ chiếu, căn cước hay bằng lái, đúng kích thước của từng nước: 35 × 45 mm ở châu Âu, 26 × 32 ở Tây Ban Nha, hình vuông ở Mỹ. Ứng dụng tìm khuôn mặt, đo chiều cao đầu từ cằm đến đỉnh tóc rồi tự cắt. Sau đó nó cho bạn biết chỗ nào chưa đạt trước khi bạn đi in: đầu nghiêng, mắt nhắm hờ, bóng đổ trên một bên mặt, nền không đều. Bạn chọn nền trắng, xám hoặc xanh nhạt, dịch khung nếu muốn, và nhận được một tờ 10 × 15 cm với sáu ảnh để cắt rời.
 
-Đọc được .p7m, .m7m và .p7s.
+Cũng mới: công cụ xoá phông nền khỏi một tấm ảnh.

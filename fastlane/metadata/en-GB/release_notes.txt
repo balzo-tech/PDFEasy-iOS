@@ -1,4 +1,4 @@
-OPEN SIGNED DOCUMENTS (.p7m)
-The file your bank, your notary or the public administration sends you: iOS has no viewer for it, Mail shows an unknown attachment, and every guide on the subject ends with "use a computer". PDF PRO now takes the envelope off and the PDF opens like any other document - from the file picker, from Mail, or with "Copy to PDF PRO". Before it opens, it shows you who the envelope names as its signer.
+PASSPORT PHOTOS, FROM YOUR PHONE
+The photo for a passport, an ID card or a driving licence, in your country's own measurements: 35 × 45 mm in the UK and Europe, 26 × 32 in Spain, square in the United States. The app finds the face, measures the head from the chin to the top of the hair and crops it for you. Then it tells you what is wrong before you go and print: head tilted, eyes half shut, a shadow down one side of the face, an uneven background. Pick a white, grey or light blue backdrop, move the frame if you want to, and get a 10 × 15 cm sheet with six photos to cut out.
 
-Recognises .p7m, .m7m and .p7s.
+Also new: a tool that removes the background from a photo.

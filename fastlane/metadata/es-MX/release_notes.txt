@@ -1,4 +1,4 @@
-ABRE LOS DOCUMENTOS FIRMADOS (.p7m)
-El archivo que te envían el banco, el notario o las dependencias de gobierno: iOS no sabe abrirlo, Mail lo muestra como un adjunto desconocido y todas las guías terminan diciendo «usa una computadora». Ahora PDF PRO quita el sobre y el PDF se abre como cualquier otro documento: desde el selector de archivos, desde Mail o con «Copiar en PDF PRO». Antes de abrirlo, te muestra a quién señala el sobre como firmante.
+FOTO DE CREDENCIAL, CON EL CELULAR
+La foto para el pasaporte, la credencial o la licencia, con las medidas de tu país: tamaño infantil de 25 × 30 mm en México, 35 × 45 en Europa, cuadrada en Estados Unidos. La app encuentra el rostro, mide la cabeza desde la barbilla hasta la parte alta del cabello y recorta sola. Después te dice qué falla antes de que vayas a imprimir: cabeza inclinada, ojos entrecerrados, sombra de un lado de la cara, fondo irregular. Eliges el fondo blanco, gris o azul claro, mueves el encuadre si quieres, y obtienes una hoja de 10 × 15 con varias fotos para recortar.
 
-Reconoce .p7m, .m7m y .p7s.
+También nuevo: una herramienta para quitar el fondo de una foto.

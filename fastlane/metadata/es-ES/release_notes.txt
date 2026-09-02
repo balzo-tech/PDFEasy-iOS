@@ -1,4 +1,4 @@
-ABRE LOS DOCUMENTOS FIRMADOS (.p7m)
-El archivo que te envían el banco, el notario o la Administración: iOS no sabe abrirlo, Mail lo muestra como un adjunto desconocido y todas las guías acaban diciendo «usa un ordenador». Ahora PDF PRO quita el sobre y el PDF se abre como cualquier otro documento: desde el selector de archivos, desde Mail o con «Copiar en PDF PRO». Antes de abrirlo, te muestra a quién señala el sobre como firmante.
+FOTO DE CARNÉ, CON EL MÓVIL
+La foto para el DNI, el pasaporte o el carné de conducir, con las medidas de tu país: 26 × 32 mm en España, 35 × 45 en el resto de Europa, cuadrada en Estados Unidos. La app encuentra el rostro, mide la cabeza desde la barbilla hasta la parte alta del pelo y recorta sola. Después te dice qué falla antes de que vayas a imprimir: cabeza inclinada, ojos entrecerrados, sombra en un lado de la cara, fondo irregular. Eliges el fondo blanco, gris o azul claro, mueves el encuadre si quieres, y obtienes una hoja de 10 × 15 con seis fotos para recortar.
 
-Reconoce .p7m, .m7m y .p7s.
+También nuevo: una herramienta para quitar el fondo de una foto.

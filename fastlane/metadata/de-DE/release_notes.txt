@@ -1,4 +1,4 @@
-SIGNIERTE DOKUMENTE ÖFFNEN (.p7m)
-Die Datei, die Ihnen Bank, Notar oder Behörde schickt: iOS kann sie nicht öffnen, Mail zeigt einen unbekannten Anhang, und jede Anleitung dazu endet mit „Nutzen Sie einen Computer". PDF PRO nimmt jetzt die Hülle ab, und das PDF öffnet sich wie jedes andere Dokument - aus der Dateiauswahl, aus Mail oder über „Kopieren nach PDF PRO". Vor dem Öffnen sehen Sie, wen die Hülle als Unterzeichner nennt.
+PASSBILD, MIT DEM TELEFON
+Das Foto für Reisepass, Personalausweis oder Führerschein, in den Maßen Ihres Landes: 35 × 45 mm in Deutschland, 26 × 32 in Spanien, quadratisch in den USA. Die App findet das Gesicht, misst den Kopf vom Kinn bis zum Haaransatz oben und schneidet selbst zu. Dann sagt sie Ihnen, was nicht stimmt, bevor Sie drucken gehen: geneigter Kopf, halb geschlossene Augen, Schatten auf einer Gesichtshälfte, ungleichmäßiger Hintergrund. Sie wählen Hellgrau, Weiß oder Hellblau als Hintergrund, verschieben den Rahmen bei Bedarf und erhalten einen 10 × 15 cm Bogen mit sechs Fotos zum Ausschneiden.
 
-Liest .p7m, .m7m und .p7s.
+Ebenfalls neu: ein Werkzeug, das den Hintergrund aus einem Foto entfernt.

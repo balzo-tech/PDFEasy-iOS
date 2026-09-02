@@ -1,4 +1,4 @@
-ABRA DOCUMENTOS ASSINADOS (.p7m)
-O arquivo que o banco, o cartório ou os órgãos públicos enviam: o iOS não consegue abri-lo, o Mail mostra um anexo desconhecido e todo guia sobre o assunto termina com "use um computador". Agora o PDF PRO tira o envelope e o PDF abre como qualquer outro documento - pelo seletor de arquivos, pelo Mail ou com "Copiar para o PDF PRO". Antes de abrir, mostra quem o envelope indica como signatário.
+FOTO 3 × 4, PELO CELULAR
+A foto para o passaporte, o RG ou a CNH, nas medidas do seu país: 3 × 4 cm no Brasil, 35 × 45 mm na Europa, quadrada nos Estados Unidos. O app encontra o rosto, mede a cabeça do queixo até o alto do cabelo e recorta sozinho. Depois diz o que está errado antes de você ir imprimir: cabeça inclinada, olhos semicerrados, sombra em um lado do rosto, fundo irregular. Você escolhe o fundo branco, cinza ou azul claro, move o enquadramento se quiser, e recebe uma folha 10 × 15 com várias fotos para recortar.
 
-Reconhece .p7m, .m7m e .p7s.
+Também novo: uma ferramenta para remover o fundo de uma foto.

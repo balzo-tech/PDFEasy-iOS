@@ -1,1 +1,1 @@
-Mới: máy quét camera tích hợp, thư mục và thẻ, cùng tìm kiếm đọc được nội dung bên trong tệp PDF chứ không chỉ tên tệp.
+Mới: ảnh thẻ. Kích thước chính thức của nước bạn, kiểm tra trước khi in, và một tờ 10 × 15 cm để cắt rời.

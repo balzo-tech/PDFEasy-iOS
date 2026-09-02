@@ -1,1 +1,1 @@
-Nuevo: escáner de cámara integrado, carpetas y etiquetas, y una búsqueda que lee dentro de tus PDF, no solo el nombre de los archivos.
+Nuevo: la foto de credencial. Las medidas oficiales de tu país, las comprobaciones antes de imprimir y una hoja de 10 × 15 para recortar.
