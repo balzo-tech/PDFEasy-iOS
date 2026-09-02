@@ -85,7 +85,15 @@ class MainCoordinator: ObservableObject {
     }
     
     @Published var rootView: RootView = .onboarding
+    #if DEBUG
+    // `debugRunTool` opens a tool from `ToolsView.onAppear`, which only runs once
+    // that tab is on screen — every use of it began with the same manual tap.
+    @Published var tab: MainTab = UserDefaults.standard.string(forKey: "debugRunTool") != nil
+        ? MainTab.tools
+        : MainTab.files
+    #else
     @Published var tab: MainTab = MainTab.files
+    #endif
     @Published var path: [Route] = []
     @Published var pdfEditFlowData: PdfEditFlowData? = nil
     @Published var settingsShow: Bool = false

@@ -107,6 +107,7 @@ struct ToolsView: View {
         .showRedactView(viewModel: self.viewModel.pdfRedactViewModel)
         .showCompressView(viewModel: self.viewModel.pdfCompressViewModel)
         .showCompareView(viewModel: self.viewModel.pdfCompareViewModel)
+        .showBackgroundRemovalView(viewModel: self.viewModel.backgroundRemovalViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
@@ -284,7 +285,7 @@ struct ToolsView: View {
     /// simulator where the file picker cannot be driven:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
     /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
-    /// `sort`, `read`, `editor`. The premium ones also need `debugPremium -bool YES`,
+    /// `sort`, `read`, `editor`, `background`. The premium ones also need `debugPremium -bool YES`,
     /// or the paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
@@ -312,6 +313,11 @@ struct ToolsView: View {
                 self.viewModel.pdfMergeViewModel.showPdfSorter = true
             case "read":
                 self.viewModel.pdfReadViewModel.read(pdf: pdf)
+            case "background":
+                // A drawn photograph: the picker cannot be driven from here, and
+                // on a simulator the cut-out is a placeholder oval anyway.
+                self.viewModel.backgroundRemovalViewModel.run(image: Self.debugPhotograph(),
+                                                              onCreatePdf: nil)
             case "editor":
                 // The editor on a document nobody has named yet: `Pdf(data:)` keeps
                 // the generated filename, which is what the name suggestion needs.
@@ -321,6 +327,17 @@ struct ToolsView: View {
             default:
                 break
             }
+        }
+    }
+
+    /// A stand-in photograph for `debugRunTool background`.
+    private static func debugPhotograph() -> UIImage {
+        let size = CGSize(width: 900, height: 1200)
+        return UIGraphicsImageRenderer(size: size).image { context in
+            UIColor.systemTeal.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            UIColor.systemOrange.setFill()
+            context.cgContext.fillEllipse(in: CGRect(x: 180, y: 180, width: 540, height: 840))
         }
     }
     #endif

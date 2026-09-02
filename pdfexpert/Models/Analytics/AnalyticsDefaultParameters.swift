@@ -9,6 +9,8 @@ import Foundation
 
 enum AnalyticsEventCustomParameters: String {
     case marginOption = "margin_option"
+    case backgroundStyle = "background_style"
+    case backgroundDestination = "background_destination"
     case homeActionType = "home_action_type"
     case importOption = "import_option"
     case pdfInputType = "pdf_input_type"
@@ -104,6 +106,7 @@ extension AnalyticsScreen {
         case .redact: return "Redact"
         case .compress: return "Compress"
         case .compare: return "Compare"
+        case .backgroundRemoval: return "BackgroundRemoval"
         case .scan: return "Scan"
         case .scanReview: return "ScanReview"
         case .scanLibrary: return "ScanLibrary"
@@ -186,6 +189,8 @@ extension AnalyticsEvent {
         case .compressionCompleted: return "compression_completed"
         case .compareStarted: return "compare_started"
         case .compareCompleted: return "compare_completed"
+        case .backgroundRemovalStarted: return "background_removal_started"
+        case .backgroundRemovalCompleted: return "background_removal_completed"
         case .folderSaved: return "folder_saved"
         case .folderDeleted: return "folder_deleted"
         case .pdfFiled: return "pdf_filed"
@@ -326,6 +331,10 @@ extension AnalyticsEvent {
         case .compareStarted: return nil
         case .compareCompleted(let changedPageCount):
             return [AnalyticsEventCustomParameters.changedPageCount.rawValue: changedPageCount]
+        case .backgroundRemovalStarted: return nil
+        case .backgroundRemovalCompleted(let style, let destination):
+            return [AnalyticsEventCustomParameters.backgroundStyle.rawValue: style,
+                    AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination]
         case .folderSaved: return nil
         case .folderDeleted: return nil
         case .pdfFiled: return nil
@@ -510,6 +519,7 @@ fileprivate extension HomeAction {
         case .rotatePdf: return "rotate_pdf"
         case .importPdf: return "import_pdf"
         case .openSignedDocument: return "open_signed_document"
+        case .removeBackground: return "remove_background"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
         case .addPassword: return "add_password"

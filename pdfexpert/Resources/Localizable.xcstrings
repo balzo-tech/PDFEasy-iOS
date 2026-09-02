@@ -1660,6 +1660,40 @@
         }
       }
     },
+    "Allow adding photos to save the image to your library.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erlauben Sie das Hinzufügen von Fotos, um das Bild in Ihrer Mediathek zu sichern."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow adding photos to save the image to your library."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permite añadir fotos para guardar la imagen en tu fototeca."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisez l'ajout de photos pour enregistrer l'image dans votre photothèque."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti l'aggiunta di foto per salvare l'immagine nella tua libreria."
+          }
+        }
+      }
+    },
     "Allow copying text": {
       "localizations": {
         "de": {
@@ -2336,6 +2370,40 @@
         }
       }
     },
+    "Background": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hintergrund"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Background"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fondo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrière-plan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sfondo"
+          }
+        }
+      }
+    },
     "Bake annotations and form fields into the page": {
       "extractionState": "stale",
       "localizations": {
@@ -2469,6 +2537,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Perdita di qualità appena visibile"
+          }
+        }
+      }
+    },
+    "Black": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schwarz"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Negro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noir"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nero"
           }
         }
       }
@@ -4541,6 +4643,40 @@
         }
       }
     },
+    "Cut the subject out of a photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Motiv aus einem Foto freistellen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cut the subject out of a photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recorta el sujeto de una foto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Détourez le sujet d'une photo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ritaglia il soggetto da una foto"
+          }
+        }
+      }
+    },
     "DOC and DOCX files": {
       "localizations": {
         "de": {
@@ -5663,6 +5799,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Più riposante per gli occhi di notte"
+          }
+        }
+      }
+    },
+    "Edge": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kante"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edge"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Borde"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contour"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bordo"
           }
         }
       }
@@ -8430,6 +8600,40 @@
         }
       }
     },
+    "Grey": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grau"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grey"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gris"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gris"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grigio"
+          }
+        }
+      }
+    },
     "Greyscale": {
       "localizations": {
         "de": {
@@ -9690,6 +9894,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rendi ricercabile (OCR)"
+          }
+        }
+      }
+    },
+    "Make a PDF": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF erstellen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make a PDF"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crear un PDF"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créer un PDF"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crea un PDF"
           }
         }
       }
@@ -11341,6 +11579,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nessuna firma aggiunta"
+          }
+        }
+      }
+    },
+    "No subject was found in this photo. It works best with a person, an animal or an object in the foreground.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In diesem Foto wurde kein Motiv gefunden. Am besten funktioniert es mit einer Person, einem Tier oder einem Objekt im Vordergrund."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No subject was found in this photo. It works best with a person, an animal or an object in the foreground."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se ha encontrado ningún sujeto en esta foto. Funciona mejor con una persona, un animal o un objeto en primer plano."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun sujet n'a été trouvé sur cette photo. Le résultat est meilleur avec une personne, un animal ou un objet au premier plan."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato trovato nessun soggetto in questa foto. Funziona meglio con una persona, un animale o un oggetto in primo piano."
           }
         }
       }
@@ -14004,6 +14276,40 @@
         }
       }
     },
+    "Photos": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto"
+          }
+        }
+      }
+    },
     "Photos access is off": {
       "localizations": {
         "de": {
@@ -14478,6 +14784,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Anteprima del documento compresso"
+          }
+        }
+      }
+    },
+    "Preview of the photo without its background": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorschau des Fotos ohne Hintergrund"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preview of the photo without its background"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vista previa de la foto sin fondo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aperçu de la photo sans arrière-plan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anteprima della foto senza sfondo"
           }
         }
       }
@@ -15152,6 +15492,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rimuovi una password che conosci"
+          }
+        }
+      }
+    },
+    "Remove background": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hintergrund entfernen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove background"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitar el fondo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer l'arrière-plan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi sfondo"
           }
         }
       }
@@ -16449,6 +16823,40 @@
         }
       }
     },
+    "Save to Photos": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Fotos sichern"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save to Photos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar en Fotos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer dans Photos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salva nelle Foto"
+          }
+        }
+      }
+    },
     "Saved to Photos": {
       "localizations": {
         "de": {
@@ -17732,6 +18140,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Salta"
+          }
+        }
+      }
+    },
+    "Slide right if the old background still shows around the hair.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach rechts schieben, wenn der alte Hintergrund um die Haare noch zu sehen ist."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slide right if the old background still shows around the hair."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desliza a la derecha si el fondo antiguo aún se ve alrededor del pelo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faites glisser vers la droite si l'ancien arrière-plan apparaît encore autour des cheveux."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sposta a destra se attorno ai capelli si vede ancora il vecchio sfondo."
           }
         }
       }
@@ -19575,6 +20017,40 @@
         }
       }
     },
+    "The image has been saved to your photos.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Bild wurde in Ihren Fotos gesichert."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The image has been saved to your photos."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La imagen se ha guardado en tus fotos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'image a été enregistrée dans vos photos."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'immagine è stata salvata nelle tue foto."
+          }
+        }
+      }
+    },
     "The pages could not be processed.": {
       "comment": "Error message when the scanner fails to process the pages.",
       "isCommentAutoGenerated": true,
@@ -20998,6 +21474,40 @@
         }
       }
     },
+    "Transparent": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transparent"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transparent"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transparente"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transparent"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trasparente"
+          }
+        }
+      }
+    },
     "Try for free": {
       "localizations": {
         "de": {
@@ -22223,6 +22733,40 @@
         }
       }
     },
+    "White": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiß"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blanco"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blanc"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bianco"
+          }
+        }
+      }
+    },
     "With the yearly plan, we let you know before it expires.": {
       "localizations": {
         "de": {
@@ -22287,6 +22831,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Word in PDF"
+          }
+        }
+      }
+    },
+    "Work on a picture before it becomes a document": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeiten Sie das Bild, bevor es ein Dokument wird"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Work on a picture before it becomes a document"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trabaja la imagen antes de que sea un documento"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Travaillez l'image avant qu'elle ne devienne un document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lavora sull'immagine prima che diventi un documento"
           }
         }
       }
@@ -23721,6 +24299,40 @@
         }
       }
     },
+    "background": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hintergrund"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "background"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fondo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "arrière-plan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sfondo"
+          }
+        }
+      }
+    },
     "blank": {
       "localizations": {
         "de": {
@@ -23955,6 +24567,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "copia"
+          }
+        }
+      }
+    },
+    "cut out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "freistellen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cut out"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "recortar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "détourage"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ritaglio"
           }
         }
       }
@@ -24331,6 +24977,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "busta"
+          }
+        }
+      }
+    },
+    "erase": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "löschen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "erase"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "borrar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "effacer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cancella"
           }
         }
       }
@@ -25658,6 +26338,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "poi %@"
+          }
+        }
+      }
+    },
+    "transparent": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "transparent"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "transparent"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "transparente"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "transparent"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "trasparente"
           }
         }
       }

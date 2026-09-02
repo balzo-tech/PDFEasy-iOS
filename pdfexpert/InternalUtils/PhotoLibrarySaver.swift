@@ -23,13 +23,21 @@ enum PhotoLibrarySaveError: Error {
 enum PhotoLibrarySaver {
 
     /// Saves each image as its own photo, in the order given.
-    static func save(images: [UIImage]) async throws {
+    ///
+    /// `keepingTransparency` writes PNG instead of JPEG. A scan has no alpha and
+    /// JPEG is the right call for it; a cut-out is nothing *but* alpha, and JPEG
+    /// flattens it onto black — the background the tool was asked to remove,
+    /// back again, in the camera roll.
+    static func save(images: [UIImage], keepingTransparency: Bool = false) async throws {
         guard !images.isEmpty else { return }
         guard await self.requestAddOnlyAuthorization() else {
             throw PhotoLibrarySaveError.notAuthorized
         }
 
-        let data = images.compactMap { $0.jpegData(compressionQuality: K.Misc.ScanJpegQuality) }
+        let type: UTType = keepingTransparency ? .png : .jpeg
+        let data = images.compactMap {
+            keepingTransparency ? $0.pngData() : $0.jpegData(compressionQuality: K.Misc.ScanJpegQuality)
+        }
         guard data.count == images.count else { throw PhotoLibrarySaveError.failed }
 
         do {
@@ -37,7 +45,7 @@ enum PhotoLibrarySaver {
                 for imageData in data {
                     let request = PHAssetCreationRequest.forAsset()
                     let options = PHAssetResourceCreationOptions()
-                    options.uniformTypeIdentifier = UTType.jpeg.identifier
+                    options.uniformTypeIdentifier = type.identifier
                     request.addResource(with: .photo, data: imageData, options: options)
                 }
             }

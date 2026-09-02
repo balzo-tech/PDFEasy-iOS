@@ -58,6 +58,7 @@ enum AnalyticsScreen {
     case redact
     case compress
     case compare
+    case backgroundRemoval
     case scan
     case scanReview
     case scanLibrary
@@ -142,6 +143,10 @@ enum AnalyticsEvent {
     case compressionCompleted(preset: CompressionPreset, savedPercent: Int)
     case compareStarted
     case compareCompleted(changedPageCount: Int)
+    case backgroundRemovalStarted
+    /// `destination` is what the cut-out was actually used for — the number that
+    /// says whether the tool ends in a saved file or in a shrug.
+    case backgroundRemovalCompleted(style: String, destination: String)
     case folderSaved
     case folderDeleted
     case pdfFiled

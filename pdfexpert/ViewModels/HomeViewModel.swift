@@ -58,6 +58,10 @@ enum HomeAction: Hashable, Identifiable {
     case compressPdf
     case comparePdf
 
+    /// Lifting the subject out of a photograph. It lives in the tool catalog and
+    /// nowhere else on purpose — see `ToolCategory.image`.
+    case removeBackground
+
     case importPdf
     /// Opening a `.p7m` on purpose, rather than stumbling on one. The import path
     /// already takes the envelope off whatever the file arrives through, but nobody
@@ -106,6 +110,7 @@ enum HomeAction: Hashable, Identifiable {
         case .redactPdf: return nil
         case .compressPdf: return nil
         case .comparePdf: return nil
+        case .removeBackground: return .image
         case .importPdf: return .pdf
         case .openSignedDocument: return .signedContainer
         case .readPdf: return .pdf
@@ -149,6 +154,7 @@ enum HomeAction: Hashable, Identifiable {
         case .redactPdf: return nil
         case .compressPdf: return nil
         case .comparePdf: return nil
+        case .removeBackground: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -192,6 +198,7 @@ enum HomeAction: Hashable, Identifiable {
         case .redactPdf: return nil
         case .compressPdf: return nil
         case .comparePdf: return nil
+        case .removeBackground: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -317,6 +324,8 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         Container.shared.pdfMarkdownImportViewModel(PdfMarkdownImportViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     }()
     
+    lazy var backgroundRemovalViewModel: BackgroundRemovalViewModel = Container.shared.backgroundRemovalViewModel()
+
     lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     
     var editStartAction: PdfEditStartAction? { self.action?.editStartAction }
@@ -350,7 +359,9 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         case .appExtension:
             assertionFailure("App Extension behaviour is not supposed to be triggered by a CTA")
             break
-        case .imageToPdf:
+        case .imageToPdf, .removeBackground:
+            // The same three doors as Image to PDF — camera, library, file. What
+            // happens to the picture afterwards is decided in `handleImportedImage`.
             self.importOptionGroup = .image
         case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword,
                 .rotatePdf, .pageNumbers, .watermark, .removeBlankPages, .flattenPdf, .invertColors,
@@ -495,7 +506,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     func convertImage(uiImage: UIImage) {
         self.activeSheet = nil
         DispatchQueue.main.async {
-            self.convertUiImageToPdf(uiImage: uiImage, filename: nil)
+            self.handleImportedImage(uiImage, filename: nil)
         }
     }
     
@@ -519,7 +530,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
             switch self.action {
-            case .imageToPdf:
+            case .imageToPdf, .removeBackground:
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
@@ -613,7 +624,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                 return
             }
             self.currentAnalyticsFileExtension = fileImageUrl.pathExtension
-            self.convertUiImageToPdf(uiImage: uiImage, filename: fileImageUrl.filename)
+            self.handleImportedImage(uiImage, filename: fileImageUrl.filename)
         } catch {
             debugPrint(for: self, message: "Error retrieving file. Error: \(error)")
             self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
@@ -652,6 +663,29 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     /// A photo the library cannot hand over does not take the others down with it —
     /// the document is only refused if *nothing* could be read.
     private func loadImages(from selections: [PhotosPickerItem]) {
+        // Removing a background is a one-photo job: the picker allows several
+        // because Image to PDF wants them, and taking the first is kinder than
+        // silently cutting out fifty subjects nobody asked for.
+        if self.action == .removeBackground {
+            guard let first = selections.first else { return }
+            self.asyncImageLoading = AsyncOperation(status: .loading(Progress()))
+            Task { @MainActor in
+                do {
+                    guard let picked = try await first.loadTransferable(type: PickedImage.self) else {
+                        self.asyncImageLoading = AsyncOperation(status: .empty)
+                        return
+                    }
+                    self.asyncImageLoading = AsyncOperation(status: .data(()))
+                    self.handleImportedImage(picked.uiImage, filename: nil)
+                } catch {
+                    self.asyncImageLoading = AsyncOperation(
+                        status: .error(SharedUnderlyingError.convertError(fromError: error))
+                    )
+                }
+            }
+            return
+        }
+
         let progress = Progress(totalUnitCount: Int64(selections.count))
         self.asyncImageLoading = AsyncOperation(status: .loading(progress))
         Task { @MainActor in
@@ -686,6 +720,25 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         }
     }
     
+    /// Where a picked photograph goes.
+    ///
+    /// Every tool that starts from an image comes through here, which is the one
+    /// place that knows what the user asked for: the picker, the camera and the
+    /// file browser are shared, and none of them should have to.
+    @MainActor
+    private func handleImportedImage(_ uiImage: UIImage, filename: String?) {
+        guard self.action == .removeBackground else {
+            self.convertUiImageToPdf(uiImage: uiImage, filename: filename)
+            return
+        }
+        self.backgroundRemovalViewModel.run(image: uiImage, onCreatePdf: { [weak self] cutOut in
+            // A cut-out becomes a document through exactly the path a photo
+            // takes, so it lands in the editor with everything else.
+            self?.convertUiImageToPdf(uiImage: cutOut, filename: filename)
+            self?.trackFullActionCompleted()
+        })
+    }
+
     private func convertUiImageToPdf(uiImage: UIImage, filename: String?) {
         let pdfDocument = PDFUtility.convertUiImageToPdf(uiImage: uiImage)
         var pdf = Pdf(pdfDocument: pdfDocument)

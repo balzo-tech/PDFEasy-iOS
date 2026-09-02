@@ -79,6 +79,7 @@ class ColorPalette {
     static let categoryProtect = Color(light: "17875A", dark: "34D399")
     static let categoryExport = Color(light: "0E8FA8", dark: "38BEC9")
     static let categoryRead = Color(light: "4F46E5", dark: "8B93FF")
+    static let categoryImage = Color(light: "B0459B", dark: "E879C9")
     static let categoryAi = Color(light: "C6339B", dark: "F472B6")
 
     // MARK: - File formats

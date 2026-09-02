@@ -334,6 +334,26 @@ i file di partenza e, accanto, i PDF che l'app ne ha prodotto.
       documento che non ne aveva: per questo diceva che non ce n'erano
 - [x] **Read PDF** — `leggi_pdf.pdf`: due pagine e **7 annotazioni** salvate
 
+### Foto
+
+⚠️ **Questi non si possono provare in simulatore**: la segmentazione di Vision lì
+non parte affatto (`Could not create inference context`), e in DEBUG l'app
+sostituisce un ovale al soggetto per poter guardare la schermata. Il ritaglio
+vero esiste solo sul telefono.
+
+- [ ] **Remove background** — una foto con una persona in primo piano: il
+      soggetto resta, lo sfondo sparisce. Guarda **i capelli e le spalle**: è lì
+      che si vede se il bordo è pulito o se resta un alone del vecchio sfondo
+- [ ] Un soggetto **che tocca il bordo della foto** (spalla tagliata dal fotogramma):
+      non deve essere mangiato dal bordo
+- [ ] I cinque sfondi: **Trasparente** salva un **PNG** (aprilo in Foto: lo sfondo
+      è a scacchi, non nero), gli altri quattro un **JPEG** opaco
+- [ ] Una foto **senza soggetto** (un muro, un documento): deve dire che non ha
+      trovato nessun soggetto, non «errore interno»
+- [ ] **Salva nelle Foto** e **Condividi** aprono il paywall se non si è abbonati,
+      e riprendono da soli dopo l'acquisto
+- [ ] **Crea un PDF** porta il ritaglio nell'editor come qualsiasi altra foto
+
 ### Solo con il servizio online acceso
 
 Se il servizio è spento questi sei **non devono comparire** nel catalogo.

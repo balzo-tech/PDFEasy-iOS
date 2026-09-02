@@ -20,6 +20,12 @@ enum ToolCategory: Int, CaseIterable, Identifiable {
     case edit
     case protect
     case export
+    /// Tools that work on a photograph rather than on a document. Its own family
+    /// on purpose: they are found by people looking for something the other five
+    /// names do not describe, and keeping them here is what stops "Edit content"
+    /// from quietly turning into a photo editor. Before `read`, which is one
+    /// tool in a family of its own and makes a poor last row to scroll past.
+    case image
     case read
 
     var id: Int { self.rawValue }
@@ -32,6 +38,7 @@ enum ToolCategory: Int, CaseIterable, Identifiable {
         case .protect: return String(localized: "Protect")
         case .export: return String(localized: "Convert from PDF")
         case .read: return String(localized: "Read")
+        case .image: return String(localized: "Photos")
         }
     }
 
@@ -43,6 +50,7 @@ enum ToolCategory: Int, CaseIterable, Identifiable {
         case .protect: return String(localized: "Passwords, permissions and redaction")
         case .export: return String(localized: "Turn your PDF into another format")
         case .read: return String(localized: "A distraction-free reader")
+        case .image: return String(localized: "Work on a picture before it becomes a document")
         }
     }
 
@@ -54,6 +62,7 @@ enum ToolCategory: Int, CaseIterable, Identifiable {
         case .protect: return "lock.shield"
         case .export: return "arrow.up.forward.square"
         case .read: return "book"
+        case .image: return "photo.artframe"
         }
     }
 
@@ -65,6 +74,7 @@ enum ToolCategory: Int, CaseIterable, Identifiable {
         case .protect: return ColorPalette.categoryProtect
         case .export: return ColorPalette.categoryExport
         case .read: return ColorPalette.categoryRead
+        case .image: return ColorPalette.categoryImage
         }
     }
 }
@@ -315,6 +325,16 @@ enum ToolCatalog {
                     systemImage: "square.and.arrow.up.on.square",
                     category: .export,
                     keywords: [String(localized: "images"), String(localized: "text"), "jpg", "txt"]),
+
+            // MARK: Photos
+            PdfTool(action: .removeBackground,
+                    title: String(localized: "Remove background"),
+                    subtitle: String(localized: "Cut the subject out of a photo"),
+                    systemImage: "person.and.background.dotted",
+                    category: .image,
+                    keywords: [String(localized: "background"), String(localized: "cut out"),
+                               String(localized: "transparent"), String(localized: "erase"),
+                               "png", String(localized: "photo")]),
 
             // MARK: Read
             PdfTool(action: .readPdf,
