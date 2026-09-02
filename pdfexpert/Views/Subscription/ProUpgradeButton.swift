@@ -38,14 +38,21 @@ struct ProUpgradeButton: View {
                     // and `Text(verbatim:)` is how the localization lint is told
                     // that a literal is a name rather than a missing translation.
                     Text(verbatim: "PRO")
-                        .font(forCategory: .callout)
+                        .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundStyle(ColorPalette.background)
-                        .padding(.horizontal, DS.Spacing.sm)
-                        .padding(.vertical, 4)
-                        .background(ColorPalette.accent, in: .capsule)
+                        // Three capitals set solid read as one blob at this
+                        // size; a little tracking is what makes them a badge.
+                        .tracking(0.5)
                 }
-                .buttonStyle(.plain)
+                // The tint through the style, not a `.background` capsule of our
+                // own: a toolbar puts every item inside its own glass container,
+                // and a filled shape drawn underneath came out as a white blob
+                // welded to the button beside it — three blue letters that read
+                // as a broken control rather than as an offer. Asking for the
+                // prominent style hands the fill to the same material the bar is
+                // made of, so it reads as one deliberate accent in the header.
+                .buttonStyle(.glassProminent)
+                .tint(ColorPalette.accent)
                 // Three letters are a poster, not a sentence: VoiceOver reads
                 // out what tapping does instead of spelling the badge.
                 .accessibilityLabel(Text("Upgrade to PRO"))
