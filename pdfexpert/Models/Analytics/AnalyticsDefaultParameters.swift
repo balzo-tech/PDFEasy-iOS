@@ -10,6 +10,9 @@ import Foundation
 enum AnalyticsEventCustomParameters: String {
     case marginOption = "margin_option"
     case backgroundStyle = "background_style"
+    case passportSpec = "passport_spec"
+    case passportOutput = "passport_output"
+    case passportOutcome = "passport_outcome"
     case backgroundDestination = "background_destination"
     case homeActionType = "home_action_type"
     case importOption = "import_option"
@@ -107,6 +110,7 @@ extension AnalyticsScreen {
         case .compress: return "Compress"
         case .compare: return "Compare"
         case .backgroundRemoval: return "BackgroundRemoval"
+        case .passportPhoto: return "PassportPhoto"
         case .scan: return "Scan"
         case .scanReview: return "ScanReview"
         case .scanLibrary: return "ScanLibrary"
@@ -191,6 +195,8 @@ extension AnalyticsEvent {
         case .compareCompleted: return "compare_completed"
         case .backgroundRemovalStarted: return "background_removal_started"
         case .backgroundRemovalCompleted: return "background_removal_completed"
+        case .passportPhotoStarted: return "passport_photo_started"
+        case .passportPhotoCompleted: return "passport_photo_completed"
         case .folderSaved: return "folder_saved"
         case .folderDeleted: return "folder_deleted"
         case .pdfFiled: return "pdf_filed"
@@ -335,6 +341,13 @@ extension AnalyticsEvent {
         case .backgroundRemovalCompleted(let style, let destination):
             return [AnalyticsEventCustomParameters.backgroundStyle.rawValue: style,
                     AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination]
+        case .passportPhotoStarted(let spec):
+            return [AnalyticsEventCustomParameters.passportSpec.rawValue: spec]
+        case .passportPhotoCompleted(let spec, let destination, let output, let outcome):
+            return [AnalyticsEventCustomParameters.passportSpec.rawValue: spec,
+                    AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination,
+                    AnalyticsEventCustomParameters.passportOutput.rawValue: output,
+                    AnalyticsEventCustomParameters.passportOutcome.rawValue: outcome]
         case .folderSaved: return nil
         case .folderDeleted: return nil
         case .pdfFiled: return nil
@@ -520,6 +533,7 @@ fileprivate extension HomeAction {
         case .importPdf: return "import_pdf"
         case .openSignedDocument: return "open_signed_document"
         case .removeBackground: return "remove_background"
+        case .passportPhoto: return "passport_photo"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
         case .addPassword: return "add_password"

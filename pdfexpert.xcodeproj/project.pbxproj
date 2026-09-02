@@ -365,6 +365,13 @@
 		C443B890349E858D04682E9D /* PdfRedactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D6989FE8D5E01C705E98BF /* PdfRedactViewModel.swift */; };
 		C7CE88087170FECAB05C82D1 /* PdfEditToolbars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8E8C949219CEBCDA1E856F /* PdfEditToolbars.swift */; };
 		C809F1EAF86E61149EB90C20 /* BackgroundRemovalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7ADB6BD313763F1C07268 /* BackgroundRemovalUtility.swift */; };
+		BE19268A6F363DF32D8F4803 /* PassportPhotoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A00EC2D37E0D139E852EF1 /* PassportPhotoSpec.swift */; };
+		50827BF6BC0491D42C8A6CF3 /* PassportPhotoCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FBA03C38F5DA0D568AFD36 /* PassportPhotoCatalog.swift */; };
+		4769E4EE9FEEF6C3464298F9 /* PassportPhotoUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50521C8B0E2A0118A9569B4C /* PassportPhotoUtility.swift */; };
+		B1452A0AB512EC9CEF7664FA /* PassportPhotoValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6680B48A29572F8AB3E3C399 /* PassportPhotoValidator.swift */; };
+		3AA0BD92D45EFAC14AF55C13 /* PassportPhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB94F95CEB7C55DEEE85CA1F /* PassportPhotoViewModel.swift */; };
+		3F00191CBE81D9B2DB6DFA80 /* PassportPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7AA504E2F27B8B14F14FA /* PassportPhotoView.swift */; };
+		17ADCE9FD28659FFBE199EEA /* PassportPhotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F0C17A8DE37479D850AF39 /* PassportPhotoTests.swift */; };
 		CA4D0A36A0B9134A9B17290C /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CBC6496C308494982DBF43 /* FilesView.swift */; };
 		CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEC26104F59A1229C145C29 /* PdfExtractView.swift */; };
 		CD81BEFD471AD97FD6526894 /* PdfExtractViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */; };
@@ -474,6 +481,13 @@
 		1627687B824247268F137100 /* PdfPageNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPageNumberView.swift; sourceTree = "<group>"; };
 		1731333E3FF44FB5FADB73EC /* PdfConvertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertView.swift; sourceTree = "<group>"; };
 		19B7ADB6BD313763F1C07268 /* BackgroundRemovalUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundRemovalUtility.swift; sourceTree = "<group>"; };
+		05A00EC2D37E0D139E852EF1 /* PassportPhotoSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoSpec.swift; sourceTree = "<group>"; };
+		F3FBA03C38F5DA0D568AFD36 /* PassportPhotoCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoCatalog.swift; sourceTree = "<group>"; };
+		50521C8B0E2A0118A9569B4C /* PassportPhotoUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoUtility.swift; sourceTree = "<group>"; };
+		6680B48A29572F8AB3E3C399 /* PassportPhotoValidator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoValidator.swift; sourceTree = "<group>"; };
+		EB94F95CEB7C55DEEE85CA1F /* PassportPhotoViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoViewModel.swift; sourceTree = "<group>"; };
+		4EA7AA504E2F27B8B14F14FA /* PassportPhotoView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoView.swift; sourceTree = "<group>"; };
+		E5F0C17A8DE37479D850AF39 /* PassportPhotoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoTests.swift; sourceTree = "<group>"; };
 		1FD02A2AFA02B35E25414789 /* MainSidebarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MainSidebarView.swift; path = ../../../pdfexpert/Views/Main/MainSidebarView.swift; sourceTree = "<group>"; };
 		2038AF30BF498F30CFFCD311 /* PdfProWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = PdfProWidget.entitlements; sourceTree = "<group>"; };
 		264B643D94F580903A7855D2 /* OfficeImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OfficeImportView.swift; sourceTree = "<group>"; };
@@ -1298,6 +1312,7 @@
 				7FFA51296A73FDFA9F94E741 /* PdfCompressView.swift */,
 				1211F42434E7C13EFE673417 /* PdfCompareView.swift */,
 				A919D717C2D470E76969A3EC /* BackgroundRemovalView.swift */,
+				4EA7AA504E2F27B8B14F14FA /* PassportPhotoView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1553,6 +1568,8 @@
 				89436ABE29E55EA000060605 /* Pdf.swift */,
 				89429F892A9C937300465420 /* Signature.swift */,
 				8928F3D02A30BAFB001C1853 /* PickedImage.swift */,
+				F3FBA03C38F5DA0D568AFD36 /* PassportPhotoCatalog.swift */,
+				05A00EC2D37E0D139E852EF1 /* PassportPhotoSpec.swift */,
 				8936AA322A6828C9005F6C73 /* ProjectInfo.swift */,
 				893ED9CF2A6920F2004EE67C /* ChatPdfRef.swift */,
 				893ED9D12A6926E8004EE67C /* ChatPdfMessage.swift */,
@@ -1630,6 +1647,7 @@
 				00DA3E08B1256B4245813C6E /* PdfCompressViewModel.swift */,
 				0864300D493DC03B817DB865 /* PdfCompareViewModel.swift */,
 				E3C674D11A26A58E3CFA5648 /* BackgroundRemovalViewModel.swift */,
+				EB94F95CEB7C55DEEE85CA1F /* PassportPhotoViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1676,6 +1694,8 @@
 				B3F0F52B481D297B421A74EC /* PdfCompressUtility.swift */,
 				DCC93DD3CF45280EA9129ED5 /* PdfCompareUtility.swift */,
 				19B7ADB6BD313763F1C07268 /* BackgroundRemovalUtility.swift */,
+				6680B48A29572F8AB3E3C399 /* PassportPhotoValidator.swift */,
+				50521C8B0E2A0118A9569B4C /* PassportPhotoUtility.swift */,
 			);
 			path = InternalUtils;
 			sourceTree = "<group>";
@@ -1862,6 +1882,7 @@
 				EE6498F5D0225CCE67211E67 /* ImageToPdfTests.swift */,
 				8F517771E9337646B0F2A813 /* AnnotationIdentityTests.swift */,
 				6859F57E5F448510FC3B4F41 /* BackgroundRemovalUtilityTests.swift */,
+				E5F0C17A8DE37479D850AF39 /* PassportPhotoTests.swift */,
 			);
 			path = PdfExpertTests;
 			sourceTree = "<group>";
@@ -2557,6 +2578,12 @@
 				C809F1EAF86E61149EB90C20 /* BackgroundRemovalUtility.swift in Sources */,
 				80D7C113C002F012E8FC1F19 /* BackgroundRemovalViewModel.swift in Sources */,
 				3E6CAD74DD33C4DCF58570FD /* BackgroundRemovalView.swift in Sources */,
+				BE19268A6F363DF32D8F4803 /* PassportPhotoSpec.swift in Sources */,
+				50827BF6BC0491D42C8A6CF3 /* PassportPhotoCatalog.swift in Sources */,
+				4769E4EE9FEEF6C3464298F9 /* PassportPhotoUtility.swift in Sources */,
+				B1452A0AB512EC9CEF7664FA /* PassportPhotoValidator.swift in Sources */,
+				3AA0BD92D45EFAC14AF55C13 /* PassportPhotoViewModel.swift in Sources */,
+				3F00191CBE81D9B2DB6DFA80 /* PassportPhotoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2598,6 +2625,7 @@
 				A288A9DACDDDD15D84CCDD9C /* ImageToPdfTests.swift in Sources */,
 				360F9836D75296B43DBED466 /* AnnotationIdentityTests.swift in Sources */,
 				33345BD8E4C00FA4E4E613D7 /* BackgroundRemovalUtilityTests.swift in Sources */,
+				17ADCE9FD28659FFBE199EEA /* PassportPhotoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

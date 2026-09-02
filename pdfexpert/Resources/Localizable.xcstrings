@@ -65,6 +65,74 @@
         }
       }
     },
+    "%@ · %lld dpi": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld dpi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld dpi"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld ppp"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld ppp"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld dpi"
+          }
+        }
+      }
+    },
+    "%@ — %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        }
+      }
+    },
     "%@/%@": {
       "localizations": {
         "de": {
@@ -297,6 +365,100 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
+          }
+        }
+      }
+    },
+    "%lld checks passed": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld check passed"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld checks passed"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld controllo superato"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld controlli superati"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld comprobación superada"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld comprobaciones superadas"
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld vérification réussie"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld vérifications réussies"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Prüfung bestanden"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Prüfungen bestanden"
+                }
+              }
+            }
           }
         }
       }
@@ -660,6 +822,100 @@
         }
       }
     },
+    "%lld photos on one sheet, with lines to cut along.": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld photo on one sheet, with lines to cut along."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld photos on one sheet, with lines to cut along."
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld foto su un foglio, con le linee per ritagliarla."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld foto su un foglio, con le linee per ritagliarle."
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld foto en una hoja, con líneas para recortarla."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld fotos en una hoja, con líneas para recortarlas."
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld photo sur une planche, avec des repères de découpe."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld photos sur une planche, avec des repères de découpe."
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Foto auf einem Bogen, mit Schnittlinien."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Fotos auf einem Bogen, mit Schnittlinien."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld scans": {
       "comment": "The name to display for a type of entity that represents a scan.",
       "isCommentAutoGenerated": true,
@@ -982,6 +1238,74 @@
         }
       }
     },
+    "10 × 15 cm": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 × 15 cm"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 × 15 cm"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 × 15 cm"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 × 15 cm"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 × 15 cm"
+          }
+        }
+      }
+    },
+    "3 × 4 document photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokumentfoto 3 × 4"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 × 4 document photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto de documento 3 × 4"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo de document 3 × 4"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto documento 3 × 4"
+          }
+        }
+      }
+    },
     "A calm, full-screen reader": {
       "localizations": {
         "de": {
@@ -1080,6 +1404,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un lettore senza distrazioni"
+          }
+        }
+      }
+    },
+    "A neutral light grey is what the German fotomuster shows; a strong white can wash the outline out.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das deutsche Fotomuster zeigt ein neutrales Hellgrau; ein kräftiges Weiß kann die Kontur verschwinden lassen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A neutral light grey is what the German fotomuster shows; a strong white can wash the outline out."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El fotomuster alemán muestra un gris claro neutro; un blanco intenso puede difuminar el contorno."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fotomuster allemand montre un gris clair neutre ; un blanc trop vif peut effacer le contour."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il fotomuster tedesco mostra un grigio chiaro neutro; un bianco forte può far sparire il contorno."
           }
         }
       }
@@ -2541,6 +2899,40 @@
         }
       }
     },
+    "Biometric passport photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biometrisches Passbild"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biometric passport photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto biométrica de pasaporte"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo de passeport biométrique"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto biometrica per passaporto"
+          }
+        }
+      }
+    },
     "Black": {
       "localizations": {
         "de": {
@@ -2707,6 +3099,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Blu"
+          }
+        }
+      }
+    },
+    "Both eyes have to be open and visible.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beide Augen müssen offen und sichtbar sein."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both eyes have to be open and visible."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los dos ojos tienen que estar abiertos y visibles."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les deux yeux doivent être ouverts et visibles."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrambi gli occhi devono essere aperti e visibili."
           }
         }
       }
@@ -3086,6 +3512,40 @@
         }
       }
     },
+    "Chin": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kinn"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chin"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barbilla"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menton"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mento"
+          }
+        }
+      }
+    },
     "Choose %@": {
       "localizations": {
         "de": {
@@ -3219,6 +3679,142 @@
           "stringUnit": {
             "state": "translated",
             "value": "Scegli una compressione per il tuo PDF"
+          }
+        }
+      }
+    },
+    "Choose a plain background above and the app fills in what is missing — or move further from the camera and take it again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie oben einen einfarbigen Hintergrund, dann füllt die App das Fehlende — oder gehen Sie weiter weg und fotografieren Sie erneut."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a plain background above and the app fills in what is missing — or move further from the camera and take it again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige un fondo liso arriba y la app rellena lo que falta, o aléjate de la cámara y repite la foto."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez un fond uni ci-dessus et l'app comble ce qui manque — ou éloignez-vous de l'appareil et reprenez la photo."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli uno sfondo uniforme qui sopra e l'app riempie quello che manca — oppure allontanati dalla fotocamera e rifai la foto."
+          }
+        }
+      }
+    },
+    "Choose a plain background above and the app replaces it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie oben einen einfarbigen Hintergrund, dann ersetzt die App ihn."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a plain background above and the app replaces it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige un fondo liso arriba y la app lo sustituye."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez un fond uni ci-dessus et l'app le remplace."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli uno sfondo uniforme qui sopra e l'app lo sostituisce."
+          }
+        }
+      }
+    },
+    "Choose a plain background above to be sure of it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie oben einen einfarbigen Hintergrund, um sicherzugehen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a plain background above to be sure of it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige un fondo liso arriba para ir sobre seguro."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez un fond uni ci-dessus pour ne pas prendre de risque."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli uno sfondo uniforme qui sopra per andare sul sicuro."
+          }
+        }
+      }
+    },
+    "Choose a plain background and the app measures the top of the hair instead of guessing it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie einen einfarbigen Hintergrund, dann misst die App den Haaransatz oben, statt ihn zu schätzen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a plain background and the app measures the top of the hair instead of guessing it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige un fondo liso y la app mide la parte alta del pelo en vez de estimarla."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez un fond uni et l'app mesure le sommet des cheveux au lieu de l'estimer."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli uno sfondo uniforme e l'app misura la sommità dei capelli invece di indovinarla."
           }
         }
       }
@@ -3896,6 +4492,40 @@
         }
       }
     },
+    "Consulates are stricter about the backdrop than about anything else: plain, light, no pattern.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bei Konsulaten ist der Hintergrund der strengste Punkt: einfarbig, hell, ohne Muster."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consulates are stricter about the backdrop than about anything else: plain, light, no pattern."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los consulados son más estrictos con el fondo que con cualquier otra cosa: liso, claro, sin dibujos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les consulats sont plus stricts sur le fond que sur tout le reste : uni, clair, sans motif."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I consolati sono più severi sullo sfondo che su tutto il resto: uniforme, chiaro, senza motivi."
+          }
+        }
+      }
+    },
     "Continue": {
       "localizations": {
         "de": {
@@ -4507,6 +5137,40 @@
         }
       }
     },
+    "Country or document": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Land oder Dokument"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Country or document"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "País o documento"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pays ou document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paese o documento"
+          }
+        }
+      }
+    },
     "Create PDF": {
       "localizations": {
         "de": {
@@ -4643,6 +5307,40 @@
         }
       }
     },
+    "Crown": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scheitel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crown"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coronilla"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sommet"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sommità"
+          }
+        }
+      }
+    },
     "Cut the subject out of a photo": {
       "localizations": {
         "de": {
@@ -4673,6 +5371,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ritaglia il soggetto da una foto"
+          }
+        }
+      }
+    },
+    "DNI and passport": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DNI und Reisepass"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DNI and passport"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DNI y pasaporte"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DNI et passeport"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DNI e passaporto"
           }
         }
       }
@@ -5321,6 +6053,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Documento"
+          }
+        }
+      }
+    },
+    "Document format": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokumentformat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Document format"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato del documento"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format du document"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato del documento"
           }
         }
       }
@@ -6657,6 +7423,40 @@
         }
       }
     },
+    "Evenly exposed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gleichmäßig belichtet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evenly exposed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposición correcta"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposition correcte"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esposizione corretta"
+          }
+        }
+      }
+    },
     "Every tool unlocked": {
       "localizations": {
         "de": {
@@ -6967,6 +7767,74 @@
         }
       }
     },
+    "Eyes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Augen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eyes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ojos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeux"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Occhi"
+          }
+        }
+      }
+    },
+    "Eyes open and visible": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Augen offen und sichtbar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eyes open and visible"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ojos abiertos y visibles"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeux ouverts et visibles"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Occhi aperti e visibili"
+          }
+        }
+      }
+    },
     "FREE TRIAL for %@": {
       "extractionState": "stale",
       "localizations": {
@@ -6998,6 +7866,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "PROVA GRATUITA per %@"
+          }
+        }
+      }
+    },
+    "Face a window or a lamp, so the light falls on you rather than behind you.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stellen Sie sich zum Fenster oder zur Lampe, damit das Licht auf Sie fällt und nicht dahinter."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Face a window or a lamp, so the light falls on you rather than behind you."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colócate de cara a una ventana o una lámpara, para que la luz caiga sobre ti y no detrás."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Placez-vous face à une fenêtre ou une lampe, pour que la lumière tombe sur vous et non derrière."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mettiti di fronte a una finestra o a una lampada, così la luce cade su di te e non dietro."
+          }
+        }
+      }
+    },
+    "Facing the camera straight on": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frontal zur Kamera"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Facing the camera straight on"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "De frente a la cámara"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bien face à l'appareil"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di fronte alla fotocamera"
           }
         }
       }
@@ -7844,6 +8780,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Testo formattato dal Markdown"
+          }
+        }
+      }
+    },
+    "France asks for a plain light background — light grey or light blue. Pure white is refused.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frankreich verlangt einen einfarbigen hellen Hintergrund — hellgrau oder hellblau. Reines Weiß wird abgelehnt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "France asks for a plain light background — light grey or light blue. Pure white is refused."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Francia pide un fondo liso y claro: gris claro o azul claro. El blanco puro se rechaza."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La France demande un fond uni et clair — gris clair ou bleu clair. Le blanc pur est refusé."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La Francia chiede uno sfondo uniforme e chiaro — grigio chiaro o azzurro. Il bianco puro viene rifiutato."
           }
         }
       }
@@ -8736,6 +9706,74 @@
         }
       }
     },
+    "Head height is estimated, not measured": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Kopfhöhe ist geschätzt, nicht gemessen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Head height is estimated, not measured"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La altura del rostro está estimada, no medida"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La hauteur du visage est estimée, pas mesurée"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'altezza del viso è stimata, non misurata"
+          }
+        }
+      }
+    },
+    "Head measures %@ mm, chin to crown": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kopf misst %@ mm, vom Kinn bis zum Scheitel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Head measures %@ mm, chin to crown"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro mide %@ mm, de la barbilla a la coronilla"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage mesure %@ mm, du menton au sommet du crâne"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso misura %@ mm, dal mento alla sommità"
+          }
+        }
+      }
+    },
     "Healthcare": {
       "extractionState": "stale",
       "localizations": {
@@ -8839,6 +9877,74 @@
         }
       }
     },
+    "Hold the camera at eye level.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halten Sie die Kamera auf Augenhöhe."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the camera at eye level."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sostén la cámara a la altura de los ojos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tenez l'appareil à hauteur des yeux."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tieni la fotocamera all'altezza degli occhi."
+          }
+        }
+      }
+    },
+    "Hold the camera level and keep your head straight.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halten Sie die Kamera gerade und den Kopf aufrecht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the camera level and keep your head straight."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantén la cámara nivelada y la cabeza recta."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tenez l'appareil droit et la tête bien verticale."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tieni la fotocamera dritta e la testa in verticale."
+          }
+        }
+      }
+    },
     "Home": {
       "extractionState": "stale",
       "localizations": {
@@ -8870,6 +9976,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Home"
+          }
+        }
+      }
+    },
+    "Home printer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drucker zu Hause"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home printer"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impresora de casa"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imprimante à la maison"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stampante di casa"
           }
         }
       }
@@ -8908,6 +10048,40 @@
         }
       }
     },
+    "ID photo (증명사진)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausweisfoto (증명사진)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID photo (증명사진)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto de carné (증명사진)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo d'identité (증명사진)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fototessera (증명사진)"
+          }
+        }
+      }
+    },
     "IT Specialist": {
       "extractionState": "stale",
       "localizations": {
@@ -8939,6 +10113,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Specialista IT"
+          }
+        }
+      }
+    },
+    "Identity photos need a light background — choose one above.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passbilder brauchen einen hellen Hintergrund — wählen Sie oben einen aus."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identity photos need a light background — choose one above."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las fotos de carné piden un fondo claro: elige uno arriba."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les photos d'identité demandent un fond clair — choisissez-en un ci-dessus."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fototessere vogliono uno sfondo chiaro — scegline uno qui sopra."
           }
         }
       }
@@ -9557,6 +10765,176 @@
         }
       }
     },
+    "It will look fine on paper, but a closer photo would be sharper.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf Papier reicht das, aber ein näheres Foto wäre schärfer."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It will look fine on paper, but a closer photo would be sharper."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En papel quedará bien, pero una foto más cercana sería más nítida."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sur papier ce sera correct, mais une photo plus rapprochée serait plus nette."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su carta andrà bene, ma una foto più ravvicinata sarebbe più nitida."
+          }
+        }
+      }
+    },
+    "Its own size, 33 × 48 mm, and a light blue backdrop is accepted alongside white.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein eigenes Format, 33 × 48 mm, und neben Weiß ist auch Hellblau zulässig."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Its own size, 33 × 48 mm, and a light blue backdrop is accepted alongside white."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiene su propio tamaño, 33 × 48 mm, y admite el azul claro además del blanco."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un format à part, 33 × 48 mm, et le bleu clair est accepté en plus du blanc."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ha una misura sua, 33 × 48 mm, e accetta l'azzurro oltre al bianco."
+          }
+        }
+      }
+    },
+    "Japan states the head as 34 mm give or take 2 — the same window as the ICAO standard.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Japan gibt den Kopf mit 34 mm plus/minus 2 an — dasselbe Fenster wie der ICAO-Standard."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Japan states the head as 34 mm give or take 2 — the same window as the ICAO standard."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Japón indica el rostro como 34 mm más o menos 2: la misma horquilla que el estándar ICAO."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le Japon indique le visage à 34 mm à 2 mm près — la même fourchette que la norme OACI."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il Giappone indica il viso come 34 mm più o meno 2 — la stessa finestra dello standard ICAO."
+          }
+        }
+      }
+    },
+    "Keep a neutral expression with your mouth closed.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behalten Sie einen neutralen Ausdruck mit geschlossenem Mund."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep a neutral expression with your mouth closed."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantén una expresión neutra con la boca cerrada."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gardez une expression neutre, bouche fermée."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tieni un'espressione neutra con la bocca chiusa."
+          }
+        }
+      }
+    },
+    "Keep original": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original behalten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep original"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantener el original"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conserver l'original"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantieni l'originale"
+          }
+        }
+      }
+    },
     "Keep scanning": {
       "localizations": {
         "de": {
@@ -9728,6 +11106,74 @@
         }
       }
     },
+    "Light blue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hellblau"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light blue"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azul claro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bleu clair"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azzurro"
+          }
+        }
+      }
+    },
+    "Light grey": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hellgrau"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light grey"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gris claro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gris clair"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grigio chiaro"
+          }
+        }
+      }
+    },
     "Limit printing and copying": {
       "localizations": {
         "de": {
@@ -9860,6 +11306,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bloccalo con una password"
+          }
+        }
+      }
+    },
+    "Look straight into the lens, with both ears equally visible.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schauen Sie gerade in die Linse, beide Ohren gleich sichtbar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look straight into the lens, with both ears equally visible."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mira de frente al objetivo, con ambas orejas igual de visibles."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regardez droit dans l'objectif, les deux oreilles également visibles."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guarda dritto nell'obiettivo, con entrambe le orecchie ugualmente visibili."
+          }
+        }
+      }
+    },
+    "Look straight into the lens, with your head upright.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schauen Sie gerade in die Linse, den Kopf aufrecht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look straight into the lens, with your head upright."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mira de frente al objetivo, con la cabeza recta."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regardez droit dans l'objectif, la tête droite."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guarda dritto nell'obiettivo, con la testa in verticale."
           }
         }
       }
@@ -10334,6 +11848,40 @@
         }
       }
     },
+    "Measured to the crown without the hair, so tall hair does not count towards the 36 mm.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemessen wird bis zum Scheitel ohne Haare, hohes Haar zählt also nicht zu den 36 mm."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Measured to the crown without the hair, so tall hair does not count towards the 36 mm."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se mide hasta la coronilla sin el pelo, así que el pelo alto no cuenta para los 36 mm."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La mesure va jusqu'au sommet du crâne sans les cheveux : une coiffure haute ne compte pas dans les 36 mm."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si misura fino alla sommità del capo senza i capelli, quindi i capelli alti non contano nei 36 mm."
+          }
+        }
+      }
+    },
     "Memorize signature": {
       "localizations": {
         "de": {
@@ -10668,6 +12216,40 @@
         }
       }
     },
+    "Move out of direct sunlight or turn the flash off.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gehen Sie aus dem direkten Sonnenlicht oder schalten Sie den Blitz aus."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move out of direct sunlight or turn the flash off."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sal de la luz directa del sol o apaga el flash."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortez du soleil direct ou désactivez le flash."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spostati dalla luce diretta del sole o spegni il flash."
+          }
+        }
+      }
+    },
     "Move to": {
       "localizations": {
         "de": {
@@ -10796,6 +12378,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nome"
+          }
+        }
+      }
+    },
+    "Needs fixing": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muss korrigiert werden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs fixing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hay que corregirla"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À corriger"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da sistemare"
+          }
+        }
+      }
+    },
+    "Neutral expression, mouth closed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutraler Ausdruck, Mund geschlossen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutral expression, mouth closed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expresión neutra, boca cerrada"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expression neutre, bouche fermée"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Espressione neutra, bocca chiusa"
           }
         }
       }
@@ -11415,6 +13065,40 @@
         }
       }
     },
+    "No face was found in this photo. Use a photo taken from the front, with the whole head in frame.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In diesem Foto wurde kein Gesicht gefunden. Verwenden Sie ein Foto von vorne, mit dem ganzen Kopf im Bild."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No face was found in this photo. Use a photo taken from the front, with the whole head in frame."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se ha encontrado ningún rostro en esta foto. Usa una foto de frente, con toda la cabeza en el encuadre."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun visage n'a été trouvé sur cette photo. Utilisez une photo de face, avec toute la tête dans le cadre."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In questa foto non è stato trovato un viso. Usa una foto frontale, con tutta la testa nell'inquadratura."
+          }
+        }
+      }
+    },
     "No images were given to scan.": {
       "comment": "Error message when the user doesn't give the scanner any images to scan.",
       "isCommentAutoGenerated": true,
@@ -11749,6 +13433,108 @@
         }
       }
     },
+    "Not an identity document: this is the photo that goes on a Japanese job application, and it is what most people there are looking for.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Ausweisdokument: Dieses Foto gehört auf die japanische Bewerbung, und danach suchen dort die meisten."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not an identity document: this is the photo that goes on a Japanese job application, and it is what most people there are looking for."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No es un documento de identidad: es la foto que va en la solicitud de empleo japonesa, y es la que allí busca la mayoría."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce n'est pas un document d'identité : c'est la photo qui accompagne une candidature au Japon, et c'est celle que la plupart des gens y cherchent."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è un documento d'identità: è la foto che va sulla domanda di lavoro giapponese, ed è quella che là cerca la maggior parte delle persone."
+          }
+        }
+      }
+    },
+    "Not enough detail for a %lld dpi print": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zu wenig Detail für einen Druck mit %lld dpi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough detail for a %lld dpi print"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay bastante detalle para una impresión a %lld ppp"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas assez de détail pour une impression à %lld ppp"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non c'è abbastanza dettaglio per una stampa a %lld dpi"
+          }
+        }
+      }
+    },
+    "Not enough room around the head": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zu wenig Platz um den Kopf"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough room around the head"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay bastante espacio alrededor de la cabeza"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas assez d'espace autour de la tête"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non c'è abbastanza spazio intorno alla testa"
+          }
+        }
+      }
+    },
     "Not sure yet?": {
       "extractionState": "stale",
       "localizations": {
@@ -11814,6 +13600,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Qui non c'è ancora niente"
+          }
+        }
+      }
+    },
+    "Nothing to do with children — it is what the small Mexican document photo is called. Head height derived from ICAO's 70–80% rule.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat nichts mit Kindern zu tun — so heißt das kleine mexikanische Dokumentfoto. Die Kopfhöhe leitet sich aus der ICAO-Regel von 70–80 % ab."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to do with children — it is what the small Mexican document photo is called. Head height derived from ICAO's 70–80% rule."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tiene nada que ver con niños: así se llama la foto de documento pequeña en México. La altura del rostro se deriva de la regla ICAO del 70–80 %."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rien à voir avec les enfants : c'est le nom de la petite photo de document mexicaine. La hauteur du visage découle de la règle OACI des 70–80 %."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non ha nulla a che vedere con i bambini: è il nome della piccola foto documento messicana. L'altezza del viso deriva dalla regola ICAO del 70–80%."
           }
         }
       }
@@ -12117,6 +13937,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uno dei file non è un'immagine."
+          }
+        }
+      }
+    },
+    "One photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein Foto"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una foto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une photo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una foto"
+          }
+        }
+      }
+    },
+    "One side of the face is in shadow": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Gesichtshälfte liegt im Schatten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One side of the face is in shadow"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un lado del rostro está en sombra"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un côté du visage est dans l'ombre"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un lato del viso è in ombra"
           }
         }
       }
@@ -12649,6 +14537,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apri documento firmato"
+          }
+        }
+      }
+    },
+    "Open your eyes wide and avoid squinting into the light.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öffnen Sie die Augen weit und blinzeln Sie nicht ins Licht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open your eyes wide and avoid squinting into the light."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre bien los ojos y evita entornarlos hacia la luz."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrez bien les yeux et évitez de plisser face à la lumière."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri bene gli occhi ed evita di strizzarli verso la luce."
           }
         }
       }
@@ -14105,6 +16027,210 @@
         }
       }
     },
+    "Paper": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Papier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paper"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Papel"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Papier"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carta"
+          }
+        }
+      }
+    },
+    "Passport": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reisepass"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passport"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasaporte"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeport"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passaporto"
+          }
+        }
+      }
+    },
+    "Passport and ID card": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reisepass und Personalausweis"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passport and ID card"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasaporte y documento de identidad"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeport et carte d'identité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passaporto e carta d'identità"
+          }
+        }
+      }
+    },
+    "Passport and OCI": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reisepass und OCI"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passport and OCI"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasaporte y OCI"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeport et OCI"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passaporto e OCI"
+          }
+        }
+      }
+    },
+    "Passport and visa": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reisepass und Visum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passport and visa"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasaporte y visado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeport et visa"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passaporto e visto"
+          }
+        }
+      }
+    },
+    "Passport photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passbild"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passport photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto de carné"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo d'identité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fototessera"
+          }
+        }
+      }
+    },
     "Password": {
       "localizations": {
         "de": {
@@ -14272,6 +16398,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Galleria foto"
+          }
+        }
+      }
+    },
+    "Photo format": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoformat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo format"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato de foto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format de photo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato foto"
+          }
+        }
+      }
+    },
+    "Photo shop or kiosk": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotogeschäft oder Automat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo shop or kiosk"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tienda de fotos o kiosco"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photographe ou borne"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotografo o chiosco"
           }
         }
       }
@@ -14476,6 +16670,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Inserisci testo dove vuoi"
+          }
+        }
+      }
+    },
+    "Plain, even background": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfarbiger, gleichmäßiger Hintergrund"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plain, even background"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fondo liso y uniforme"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fond uni et régulier"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sfondo uniforme"
           }
         }
       }
@@ -14788,6 +17016,40 @@
         }
       }
     },
+    "Preview of the identity photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorschau des Passbilds"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preview of the identity photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vista previa de la foto de carné"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aperçu de la photo d'identité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anteprima della fototessera"
+          }
+        }
+      }
+    },
     "Preview of the photo without its background": {
       "localizations": {
         "de": {
@@ -14853,6 +17115,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pagina precedente"
+          }
+        }
+      }
+    },
+    "Print sheet": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druckbogen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Print sheet"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoja de impresión"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planche à imprimer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foglio di stampa"
           }
         }
       }
@@ -15286,6 +17582,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Legge il testo dalle pagine fotografate, raddrizzandole prima così il riconoscimento lavora su una pagina piana."
+          }
+        }
+      }
+    },
+    "Ready to print": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druckfertig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready to print"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lista para imprimir"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prête à imprimer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pronta da stampare"
           }
         }
       }
@@ -16516,6 +18846,40 @@
         }
       }
     },
+    "Résumé photo (履歴書)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bewerbungsfoto (履歴書)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résumé photo (履歴書)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto para currículum (履歴書)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo de CV (履歴書)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto per curriculum (履歴書)"
+          }
+        }
+      }
+    },
     "Sanitize PDF": {
       "localizations": {
         "de": {
@@ -17189,6 +19553,40 @@
         }
       }
     },
+    "Schengen visa": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schengen-Visum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schengen visa"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visado Schengen"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visa Schengen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visto Schengen"
+          }
+        }
+      }
+    },
     "Search": {
       "localizations": {
         "de": {
@@ -17770,6 +20168,74 @@
         }
       }
     },
+    "Sharp enough for %lld dpi": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scharf genug für %lld dpi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharp enough for %lld dpi"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bastante nítida para %lld ppp"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assez nette pour %lld ppp"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbastanza nitida per %lld dpi"
+          }
+        }
+      }
+    },
+    "Show measurement guides": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maßlinien anzeigen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show measurement guides"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar las guías de medida"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afficher les repères de mesure"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra le linee di misura"
+          }
+        }
+      }
+    },
     "Show my scans": {
       "comment": "Title of an intent that opens the Scanner tab without starting a capture.",
       "isCommentAutoGenerated": true,
@@ -18110,6 +20576,40 @@
         }
       }
     },
+    "Sizes follow each country's official rules. The office issuing your document has the final say.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Maße folgen den amtlichen Regeln des jeweiligen Landes. Das letzte Wort hat die ausstellende Behörde."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sizes follow each country's official rules. The office issuing your document has the final say."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las medidas siguen las normas oficiales de cada país. La última palabra la tiene la oficina que expide el documento."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les dimensions suivent les règles officielles de chaque pays. C'est le service qui délivre le document qui tranche."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le misure seguono le regole ufficiali di ogni paese. L'ultima parola spetta all'ufficio che rilascia il documento."
+          }
+        }
+      }
+    },
     "Skip": {
       "localizations": {
         "de": {
@@ -18315,6 +20815,40 @@
         }
       }
     },
+    "Spain is the exception: 26 × 32 mm, not the 35 × 45 mm the rest of Europe uses. Head height derived from ICAO's 70–80% rule.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spanien ist die Ausnahme: 26 × 32 mm statt der 35 × 45 mm des übrigen Europas. Die Kopfhöhe leitet sich aus der ICAO-Regel von 70–80 % ab."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spain is the exception: 26 × 32 mm, not the 35 × 45 mm the rest of Europe uses. Head height derived from ICAO's 70–80% rule."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "España es la excepción: 26 × 32 mm, no los 35 × 45 mm del resto de Europa. La altura del rostro se deriva de la regla ICAO del 70–80 %."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'Espagne fait exception : 26 × 32 mm, et non les 35 × 45 mm du reste de l'Europe. La hauteur du visage découle de la règle OACI des 70–80 %."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La Spagna è l'eccezione: 26 × 32 mm, non i 35 × 45 mm del resto d'Europa. L'altezza del viso deriva dalla regola ICAO del 70–80%."
+          }
+        }
+      }
+    },
     "Split": {
       "extractionState": "stale",
       "localizations": {
@@ -18418,6 +20952,74 @@
         }
       }
     },
+    "Square like the American one, but measured from the crown rather than from the eyes.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadratisch wie das amerikanische, aber vom Scheitel aus gemessen statt von den Augen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Square like the American one, but measured from the crown rather than from the eyes."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuadrada como la estadounidense, pero medida desde la coronilla en lugar de desde los ojos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carrée comme l'américaine, mais mesurée depuis le sommet du crâne plutôt que depuis les yeux."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadrata come quella americana, ma misurata dalla sommità del capo invece che dagli occhi."
+          }
+        }
+      }
+    },
+    "Square, 2 × 2 inches, and measured from the eyes rather than from the top of the head.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadratisch, 2 × 2 Zoll, und von den Augen aus gemessen statt vom Scheitel."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Square, 2 × 2 inches, and measured from the eyes rather than from the top of the head."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuadrada, 2 × 2 pulgadas, y medida desde los ojos en lugar de desde la coronilla."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carrée, 2 × 2 pouces, et mesurée à partir des yeux plutôt que du sommet du crâne."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadrata, 2 × 2 pollici, e misurata dagli occhi invece che dalla sommità del capo."
+          }
+        }
+      }
+    },
     "Stamp a text watermark across every page": {
       "extractionState": "stale",
       "localizations": {
@@ -18483,6 +21085,142 @@
           "stringUnit": {
             "state": "translated",
             "value": "Imprimi un testo su ogni pagina"
+          }
+        }
+      }
+    },
+    "Standard 35 × 45 mm": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard 35 × 45 mm"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard 35 × 45 mm"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estándar 35 × 45 mm"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard 35 × 45 mm"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard 35 × 45 mm"
+          }
+        }
+      }
+    },
+    "Standard Japanese résumé format": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standardformat des japanischen Lebenslaufs"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard Japanese résumé format"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato estándar del currículum japonés"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format standard du CV japonais"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato standard del curriculum giapponese"
+          }
+        }
+      }
+    },
+    "Standard Korean 증명사진 format": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koreanisches Standardformat 증명사진"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard Korean 증명사진 format"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato coreano estándar 증명사진"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format coréen standard 증명사진"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato coreano standard 증명사진"
+          }
+        }
+      }
+    },
+    "Standard Mexican “infantil” format": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mexikanisches Standardformat „infantil“"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard Mexican “infantil” format"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato mexicano estándar «infantil»"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format mexicain standard « infantil »"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato messicano standard «infantil»"
           }
         }
       }
@@ -19164,6 +21902,40 @@
         }
       }
     },
+    "Take it again, holding the camera still and tapping the face to focus.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholen Sie es, halten Sie die Kamera ruhig und tippen Sie zum Fokussieren auf das Gesicht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take it again, holding the camera still and tapping the face to focus."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repítela sujetando la cámara quieta y tocando el rostro para enfocar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reprenez-la en tenant l'appareil immobile et en touchant le visage pour faire la mise au point."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rifalla tenendo ferma la fotocamera e toccando il viso per mettere a fuoco."
+          }
+        }
+      }
+    },
     "Take the PDF out of a .p7m file": {
       "extractionState": "manual",
       "localizations": {
@@ -19199,6 +21971,108 @@
         }
       }
     },
+    "Take the photo again with some space above the hair.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Machen Sie das Foto erneut, mit etwas Platz über den Haaren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take the photo again with some space above the hair."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repite la foto dejando espacio por encima del pelo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reprenez la photo en laissant de l'espace au-dessus des cheveux."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rifai la foto lasciando dello spazio sopra i capelli."
+          }
+        }
+      }
+    },
+    "Take the photo again with the whole head and the top of the shoulders in frame.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Machen Sie das Foto erneut, mit dem ganzen Kopf und den oberen Schultern im Bild."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take the photo again with the whole head and the top of the shoulders in frame."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repite la foto con toda la cabeza y la parte alta de los hombros en el encuadre."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reprenez la photo avec toute la tête et le haut des épaules dans le cadre."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rifai la foto con tutta la testa e la parte alta delle spalle nell'inquadratura."
+          }
+        }
+      }
+    },
+    "Tamaño infantil": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamaño infantil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamaño infantil"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamaño infantil"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamaño infantil"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamaño infantil"
+          }
+        }
+      }
+    },
     "Tap Share": {
       "localizations": {
         "de": {
@@ -19229,6 +22103,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tocca Condividi"
+          }
+        }
+      }
+    },
+    "Tap the face to focus before taking the photo.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tippen Sie vor der Aufnahme zum Fokussieren auf das Gesicht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the face to focus before taking the photo."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca el rostro para enfocar antes de disparar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touchez le visage pour faire la mise au point avant de déclencher."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tocca il viso per mettere a fuoco prima di scattare."
           }
         }
       }
@@ -19745,6 +22653,244 @@
         }
       }
     },
+    "The background could not be checked": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Hintergrund konnte nicht geprüft werden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The background could not be checked"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se ha podido comprobar el fondo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fond n'a pas pu être vérifié"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato possibile controllare lo sfondo"
+          }
+        }
+      }
+    },
+    "The background is not uniform": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Hintergrund ist nicht einheitlich"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The background is not uniform"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El fondo no es uniforme"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fond n'est pas uniforme"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo sfondo non è uniforme"
+          }
+        }
+      }
+    },
+    "The background is plain and light": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Hintergrund ist einfarbig und hell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The background is plain and light"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El fondo es liso y claro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fond est uni et clair"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo sfondo è uniforme e chiaro"
+          }
+        }
+      }
+    },
+    "The background is slightly uneven": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Hintergrund ist leicht ungleichmäßig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The background is slightly uneven"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El fondo es algo irregular"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fond est légèrement irrégulier"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo sfondo è leggermente irregolare"
+          }
+        }
+      }
+    },
+    "The background is too dark": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Hintergrund ist zu dunkel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The background is too dark"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El fondo es demasiado oscuro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le fond est trop sombre"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo sfondo è troppo scuro"
+          }
+        }
+      }
+    },
+    "The chin is cut off": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Kinn ist abgeschnitten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chin is cut off"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La barbilla está cortada"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le menton est coupé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il mento è tagliato"
+          }
+        }
+      }
+    },
+    "The chin is raised or lowered": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Kinn ist angehoben oder gesenkt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chin is raised or lowered"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La barbilla está alta o baja"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le menton est relevé ou baissé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il mento è alzato o abbassato"
+          }
+        }
+      }
+    },
     "The conversion could not be completed. Please try again.": {
       "localizations": {
         "de": {
@@ -19983,6 +23129,278 @@
         }
       }
     },
+    "The everyday Brazilian document photo. Head height derived from ICAO's 70–80% rule.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das alltägliche brasilianische Dokumentfoto. Die Kopfhöhe leitet sich aus der ICAO-Regel von 70–80 % ab."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The everyday Brazilian document photo. Head height derived from ICAO's 70–80% rule."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La foto de documento brasileña de todos los días. La altura del rostro se deriva de la regla ICAO del 70–80 %."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La photo de document brésilienne de tous les jours. La hauteur du visage découle de la règle OACI des 70–80 %."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La foto documento brasiliana di tutti i giorni. L'altezza del viso deriva dalla regola ICAO del 70–80%."
+          }
+        }
+      }
+    },
+    "The eyes look closed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Augen wirken geschlossen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The eyes look closed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los ojos parecen cerrados"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les yeux semblent fermés"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gli occhi sembrano chiusi"
+          }
+        }
+      }
+    },
+    "The eyes look half shut": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Augen wirken halb geschlossen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The eyes look half shut"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los ojos parecen entrecerrados"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les yeux semblent mi-clos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gli occhi sembrano socchiusi"
+          }
+        }
+      }
+    },
+    "The face is in focus": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Gesicht ist scharf"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The face is in focus"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro está enfocado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage est net"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso è a fuoco"
+          }
+        }
+      }
+    },
+    "The face is lit evenly": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Gesicht ist gleichmäßig beleuchtet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The face is lit evenly"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro está iluminado de forma uniforme"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage est éclairé uniformément"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso è illuminato in modo uniforme"
+          }
+        }
+      }
+    },
+    "The face is underexposed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Gesicht ist unterbelichtet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The face is underexposed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro está subexpuesto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage est sous-exposé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso è sottoesposto"
+          }
+        }
+      }
+    },
+    "The face is washed out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Gesicht ist überstrahlt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The face is washed out"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro está quemado por la luz"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage est surexposé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso è bruciato dalla luce"
+          }
+        }
+      }
+    },
+    "The face looks soft": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Gesicht wirkt weich"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The face looks soft"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro se ve poco definido"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage manque de netteté"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso è poco definito"
+          }
+        }
+      }
+    },
     "The file arrives in your archive already converted, ready to sign, compress or send.": {
       "localizations": {
         "de": {
@@ -20017,6 +23435,210 @@
         }
       }
     },
+    "The frame fits inside the photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Rahmen passt in das Foto"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The frame fits inside the photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El encuadre cabe dentro de la foto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le cadre tient dans la photo"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'inquadratura sta dentro la foto"
+          }
+        }
+      }
+    },
+    "The head fits the frame": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kopf passt in den Rahmen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The head fits the frame"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La cabeza cabe en el encuadre"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tête tient dans le cadre"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La testa sta nell'inquadratura"
+          }
+        }
+      }
+    },
+    "The head is shorter than elsewhere in Europe: 29–34 mm, not 32–36. A photo made to the EU rule is rejected here.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kopf ist kürzer als im übrigen Europa: 29–34 mm statt 32–36. Ein nach EU-Regel erstelltes Foto wird hier abgelehnt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The head is shorter than elsewhere in Europe: 29–34 mm, not 32–36. A photo made to the EU rule is rejected here."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El rostro es más bajo que en el resto de Europa: 29–34 mm, no 32–36. Una foto hecha con la regla de la UE se rechaza aquí."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le visage est plus court qu'ailleurs en Europe : 29–34 mm, et non 32–36. Une photo faite selon la règle de l'UE est refusée ici."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il viso è più basso che nel resto d'Europa: 29–34 mm, non 32–36. Una foto fatta con la regola UE qui viene respinta."
+          }
+        }
+      }
+    },
+    "The head is slightly off square": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kopf ist nicht ganz frontal"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The head is slightly off square"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La cabeza no está del todo de frente"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tête n'est pas tout à fait de face"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La testa non è perfettamente frontale"
+          }
+        }
+      }
+    },
+    "The head is tilted to one side": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kopf ist zur Seite geneigt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The head is tilted to one side"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La cabeza está inclinada hacia un lado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tête est inclinée sur le côté"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La testa è inclinata da un lato"
+          }
+        }
+      }
+    },
+    "The head is turned away from the camera": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kopf ist von der Kamera weggedreht"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The head is turned away from the camera"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La cabeza está girada respecto a la cámara"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tête est tournée par rapport à l'appareil"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La testa è girata rispetto alla fotocamera"
+          }
+        }
+      }
+    },
     "The image has been saved to your photos.": {
       "localizations": {
         "de": {
@@ -20047,6 +23669,142 @@
           "stringUnit": {
             "state": "translated",
             "value": "L'immagine è stata salvata nelle tue foto."
+          }
+        }
+      }
+    },
+    "The largest frame in this list, 50 × 70 mm, with an ordinary-sized head inside it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das größte Format dieser Liste, 50 × 70 mm, mit einem normal großen Kopf darin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The largest frame in this list, 50 × 70 mm, with an ordinary-sized head inside it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El formato más grande de esta lista, 50 × 70 mm, con un rostro de tamaño normal dentro."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le plus grand format de cette liste, 50 × 70 mm, avec un visage de taille ordinaire à l'intérieur."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il formato più grande di questa lista, 50 × 70 mm, con dentro un viso di misura normale."
+          }
+        }
+      }
+    },
+    "The light is uneven across the face": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Licht auf dem Gesicht ist ungleichmäßig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The light is uneven across the face"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La luz sobre el rostro no es uniforme"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La lumière sur le visage n'est pas uniforme"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La luce sul viso non è uniforme"
+          }
+        }
+      }
+    },
+    "The mouth is open": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Mund ist geöffnet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The mouth is open"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La boca está abierta"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La bouche est ouverte"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La bocca è aperta"
+          }
+        }
+      }
+    },
+    "The one that goes on a résumé, a student card or an application form. Head height derived from ICAO's 70–80% rule.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Foto für Lebenslauf, Studierendenausweis oder Antragsformular. Die Kopfhöhe leitet sich aus der ICAO-Regel von 70–80 % ab."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The one that goes on a résumé, a student card or an application form. Head height derived from ICAO's 70–80% rule."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La que va en el currículum, en el carné de estudiante o en un formulario de solicitud. La altura del rostro se deriva de la regla ICAO del 70–80 %."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Celle qui va sur un CV, une carte d'étudiant ou un formulaire de demande. La hauteur du visage découle de la règle OACI des 70–80 %."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quella che va sul curriculum, sul tesserino dello studente o su un modulo di domanda. L'altezza del viso deriva dalla regola ICAO del 70–80%."
           }
         }
       }
@@ -20184,6 +23942,74 @@
         }
       }
     },
+    "The photo is out of focus": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Foto ist unscharf"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The photo is out of focus"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La foto está desenfocada"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La photo est floue"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La foto è sfocata"
+          }
+        }
+      }
+    },
+    "The print will be slightly enlarged": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Druck wird leicht vergrößert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The print will be slightly enlarged"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La impresión se ampliará un poco"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'impression sera légèrement agrandie"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La stampa sarà leggermente ingrandita"
+          }
+        }
+      }
+    },
     "The redacted pages are converted into images: on those pages the text will no longer be selectable or searchable. A new copy is saved and your original is left untouched.": {
       "localizations": {
         "de": {
@@ -20214,6 +24040,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Le pagine oscurate vengono convertite in immagini: su quelle pagine il testo non sarà più selezionabile né ricercabile. Viene salvata una nuova copia e l'originale resta intatto."
+          }
+        }
+      }
+    },
+    "The right size for your country, checked before you print": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das richtige Format für Ihr Land, vor dem Druck geprüft"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The right size for your country, checked before you print"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El tamaño correcto para tu país, comprobado antes de imprimir"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le bon format pour votre pays, vérifié avant l'impression"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La misura giusta per il tuo paese, controllata prima di stampare"
+          }
+        }
+      }
+    },
+    "The same photo works for the passport, the electronic ID card and the driving licence.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dasselbe Foto gilt für Reisepass, elektronischen Personalausweis und Führerschein."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The same photo works for the passport, the electronic ID card and the driving licence."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La misma foto sirve para el pasaporte, el DNI electrónico y el carné de conducir."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La même photo convient au passeport, à la carte d'identité électronique et au permis de conduire."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La stessa foto vale per il passaporto, la carta d'identità elettronica e la patente."
           }
         }
       }
@@ -20286,6 +24180,74 @@
         }
       }
     },
+    "The size most of the world uses, including the whole Schengen area.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Format, das fast überall gilt, einschließlich des gesamten Schengen-Raums."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The size most of the world uses, including the whole Schengen area."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El tamaño que usa casi todo el mundo, incluido todo el espacio Schengen."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le format utilisé presque partout, y compris dans tout l'espace Schengen."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La misura usata quasi ovunque, compresa tutta l'area Schengen."
+          }
+        }
+      }
+    },
+    "The subject could not be separated from this photo, so the background is kept as it is.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Motiv konnte in diesem Foto nicht freigestellt werden, der Hintergrund bleibt daher unverändert."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The subject could not be separated from this photo, so the background is kept as it is."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se ha podido separar al sujeto de esta foto, así que el fondo se mantiene tal cual."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le sujet n'a pas pu être détouré sur cette photo : le fond est conservé tel quel."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non è stato possibile separare il soggetto da questa foto, quindi lo sfondo resta com'è."
+          }
+        }
+      }
+    },
     "The tools that make you brilliant in what you do": {
       "extractionState": "stale",
       "localizations": {
@@ -20317,6 +24279,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gli strumenti che ti rendono brillante in ciò che fai"
+          }
+        }
+      }
+    },
+    "The top of the head is cut off": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der obere Kopfbereich ist abgeschnitten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The top of the head is cut off"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La parte superior de la cabeza está cortada"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le sommet de la tête est coupé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La sommità della testa è tagliata"
           }
         }
       }
@@ -20385,6 +24381,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Non ci sono immagini in questa pagina"
+          }
+        }
+      }
+    },
+    "There is more than one face in this photo. An identity photo has to show one person alone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf diesem Foto ist mehr als ein Gesicht. Ein Passbild muss eine einzelne Person zeigen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is more than one face in this photo. An identity photo has to show one person alone."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En esta foto hay más de un rostro. Una foto de carné debe mostrar a una sola persona."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette photo contient plus d'un visage. Une photo d'identité doit montrer une seule personne."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In questa foto c'è più di un viso. Una fototessera deve mostrare una persona sola."
           }
         }
       }
@@ -21679,6 +25709,74 @@
         }
       }
     },
+    "Turn to face the light, or stand where it reaches both sides of your face.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drehen Sie sich zum Licht oder stellen Sie sich dorthin, wo es beide Gesichtshälften erreicht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn to face the light, or stand where it reaches both sides of your face."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gírate hacia la luz, o ponte donde llegue a ambos lados del rostro."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tournez-vous vers la lumière, ou placez-vous là où elle atteint les deux côtés du visage."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Girati verso la luce, o mettiti dove arriva su entrambi i lati del viso."
+          }
+        }
+      }
+    },
+    "Turn towards the light so both sides are lit the same.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drehen Sie sich zum Licht, damit beide Seiten gleich beleuchtet sind."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn towards the light so both sides are lit the same."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gírate hacia la luz para que ambos lados queden igual de iluminados."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tournez-vous vers la lumière pour que les deux côtés soient éclairés de la même façon."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Girati verso la luce così i due lati sono illuminati allo stesso modo."
+          }
+        }
+      }
+    },
     "Turn your PDF into an editable PowerPoint presentation (.pptx)": {
       "localizations": {
         "de": {
@@ -21845,6 +25943,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Macchina da scrivere"
+          }
+        }
+      }
+    },
+    "US Letter": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "US Letter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "US Letter"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carta (US Letter)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "US Letter"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "US Letter"
           }
         }
       }
@@ -22185,6 +26317,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Usa"
+          }
+        }
+      }
+    },
+    "Use a photo taken with the main camera, closer to the subject.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwenden Sie ein Foto der Hauptkamera, näher am Motiv aufgenommen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a photo taken with the main camera, closer to the subject."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa una foto hecha con la cámara principal, más cerca del sujeto."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utilisez une photo prise avec l'appareil principal, plus près du sujet."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa una foto scattata con la fotocamera principale, più vicino al soggetto."
           }
         }
       }
@@ -22767,6 +26933,40 @@
         }
       }
     },
+    "White only, and both ears should be visible.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur Weiß, und beide Ohren müssen sichtbar sein."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White only, and both ears should be visible."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo blanco, y ambas orejas deben verse."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blanc uniquement, et les deux oreilles doivent être visibles."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo bianco, ed entrambe le orecchie devono essere visibili."
+          }
+        }
+      }
+    },
     "With the yearly plan, we let you know before it expires.": {
       "localizations": {
         "de": {
@@ -22865,6 +27065,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lavora sull'immagine prima che diventi un documento"
+          }
+        }
+      }
+    },
+    "Worth a look": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genauer ansehen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Worth a look"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merece un vistazo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À vérifier"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da guardare"
           }
         }
       }
@@ -24333,6 +28567,40 @@
         }
       }
     },
+    "biometric": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "biometrisch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "biometric"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "biométrica"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "biométrique"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "biometrica"
+          }
+        }
+      }
+    },
     "blank": {
       "localizations": {
         "de": {
@@ -25287,6 +29555,40 @@
         }
       }
     },
+    "id photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ausweisfoto"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "id photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foto de dni"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "photo carte d'identité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foto documento"
+          }
+        }
+      }
+    },
     "images": {
       "localizations": {
         "de": {
@@ -25691,6 +29993,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "impaginazione"
+          }
+        }
+      }
+    },
+    "passport photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "passbild"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "passport photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foto de carné"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "photo d'identité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fototessera"
           }
         }
       }
@@ -26440,6 +30776,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "versioni"
+          }
+        }
+      }
+    },
+    "visa photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "visumfoto"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "visa photo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foto de visado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "photo de visa"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "foto visto"
           }
         }
       }

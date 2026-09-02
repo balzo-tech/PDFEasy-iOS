@@ -341,6 +341,8 @@ non parte affatto (`Could not create inference context`), e in DEBUG l'app
 sostituisce un ovale al soggetto per poter guardare la schermata. Il ritaglio
 vero esiste solo sul telefono.
 
+#### Rimozione sfondo
+
 - [ ] **Remove background** — una foto con una persona in primo piano: il
       soggetto resta, lo sfondo sparisce. Guarda **i capelli e le spalle**: è lì
       che si vede se il bordo è pulito o se resta un alone del vecchio sfondo
@@ -353,6 +355,37 @@ vero esiste solo sul telefono.
 - [ ] **Salva nelle Foto** e **Condividi** aprono il paywall se non si è abbonati,
       e riprendono da soli dopo l'acquisto
 - [ ] **Crea un PDF** porta il ritaglio nell'editor come qualsiasi altra foto
+
+#### Fototessera
+
+Stessa avvertenza del simulatore, e una in più: qui non parte nemmeno il
+rilevamento del viso, quindi in DEBUG l'app mette un ovale al posto della testa.
+**Le misure vere si vedono solo sul telefono**, ed è tutto il senso della
+funzione.
+
+- [ ] **Un selfie a mezzo busto contro un muro chiaro**: la testa deve stare
+      esattamente fra le linee **Sommità** e **Mento**. È la verifica principale:
+      se le linee non cadono sul soggetto, la stampa è fuori misura
+- [ ] Con **capelli voluminosi o raccolti in alto**: la linea Sommità deve stare
+      sopra i capelli, non sulla fronte. È il punto che il rilevatore di volti da
+      solo sbaglia, e per cui la sagoma viene misurata invece che stimata
+- [ ] Cambia paese: **Spagna** (26 × 32, l'unica misura diversa in Europa) e
+      **Stati Uniti** (quadrata, con la linea **Occhi**). L'anteprima deve
+      cambiare forma, non solo etichetta
+- [ ] **Sfondo «Mantieni originale»** su una foto con la libreria dietro: deve
+      dire che lo sfondo non è uniforme e **rimandare allo sfondo uniforme**
+- [ ] Una foto **con poco spazio sopra la testa**: con uno sfondo uniforme scelto
+      l'app deve riempire la striscia mancante (guarda il bordo alto: deve essere
+      dello sfondo scelto, non trasparente o nero); con «Mantieni originale» i
+      pulsanti di export devono essere **disattivati** e il motivo scritto
+- [ ] Una foto **con due persone**: deve dirlo, e non ritagliare la più vicina
+- [ ] **La lista dei controlli**: fatti un ritratto storto di dieci gradi, uno
+      con la lampada di lato, uno mosso. Ognuno deve accendere la riga giusta con
+      un consiglio che si può eseguire
+- [ ] **Foglio di stampa 10 × 15**: sei foto, linee di taglio visibili. Poi A4
+      (o US Letter con una specifica americana)
+- [ ] **Crea un PDF** e mandalo in stampa: misura la foto stampata con un righello.
+      35 × 45 mm, non «quello che decide la stampante»
 
 ### Solo con il servizio online acceso
 

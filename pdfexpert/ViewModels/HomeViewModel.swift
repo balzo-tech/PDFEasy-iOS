@@ -61,6 +61,9 @@ enum HomeAction: Hashable, Identifiable {
     /// Lifting the subject out of a photograph. It lives in the tool catalog and
     /// nowhere else on purpose — see `ToolCategory.image`.
     case removeBackground
+    /// The identity photo. Shares the segmentation engine with the one above and
+    /// nothing else: it ends in a print, not in a document.
+    case passportPhoto
 
     case importPdf
     /// Opening a `.p7m` on purpose, rather than stumbling on one. The import path
@@ -111,6 +114,7 @@ enum HomeAction: Hashable, Identifiable {
         case .compressPdf: return nil
         case .comparePdf: return nil
         case .removeBackground: return .image
+        case .passportPhoto: return .image
         case .importPdf: return .pdf
         case .openSignedDocument: return .signedContainer
         case .readPdf: return .pdf
@@ -155,6 +159,7 @@ enum HomeAction: Hashable, Identifiable {
         case .compressPdf: return nil
         case .comparePdf: return nil
         case .removeBackground: return nil
+        case .passportPhoto: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -199,6 +204,7 @@ enum HomeAction: Hashable, Identifiable {
         case .compressPdf: return nil
         case .comparePdf: return nil
         case .removeBackground: return nil
+        case .passportPhoto: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -326,6 +332,8 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     
     lazy var backgroundRemovalViewModel: BackgroundRemovalViewModel = Container.shared.backgroundRemovalViewModel()
 
+    lazy var passportPhotoViewModel: PassportPhotoViewModel = Container.shared.passportPhotoViewModel()
+
     lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     
     var editStartAction: PdfEditStartAction? { self.action?.editStartAction }
@@ -359,7 +367,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         case .appExtension:
             assertionFailure("App Extension behaviour is not supposed to be triggered by a CTA")
             break
-        case .imageToPdf, .removeBackground:
+        case .imageToPdf, .removeBackground, .passportPhoto:
             // The same three doors as Image to PDF — camera, library, file. What
             // happens to the picture afterwards is decided in `handleImportedImage`.
             self.importOptionGroup = .image
@@ -530,7 +538,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
             switch self.action {
-            case .imageToPdf, .removeBackground:
+            case .imageToPdf, .removeBackground, .passportPhoto:
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
@@ -666,7 +674,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         // Removing a background is a one-photo job: the picker allows several
         // because Image to PDF wants them, and taking the first is kinder than
         // silently cutting out fifty subjects nobody asked for.
-        if self.action == .removeBackground {
+        if self.action == .removeBackground || self.action == .passportPhoto {
             guard let first = selections.first else { return }
             self.asyncImageLoading = AsyncOperation(status: .loading(Progress()))
             Task { @MainActor in
@@ -727,16 +735,27 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     /// file browser are shared, and none of them should have to.
     @MainActor
     private func handleImportedImage(_ uiImage: UIImage, filename: String?) {
-        guard self.action == .removeBackground else {
+        switch self.action {
+        case .removeBackground:
+            self.backgroundRemovalViewModel.run(image: uiImage, onCreatePdf: { [weak self] cutOut in
+                // A cut-out becomes a document through exactly the path a photo
+                // takes, so it lands in the editor with everything else.
+                self?.convertUiImageToPdf(uiImage: cutOut, filename: filename)
+                self?.trackFullActionCompleted()
+            })
+        case .passportPhoto:
+            // Not through `convertUiImageToPdf`: an identity photo is only
+            // correct at one physical size, and that path makes the page as big
+            // as the bitmap. The tool builds its own 35 × 45 mm page.
+            self.passportPhotoViewModel.run(image: uiImage, onCreatePdf: { [weak self] document, name in
+                var pdf = Pdf(pdfDocument: document)
+                pdf.updateFilename(name)
+                self?.asyncPdf = AsyncOperation(status: .data(pdf))
+                self?.trackFullActionCompleted()
+            })
+        default:
             self.convertUiImageToPdf(uiImage: uiImage, filename: filename)
-            return
         }
-        self.backgroundRemovalViewModel.run(image: uiImage, onCreatePdf: { [weak self] cutOut in
-            // A cut-out becomes a document through exactly the path a photo
-            // takes, so it lands in the editor with everything else.
-            self?.convertUiImageToPdf(uiImage: cutOut, filename: filename)
-            self?.trackFullActionCompleted()
-        })
     }
 
     private func convertUiImageToPdf(uiImage: UIImage, filename: String?) {

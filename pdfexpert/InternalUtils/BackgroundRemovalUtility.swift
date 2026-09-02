@@ -232,8 +232,11 @@ enum BackgroundRemovalUtility {
     ///
     /// Converted to sRGB first: a grey or a P3 swatch from a colour picker is not
     /// an RGB colour, and `CIImage(color:)` fills the frame with black when
-    /// handed one.
-    private static func ciColor(from color: CGColor) -> CIColor? {
+    /// handed one. Internal rather than private because the passport photo
+    /// paints its own backdrop and would otherwise repeat the same trap —
+    /// `UIColor.white.cgColor` is a *grey* colour, and it is the first swatch in
+    /// both tools.
+    static func ciColor(from color: CGColor) -> CIColor? {
         if color.colorSpace?.model == .rgb { return CIColor(cgColor: color) }
         guard let srgb = CGColorSpace(name: CGColorSpace.sRGB),
               let converted = color.converted(to: srgb, intent: .defaultIntent, options: nil) else {

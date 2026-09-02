@@ -327,6 +327,20 @@ enum ToolCatalog {
                     keywords: [String(localized: "images"), String(localized: "text"), "jpg", "txt"]),
 
             // MARK: Photos
+            // First in its family, and the reason the family exists. The
+            // keywords are the ones the App Store says people actually type —
+            // `fototessera`, `foto carnet`, `Passbild`, `3x4` — rather than the
+            // words on the tile, which nobody searches for.
+            PdfTool(action: .passportPhoto,
+                    title: String(localized: "Passport photo"),
+                    subtitle: String(localized: "The right size for your country, checked before you print"),
+                    systemImage: "person.crop.rectangle",
+                    category: .image,
+                    keywords: [String(localized: "passport photo"),
+                               String(localized: "id photo"),
+                               String(localized: "visa photo"),
+                               "fototessera", "foto carnet", "passbild", "3x4", "35x45", "2x2",
+                               String(localized: "biometric")]),
             PdfTool(action: .removeBackground,
                     title: String(localized: "Remove background"),
                     subtitle: String(localized: "Cut the subject out of a photo"),

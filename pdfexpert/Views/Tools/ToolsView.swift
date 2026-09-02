@@ -108,6 +108,7 @@ struct ToolsView: View {
         .showCompressView(viewModel: self.viewModel.pdfCompressViewModel)
         .showCompareView(viewModel: self.viewModel.pdfCompareViewModel)
         .showBackgroundRemovalView(viewModel: self.viewModel.backgroundRemovalViewModel)
+        .showPassportPhotoView(viewModel: self.viewModel.passportPhotoViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
@@ -285,7 +286,7 @@ struct ToolsView: View {
     /// simulator where the file picker cannot be driven:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
     /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
-    /// `sort`, `read`, `editor`, `background`. The premium ones also need `debugPremium -bool YES`,
+    /// `sort`, `read`, `editor`, `background`, `passport`, `passport-sheet`. The premium ones also need `debugPremium -bool YES`,
     /// or the paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
@@ -318,6 +319,14 @@ struct ToolsView: View {
                 // on a simulator the cut-out is a placeholder oval anyway.
                 self.viewModel.backgroundRemovalViewModel.run(image: Self.debugPhotograph(),
                                                               onCreatePdf: nil)
+            case "passport", "passport-sheet":
+                self.viewModel.passportPhotoViewModel.run(image: Self.debugPhotograph(),
+                                                          onCreatePdf: nil)
+                // `run` resets the tool before it starts, so the output has to be
+                // chosen after it rather than before.
+                if tool == "passport-sheet" {
+                    self.viewModel.passportPhotoViewModel.output = .sheet
+                }
             case "editor":
                 // The editor on a document nobody has named yet: `Pdf(data:)` keeps
                 // the generated filename, which is what the name suggestion needs.

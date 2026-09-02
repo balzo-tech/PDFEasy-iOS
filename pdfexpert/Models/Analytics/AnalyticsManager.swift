@@ -59,6 +59,7 @@ enum AnalyticsScreen {
     case compress
     case compare
     case backgroundRemoval
+    case passportPhoto
     case scan
     case scanReview
     case scanLibrary
@@ -147,6 +148,12 @@ enum AnalyticsEvent {
     /// `destination` is what the cut-out was actually used for — the number that
     /// says whether the tool ends in a saved file or in a shrug.
     case backgroundRemovalCompleted(style: String, destination: String)
+    case passportPhotoStarted(spec: String)
+    /// `spec` is the country and document, `outcome` the worst thing the
+    /// checklist found. Together they answer the question the feature lives or
+    /// dies on: are people getting a photo they are willing to print, and in
+    /// which countries are they not.
+    case passportPhotoCompleted(spec: String, destination: String, output: String, outcome: String)
     case folderSaved
     case folderDeleted
     case pdfFiled
