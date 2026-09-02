@@ -109,6 +109,27 @@ class PassportPhotoViewModel: ObservableObject {
         }
     }
 
+    /// How much the user has resized the frame by hand. 1 is what the app worked
+    /// out on its own.
+    @Published var cropZoom: CGFloat = 1 {
+        didSet {
+            guard oldValue != self.cropZoom else { return }
+            Task { @MainActor in self.applyAdjustment() }
+        }
+    }
+
+    /// How far it has been nudged, in fractions of the frame's own size, in the
+    /// photograph's coordinates — x right, y **up**, because that is the space
+    /// the frame lives in. The gesture flips the sign on the way in.
+    @Published var cropOffset: CGSize = .zero {
+        didSet {
+            guard oldValue != self.cropOffset else { return }
+            Task { @MainActor in self.applyAdjustment() }
+        }
+    }
+
+    var hasAdjustment: Bool { self.cropZoom != 1 || self.cropOffset != .zero }
+
     /// The crown, chin and eye lines drawn over the preview. On by default: they
     /// are the evidence that the crop is not a guess, and the first thing
     /// somebody comparing us to a photo booth looks for.
@@ -135,6 +156,9 @@ class PassportPhotoViewModel: ObservableObject {
     private var previewScale: CGFloat = 1
 
     private var geometry: PassportFaceGeometry? = nil
+    /// Where the app put the frame, before the user touched it. Kept so that
+    /// Reset is exact and so that an adjustment never compounds on itself.
+    private var baseCrop: CGRect = .zero
     private var crop: CGRect = .zero
 
     private var pendingExport: PendingExport? = nil
@@ -279,19 +303,48 @@ class PassportPhotoViewModel: ObservableObject {
         self.error = error
     }
 
+    /// Re-applies the hand adjustment to the frame the app computed, then
+    /// re-runs the checks.
+    ///
+    /// Separate from `rebuild` for one reason that matters: the base frame must
+    /// never be derived from an already-adjusted one, or every nudge would
+    /// compound on the last and Reset would have nothing to go back to.
+    @MainActor
+    private func applyAdjustment() {
+        guard self.geometry != nil else { return }
+        self.crop = PassportPhotoUtility.adjusted(self.baseCrop,
+                                                  zoom: self.cropZoom,
+                                                  offset: self.cropOffset)
+        self.revalidate()
+        self.updatePreview()
+    }
+
+    @MainActor
+    func resetAdjustment() {
+        self.cropOffset = .zero
+        self.cropZoom = 1
+    }
+
     /// Re-cuts the frame for the current country and re-runs the checks. Vision
-    /// is not asked again.
+    /// is not asked again. The hand adjustment survives, because it is expressed
+    /// in fractions of the frame rather than in pixels and so means the same
+    /// thing whichever country's frame it is applied to.
     @MainActor
     private func rebuild() {
+        guard let geometry else { return }
+        self.baseCrop = PassportPhotoUtility.cropRect(for: self.spec, geometry: geometry)
+        self.applyAdjustment()
+    }
+
+    @MainActor
+    private func revalidate() {
         guard let geometry, let previewSource else { return }
-        self.crop = PassportPhotoUtility.cropRect(for: self.spec, geometry: geometry)
         self.checks = PassportPhotoValidator.checks(for: self.spec,
                                                     geometry: geometry,
                                                     crop: self.crop,
                                                     background: self.background,
                                                     image: previewSource,
                                                     imageScale: self.previewScale)
-        self.updatePreview()
     }
 
     @MainActor
@@ -475,7 +528,10 @@ class PassportPhotoViewModel: ObservableObject {
         self.previewMask = nil
         self.previewScale = 1
         self.geometry = nil
+        self.baseCrop = .zero
         self.crop = .zero
+        self.cropZoom = 1
+        self.cropOffset = .zero
         self.previewImage = nil
         self.checks = []
         self.pendingExport = nil

@@ -6,9 +6,17 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct CameraView: View {
     @StateObject var model: CameraViewModel
+
+    /// An outline over the preview saying where the subject goes. `nil` for every
+    /// caller that just wants a photograph.
+    var guide: CameraFrameGuide? = nil
+    /// Which camera to open on. The passport photo starts on the front one
+    /// because it is a selfie; everything else starts where it always did.
+    var startingPosition: AVCaptureDevice.Position = .back
 
     @State var currentZoomFactor: CGFloat = 1.0
     
@@ -77,7 +85,12 @@ struct CameraView: View {
                                     })
                                 )
                                 .onAppear {
-                                    model.configure()
+                                    model.configure(startingPosition: self.startingPosition)
+                                }
+                                .overlay {
+                                    if let guide = self.guide {
+                                        CameraFrameGuideView(guide: guide)
+                                    }
                                 }
                                 .alert(isPresented: $model.showAlertError, content: {
                                     let error = self.model.error!

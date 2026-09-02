@@ -10,6 +10,7 @@ import Factory
 import SwiftUI
 import PhotosUI
 import PDFKit
+import AVFoundation
 
 extension Container {
     var homeViewModel: Factory<HomeViewModel> {
@@ -333,6 +334,18 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     lazy var backgroundRemovalViewModel: BackgroundRemovalViewModel = Container.shared.backgroundRemovalViewModel()
 
     lazy var passportPhotoViewModel: PassportPhotoViewModel = Container.shared.passportPhotoViewModel()
+
+    /// The outline the camera draws over its preview, when the tool that opened
+    /// it has something to say about where the subject goes.
+    var cameraGuide: CameraFrameGuide? {
+        guard self.action == .passportPhoto else { return nil }
+        return CameraFrameGuide(spec: self.passportPhotoViewModel.spec)
+    }
+
+    /// An identity photo is a selfie. Everything else opens where it always did.
+    var cameraStartingPosition: AVCaptureDevice.Position {
+        self.action == .passportPhoto ? .front : .back
+    }
 
     lazy var pdfMergeViewModel: PdfMergeViewModel = Container.shared.pdfMergeViewModel(PdfMergeViewModel.Params(asyncPdf: self.asyncSubject(\.asyncPdf)))
     

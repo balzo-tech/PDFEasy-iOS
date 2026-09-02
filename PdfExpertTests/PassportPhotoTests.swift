@@ -262,6 +262,65 @@ final class PassportPhotoTests: XCTestCase {
         XCTAssertEqual(large.width / large.height, small.width / small.height, accuracy: 0.001)
     }
 
+    // MARK: - Moving the frame by hand
+
+    func testAnUntouchedFrameIsTheFrameTheAppComputed() {
+        let crop = PassportPhotoUtility.cropRect(for: self.europeanSpec, geometry: self.makeGeometry())
+        let adjusted = PassportPhotoUtility.adjusted(crop, zoom: 1, offset: .zero)
+        XCTAssertEqual(adjusted, crop)
+    }
+
+    func testZoomingInMakesTheFrameSmallerAndKeepsItsShape() {
+        // A smaller frame around the same head is a bigger head on the print,
+        // which is the direction the user expects a pinch to work.
+        let crop = PassportPhotoUtility.cropRect(for: self.europeanSpec, geometry: self.makeGeometry())
+        let zoomed = PassportPhotoUtility.adjusted(crop, zoom: 1.25, offset: .zero)
+        XCTAssertLessThan(zoomed.height, crop.height)
+        XCTAssertEqual(zoomed.width / zoomed.height, crop.width / crop.height, accuracy: 0.001)
+        XCTAssertEqual(zoomed.midX, crop.midX, accuracy: 0.001, "Zooming must not move the frame")
+        XCTAssertEqual(zoomed.midY, crop.midY, accuracy: 0.001)
+    }
+
+    func testAnOffsetMovesTheFrameByFractionsOfItsOwnSize() {
+        let crop = PassportPhotoUtility.cropRect(for: self.europeanSpec, geometry: self.makeGeometry())
+        let moved = PassportPhotoUtility.adjusted(crop, zoom: 1, offset: CGSize(width: 0.25, height: -0.1))
+        XCTAssertEqual(moved.midX, crop.midX + 0.25 * crop.width, accuracy: 0.001)
+        XCTAssertEqual(moved.midY, crop.midY - 0.1 * crop.height, accuracy: 0.001)
+    }
+
+    func testTheAdjustmentIsClampedSoTheFrameCannotBeLostAltogether() {
+        let crop = PassportPhotoUtility.cropRect(for: self.europeanSpec, geometry: self.makeGeometry())
+        let silly = PassportPhotoUtility.adjusted(crop, zoom: 99, offset: CGSize(width: 12, height: -12))
+        let clamped = PassportPhotoUtility.adjusted(crop,
+                                                    zoom: PassportPhotoUtility.zoomRange.upperBound,
+                                                    offset: CGSize(width: PassportPhotoUtility.offsetLimit,
+                                                                   height: -PassportPhotoUtility.offsetLimit))
+        XCTAssertEqual(silly, clamped)
+    }
+
+    func testTheHeadIsMeasuredAgainAfterTheUserMovesTheFrame() {
+        // The whole reason the adjustment is allowed to exist: overrule the
+        // placement all you like, the ruler keeps reading. Without this the
+        // controls would quietly turn a checked photo into an unchecked one.
+        let geometry = self.makeGeometry()
+        let spec = self.europeanSpec
+        func headOutcome(zoom: CGFloat) -> PassportPhotoCheck.Outcome? {
+            let crop = PassportPhotoUtility.adjusted(
+                PassportPhotoUtility.cropRect(for: spec, geometry: geometry), zoom: zoom, offset: .zero)
+            let checks = PassportPhotoValidator.checks(for: spec,
+                                                       geometry: geometry,
+                                                       crop: crop,
+                                                       background: .white,
+                                                       image: self.makePhoto(),
+                                                       imageScale: 1)
+            return self.outcome(of: .headSize, in: checks)
+        }
+        XCTAssertEqual(headOutcome(zoom: 1), .pass)
+        XCTAssertEqual(headOutcome(zoom: 1.03), .pass, "Inside the country's own tolerance")
+        XCTAssertEqual(headOutcome(zoom: 1.25), .failure, "Head too big for the frame")
+        XCTAssertEqual(headOutcome(zoom: 0.8), .failure, "Head too small for the frame")
+    }
+
     // MARK: - Rendering
 
     func testTheRenderComesOutAtThePrintSize() {

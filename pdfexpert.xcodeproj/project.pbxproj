@@ -137,6 +137,7 @@
 		893C8FDE29DED7F4000E35BD /* PdfUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893C8FDD29DED7F4000E35BD /* PdfUtility.swift */; };
 		893C8FE129DEDAF4000E35BD /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 893C8FE029DEDAF4000E35BD /* test.pdf */; };
 		893E849129D5874D00F6B99A /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849029D5874D00F6B99A /* CameraView.swift */; };
+		E90C46BC88C52CBDCA8FD00B /* CameraFrameGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A505026AF41443765CFC5C /* CameraFrameGuide.swift */; };
 		893E849429D5878E00F6B99A /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849329D5878E00F6B99A /* CameraViewModel.swift */; };
 		893E849C29D5944E00F6B99A /* PhotoCaptureProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */; };
 		893E849D29D5944E00F6B99A /* CameraService+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893E849729D5944E00F6B99A /* CameraService+Enums.swift */; };
@@ -594,6 +595,7 @@
 		893C8FE229DF0145000E35BD /* PdfExpert.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PdfExpert.entitlements; sourceTree = "<group>"; };
 		893DE8DD29E832B90043C02C /* LocalProductionProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = LocalProductionProducts.storekit; sourceTree = "<group>"; };
 		893E849029D5874D00F6B99A /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		F8A505026AF41443765CFC5C /* CameraFrameGuide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraFrameGuide.swift; sourceTree = "<group>"; };
 		893E849329D5878E00F6B99A /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		893E849629D5944E00F6B99A /* PhotoCaptureProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureProcessor.swift; sourceTree = "<group>"; };
 		893E849729D5944E00F6B99A /* CameraService+Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraService+Enums.swift"; sourceTree = "<group>"; };
@@ -1105,6 +1107,7 @@
 			isa = PBXGroup;
 			children = (
 				893E849029D5874D00F6B99A /* CameraView.swift */,
+				F8A505026AF41443765CFC5C /* CameraFrameGuide.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -2324,6 +2327,7 @@
 				895C1BC02A051261005EA190 /* SharedStorage.swift in Sources */,
 				89CD7B7329D329B1003F1C3A /* SubscribeViewModel.swift in Sources */,
 				893E849129D5874D00F6B99A /* CameraView.swift in Sources */,
+				E90C46BC88C52CBDCA8FD00B /* CameraFrameGuide.swift in Sources */,
 				89504A482A44829C000BCACD /* PdfFillWidgetViewModel.swift in Sources */,
 				894B019F2A0902BC00FF6198 /* ImportTutorialView.swift in Sources */,
 				893E849F29D5944E00F6B99A /* ImageResizer.swift in Sources */,

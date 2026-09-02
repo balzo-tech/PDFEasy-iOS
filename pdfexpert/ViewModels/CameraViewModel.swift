@@ -73,7 +73,11 @@ final class CameraViewModel: ObservableObject {
         .store(in: &self.subscriptions)
     }
     
-    func configure() {
+    /// `startingPosition` picks the camera the session opens on. It has to be set
+    /// before `configure()` — after that the session is running and the only way
+    /// to change camera is the flip button, which is the user's to press.
+    func configure(startingPosition: AVCaptureDevice.Position = .back) {
+        self.cameraService.preferredPosition = startingPosition
         self.cameraService.checkForPermissions()
         self.cameraService.configure()
     }

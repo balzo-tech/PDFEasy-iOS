@@ -87,6 +87,14 @@ public class CameraService {
     // MARK: Capturing Photos
     
     private let photoOutput = AVCapturePhotoOutput()
+
+    /// Which camera to start on.
+    ///
+    /// Set before `configure()`, and only that: once the session is running the
+    /// user is in charge through the flip button. It exists because a passport
+    /// photo is a selfie — asking somebody to photograph their own face with the
+    /// rear camera is asking them to guess where the frame is.
+    public var preferredPosition: AVCaptureDevice.Position = .back
     
     private var inProgressPhotoCaptureDelegates = [Int64: PhotoCaptureProcessor]()
     
@@ -159,15 +167,14 @@ public class CameraService {
         
         // Add video input.
         do {
-            var defaultVideoDevice: AVCaptureDevice?
-            
-            if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
-                // If a rear dual camera is not available, default to the rear wide angle camera.
-                defaultVideoDevice = backCameraDevice
-            } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
-                // If the rear wide angle camera isn't available, default to the front wide angle camera.
-                defaultVideoDevice = frontCameraDevice
-            }
+            // The preferred camera first, then the other one: a device with no
+            // front camera still has to be able to take a photograph, and an
+            // iPad in a case has been known to report one and fail to open it.
+            let fallbackPosition: AVCaptureDevice.Position = self.preferredPosition == .front ? .back : .front
+            let defaultVideoDevice = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                             for: .video,
+                                                             position: self.preferredPosition)
+                ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: fallbackPosition)
             
             guard let videoDevice = defaultVideoDevice else {
                 print("Default video device is unavailable.")

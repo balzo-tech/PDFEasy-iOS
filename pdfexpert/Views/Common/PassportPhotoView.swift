@@ -36,6 +36,15 @@ struct PassportPhotoEditorView: View {
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
+    /// The photo's size on screen, for turning a drag in points into a nudge in
+    /// fractions of the frame.
+    @State private var previewSize: CGSize = .zero
+    /// Where the frame was when the current gesture started. Without these the
+    /// second finger-move would be measured from the already-moved frame and the
+    /// photo would run away from the finger.
+    @State private var dragOrigin: CGSize? = nil
+    @State private var zoomOrigin: CGFloat? = nil
+
     private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
 
     var body: some View {
@@ -45,7 +54,12 @@ struct PassportPhotoEditorView: View {
                 ColorPalette.background.ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: DS.Spacing.lg) {
-                        self.preview
+                        VStack(spacing: DS.Spacing.xs) {
+                            self.preview
+                            if self.viewModel.output == .photo {
+                                self.adjustmentHint
+                            }
+                        }
                         self.documentButton
                         self.backgroundPicker
                         self.outputPicker
@@ -147,8 +161,68 @@ struct PassportPhotoEditorView: View {
             }
             .frame(maxWidth: self.previewHeightCap * self.previewAspect)
             .frame(maxWidth: .infinity)
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { self.previewSize = $0 }
+            // High priority, or the scroll view swallows every vertical drag and
+            // the photo can only be moved sideways. The rest of the screen still
+            // scrolls; this is the one place that does not, which is what a crop
+            // editor does everywhere else too.
+            .highPriorityGesture(self.viewModel.output == .photo ? self.dragGesture : nil)
+            .simultaneousGesture(self.viewModel.output == .photo ? self.zoomGesture : nil)
             .animation(DS.Motion.quick, value: self.viewModel.previewImage)
             .accessibilityLabel(Text("Preview of the identity photo"))
+    }
+
+    // MARK: - Moving the frame by hand
+
+    /// Dragging moves the *photograph*, which means the frame moves the other
+    /// way — and the other way again vertically, because the frame lives in the
+    /// image's coordinates, where y points up.
+    private var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 6)
+            .onChanged { value in
+                guard self.previewSize.width > 0, self.previewSize.height > 0 else { return }
+                let origin = self.dragOrigin ?? self.viewModel.cropOffset
+                if self.dragOrigin == nil { self.dragOrigin = origin }
+                self.viewModel.cropOffset = CGSize(
+                    width: origin.width - value.translation.width / self.previewSize.width,
+                    height: origin.height + value.translation.height / self.previewSize.height)
+            }
+            .onEnded { _ in self.dragOrigin = nil }
+    }
+
+    private var zoomGesture: some Gesture {
+        MagnifyGesture()
+            .onChanged { value in
+                let origin = self.zoomOrigin ?? self.viewModel.cropZoom
+                if self.zoomOrigin == nil { self.zoomOrigin = origin }
+                let range = PassportPhotoUtility.zoomRange
+                self.viewModel.cropZoom = min(max(origin * value.magnification, range.lowerBound),
+                                              range.upperBound)
+            }
+            .onEnded { _ in self.zoomOrigin = nil }
+    }
+
+    /// The one line that tells people the photo can be moved at all, and the way
+    /// back when they have moved it somewhere wrong.
+    private var adjustmentHint: some View {
+        HStack(spacing: DS.Spacing.xs) {
+            Image(systemName: "hand.draw")
+                .font(forCategory: .caption1)
+                .foregroundStyle(ColorPalette.textTertiary)
+                .accessibilityHidden(true)
+            Text("Drag to move the photo, pinch to zoom.")
+                .font(forCategory: .caption2)
+                .foregroundStyle(ColorPalette.textTertiary)
+            Spacer(minLength: 0)
+            if self.viewModel.hasAdjustment {
+                Button(String(localized: "Reset")) {
+                    withAnimation(DS.Motion.quick) { self.viewModel.resetAdjustment() }
+                }
+                .font(forCategory: .caption1)
+                .buttonStyle(.plain)
+                .foregroundStyle(ColorPalette.accent)
+            }
+        }
     }
 
     // MARK: - Which document
@@ -353,8 +427,39 @@ struct PassportPhotoEditorView: View {
 
     // MARK: - Ways out
 
+    /// What each way out is actually *for*.
+    ///
+    /// Three buttons that all produce "the photo" is the question this screen
+    /// kept being asked: do I have to print it, and does the digital file count?
+    /// The answer depends on which of the two outputs is selected, so it is said
+    /// here rather than in a help page nobody opens.
+    private var exportGuidance: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.xxs) {
+            switch self.viewModel.output {
+            case .photo:
+                Label {
+                    Text("A single photo at \(self.viewModel.spec.sizeDescription), \(self.viewModel.spec.minimumDPI) dpi. This is the file to upload to an online application, or to send to a photo shop.")
+                } icon: {
+                    Image(systemName: "photo")
+                }
+            case .sheet:
+                Label {
+                    Text("A whole sheet to cut up. Take the image to a photo kiosk, or print the PDF **at actual size — 100%, not “fit to page”** — or the photos come out the wrong size.")
+                } icon: {
+                    Image(systemName: "printer")
+                }
+            }
+        }
+        .font(forCategory: .caption1)
+        .foregroundStyle(ColorPalette.textSecondary)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
     private var actions: some View {
         VStack(spacing: DS.Spacing.xs) {
+            self.exportGuidance
+                .padding(.bottom, DS.Spacing.xxs)
             Button(action: { self.viewModel.saveToPhotos() }) {
                 Label("Save to Photos", systemImage: "square.and.arrow.down")
                     .font(forCategory: .button)

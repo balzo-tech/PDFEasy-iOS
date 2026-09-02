@@ -139,7 +139,7 @@ enum PassportPhotoValidator {
 
         var checks: [PassportPhotoCheck] = []
         checks.append(self.framingCheck(geometry: geometry, crop: crop, background: background))
-        checks.append(self.headSizeCheck(spec: spec, geometry: geometry, background: background))
+        checks.append(self.headSizeCheck(spec: spec, geometry: geometry, crop: crop))
         checks.append(self.poseCheck(geometry: geometry))
         if let eyes = self.eyesCheck(geometry: geometry) { checks.append(eyes) }
         if let mouth = self.expressionCheck(geometry: geometry) { checks.append(mouth) }
@@ -215,13 +215,34 @@ enum PassportPhotoValidator {
             advice: nil)
     }
 
-    /// The head is cropped to the right height by construction, so what is
-    /// reported here is how much that number can be trusted.
+    /// How tall the head actually comes out, in the frame as it stands.
+    ///
+    /// Not a formality even though the crop is computed to get this right: the
+    /// user can move and resize the frame by hand, and the moment they do, the
+    /// country's tolerance is something to be measured rather than assumed. This
+    /// is what lets the adjustment controls exist without giving up the promise —
+    /// overrule the placement all you like, the ruler keeps reading.
     private static func headSizeCheck(spec: PassportPhotoSpec,
                                       geometry: PassportFaceGeometry,
-                                      background: PassportBackground) -> PassportPhotoCheck {
-        let millimetres = spec.targetFaceHeight
+                                      crop: CGRect) -> PassportPhotoCheck {
+        let fraction = geometry.headHeight / max(crop.height, 1)
+        let millimetres = fraction * spec.size.height
         let formatted = String(format: "%.0f", Double(millimetres))
+        let lowest = String(format: "%.0f", Double(spec.faceHeight.lowerBound))
+        let highest = String(format: "%.0f", Double(spec.faceHeight.upperBound))
+
+        if fraction > spec.faceFractionRange.upperBound {
+            return PassportPhotoCheck(
+                id: .headSize, outcome: .failure,
+                title: String(localized: "The head is too big: \(formatted) mm instead of \(lowest)–\(highest)"),
+                advice: String(localized: "Pinch to zoom out, or tap Reset to put the frame back where the app had it."))
+        }
+        if fraction < spec.faceFractionRange.lowerBound {
+            return PassportPhotoCheck(
+                id: .headSize, outcome: .failure,
+                title: String(localized: "The head is too small: \(formatted) mm instead of \(lowest)–\(highest)"),
+                advice: String(localized: "Pinch to zoom in, or tap Reset to put the frame back where the app had it."))
+        }
         guard geometry.crownWasMeasured else {
             return PassportPhotoCheck(
                 id: .headSize, outcome: .warning,

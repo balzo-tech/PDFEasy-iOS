@@ -324,6 +324,36 @@ enum PassportPhotoUtility {
                       height: height)
     }
 
+    /// How far the frame may be nudged and resized by hand.
+    ///
+    /// Wide enough to rescue a photograph the automatic placement got slightly
+    /// wrong, narrow enough that nobody arrives at a frame with no head in it and
+    /// wonders what happened. Going out of the country's own tolerance inside
+    /// this range is allowed and *reported* — the checklist measures the head
+    /// again after every adjustment, which is what keeps the promise while still
+    /// letting the user overrule us.
+    static let zoomRange: ClosedRange<CGFloat> = 0.7...1.4
+    /// Offset, in units of the frame's own width and height.
+    static let offsetLimit: CGFloat = 0.5
+
+    /// The frame after the user has moved or resized it.
+    ///
+    /// `zoom` above 1 means a bigger head, so a *smaller* frame; the offset is
+    /// expressed in fractions of the adjusted frame so that a nudge means the
+    /// same thing whatever the photograph's resolution.
+    static func adjusted(_ crop: CGRect, zoom: CGFloat, offset: CGSize) -> CGRect {
+        let zoom = min(max(zoom, self.zoomRange.lowerBound), self.zoomRange.upperBound)
+        let width = crop.width / zoom
+        let height = crop.height / zoom
+        let limit = self.offsetLimit
+        let x = min(max(offset.width, -limit), limit)
+        let y = min(max(offset.height, -limit), limit)
+        return CGRect(x: crop.midX + x * width - width / 2,
+                      y: crop.midY + y * height - height / 2,
+                      width: width,
+                      height: height)
+    }
+
     // MARK: - Rendering
 
     /// The finished photo: subject cut out, backdrop painted, cropped to the

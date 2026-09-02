@@ -86,7 +86,9 @@ struct ToolsView: View {
             case .camera:
                 CameraView(model: Container.shared.cameraViewModel({ uiImage in
                     self.viewModel.convertImage(uiImage: uiImage)
-                }))
+                }),
+                           guide: self.viewModel.cameraGuide,
+                           startingPosition: self.viewModel.cameraStartingPosition)
             }
         }
         // Photo gallery picker

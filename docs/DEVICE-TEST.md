@@ -363,9 +363,19 @@ rilevamento del viso, quindi in DEBUG l'app mette un ovale al posto della testa.
 **Le misure vere si vedono solo sul telefono**, ed è tutto il senso della
 funzione.
 
+- [ ] **La fotocamera si apre già rivolta verso di te** (è un selfie), e mostra
+      una **cornice con la sagoma della testa e le due linee**. ⚠️ In simulatore
+      non si può vedere: non c'è una fotocamera. È guida, non promessa — la foto
+      viene scattata a pieno sensore e il ritaglio si calcola dopo
 - [ ] **Un selfie a mezzo busto contro un muro chiaro**: la testa deve stare
       esattamente fra le linee **Sommità** e **Mento**. È la verifica principale:
       se le linee non cadono sul soggetto, la stampa è fuori misura
+- [ ] **Trascina e pizzica** sull'anteprima: la foto si sposta e si ingrandisce
+      dentro l'inquadratura. Poi guarda la lista: appena esci dalla tolleranza del
+      paese deve comparire **«Il viso è troppo grande/piccolo: N mm invece di
+      X–Y»**. È il controllo che tiene in piedi la promessa mentre l'utente
+      scavalca il ritaglio automatico
+- [ ] **Ripristina** rimette l'inquadratura esattamente dove l'aveva messa l'app
 - [ ] Con **capelli voluminosi o raccolti in alto**: la linea Sommità deve stare
       sopra i capelli, non sulla fronte. È il punto che il rilevatore di volti da
       solo sbaglia, e per cui la sagoma viene misurata invece che stimata
@@ -385,7 +395,9 @@ funzione.
 - [ ] **Foglio di stampa 10 × 15**: sei foto, linee di taglio visibili. Poi A4
       (o US Letter con una specifica americana)
 - [ ] **Crea un PDF** e mandalo in stampa: misura la foto stampata con un righello.
-      35 × 45 mm, non «quello che decide la stampante»
+      35 × 45 mm, non «quello che decide la stampante». ⚠️ Nel dialogo di stampa
+      scegli **grandezza reale / 100%**, non «adatta alla pagina» — è quello che
+      dice la riga sotto i pulsanti, e va verificato che lo dica
 
 ### Solo con il servizio online acceso
 
