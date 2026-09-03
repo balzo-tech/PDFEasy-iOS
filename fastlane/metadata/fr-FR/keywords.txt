@@ -1,1 +1,1 @@
-numériser,fusionner,compresser,diviser,pivoter,formulaire,photo,page,ocr,document,fichier,signature
+numériser,fusionner,compresser,diviser,pivoter,formulaire,photo,ocr,document,signature,identité

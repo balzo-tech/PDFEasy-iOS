@@ -1,1 +1,1 @@
-scannen,zusammenfügen,komprimieren,teilen,bearbeiten,formular,passwort,foto,ocr,seite,konverter
+scannen,zusammenfügen,komprimieren,teilen,bearbeiten,formular,passwort,foto,ocr,konverter,passbild

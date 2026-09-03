@@ -1,1 +1,1 @@
-quét,gộp,nén,tách,xoay,biểu mẫu,mật khẩu,ảnh,word,ocr,trang,văn bản,chữ ký số
+quét,gộp,nén,tách,xoay,biểu mẫu,mật khẩu,ảnh,word,ocr,trang,văn bản,chữ ký số,thẻ
