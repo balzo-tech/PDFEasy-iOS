@@ -14,6 +14,11 @@
 //  objection the yearly plan has to answer — that the renewal will arrive
 //  unannounced a year from now.
 //
+//  Closing it asks one question first. A screen left in silence is a sale lost
+//  without a word said, so the close button answers with what the subscription
+//  would have given and offers the free trial one last time — once per showing,
+//  and only while there is a trial left to offer.
+//
 
 import SwiftUI
 import Factory
@@ -23,6 +28,11 @@ struct SubscriptionPaywallView: View {
     @InjectedObject(\.subscriptionPaywallViewModel) var viewModel
 
     var onComplete: () -> ()
+
+    /// The exit prompt, and the memory of having asked. Asking twice in the same
+    /// showing turns a last offer into a trap the customer has to fight.
+    @State private var confirmExit = false
+    @State private var askedExit = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -39,6 +49,25 @@ struct SubscriptionPaywallView: View {
             if isPremium {
                 self.onComplete()
             }
+        }
+        .alert("If you leave, you lose every PRO benefit",
+               isPresented: self.$confirmExit) {
+            Button("Yes") { self.viewModel.startFreeTrial() }
+                .keyboardShortcut(.defaultAction)
+            Button("No", role: .cancel) { self.onComplete() }
+        } message: {
+            Text("No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI. Do you want to start your free trial?")
+        }
+    }
+
+    /// Closing: while a free trial is still on the table and the question has not
+    /// been asked yet, ask it. Otherwise the door opens straight away.
+    private func leave() {
+        if !self.askedExit, self.viewModel.freeTrialPlanIndex != nil {
+            self.askedExit = true
+            self.confirmExit = true
+        } else {
+            self.onComplete()
         }
     }
 
@@ -64,7 +93,7 @@ struct SubscriptionPaywallView: View {
                 GlassIconButton(systemImage: "xmark",
                                 accessibilityLabel: String(localized: "Close"),
                                 tint: ColorPalette.textSecondary,
-                                action: self.onComplete)
+                                action: self.leave)
             }
         }
         .padding(.horizontal, DS.Spacing.md)

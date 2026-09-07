@@ -109,6 +109,23 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
         return max(0, plans.count - 1)
     }
 
+    /// The plan the exit prompt sells: the only one that opens on a free trial.
+    /// Since 1.30 that is the yearly plan, but the view asks the question rather
+    /// than assuming it, so `Products.plist` stays the one place that decides.
+    var freeTrialPlanIndex: Int? {
+        self.asyncSubscriptionPlans.data?.firstIndex { $0.hasFreeTrial }
+    }
+
+    /// The "Yes" of the exit prompt: select the plan with the trial and buy it,
+    /// in that order, so the card the customer sees behind the alert is the one
+    /// Apple is about to charge for.
+    @MainActor
+    func startFreeTrial() {
+        guard let index = self.freeTrialPlanIndex else { return }
+        self.selectedPlanIndex = index
+        self.subscribe()
+    }
+
     private func updateCurrentSubscriptionPlan() {
         guard let plans = self.asyncSubscriptionPlans.data,
               self.selectedPlanIndex >= 0,

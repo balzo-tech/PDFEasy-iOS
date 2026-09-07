@@ -57,9 +57,20 @@ final class PaywallEntryUITests: XCTestCase {
 
         // And it lets go of the app again: a door that cannot be closed is a
         // wall. The archive is behind it, untouched — nothing was started.
+        //
+        // The door asks one question on the way out — the free trial, offered a
+        // last time — and "No" is what actually opens it. That the question is
+        // asked at all is half of what this checks: a close button that walks
+        // straight out is the old behaviour.
         let close = self.app.buttons["Close"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 10), "the paywall cannot be closed")
         self.tap(close)
+
+        let no = self.app.alerts.buttons["No"].firstMatch
+        XCTAssertTrue(no.waitForExistence(timeout: 10),
+                      "closing the paywall did not offer the free trial one last time")
+        self.attachScreenshot(named: "Paywall-exit-prompt")
+        self.tap(no)
         XCTAssertTrue(self.app.buttons["Upgrade to PRO"].firstMatch.waitForExistence(timeout: 10),
                       "closing the paywall did not come back to the header")
     }
