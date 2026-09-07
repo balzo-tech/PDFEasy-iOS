@@ -83,6 +83,11 @@ fastlane/README.md
 fastlane/.env
 fastlane/*.p8
 
+# Provisioning profiles downloaded by `fastlane profiles`. They are made from
+# the App Store Connect key and can always be made again; a .mobileprovision in
+# a repository is a signing asset in every clone of it.
+fastlane/profiles/
+
 # Serena MCP
 .serena/
 
