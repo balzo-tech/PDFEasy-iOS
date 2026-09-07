@@ -9,6 +9,9 @@ Fotos, Word, Pages, PowerPoint, Keynote, Excel, Numbers, PNG, JPEG, HEIF e HEIC 
 EDITE O DOCUMENTO, NÃO UMA CÓPIA
 Adicione ou apague páginas, reordene, gire o arquivo inteiro, preencha os campos de um formulário e coloque sua assinatura. Documentos longos abrem na hora e continuam fluidos enquanto você rola.
 
+FOTO 3 × 4, COM AS MEDIDAS DO SEU PAÍS
+Passaporte, RG ou CNH: o app encontra o rosto, mede a cabeça e recorta segundo as regras do país que você escolher — 3 × 4 cm no Brasil, quadrada nos Estados Unidos. Ele diz o que está errado antes de você imprimir e monta uma folha 10 × 15 com seis cópias. Há também uma ferramenta que remove o fundo de uma foto. As duas estão incluídas na assinatura.
+
 ENCONTRE SEUS DOCUMENTOS DE NOVO
 Organize o arquivo com pastas e etiquetas e busque dentro do texto dos seus PDFs, não só no nome deles. Tudo sincroniza entre seus aparelhos pela sua própria conta do iCloud.
 
@@ -27,7 +30,7 @@ Digitalizar, converter e editar acontece no seu aparelho: para isso, seus docume
 Disponível em inglês, francês, alemão, italiano e espanhol.
 
 ASSINATURA PDF PRO
-A assinatura libera compartilhar, exportar e imprimir seus documentos, sem limite de quantidade. Há um plano semanal e um anual, e os dois começam com um período de teste gratuito.
+A assinatura libera compartilhar, exportar e imprimir seus documentos, sem limite de quantidade. Há um plano semanal, um mensal e um anual; o plano anual começa com um período de teste gratuito.
 
 O pagamento será cobrado na sua Conta Apple ao confirmar a compra. A assinatura é renovada automaticamente pelo mesmo preço, a menos que seja cancelada pelo menos 24 horas antes do fim do período atual. Você pode gerenciar a assinatura ou desativar a renovação automática nos ajustes da sua conta depois da compra. Qualquer parte não usada de um teste gratuito é perdida ao comprar uma assinatura.
 

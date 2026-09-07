@@ -9,6 +9,9 @@ Fotos, Word, Pages, PowerPoint, Keynote, Excel, Numbers, PNG, JPEG, HEIF und HEI
 DAS DOKUMENT BEARBEITEN, NICHT EINE KOPIE
 Seiten hinzufügen oder löschen, neu anordnen, die ganze Datei drehen, Formularfelder ausfüllen, Ihre Unterschrift setzen. Lange Dokumente öffnen sich sofort und bleiben beim Blättern flüssig.
 
+PASSBILD, IN DEN MASSEN IHRES LANDES
+Reisepass, Personalausweis oder Führerschein: Die App findet das Gesicht, misst den Kopf und schneidet nach den Regeln des Landes zu, das Sie wählen — 35 × 45 mm in Deutschland, quadratisch in den USA. Sie sagt Ihnen vor dem Druck, was nicht stimmt, und legt einen 10 × 15 Bogen mit sechs Bildern an. Es gibt auch ein Werkzeug, das den Hintergrund eines Fotos entfernt. Beides ist im Abonnement enthalten.
+
 JEDES DOKUMENT WIEDERFINDEN
 Ordnen Sie das Archiv mit Ordnern und Tags, und suchen Sie im Text Ihrer PDFs — nicht nur in den Dateinamen. Alles wird über Ihren eigenen iCloud-Account zwischen Ihren Geräten synchronisiert.
 
@@ -27,7 +30,7 @@ Scannen, Konvertieren und Bearbeiten geschehen auf Ihrem Gerät: Ihre Dokumente 
 Die App ist auf Deutsch, Englisch, Französisch, Italienisch und Spanisch verfügbar.
 
 PDF PRO ABONNEMENT
-Ein Abonnement schaltet das Teilen, Exportieren und Drucken Ihrer Dokumente frei, ohne Begrenzung der Anzahl. Es gibt einen wöchentlichen und einen jährlichen Plan, beide beginnen mit einer kostenlosen Testphase.
+Ein Abonnement schaltet das Teilen, Exportieren und Drucken Ihrer Dokumente frei, ohne Begrenzung der Anzahl. Es gibt einen wöchentlichen, einen monatlichen und einen jährlichen Plan; der jährliche Plan beginnt mit einer kostenlosen Testphase.
 
 Die Zahlung wird bei Bestätigung des Kaufs über Ihren Apple-Account abgerechnet. Das Abonnement verlängert sich automatisch zum gleichen Preis, sofern es nicht mindestens 24 Stunden vor Ende des laufenden Zeitraums gekündigt wird. Verwalten Sie Ihr Abonnement oder schalten Sie die automatische Verlängerung nach dem Kauf in Ihren Account-Einstellungen aus. Ein nicht genutzter Teil einer kostenlosen Testphase verfällt, sobald ein Abonnement gekauft wird.
 

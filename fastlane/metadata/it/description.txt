@@ -9,6 +9,9 @@ Foto, Word, Pages, PowerPoint, Keynote, Excel, Numbers, PNG, JPEG, HEIF e HEIC d
 MODIFICA IL DOCUMENTO, NON UNA COPIA
 Aggiungi o elimina pagine, riordinale, ruota l'intero file, compila i campi dei moduli, applica la tua firma. I documenti lunghi si aprono subito e restano fluidi mentre scorri.
 
+LA FOTO TESSERA, CON LE MISURE DEL TUO PAESE
+Passaporto, carta d'identità o patente: l'app trova il viso, misura la testa e ritaglia secondo le regole del paese che scegli — 35 × 45 mm in Italia, quadrata negli Stati Uniti. Ti dice cosa non va prima che tu vada a stampare e prepara un foglio 10 × 15 con sei copie. C'è anche uno strumento che toglie lo sfondo da una foto. Sono compresi nell'abbonamento.
+
 RITROVA I TUOI DOCUMENTI
 Organizza l'archivio con cartelle ed etichette e cerca dentro il testo dei PDF, non solo nel nome dei file. Tutto si sincronizza tra i tuoi dispositivi tramite il tuo account iCloud.
 
@@ -27,7 +30,7 @@ Scansione, conversione e modifica avvengono sul dispositivo: per farle, i tuoi d
 Disponibile in italiano, inglese, francese, spagnolo e tedesco.
 
 ABBONAMENTO PDF PRO
-L'abbonamento sblocca la condivisione, l'esportazione e la stampa dei documenti, senza limiti di quantità. Sono disponibili un piano settimanale e uno annuale, ed entrambi cominciano con una prova gratuita.
+L'abbonamento sblocca la condivisione, l'esportazione e la stampa dei documenti, senza limiti di quantità. Sono disponibili un piano settimanale, uno mensile e uno annuale; il piano annuale comincia con una prova gratuita.
 
 Il pagamento viene addebitato sull'Account Apple al momento della conferma dell'acquisto. L'abbonamento si rinnova automaticamente allo stesso prezzo, salvo disdetta almeno 24 ore prima della fine del periodo in corso. Puoi gestire l'abbonamento o disattivare il rinnovo automatico nelle impostazioni del tuo account dopo l'acquisto. L'eventuale parte non utilizzata di una prova gratuita decade al momento dell'acquisto di un abbonamento.
 
