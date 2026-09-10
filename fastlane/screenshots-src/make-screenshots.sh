@@ -5,9 +5,11 @@
 #
 # Le lingue sono cinque dal 19 agosto 2026, da quando l'app parla anche tedesco e
 # francese: prima la Germania vedeva la pagina inglese, e le campagne tedesche
-# mandavano la gente su una scheda che non parlava la loro lingua.
+# mandavano la gente su una scheda che non parlava la loro lingua. Sei dal 10
+# settembre, con l'olandese: là il sintomo era diverso e più netto — 440
+# impressioni in prima e seconda posizione producevano 8 tap.
 #
-#   ./make-screenshots.sh            # en it es de fr
+#   ./make-screenshots.sh            # en it es de fr nl
 #   ./make-screenshots.sh it         # una lingua sola
 #
 # Serve Xcode e il simulatore "iPhone 17 Pro Max" (1320x2868, il display da 6,9").
@@ -24,7 +26,7 @@ cd "$(dirname "$0")"
 PROJECT="$(cd ../.. && pwd)/pdfexpert.xcodeproj"
 DEVICE="iPhone 17 Pro Max"
 BUNDLE="eu.balzo.pdfexpert"
-LANGS="${*:-en it es de fr}"
+LANGS="${*:-en it es de fr nl}"
 
 UDID=$(xcrun simctl list devices available | grep "$DEVICE (" | head -1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
 [ -n "$UDID" ] || { echo "simulatore '$DEVICE' non trovato"; exit 1; }
@@ -32,7 +34,12 @@ UDID=$(xcrun simctl list devices available | grep "$DEVICE (" | head -1 | sed -E
 echo "→ preparo il simulatore"
 mkdir -p build
 xcrun simctl boot "$UDID" 2>/dev/null || true
-# Senza questo la prima schermata esce con il dialog dei permessi sopra.
+# ⚠️ `boot` torna subito, il simulatore no. Dare il grant a un device ancora in
+# avvio lo fa cadere nel vuoto, e la prima slide esce con il dialog dei permessi
+# sopra — in inglese, su una pagina olandese (successo il 2026-09-10). Il grant
+# va anche ridato a ogni giro: `xcodebuild test` reinstalla l'app, e il permesso
+# se ne va con la copia vecchia.
+xcrun simctl bootstatus "$UDID" -b >/dev/null 2>&1 || true
 xcrun simctl privacy "$UDID" grant camera "$BUNDLE" 2>/dev/null || true
 # La status bar di serie mostra l'ora vera e una batteria a metà: Apple vuole
 # gli screenshot con una barra pulita. La sesta slide arriva da un telefono
@@ -45,6 +52,7 @@ xcrun simctl status_bar "$UDID" override \
 
 for lang in $LANGS; do
   echo "→ $lang: guido l'app e fotografo le schermate"
+  xcrun simctl privacy "$UDID" grant camera "$BUNDLE" 2>/dev/null || true
   RESULT="$PWD/build/shots-$lang.xcresult"
   rm -rf "$RESULT"
 

@@ -57,7 +57,7 @@ struct K {
         /// answer quotes the deposit and the notice period straight out of it.
         static var DebugContractName: String {
             let code = Locale.current.language.languageCode?.identifier ?? "en"
-            return ["it", "es", "de", "fr"].contains(code) ? "contract-\(code)" : "contract-en"
+            return ["it", "es", "de", "fr", "nl"].contains(code) ? "contract-\(code)" : "contract-en"
         }
 
         static var DebugContractDocument: PDFDocument? {
@@ -79,6 +79,7 @@ struct K {
             case "es": return "Contrato de arrendamiento"
             case "de": return "Mietvertrag"
             case "fr": return "Contrat de location"
+            case "nl": return "Huurovereenkomst"
             default:   return "Rental agreement"
             }
         }
@@ -100,6 +101,8 @@ struct K {
                                "Passscan", "Besprechungsnotizen"]
             case "fr": return ["Facture 2026-07", "Reçu scanné",
                                "Scan du passeport", "Notes de réunion"]
+            case "nl": return ["Factuur 2026-07", "Gescande bon",
+                               "Scan paspoort", "Vergadernotities"]
             default:   return ["Invoice 2026-07", "Scanned receipt",
                                "Passport scan", "Meeting notes"]
             }

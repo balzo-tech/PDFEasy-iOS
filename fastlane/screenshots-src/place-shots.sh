@@ -41,7 +41,7 @@ if [ "$SOURCE" = "mac" ]; then
 fi
 
 # locale di App Store Connect : lingua della cattura
-MAP="en-US:en it:it es-MX:es es-ES:es de-DE:de fr-FR:fr"
+MAP="en-US:en it:it es-MX:es es-ES:es de-DE:de fr-FR:fr nl-NL:nl"
 
 for pair in $MAP; do
   locale="${pair%%:*}"

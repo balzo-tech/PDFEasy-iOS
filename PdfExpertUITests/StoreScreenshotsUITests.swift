@@ -37,21 +37,21 @@ final class StoreScreenshotsUITests: XCTestCase {
 
     // MARK: - Which language we are photographing
 
-    /// One of the app's three languages, chosen from the environment:
+    /// One of the app's six languages, chosen from the environment:
     ///
     ///     TEST_RUNNER_SHOT_LANG=it xcodebuild test …
     ///
     /// The `TEST_RUNNER_` prefix is how xcodebuild hands a variable to the test
     /// process; it arrives here without it.
     ///
-    /// The store page exists in fourteen languages but the app is translated
-    /// into three, so three sets of pictures is all there is to take; the other
+    /// The store page exists in seventeen languages but the app is translated
+    /// into six, so six sets of pictures is all there is to take; the other
     /// eleven pages fall back to the English set.
     private var language: String {
         ProcessInfo.processInfo.environment["SHOT_LANG"] ?? "en"
     }
 
-    /// The labels this file navigates by, in the two languages that are not
+    /// The labels this file navigates by, in the five languages that are not
     /// English.
     ///
     /// Copied from `Localizable.xcstrings` rather than read out of it: a test
@@ -60,21 +60,21 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// which is the right failure, because the alternative is photographing
     /// whatever screen the app happened to land on.
     private static let labels: [String: [String: String]] = [
-        "Files":                ["it": "File",                      "es": "Archivos", "de": "Dateien", "fr": "Fichiers"],
-        "Tools":                ["it": "Strumenti",                 "es": "Herramientas", "de": "Werkzeuge", "fr": "Outils"],
-        "Scanner":              ["it": "Scanner",                   "es": "Escáner", "de": "Scanner", "fr": "Scanner"],
-        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF", "de": "PDF unterschreiben", "fr": "Signer le PDF"],
-        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF", "de": "Ein PDF wählen", "fr": "Choisir un PDF"],
-        "Finish":               ["it": "Fine",                      "es": "Finalizar", "de": "Abschließen", "fr": "Terminer"],
-        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas", "de": "Werkzeuge suchen", "fr": "Rechercher des outils"],
-        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje...", "de": "Schreiben Sie Ihre Nachricht...", "fr": "Écrivez votre message..."],
-        "Edit":                 ["it": "Modifica",                  "es": "Editar", "de": "Bearbeiten", "fr": "Modifier"],
-        "Password":             ["it": "Password",                  "es": "Contraseña", "de": "Passwort", "fr": "Mot de passe"],
-        "Your Signatures":      ["it": "Le tue firme",              "es": "Tus firmas", "de": "Ihre Unterschriften", "fr": "Vos signatures"],
+        "Files":                ["it": "File",                      "es": "Archivos", "de": "Dateien", "fr": "Fichiers", "nl": "Bestanden"],
+        "Tools":                ["it": "Strumenti",                 "es": "Herramientas", "de": "Werkzeuge", "fr": "Outils", "nl": "Hulpmiddelen"],
+        "Scanner":              ["it": "Scanner",                   "es": "Escáner", "de": "Scanner", "fr": "Scanner", "nl": "Scanner"],
+        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF", "de": "PDF unterschreiben", "fr": "Signer le PDF", "nl": "PDF ondertekenen"],
+        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF", "de": "Ein PDF wählen", "fr": "Choisir un PDF", "nl": "Kies een PDF"],
+        "Finish":               ["it": "Fine",                      "es": "Finalizar", "de": "Abschließen", "fr": "Terminer", "nl": "Voltooien"],
+        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas", "de": "Werkzeuge suchen", "fr": "Rechercher des outils", "nl": "Hulpmiddelen zoeken"],
+        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje...", "de": "Schreiben Sie Ihre Nachricht...", "fr": "Écrivez votre message...", "nl": "Typ uw bericht..."],
+        "Edit":                 ["it": "Modifica",                  "es": "Editar", "de": "Bearbeiten", "fr": "Modifier", "nl": "Bewerken"],
+        "Password":             ["it": "Password",                  "es": "Contraseña", "de": "Passwort", "fr": "Mot de passe", "nl": "Wachtwoord"],
+        "Your Signatures":      ["it": "Le tue firme",              "es": "Tus firmas", "de": "Ihre Unterschriften", "fr": "Vos signatures", "nl": "Uw handtekeningen"],
         "Tap where you wish to sign": ["it": "Tocca dove vuoi firmare",
                                        "es": "Toca donde quieras firmar",
                                        "de": "Tippen Sie dorthin, wo Sie unterschreiben möchten",
-                                       "fr": "Touchez l'endroit où vous voulez signer"],
+                                       "fr": "Touchez l'endroit où vous voulez signer", "nl": "Tik waar u wilt ondertekenen"],
     ]
 
     /// The document the screenshots are taken over: a lease agreement, seeded
@@ -86,6 +86,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         case "es": return "Contrato de arrendamiento.pdf"
         case "de": return "Mietvertrag.pdf"
         case "fr": return "Contrat de location.pdf"
+        case "nl": return "Huurovereenkomst.pdf"
         default:   return "Rental agreement.pdf"
         }
     }
@@ -99,6 +100,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         case "es": return "Daniel Marchena"
         case "de": return "Daniel Markwart"
         case "fr": return "Daniel Marchand"
+        case "nl": return "Daan Markwijk"
         default:   return "Daniel R. Marsh"
         }
     }
@@ -112,6 +114,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         "es": "¿De qué trata este documento?",
         "de": "Worum geht es in diesem Dokument?",
         "fr": "De quoi parle ce document ?",
+        "nl": "Waar gaat dit document over?",
     ]
 
     /// English in, the running language out. Words that are the same in all
