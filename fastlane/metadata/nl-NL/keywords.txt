@@ -1,0 +1,1 @@
+scannen,samenvoegen,comprimeren,splitsen,bewerken,formulier,wachtwoord,foto,ocr,converteren,pasfoto

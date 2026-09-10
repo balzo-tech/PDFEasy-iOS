@@ -27,7 +27,7 @@ Uma interface pensada para a tela grande e, no Mac, uma janela de verdade: barra
 PRIVACIDADE POR PADRÃO
 Digitalizar, converter e editar acontece no seu aparelho: para isso, seus documentos não são enviados a lugar nenhum. Dois recursos usam um serviço on-line seguro, e só quando você pede — fazer perguntas sobre um documento e as poucas conversões que um iPhone não consegue fazer sozinho.
 
-Disponível em inglês, francês, alemão, italiano e espanhol.
+Disponível em inglês, neerlandês, francês, alemão, italiano e espanhol.
 
 ASSINATURA PDF PRO
 A assinatura libera compartilhar, exportar e imprimir seus documentos, sem limite de quantidade. Há um plano semanal, um mensal e um anual; o plano anual começa com um período de teste gratuito.

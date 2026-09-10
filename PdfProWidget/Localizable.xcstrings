@@ -26,6 +26,12 @@
             "state": "translated",
             "value": "%lld pagine"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pagina's"
+          }
         }
       }
     },
@@ -53,6 +59,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Unisci"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Samenvoegen"
           }
         }
       }
@@ -82,6 +94,12 @@
             "state": "translated",
             "value": "Nessun documento"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog geen documenten"
+          }
         }
       }
     },
@@ -109,6 +127,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Foto"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto's"
           }
         }
       }
@@ -138,6 +162,12 @@
             "state": "translated",
             "value": "Azioni rapide"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snelle acties"
+          }
         }
       }
     },
@@ -165,6 +195,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Recenti"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent"
           }
         }
       }
@@ -194,6 +230,12 @@
             "state": "translated",
             "value": "Documenti recenti"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recente documenten"
+          }
         }
       }
     },
@@ -221,6 +263,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Scansiona"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scannen"
           }
         }
       }
@@ -250,6 +298,12 @@
             "state": "translated",
             "value": "Firma"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ondertekenen"
+          }
         }
       }
     },
@@ -278,6 +332,12 @@
             "state": "translated",
             "value": "Avvia una scansione o una conversione dalla schermata Home."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start een scan of een conversie rechtstreeks vanaf het beginscherm."
+          }
         }
       }
     },
@@ -305,6 +365,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "I tuoi ultimi PDF, a portata di tocco."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uw nieuwste PDF's, met één tik bereikbaar."
           }
         }
       }

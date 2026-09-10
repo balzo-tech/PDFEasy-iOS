@@ -27,7 +27,7 @@ Une interface conçue pour le grand écran, et sur Mac une véritable fenêtre :
 LA CONFIDENTIALITÉ PAR DÉFAUT
 La numérisation, la conversion et l'édition se font sur votre appareil : pour cela, vos documents ne sont envoyés nulle part. Deux fonctions utilisent un service en ligne sécurisé, et seulement lorsque vous les demandez — poser des questions sur un document, et les rares conversions qu'un iPhone ne peut pas effectuer seul.
 
-Disponible en français, anglais, allemand, italien et espagnol.
+Disponible en français, anglais, allemand, italien, néerlandais et espagnol.
 
 ABONNEMENT PDF PRO
 L'abonnement débloque le partage, l'exportation et l'impression de vos documents, sans limite de nombre. Une formule hebdomadaire, une mensuelle et une annuelle sont proposées ; la formule annuelle commence par un essai gratuit.

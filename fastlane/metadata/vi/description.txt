@@ -27,7 +27,7 @@ Giao diện thiết kế cho màn hình lớn, và trên Mac là một cửa s�
 QUYỀN RIÊNG TƯ NGAY TỪ ĐẦU
 Việc quét, chuyển đổi và chỉnh sửa diễn ra trên máy của bạn: để làm những việc đó, tài liệu không được tải lên bất kỳ đâu. Có hai tính năng dùng dịch vụ trực tuyến an toàn, và chỉ khi bạn yêu cầu — đặt câu hỏi về một tài liệu, và một vài định dạng chuyển đổi mà iPhone không thể tự xử lý.
 
-Có sẵn bằng tiếng Anh, tiếng Pháp, tiếng Đức, tiếng Ý và tiếng Tây Ban Nha.
+Có sẵn bằng tiếng Anh, tiếng Hà Lan, tiếng Pháp, tiếng Đức, tiếng Ý và tiếng Tây Ban Nha.
 
 GÓI ĐĂNG KÝ PDF PRO
 Gói đăng ký mở khoá việc chia sẻ, xuất và in tài liệu, không giới hạn số lượng. Có gói theo tuần, theo tháng và theo năm; gói theo năm bắt đầu bằng bản dùng thử miễn phí.

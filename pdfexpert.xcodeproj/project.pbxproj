@@ -2067,6 +2067,7 @@
 				es,
 				de,
 				fr,
+				nl,
 			);
 			mainGroup = 89CD7A8D29D32855003F1C3A;
 			packageReferences = (
