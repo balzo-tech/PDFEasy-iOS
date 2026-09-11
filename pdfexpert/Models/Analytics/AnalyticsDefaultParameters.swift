@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import StoreKit
 
 enum AnalyticsEventCustomParameters: String {
     case marginOption = "margin_option"
@@ -45,6 +46,40 @@ enum AnalyticsEventCustomParameters: String {
     case scanFilterAppliedToAll = "scan_filter_applied_to_all"
     case scanFormat = "scan_format"
     case scanPageCount = "scan_page_count"
+    case paywallExit = "paywall_exit"
+    case checkoutFailureReason = "checkout_failure_reason"
+    case checkoutErrorCode = "checkout_error_code"
+}
+
+extension AnalyticsPaywallExit {
+    var trackingParameterValue: String {
+        switch self {
+        case .notShown: return "not_shown"
+        case .declined: return "declined"
+        case .accepted: return "accepted"
+        }
+    }
+}
+
+extension AnalyticsCheckoutFailure {
+    var trackingParameterValue: String {
+        switch self {
+        case .userCancelled: return "user_cancelled"
+        case .pending: return "pending"
+        case .verificationFailed: return "verification_failed"
+        case .unknownResult: return "unknown_result"
+        case .error: return "error"
+        }
+    }
+
+    /// Only the `error` case has one: the domain and code of the underlying
+    /// `NSError`, which is what tells a declined card from a network failure.
+    var trackingErrorCode: String? {
+        switch self {
+        case .error(let code): return code
+        default: return nil
+        }
+    }
 }
 
 extension AnalyticsScanFormat {
@@ -119,6 +154,18 @@ extension AnalyticsScreen {
 }
 
 extension AnalyticsEvent {
+
+    /// What every checkout event says about the plan being bought. Started,
+    /// failed and completed carry the same three, so the funnel between them can
+    /// be read per product rather than in aggregate.
+    static func checkoutParameters(forProduct product: Product) -> [String: Any] {
+        [
+            AnalyticsEventCustomParameters.productId.rawValue: product.id,
+            AnalyticsEventCustomParameters.productPrice.rawValue: product.displayPrice,
+            AnalyticsEventCustomParameters.subscriptionPlanIsFreeTrial.rawValue: product.subscription?.introductoryOffer?.paymentMode == .freeTrial
+        ]
+    }
+
     var customEventName: String {
         switch self {
         case .appTrackingTransparancyAuthorized: return "tracking_authorized"
@@ -160,6 +207,9 @@ extension AnalyticsEvent {
         case .chatPdfMessageSent: return "chat_pdf_message_sent"
         case .chatMessageLimitReached: return "chat_message_limit_reached"
         case .subscriptionShown: return "subscription_shown"
+        case .subscriptionDismissed: return "subscription_dismissed"
+        case .checkoutStarted: return "checkout_started"
+        case .checkoutFailed: return "checkout_failed"
         case .reviewLowRateFeedback: return "review_low_rate_feedback"
         case .suggestedFieldsSaved: return "suggested_fields_saved"
         case .ocrStarted: return "ocr_started"
@@ -217,11 +267,7 @@ extension AnalyticsEvent {
         switch self {
         case .appTrackingTransparancyAuthorized: return nil
         case .checkoutCompleted(let subscriptionPlanProduct):
-            return [
-                AnalyticsEventCustomParameters.productId.rawValue: subscriptionPlanProduct.id,
-                AnalyticsEventCustomParameters.productPrice.rawValue: subscriptionPlanProduct.displayPrice,
-                AnalyticsEventCustomParameters.subscriptionPlanIsFreeTrial.rawValue: subscriptionPlanProduct.subscription?.introductoryOffer?.paymentMode == .freeTrial
-            ]
+            return Self.checkoutParameters(forProduct: subscriptionPlanProduct)
         case .homeActionChosen(let homeAction):
             return [AnalyticsEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
         case .homeFullActionChosen(let homeAction, let importOption):
@@ -292,6 +338,17 @@ extension AnalyticsEvent {
         case .chatPdfMessageSent: return nil
         case .chatMessageLimitReached: return nil
         case .subscriptionShown: return nil
+        case .subscriptionDismissed(let exit):
+            return [AnalyticsEventCustomParameters.paywallExit.rawValue: exit.trackingParameterValue]
+        case .checkoutStarted(let subscriptionPlanProduct):
+            return Self.checkoutParameters(forProduct: subscriptionPlanProduct)
+        case .checkoutFailed(let subscriptionPlanProduct, let failure):
+            var parameters = Self.checkoutParameters(forProduct: subscriptionPlanProduct)
+            parameters[AnalyticsEventCustomParameters.checkoutFailureReason.rawValue] = failure.trackingParameterValue
+            if let code = failure.trackingErrorCode {
+                parameters[AnalyticsEventCustomParameters.checkoutErrorCode.rawValue] = code
+            }
+            return parameters
         case .reviewLowRateFeedback(let feedback):
             return [AnalyticsEventCustomParameters.reviewLowRateFeedbackContent.rawValue: feedback]
         case .suggestedFieldsSaved: return nil

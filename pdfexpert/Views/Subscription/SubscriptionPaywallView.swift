@@ -52,9 +52,15 @@ struct SubscriptionPaywallView: View {
         }
         .alert("If you leave, you lose every PRO benefit",
                isPresented: self.$confirmExit) {
-            Button("Yes") { self.viewModel.startFreeTrial() }
+            Button("Yes") {
+                self.viewModel.onExit(.accepted)
+                self.viewModel.startFreeTrial()
+            }
                 .keyboardShortcut(.defaultAction)
-            Button("No", role: .cancel) { self.onComplete() }
+            Button("No", role: .cancel) {
+                self.viewModel.onExit(.declined)
+                self.onComplete()
+            }
         } message: {
             Text("No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI. Do you want to start your free trial?")
         }
@@ -67,6 +73,9 @@ struct SubscriptionPaywallView: View {
             self.askedExit = true
             self.confirmExit = true
         } else {
+            // Nothing was asked this time: either the question has already been
+            // put and answered, or there is no trial left to put it about.
+            self.viewModel.onExit(.notShown)
             self.onComplete()
         }
     }

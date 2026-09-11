@@ -175,13 +175,32 @@ final class StoreImpl: Store {
         if let installId = AppleAttribution.installId, let token = UUID(uuidString: installId) {
             options.insert(.appAccountToken(token))
         }
-        let result = try await product.purchase(options: options)
+        // Every outcome below is reported, not just the sale. `checkout_completed`
+        // on its own says how many people bought and nothing about how many
+        // tried: with barely a third of charges going through, the customers who
+        // pressed the button and were turned away are the larger group, and they
+        // were invisible until now.
+        self.analyticsManager.track(event: .checkoutStarted(subscriptionPlanProduct: product))
+
+        let result: Product.PurchaseResult
+        do {
+            result = try await product.purchase(options: options)
+        } catch {
+            self.trackCheckoutFailure(forProduct: product, failure: .error(code: Self.failureCode(forError: error)))
+            throw error
+        }
 
         switch result {
         case .success(let verification):
             //Check whether the transaction is verified. If it isn't,
             //this function rethrows the verification error.
-            let transaction = try self.checkVerified(verification)
+            let transaction: Transaction
+            do {
+                transaction = try self.checkVerified(verification)
+            } catch {
+                self.trackCheckoutFailure(forProduct: product, failure: .verificationFailed)
+                throw error
+            }
 
             //The transaction is verified. Deliver content to the user.
             await self.updateCustomerProductStatus()
@@ -194,11 +213,31 @@ final class StoreImpl: Store {
             self.analyticsManager.track(event: .checkoutCompleted(subscriptionPlanProduct: product))
 
             return transaction
-        case .userCancelled, .pending:
+        case .userCancelled:
+            self.trackCheckoutFailure(forProduct: product, failure: .userCancelled)
+            return nil
+        case .pending:
+            // Waiting on someone else: Ask to Buy, or a bank that wants a second
+            // word. Not a lost sale yet, but not a sale either.
+            self.trackCheckoutFailure(forProduct: product, failure: .pending)
             return nil
         default:
+            self.trackCheckoutFailure(forProduct: product, failure: .unknownResult)
             return nil
         }
+    }
+
+    private func trackCheckoutFailure(forProduct product: Product, failure: AnalyticsCheckoutFailure) {
+        self.analyticsManager.track(event: .checkoutFailed(subscriptionPlanProduct: product, failure: failure))
+    }
+
+    /// The domain and code of whatever Apple raised — `SKErrorDomain.2` and the
+    /// like. It is what separates a card the bank declined from a network that
+    /// dropped halfway, it is the same string in every language the app is sold
+    /// in, and it says nothing about the customer.
+    nonisolated static func failureCode(forError error: Error) -> String {
+        let nsError = error as NSError
+        return "\(nsError.domain).\(nsError.code)"
     }
 
     func isPurchased(_ product: Product) async throws -> Bool {

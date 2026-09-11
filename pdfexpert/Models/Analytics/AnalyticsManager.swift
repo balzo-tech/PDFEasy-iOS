@@ -71,6 +71,34 @@ enum AnalyticsScanFormat {
     case image
 }
 
+/// What the customer did when they asked to leave the paywall. The exit prompt
+/// is only raised while a free trial is still on the table and only once per
+/// showing, so `notShown` covers both the second attempt and the case where
+/// there is no trial left to offer.
+///
+/// `accepted` is not an exit at all — the customer stayed and the purchase
+/// began — but it is the only way to tell whether the prompt earns its place.
+enum AnalyticsPaywallExit {
+    case notShown
+    case declined
+    case accepted
+}
+
+/// Why a purchase that started never became a transaction.
+///
+/// Every case here is an outcome of `Product.purchase`, and together they answer
+/// the question `checkout_completed` cannot: of the customers who pressed the
+/// button, how many did Apple actually charge. `error` carries the domain and
+/// code rather than the message, so the value stays stable across the sixteen
+/// languages the app is sold in and carries nothing personal.
+enum AnalyticsCheckoutFailure {
+    case userCancelled
+    case pending
+    case verificationFailed
+    case unknownResult
+    case error(code: String)
+}
+
 enum AnalyticsEvent {
     case appTrackingTransparancyAuthorized
     case checkoutCompleted(subscriptionPlanProduct: Product)
@@ -111,6 +139,14 @@ enum AnalyticsEvent {
     case chatPdfMessageSent
     case chatMessageLimitReached
     case subscriptionShown
+    /// The customer asked to close the paywall. Raised on the way out — and on
+    /// `accepted`, on the way back in — so the silent half of `subscriptionShown`
+    /// stops being invisible.
+    case subscriptionDismissed(exit: AnalyticsPaywallExit)
+    /// The button was pressed and Apple's sheet was asked for. The gap between
+    /// this and `checkoutCompleted` is where declined cards live.
+    case checkoutStarted(subscriptionPlanProduct: Product)
+    case checkoutFailed(subscriptionPlanProduct: Product, failure: AnalyticsCheckoutFailure)
     case reviewLowRateFeedback(feedback: String)
     case suggestedFieldsSaved
     case ocrStarted

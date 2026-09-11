@@ -317,6 +317,7 @@
 		8A11AT0100000000000001 /* AppleAttribution in Frameworks */ = {isa = PBXBuildFile; productRef = 8A11AT0100000000000002 /* AppleAttribution */; };
 		8A11AT0100000000000004 /* AppleAttributionPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000005 /* AppleAttributionPlatform.swift */; };
 		8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */; };
+		8A11PA0100000000000006 /* PaywallAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11PA0100000000000007 /* PaywallAnalyticsTests.swift */; };
 		8A11AT0100000000000008 /* PdfAppendAndShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */; };
 		8A11AT010000000000000A /* PersistenceDeduplicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */; };
 		8AD335DC7C937B1E5E8283C9 /* contract-fr.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6D22770F54E7EFFD67EF7696 /* contract-fr.pdf */; };
@@ -776,6 +777,7 @@
 		89F9E4FC2A9635EC0001D48B /* ZoomImageModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomImageModifier.swift; sourceTree = "<group>"; };
 		8A11AT0100000000000005 /* AppleAttributionPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleAttributionPlatform.swift; sourceTree = "<group>"; };
 		8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleAttributionPlatformTests.swift; sourceTree = "<group>"; };
+		8A11PA0100000000000007 /* PaywallAnalyticsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallAnalyticsTests.swift; sourceTree = "<group>"; };
 		8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfAppendAndShareTests.swift; sourceTree = "<group>"; };
 		8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersistenceDeduplicationTests.swift; sourceTree = "<group>"; };
 		8EAA957B04E3057198E85988 /* MainSplitView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MainSplitView.swift; path = ../../../pdfexpert/Views/Main/MainSplitView.swift; sourceTree = "<group>"; };
@@ -1884,6 +1886,7 @@
 				8A11AT0100000000000009 /* PdfAppendAndShareTests.swift */,
 				8A11AT010000000000000B /* PersistenceDeduplicationTests.swift */,
 				8A11AT0100000000000007 /* AppleAttributionPlatformTests.swift */,
+				8A11PA0100000000000007 /* PaywallAnalyticsTests.swift */,
 				9B74D4690C1D855C28282544 /* EditorOpeningCostTests.swift */,
 				EE6498F5D0225CCE67211E67 /* ImageToPdfTests.swift */,
 				8F517771E9337646B0F2A813 /* AnnotationIdentityTests.swift */,
@@ -2630,6 +2633,7 @@
 				8A11AT0100000000000008 /* PdfAppendAndShareTests.swift in Sources */,
 				8A11AT010000000000000A /* PersistenceDeduplicationTests.swift in Sources */,
 				8A11AT0100000000000006 /* AppleAttributionPlatformTests.swift in Sources */,
+				8A11PA0100000000000006 /* PaywallAnalyticsTests.swift in Sources */,
 				50D3963EB3588AC7DAC2C955 /* EditorOpeningCostTests.swift in Sources */,
 				A288A9DACDDDD15D84CCDD9C /* ImageToPdfTests.swift in Sources */,
 				360F9836D75296B43DBED466 /* AnnotationIdentityTests.swift in Sources */,

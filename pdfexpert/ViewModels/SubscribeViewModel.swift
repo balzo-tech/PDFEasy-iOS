@@ -80,6 +80,16 @@ class SubscribeViewModel<S: SubscriptionPlan>: ObservableObject {
         self.analyticsManager.track(event: .subscriptionShown)
         self.refresh()
     }
+
+    /// The other half of `onAppear`. Nine customers in ten leave this screen
+    /// without buying and, until now, left no trace of having done so: `exit`
+    /// says whether the last offer was made on the way out and what it earned.
+    ///
+    /// Not called when the purchase succeeds — that exit is `checkout_completed`.
+    @MainActor
+    func onExit(_ exit: AnalyticsPaywallExit) {
+        self.analyticsManager.track(event: .subscriptionDismissed(exit: exit))
+    }
     
     private func onPremiumStateChanged(isPremium: Bool) {
         self.isPremium = isPremium
