@@ -57,6 +57,7 @@ struct ImageEditorEditorView: View {
                                    thumbnail: item.thumbnail,
                                    title: item.url.lastPathComponent)
         }
+        .imageCropView(flow: self.viewModel.imageCropFlow)
         .showSubscriptionView(self.$viewModel.monetizationShow,
                               onComplete: { self.viewModel.onMonetizationClose() })
         .alert(String(localized: "Saved to Photos"), isPresented: self.$viewModel.savedToPhotosAlertShow, actions: {
@@ -100,6 +101,11 @@ struct ImageEditorEditorView: View {
                             label: String(localized: "Mirror")) {
                 self.viewModel.mirror()
             }
+            if self.viewModel.canCropFreely {
+                self.iconButton("crop", label: String(localized: "Crop")) {
+                    self.viewModel.cropFreely()
+                }
+            }
             self.iconButton("arrow.uturn.backward", label: String(localized: "Reset")) {
                 self.viewModel.resetEdits()
             }
@@ -122,6 +128,8 @@ struct ImageEditorEditorView: View {
 
     private var shapePicker: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+            // The quick shapes. `Crop` above is the one with handles; these are
+            // for the case where the answer is just "square".
             Text("Shape")
                 .font(forCategory: .caption1)
                 .foregroundStyle(ColorPalette.textSecondary)

@@ -82,26 +82,41 @@ enum ImageCanvasUtility {
 
     // MARK: - Captions
 
-    /// Where a line of caption sits.
-    enum CaptionPosition {
-        case top
-        case bottom
-    }
+    /// One block of meme text, placed on the picture rather than above or below it.
+    ///
+    /// Everything is a **fraction of the image**, never a point size or a pixel
+    /// offset. That is the whole trick behind the editor: the canvas on screen is
+    /// a few hundred points tall and the export is a few thousand, and the same
+    /// three numbers describe the same result at both sizes. A point size that
+    /// looked right while dragging would come out invisible in the file.
+    struct Caption: Identifiable, Equatable {
 
-    /// One line of meme text, and how it should look.
-    struct Caption {
+        let id: UUID
         var text: String
-        var position: CaptionPosition
+        /// Where the middle of the block sits, 0…1 across and down, origin at the
+        /// top left — UIKit's orientation and SwiftUI's, so neither has to flip.
+        var center: CGPoint
+        /// Type height as a fraction of the image height.
+        var scale: CGFloat
+
+        init(id: UUID = UUID(), text: String = "", center: CGPoint, scale: CGFloat = 0.11) {
+            self.id = id
+            self.text = text
+            self.center = center
+            self.scale = scale
+        }
+
+        /// True when there is nothing to draw. Kept as a property rather than
+        /// filtered away, because an empty block is still a thing the user is
+        /// about to type into.
+        var isBlank: Bool {
+            self.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
     }
 
-    /// How the captions are drawn — shared by both lines, because a meme with two
+    /// How the captions look. Shared by every block, because a meme with two
     /// different type treatments stops reading as a meme.
-    struct CaptionStyle {
-        /// Height of the type as a fraction of the *image* height, not a point
-        /// size. A point size that looks right on a preview is invisible on a
-        /// 4032-pixel photograph, and this is the whole reason the preview and
-        /// the export agree.
-        var scale: CGFloat = 0.11
+    struct CaptionStyle: Equatable {
         var fill: UIColor = .white
         var stroke: UIColor = .black
         /// Outline width, as a fraction of the type height.
@@ -109,14 +124,68 @@ enum ImageCanvasUtility {
         var isUppercased: Bool = true
     }
 
-    /// Draws the captions onto the image at whatever size it is.
+    /// The share of the width a block may use before it wraps. The same number is
+    /// used by the editor's live text, so a line that wraps on screen wraps in the
+    /// file at the same word.
+    static let captionWidthFraction: CGFloat = 0.92
+
+    /// Where a block actually lands, measured rather than assumed.
     ///
-    /// Called twice for the same state: once on the downscaled preview while the
-    /// user types, once on the full-resolution original on the way out.
+    /// Two things depend on this and they must not disagree, so both ask here:
+    /// the canvas, to place the live text, and the export, to draw it. The rect
+    /// is the block's **own** size — as wide as the words need up to 92% of the
+    /// picture, as tall as they wrap to — and never the full width. A block that
+    /// always claimed 92% could not be dragged sideways at all: there was nowhere
+    /// left to go.
+    ///
+    /// It is then clamped inside the picture. `Caption.center` is clamped too,
+    /// but that only keeps the *middle* on the picture — three lines of type
+    /// centred a tenth of the way down still start above the top edge, which is
+    /// exactly how the first canvas cut "WHEN THE" off its own meme.
+    static func captionFrame(_ caption: Caption,
+                             style: CaptionStyle,
+                             in size: CGSize) -> CGRect {
+        guard size.width > 0, size.height > 0 else { return .zero }
+        let text = style.isUppercased ? caption.text.uppercased(with: .current) : caption.text
+        let font = Self.captionFont(forImageHeight: size.height, scale: caption.scale)
+
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .center
+        paragraph.lineBreakMode = .byWordWrapping
+
+        let limit = size.width * Self.captionWidthFraction
+        // An empty block still needs a box, or there would be nothing to tap.
+        let measured = NSAttributedString(string: text.isEmpty ? " " : text,
+                                          attributes: [.font: font, .paragraphStyle: paragraph])
+            .boundingRect(with: CGSize(width: limit, height: .greatestFiniteMagnitude),
+                          options: [.usesLineFragmentOrigin, .usesFontLeading],
+                          context: nil)
+
+        // A little slack on the width: the outline is drawn outside the glyphs,
+        // and a box measured to the hair clips the last stroke.
+        let width = min(ceil(measured.width) + font.pointSize * style.strokeScale * 2, limit)
+        let height = ceil(measured.height)
+
+        var origin = CGPoint(x: size.width * caption.center.x - width / 2,
+                             y: size.height * caption.center.y - height / 2)
+        origin.x = min(max(origin.x, 0), max(size.width - width, 0))
+        origin.y = min(max(origin.y, 0), max(size.height - height, 0))
+        return CGRect(origin: origin, size: CGSize(width: width, height: height))
+    }
+
+    /// The font, at a size derived from the image. `.black` at a condensed width
+    /// is as close as iOS gets to the face this format was born in; Impact is not
+    /// on the system and shipping a font for one tool is not worth the binary.
+    static func captionFont(forImageHeight height: CGFloat, scale: CGFloat) -> UIFont {
+        UIFont.systemFont(ofSize: max(height * scale, 1), weight: .black)
+            .withCondensedWidthIfAvailable()
+    }
+
+    /// Burns the captions into the picture at its own resolution.
     static func captioned(_ image: UIImage,
                           captions: [Caption],
                           style: CaptionStyle) -> UIImage {
-        let lines = captions.filter { !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        let lines = captions.filter { !$0.isBlank }
         guard !lines.isEmpty else { return image }
 
         let size = image.size
@@ -136,45 +205,28 @@ enum ImageCanvasUtility {
 
     private static func draw(_ caption: Caption, style: CaptionStyle, in size: CGSize) {
         let text = style.isUppercased ? caption.text.uppercased(with: .current) : caption.text
-        let pointSize = size.height * style.scale
-        // `.black` at a condensed width is as close as iOS gets to the face this
-        // format was born in; Impact is not on the system and shipping a font
-        // for one tool is not worth the binary.
-        let font = UIFont.systemFont(ofSize: pointSize, weight: .black).withCondensedWidthIfAvailable()
+        let font = Self.captionFont(forImageHeight: size.height, scale: caption.scale)
 
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
         paragraph.lineBreakMode = .byWordWrapping
 
-        let inset = size.width * 0.04
-        let available = CGSize(width: size.width - inset * 2, height: size.height * 0.45)
-
-        // Stroke first, fill second, as two passes: `.strokeWidth` negative in a
-        // single attributed run draws both, but thins the outline where glyphs
-        // overlap, which is exactly where this format needs it thickest.
-        let outlined: [NSAttributedString.Key: Any] = [
+        // Stroke and fill in one run, with a negative width: positive would draw
+        // the outline *only*. The two-pass version this replaced drew the outline
+        // under the fill, which doubled the glyph count for no visible gain.
+        let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .paragraphStyle: paragraph,
             .foregroundColor: style.fill,
             .strokeColor: style.stroke,
-            .strokeWidth: -(pointSize * style.strokeScale)
+            .strokeWidth: -(font.pointSize * style.strokeScale)
         ]
 
-        let attributed = NSAttributedString(string: text, attributes: outlined)
-        let bounds = attributed.boundingRect(with: available,
-                                             options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                             context: nil)
-
-        let y: CGFloat
-        switch caption.position {
-        case .top:
-            y = inset
-        case .bottom:
-            y = size.height - bounds.height - inset
-        }
-        attributed.draw(with: CGRect(x: inset, y: y, width: available.width, height: bounds.height),
-                        options: [.usesLineFragmentOrigin, .usesFontLeading],
-                        context: nil)
+        // The very same rect the canvas placed the live text in.
+        NSAttributedString(string: text, attributes: attributes)
+            .draw(with: Self.captionFrame(caption, style: style, in: size),
+                  options: [.usesLineFragmentOrigin, .usesFontLeading],
+                  context: nil)
     }
 }
 

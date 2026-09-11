@@ -2,9 +2,14 @@
 //  MemeMakerView.swift
 //  PdfExpert
 //
-//  Two fields and a picture. The preview is the real renderer running on a
-//  downscaled copy, not an approximation drawn with SwiftUI text — so what is on
-//  screen while typing is what lands in the share sheet.
+//  A canvas, not a form.
+//
+//  The first version of this screen put two text fields under the picture and
+//  locked one line to the top and one to the bottom. It was easy to build and
+//  wrong to use: a meme is made by putting words *where the joke needs them*,
+//  and every app that makes them lets you drag. So the picture is now the
+//  biggest thing on screen, the words sit on it, and the controls are a single
+//  strip that never competes with the canvas for room.
 //
 
 import SwiftUI
@@ -27,37 +32,29 @@ struct MemeMakerEditorView: View {
 
     @ObservedObject var viewModel: MemeMakerViewModel
 
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @FocusState private var focusedField: Field?
+    @FocusState private var editing: UUID?
     @State private var pickedPhoto: PhotosPickerItem? = nil
-
-    private enum Field { case top, bottom }
-
-    private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
 
     var body: some View {
         ToolScreen(title: String(localized: "Meme maker"),
                    onCancel: { self.viewModel.cancel() }) {
             ZStack {
                 ColorPalette.background.ignoresSafeArea()
-                ScrollView {
-                    VStack(spacing: DS.Spacing.lg) {
-                        self.preview
-                        self.gallery
-                        self.fields
-                        self.styleControls
-                        self.actions
-                    }
-                    .padding(DS.Spacing.md)
-                    .readableColumn()
+                VStack(spacing: DS.Spacing.sm) {
+                    self.canvas
+                    self.textControls
+                    self.gallery
+                    self.actions
                 }
-                .scrollDismissesKeyboard(.interactively)
+                .padding(.horizontal, DS.Spacing.md)
+                .padding(.bottom, DS.Spacing.sm)
+                .readableColumn()
             }
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") { self.focusedField = nil }
+                Button("Done") { self.editing = nil }
             }
         }
         .sheet(item: self.$viewModel.shareUrl,
@@ -65,6 +62,9 @@ struct MemeMakerEditorView: View {
             ActivityViewController(activityItems: [item.url],
                                    thumbnail: item.thumbnail,
                                    title: item.url.lastPathComponent)
+        }
+        .sheet(isPresented: self.$viewModel.browseAllShow) {
+            MemeTemplateBrowser(viewModel: self.viewModel)
         }
         .showSubscriptionView(self.$viewModel.monetizationShow,
                               onComplete: { self.viewModel.onMonetizationClose() })
@@ -74,35 +74,30 @@ struct MemeMakerEditorView: View {
             Text("The image has been saved to your photos.")
         })
         .alertPhotoLibraryPermission(isPresented: self.$viewModel.photosPermissionAlertShow)
-        .sheet(isPresented: self.$viewModel.browseAllShow) {
-            MemeTemplateBrowser(viewModel: self.viewModel)
-        }
     }
 
-    // MARK: - Preview
+    // MARK: - The canvas
 
-    private var preview: some View {
+    /// Takes every point the controls do not need. It is the thing being made:
+    /// everything else on this screen is in service of it.
+    private var canvas: some View {
         ZStack {
-            if let image = self.viewModel.previewImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(.rect(cornerRadius: DS.Radius.thumbnail, style: .continuous))
+            RoundedRectangle(cornerRadius: DS.Radius.thumbnail, style: .continuous)
+                .fill(ColorPalette.surface)
+            if self.viewModel.isEmpty {
+                VStack(spacing: DS.Spacing.xs) {
+                    Image(systemName: "photo.stack")
+                        .font(.system(size: 30, weight: .light))
+                        .foregroundStyle(ColorPalette.textTertiary)
+                    Text("Pick a template below, or one of your own photos.")
+                        .font(forCategory: .caption1)
+                        .foregroundStyle(ColorPalette.textSecondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(DS.Spacing.md)
             } else {
-                RoundedRectangle(cornerRadius: DS.Radius.thumbnail, style: .continuous)
-                    .fill(ColorPalette.surface)
-                    .overlay {
-                        VStack(spacing: DS.Spacing.xs) {
-                            Image(systemName: "photo.stack")
-                                .font(.system(size: 28, weight: .light))
-                                .foregroundStyle(ColorPalette.textTertiary)
-                            Text("Pick a template below, or one of your own photos.")
-                                .font(forCategory: .caption1)
-                                .foregroundStyle(ColorPalette.textSecondary)
-                                .multilineTextAlignment(.center)
-                        }
-                        .padding(DS.Spacing.md)
-                    }
+                MemeCanvasView(viewModel: self.viewModel, editing: self.$editing)
+                    .padding(DS.Spacing.xxs)
             }
             if self.viewModel.isLoadingTemplate {
                 ZStack {
@@ -112,19 +107,81 @@ struct MemeMakerEditorView: View {
                 .clipShape(.rect(cornerRadius: DS.Radius.thumbnail, style: .continuous))
             }
         }
-        .frame(maxHeight: self.isWideLayout ? 460 : 300)
-        .frame(minHeight: self.viewModel.isEmpty ? 180 : 0)
-        .animation(DS.Motion.quick, value: self.viewModel.previewImage)
-        .accessibilityLabel(Text("Preview of the meme"))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityLabel(Text("The meme being made"))
+    }
+
+    // MARK: - The words
+
+    /// One row, and it only offers what applies: the bin appears when a block is
+    /// selected and not before.
+    private var textControls: some View {
+        HStack(spacing: DS.Spacing.xs) {
+            Button(action: {
+                self.viewModel.addCaption()
+                self.editing = self.viewModel.selectedCaptionId
+            }) {
+                Label("Text", systemImage: "plus")
+                    .font(forCategory: .button)
+                    .frame(height: DS.Size.tapTarget)
+                    .padding(.horizontal, DS.Spacing.sm)
+            }
+            .buttonStyle(.glass)
+            .disabled(self.viewModel.isEmpty)
+
+            ForEach(MemeTextColor.allCases) { color in
+                Button {
+                    self.viewModel.color = color
+                } label: {
+                    Circle()
+                        .fill(color.swatch)
+                        .frame(width: 30, height: 30)
+                        .overlay {
+                            Circle().strokeBorder(color == self.viewModel.color
+                                                  ? ColorPalette.accent : ColorPalette.separator,
+                                                  lineWidth: color == self.viewModel.color ? 3 : 1)
+                        }
+                        .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(color.title))
+                .accessibilityAddTraits(color == self.viewModel.color ? [.isButton, .isSelected] : .isButton)
+            }
+
+            Button {
+                self.viewModel.isUppercased.toggle()
+            } label: {
+                Text(verbatim: "AA")
+                    .font(.system(size: 15, weight: .black))
+                    .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+            }
+            .buttonStyle(.glass)
+            .tint(self.viewModel.isUppercased ? ColorPalette.accent : ColorPalette.textSecondary)
+            .accessibilityLabel(Text("All capitals"))
+            .accessibilityAddTraits(self.viewModel.isUppercased ? [.isButton, .isSelected] : .isButton)
+
+            Spacer(minLength: 0)
+
+            if let selected = self.viewModel.selectedCaptionId {
+                Button(role: .destructive) {
+                    self.editing = nil
+                    self.viewModel.removeCaption(id: selected)
+                } label: {
+                    Image(systemName: "trash")
+                        .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                }
+                .buttonStyle(.glass)
+                .accessibilityLabel(Text("Delete text"))
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(DS.Motion.quick, value: self.viewModel.selectedCaptionId)
     }
 
     // MARK: - The gallery
 
-    /// The templates, with the camera roll as the first tile. Horizontal rather
-    /// than a grid: the list is curated and short, and a grid would push the
-    /// caption fields below the fold on a phone — and the fields are the point.
     @ViewBuilder private var gallery: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+        VStack(alignment: .leading, spacing: DS.Spacing.xxs) {
             HStack {
                 Text("Template")
                     .font(forCategory: .caption1)
@@ -135,7 +192,7 @@ struct MemeMakerEditorView: View {
                 // scrolling sideways past a hundred and fifty tiles.
                 if self.viewModel.templates.count > Self.stripCount {
                     Button(String(localized: "See all")) {
-                        self.focusedField = nil
+                        self.editing = nil
                         self.viewModel.browseAllShow = true
                     }
                     .font(forCategory: .caption1)
@@ -147,7 +204,7 @@ struct MemeMakerEditorView: View {
                     self.photoTile
                     ForEach(self.viewModel.templates.prefix(Self.stripCount)) { template in
                         Button {
-                            self.focusedField = nil
+                            self.editing = nil
                             self.viewModel.select(template)
                         } label: {
                             self.templateTile(for: template)
@@ -175,10 +232,10 @@ struct MemeMakerEditorView: View {
                 }
                 .frame(width: Self.tileSize, height: Self.tileSize)
                 .overlay {
+                    let isCurrent = self.viewModel.selectedTemplateId == nil && !self.viewModel.isEmpty
                     RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
-                        .strokeBorder(self.viewModel.selectedTemplateId == nil && !self.viewModel.isEmpty
-                                      ? ColorPalette.accent : ColorPalette.separator,
-                                      lineWidth: self.viewModel.selectedTemplateId == nil && !self.viewModel.isEmpty ? 3 : 1)
+                        .strokeBorder(isCurrent ? ColorPalette.accent : ColorPalette.separator,
+                                      lineWidth: isCurrent ? 3 : 1)
                 }
                 Text("Your photo")
                     .font(forCategory: .caption2)
@@ -214,100 +271,20 @@ struct MemeMakerEditorView: View {
         .contentShape(.rect)
     }
 
-    private static let tileSize: CGFloat = 72
+    private static let tileSize: CGFloat = 64
     /// How many fit in the strip before "See all" earns its place.
     private static let stripCount: Int = 24
-
-    // MARK: - The words
-
-    private var fields: some View {
-        VStack(spacing: DS.Spacing.sm) {
-            self.field(String(localized: "Top line"),
-                       text: self.$viewModel.topText,
-                       field: .top)
-            self.field(String(localized: "Bottom line"),
-                       text: self.$viewModel.bottomText,
-                       field: .bottom)
-        }
-    }
-
-    private func field(_ placeholder: String, text: Binding<String>, field: Field) -> some View {
-        TextField(placeholder, text: text, axis: .vertical)
-            .lineLimit(1...3)
-            .font(forCategory: .body1)
-            .focused(self.$focusedField, equals: field)
-            .submitLabel(.done)
-            .textInputAutocapitalization(.sentences)
-            .padding(DS.Spacing.sm)
-            .frame(minHeight: DS.Size.tapTarget)
-            .background(ColorPalette.surface, in: .rect(cornerRadius: DS.Radius.control, style: .continuous))
-    }
-
-    // MARK: - How it looks
-
-    private var styleControls: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-            VStack(alignment: .leading, spacing: DS.Spacing.xxs) {
-                Text("Size")
-                    .font(forCategory: .caption1)
-                    .foregroundStyle(ColorPalette.textSecondary)
-                HStack(spacing: DS.Spacing.sm) {
-                    Image(systemName: "textformat.size.smaller")
-                        .foregroundStyle(ColorPalette.textTertiary)
-                        .accessibilityHidden(true)
-                    Slider(value: self.$viewModel.textScale, in: 0.05...0.20)
-                        .accessibilityLabel(Text("Size"))
-                    Image(systemName: "textformat.size.larger")
-                        .foregroundStyle(ColorPalette.textTertiary)
-                        .accessibilityHidden(true)
-                }
-            }
-
-            VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-                Text("Colour")
-                    .font(forCategory: .caption1)
-                    .foregroundStyle(ColorPalette.textSecondary)
-                HStack(spacing: DS.Spacing.sm) {
-                    ForEach(MemeTextColor.allCases) { color in
-                        Button {
-                            self.viewModel.color = color
-                        } label: {
-                            self.swatch(for: color)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text(color.title))
-                        .accessibilityAddTraits(color == self.viewModel.color ? [.isButton, .isSelected] : .isButton)
-                    }
-                    Spacer(minLength: 0)
-                }
-            }
-
-            Toggle(isOn: self.$viewModel.isUppercased) {
-                Text("All capitals")
-                    .font(forCategory: .body1)
-            }
-        }
-    }
-
-    private func swatch(for color: MemeTextColor) -> some View {
-        let isSelected = color == self.viewModel.color
-        return Circle()
-            .fill(color.swatch)
-            .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
-            .overlay {
-                Circle()
-                    .strokeBorder(isSelected ? ColorPalette.accent : ColorPalette.separator,
-                                  lineWidth: isSelected ? 3 : 1)
-            }
-    }
 
     // MARK: - Ways out
 
     private var actions: some View {
-        VStack(spacing: DS.Spacing.xs) {
+        HStack(spacing: DS.Spacing.xs) {
             // Sharing leads, unlike every other tool in this app: a meme that
             // stays on the phone did not do its job.
-            Button(action: { self.viewModel.share() }) {
+            Button(action: {
+                self.editing = nil
+                self.viewModel.share()
+            }) {
                 Label("Share", systemImage: "square.and.arrow.up")
                     .font(forCategory: .button)
                     .frame(maxWidth: .infinity)
@@ -315,85 +292,27 @@ struct MemeMakerEditorView: View {
             }
             .buttonStyle(.glassProminent)
 
-            HStack(spacing: DS.Spacing.xs) {
-                Button(action: { self.viewModel.saveToPhotos() }) {
-                    Label("Save to Photos", systemImage: "square.and.arrow.down")
-                        .font(forCategory: .button)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: DS.Size.tapTarget)
-                }
-                .buttonStyle(.glass)
-
-                Button(action: { self.viewModel.createPdf() }) {
-                    Label("To PDF", systemImage: "doc")
-                        .font(forCategory: .button)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: DS.Size.tapTarget)
-                }
-                .buttonStyle(.glass)
+            Button(action: {
+                self.editing = nil
+                self.viewModel.saveToPhotos()
+            }) {
+                Image(systemName: "square.and.arrow.down")
+                    .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
             }
+            .buttonStyle(.glass)
+            .accessibilityLabel(Text("Save to Photos"))
+
+            Button(action: {
+                self.editing = nil
+                self.viewModel.createPdf()
+            }) {
+                Image(systemName: "doc")
+                    .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+            }
+            .buttonStyle(.glass)
+            .accessibilityLabel(Text("To PDF"))
         }
         .disabled(!self.viewModel.canExport)
-    }
-}
-
-/// A template's picture, filling whatever frame the caller gives it.
-///
-/// Built inside out, and it took two goes. The obvious spelling — an
-/// `AsyncImage` with `scaledToFill` and a frame fixing only the height — lets
-/// the *image* decide the width: a 240-pixel thumbnail asked to fill a 96-point
-/// box reports about 145 points, and a later `maxWidth: .infinity` widens but
-/// never narrows. In a `LazyVGrid` of 96-point cells that drew every tile on
-/// top of its neighbours.
-///
-/// The second go replaced the image with a square `Color.clear` and drew the
-/// picture as an `overlay`, since overlays are sized by what they cover and
-/// report nothing of their own. That fixed the overlap and broke the rows: a
-/// lazy grid proposes **no** height, so `aspectRatio(1, contentMode: .fit)` had
-/// nothing to fit into and resolved differently row by row — some cells came out
-/// oblong and wide enough to eat two columns, leaving holes in the grid.
-///
-/// So this one carries no opinion about its own size at all. It is a plain
-/// `Color`, which accepts any proposal, and **the caller states the frame** —
-/// 72 x 72 in the strip, a fixed height across the cell in the grid. Deciding
-/// the size in one place is the whole fix.
-private struct MemeTemplateThumbnail: View {
-
-    let url: URL?
-    var isSelected: Bool = false
-
-    var body: some View {
-        ColorPalette.surface
-            .overlay {
-                AsyncImage(url: self.url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    case .failure:
-                        Image(systemName: "photo")
-                            .font(.system(size: 18, weight: .light))
-                            .foregroundStyle(ColorPalette.textTertiary)
-                    default:
-                        ProgressView().progressViewStyle(.circular)
-                    }
-                }
-            }
-            // Both: `clipped` cuts what `scaledToFill` pushes past the frame,
-            // `clipShape` rounds what is left.
-            .clipped()
-            .clipShape(.rect(cornerRadius: DS.Radius.icon, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
-                    .strokeBorder(self.isSelected ? ColorPalette.accent : ColorPalette.separator,
-                                  lineWidth: self.isSelected ? 3 : 1)
-            }
-    }
-}
-
-extension View {
-
-    func showMemeMakerView(viewModel: MemeMakerViewModel) -> some View {
-        self.modifier(MemeMakerView(viewModel: viewModel))
     }
 }
 
@@ -480,4 +399,64 @@ struct MemeTemplateBrowser: View {
     }
 
     private static let tileHeight: CGFloat = 104
+}
+
+/// A template's picture, filling whatever frame the caller gives it.
+///
+/// Built inside out, and it took two goes. The obvious spelling — an
+/// `AsyncImage` with `scaledToFill` and a frame fixing only the height — lets
+/// the *image* decide the width: a 240-pixel thumbnail asked to fill a 96-point
+/// box reports about 145 points, and a later `maxWidth: .infinity` widens but
+/// never narrows. In a `LazyVGrid` of 96-point cells that drew every tile on
+/// top of its neighbours.
+///
+/// The second go replaced the image with a square `Color.clear` and drew the
+/// picture as an `overlay`, since overlays are sized by what they cover and
+/// report nothing of their own. That fixed the overlap and broke the rows: a
+/// lazy grid proposes **no** height, so `aspectRatio(1, contentMode: .fit)` had
+/// nothing to fit into and resolved differently row by row — some cells came out
+/// oblong and wide enough to eat two columns, leaving holes in the grid.
+///
+/// So this one carries no opinion about its own size at all. It is a plain
+/// `Color`, which accepts any proposal, and **the caller states the frame** —
+/// a square in the strip, a fixed height across the cell in the grid. Deciding
+/// the size in one place is the whole fix.
+struct MemeTemplateThumbnail: View {
+
+    let url: URL?
+    var isSelected: Bool = false
+
+    var body: some View {
+        ColorPalette.surface
+            .overlay {
+                AsyncImage(url: self.url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    case .failure:
+                        Image(systemName: "photo")
+                            .font(.system(size: 18, weight: .light))
+                            .foregroundStyle(ColorPalette.textTertiary)
+                    default:
+                        ProgressView().progressViewStyle(.circular)
+                    }
+                }
+            }
+            // Both: `clipped` cuts what `scaledToFill` pushes past the frame,
+            // `clipShape` rounds what is left.
+            .clipped()
+            .clipShape(.rect(cornerRadius: DS.Radius.icon, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
+                    .strokeBorder(self.isSelected ? ColorPalette.accent : ColorPalette.separator,
+                                  lineWidth: self.isSelected ? 3 : 1)
+            }
+    }
+}
+
+extension View {
+
+    func showMemeMakerView(viewModel: MemeMakerViewModel) -> some View {
+        self.modifier(MemeMakerView(viewModel: viewModel))
+    }
 }

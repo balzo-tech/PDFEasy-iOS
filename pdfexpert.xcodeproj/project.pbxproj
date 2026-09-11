@@ -380,6 +380,7 @@
 		C809F1EAF86E61149EB90C20 /* BackgroundRemovalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7ADB6BD313763F1C07268 /* BackgroundRemovalUtility.swift */; };
 		C8C3DAFBE8B6E6A5433D8102 /* MemeTemplateCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D1352D35DEC36927AF95 /* MemeTemplateCatalog.swift */; };
 		CA4D0A36A0B9134A9B17290C /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CBC6496C308494982DBF43 /* FilesView.swift */; };
+		CB61C3B77576397A3C053FE5 /* MemeCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD963372AF5615EBF59B789 /* MemeCanvasView.swift */; };
 		CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEC26104F59A1229C145C29 /* PdfExtractView.swift */; };
 		CD81BEFD471AD97FD6526894 /* PdfExtractViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */; };
 		CD9AF61FE6984926231D31CC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E063C045C32C627710F557 /* Foundation.framework */; };
@@ -556,6 +557,7 @@
 		7C07C24D9158C55FAB874680 /* PdfPageReorderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfPageReorderView.swift; sourceTree = "<group>"; };
 		7C0F71B93C8DC1E425F2D2B3 /* MemeMakerViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemeMakerViewModel.swift; sourceTree = "<group>"; };
 		7E5C0A93B14D46A2A0F1C8B7 /* EditorToolScreens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorToolScreens.swift; sourceTree = "<group>"; };
+		7FD963372AF5615EBF59B789 /* MemeCanvasView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemeCanvasView.swift; sourceTree = "<group>"; };
 		7FFA51296A73FDFA9F94E741 /* PdfCompressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfCompressView.swift; sourceTree = "<group>"; };
 		8182CA141142B57D9B63CE37 /* PdfCleanupUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfCleanupUtilityTests.swift; sourceTree = "<group>"; };
 		83B6A024C1154318BD3FB239 /* ArchiveColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArchiveColor.swift; sourceTree = "<group>"; };
@@ -1337,6 +1339,7 @@
 				4EA7AA504E2F27B8B14F14FA /* PassportPhotoView.swift */,
 				F728ABDE8248A2CFA3BE619B /* MemeMakerView.swift */,
 				26BE9C62D6A2122C38FCCAE3 /* ImageEditorView.swift */,
+				7FD963372AF5615EBF59B789 /* MemeCanvasView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2624,6 +2627,7 @@
 				822FC0319A21359CB1E2BD4A /* ImageEditorView.swift in Sources */,
 				C8C3DAFBE8B6E6A5433D8102 /* MemeTemplateCatalog.swift in Sources */,
 				157EAE6338D2F5DFDB8D3DC3 /* InstallKeywordService.swift in Sources */,
+				CB61C3B77576397A3C053FE5 /* MemeCanvasView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

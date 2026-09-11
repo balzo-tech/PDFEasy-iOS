@@ -291,7 +291,7 @@ struct ToolsView: View {
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
     /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
     /// `sort`, `read`, `editor`, `background`, `passport`, `passport-sheet`,
-    /// `meme`, `meme-browse`, `image-edit`. The premium ones also need `debugPremium -bool YES`,
+    /// `meme`, `meme-browse`, `meme-filled`, `image-edit`. The premium ones also need `debugPremium -bool YES`,
     /// or the paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
@@ -332,13 +332,16 @@ struct ToolsView: View {
                 if tool == "passport-sheet" {
                     self.viewModel.passportPhotoViewModel.output = .sheet
                 }
-            case "meme", "meme-browse":
+            case "meme", "meme-browse", "meme-filled":
                 // The only tool that needs no input to open: it starts on the
                 // template gallery. `meme-browse` goes one further and opens the
                 // full grid, which is the layout worth looking at.
                 self.viewModel.memeMakerViewModel.start(onCreatePdf: nil)
                 if tool == "meme-browse" {
                     self.viewModel.memeMakerViewModel.browseAllShow = true
+                }
+                if tool == "meme-filled" {
+                    self.viewModel.memeMakerViewModel.debugFillForScreenshot()
                 }
             case "image-edit":
                 self.viewModel.imageEditorViewModel.run(image: Self.debugPhotograph(), onCreatePdf: nil)

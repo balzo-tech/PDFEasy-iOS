@@ -9,6 +9,12 @@
 //  by a handful of people a month because they are buried inside a document
 //  workflow. Here they point at a photograph and give a photograph back.
 //
+//  Two kinds of crop, on purpose. The shapes are a tap: centred, non-destructive,
+//  and the answer to "make this square for the grid". **Crop** is the real one —
+//  `ImageCropFlow`, the Mantis cropper this app has used for signatures for two
+//  years, with handles, free ratios and its own rotation. Building a second
+//  cropper next to a working one would have been the wrong kind of new code.
+//
 //  The chain is built once and evaluated twice, at preview size and at full
 //  size, for the reason `BackgroundRemovalViewModel` sets out: Core Image is
 //  lazy, so this costs one description of the work rather than two pipelines.
@@ -74,7 +80,9 @@ enum ImageCropShape: String, CaseIterable, Identifiable {
         case .original: return "photo"
         case .square: return "square"
         case .portrait: return "rectangle.portrait"
-        case .story: return "rectangle.portrait.and.arrow.right"
+        // Same glyph as the 4:5 one on purpose: the captions underneath say
+        // which is which, and the arrow this replaced read as "export".
+        case .story: return "rectangle.portrait"
         case .landscape: return "rectangle"
         }
     }
@@ -116,6 +124,12 @@ class ImageEditorViewModel: ObservableObject {
 
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.store) private var store
+    @Injected(\.imageCropFlow) var imageCropFlow
+
+    /// Mantis draws nothing under Catalyst, and `ImageCropFlow` hands the picture
+    /// straight back there rather than showing an empty black screen. A button
+    /// that silently does nothing is worse than no button, so it is hidden.
+    var canCropFreely: Bool { !UIDevice.isMac }
 
     private var source: CIImage? = nil
     private var previewSource: CIImage? = nil
@@ -170,6 +184,36 @@ class ImageEditorViewModel: ObservableObject {
     @MainActor
     func mirror() {
         self.isMirrored.toggle()
+        self.updatePreview()
+    }
+
+    /// Opens the real cropper on what is currently on screen.
+    ///
+    /// What comes back **replaces the picture**, and every dial goes back to
+    /// zero: the crop is taken of the edit as the user sees it, so keeping the
+    /// recipe as well would apply it a second time. Cropping commits.
+    @MainActor
+    func cropFreely() {
+        guard let current = self.fullResolutionResult() else { return }
+        self.imageCropFlow.startFlow(image: current, onImageCropped: { [weak self] cropped in
+            self?.replaceSource(with: cropped)
+        })
+    }
+
+    @MainActor
+    private func replaceSource(with image: UIImage) {
+        guard let source = ScanImageProcessor.ciImage(from: image) else {
+            self.error = .renderFailed
+            return
+        }
+        self.source = source
+        self.previewSource = ScanImageProcessor.downscaled(source, maxDimension: Self.previewMaxDimension)
+        self.rotation = .none
+        self.isMirrored = false
+        self.shape = .original
+        self.brightness = 0
+        self.contrast = 0
+        self.saturation = 0
         self.updatePreview()
     }
 
