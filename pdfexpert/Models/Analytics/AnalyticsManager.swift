@@ -60,6 +60,8 @@ enum AnalyticsScreen {
     case compare
     case backgroundRemoval
     case passportPhoto
+    case imageEditor
+    case memeMaker
     case scan
     case scanReview
     case scanLibrary
@@ -190,6 +192,15 @@ enum AnalyticsEvent {
     /// dies on: are people getting a photo they are willing to print, and in
     /// which countries are they not.
     case passportPhotoCompleted(spec: String, destination: String, output: String, outcome: String)
+    case imageEditStarted
+    /// `shape` is which frame people actually crop for; `destination` is
+    /// whether the edit ends in a file or in a shrug.
+    case imageEditCompleted(shape: String, destination: String)
+    case memeStarted
+    /// The tool exists to be shared out of, so `destination` is the whole
+    /// experiment: a meme saved to the camera roll is not the same result as
+    /// a meme sent to somebody.
+    case memeCompleted(lines: Int, template: String, destination: String)
     case folderSaved
     case folderDeleted
     case pdfFiled

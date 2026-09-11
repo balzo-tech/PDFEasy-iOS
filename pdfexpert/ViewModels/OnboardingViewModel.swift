@@ -30,7 +30,11 @@ public class OnboardingViewModel : ObservableObject {
     /// Every string goes through `String(localized:)`: these are handed to
     /// `Text` as plain `String`s, and that overload does not localize. The four
     /// sentences this replaced were English in every language for that reason.
-    let items: [OnboardingItem] = [
+    /// The tour as everybody sees it.
+    ///
+    /// `items` puts one more step in front of these when the install came from a
+    /// keyword we are watching — see `memeStep`.
+    private let baseItems: [OnboardingItem] = [
         OnboardingItem(
             illustration: .scan,
             title: String(localized: "Scan anything into a PDF"),
@@ -62,6 +66,36 @@ public class OnboardingViewModel : ObservableObject {
         ),
     ]
     
+    /// The step shown to installs that arrived searching for a meme maker.
+    ///
+    /// First, not last: someone who typed "meme maker" into the App Store and
+    /// got a PDF app needs to see, in the first second, that they did not make a
+    /// mistake. Putting it fifth would be showing it to people who have already
+    /// decided they are in the wrong place.
+    private var memeStep: OnboardingItem {
+        OnboardingItem(
+            illustration: .meme,
+            title: String(localized: "Make a meme in ten seconds"),
+            description: String(localized: "Pick a template, write the top line and the bottom line, and send it.")
+        )
+    }
+
+    /// Whether this install asked for it.
+    ///
+    /// Nil keyword means organic, or a search-match campaign, or that Apple has
+    /// not answered yet — all three take the ordinary tour, which is why the
+    /// list is read rather than awaited: the onboarding cannot wait on a network
+    /// call, and `install-keyword-is-knowable` measured that it usually does not
+    /// have to (2,6 s median, and the welcome screen comes first).
+    private var wantsMemeStep: Bool {
+        guard let keywordId = self.installKeywordService.keywordId else { return false }
+        return self.configService.remoteConfigData.value.memeKeywordIds.contains(keywordId)
+    }
+
+    var items: [OnboardingItem] {
+        self.wantsMemeStep ? [self.memeStep] + self.baseItems : self.baseItems
+    }
+
     @Published var monetizationShow: Bool = false
     @Published var pageIndex = 0
     
@@ -70,6 +104,8 @@ public class OnboardingViewModel : ObservableObject {
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.appTrackingTransparancy) private var appTrackingTransparency
+    @Injected(\.installKeywordService) private var installKeywordService
+    @Injected(\.configService) private var configService
     
     func onMonetizationClose() {
         self.coordinator.goToMain()

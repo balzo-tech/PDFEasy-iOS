@@ -349,6 +349,28 @@ enum ToolCatalog {
                     keywords: [String(localized: "background"), String(localized: "cut out"),
                                String(localized: "transparent"), String(localized: "erase"),
                                "png", String(localized: "photo")]),
+            // The two tools whose output is a picture rather than a document.
+            // The keywords are the ones the App Store popularity data actually
+            // measures — `photo editor` is the only image term with volume in
+            // every market we buy in, and `meme maker` the only one for the
+            // other; the words on the tiles are not searched for anywhere.
+            PdfTool(action: .editImage,
+                    title: String(localized: "Edit image"),
+                    subtitle: String(localized: "Turn, crop and adjust a photo"),
+                    systemImage: "slider.horizontal.below.rectangle",
+                    category: .image,
+                    keywords: [String(localized: "photo editor"), String(localized: "edit photo"),
+                               String(localized: "crop"), String(localized: "rotate"),
+                               String(localized: "resize"), String(localized: "brightness"),
+                               "jpg", "png"]),
+            PdfTool(action: .memeMaker,
+                    title: String(localized: "Meme maker"),
+                    subtitle: String(localized: "Put a caption over a picture"),
+                    systemImage: "text.bubble",
+                    category: .image,
+                    keywords: ["meme", String(localized: "meme maker"),
+                               String(localized: "meme generator"), String(localized: "caption"),
+                               String(localized: "funny"), String(localized: "text on photo")]),
 
             // MARK: Read
             PdfTool(action: .readPdf,
@@ -412,5 +434,33 @@ enum ToolCatalog {
 
     /// The shortcuts offered at the top of the Tools screen, before the user
     /// has built any history of their own.
-    static let defaultQuickActions: [HomeAction] = [.scan, .imageToPdf, .merge, .sign, .readPdf]
+    /// What fills the shortcut strip before the app has learned what this user
+    /// reaches for. `ToolUsageTracker` keeps five, so anything past the fifth
+    /// place here is never seen.
+    ///
+    /// The meme maker is in that list **only on an English device**. It is a bet
+    /// on a market, not a feature everyone asked for: the search data has a
+    /// buyable term for it in the United States and nowhere else
+    /// (`image-tools-demand`), and a tool nobody can find is a tool that measures
+    /// the drawer it was put in rather than itself — which is what happened to
+    /// the passport photo, at one user a month.
+    ///
+    /// Third place, not first: `scan` and `imageToPdf` are what people actually
+    /// open this app to do, and displacing them to advertise an experiment would
+    /// cost more than the experiment can return.
+    static var defaultQuickActions: [HomeAction] {
+        var actions: [HomeAction] = [.scan, .imageToPdf, .merge, .sign, .readPdf]
+        if Self.prefersEnglish {
+            actions.insert(.memeMaker, at: 2)
+        }
+        return actions
+    }
+
+    /// The device's own language, not the storefront and not the region: someone
+    /// reading their phone in English is the audience this is aimed at, wherever
+    /// they happen to be.
+    private static var prefersEnglish: Bool {
+        guard let preferred = Locale.preferredLanguages.first else { return false }
+        return Locale(identifier: preferred).language.languageCode?.identifier == "en"
+    }
 }

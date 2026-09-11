@@ -49,6 +49,9 @@ enum AnalyticsEventCustomParameters: String {
     case paywallExit = "paywall_exit"
     case checkoutFailureReason = "checkout_failure_reason"
     case checkoutErrorCode = "checkout_error_code"
+    case imageCropShape = "image_crop_shape"
+    case memeLineCount = "meme_line_count"
+    case memeTemplate = "meme_template"
 }
 
 extension AnalyticsPaywallExit {
@@ -146,6 +149,8 @@ extension AnalyticsScreen {
         case .compare: return "Compare"
         case .backgroundRemoval: return "BackgroundRemoval"
         case .passportPhoto: return "PassportPhoto"
+        case .imageEditor: return "ImageEditor"
+        case .memeMaker: return "MemeMaker"
         case .scan: return "Scan"
         case .scanReview: return "ScanReview"
         case .scanLibrary: return "ScanLibrary"
@@ -247,6 +252,10 @@ extension AnalyticsEvent {
         case .backgroundRemovalCompleted: return "background_removal_completed"
         case .passportPhotoStarted: return "passport_photo_started"
         case .passportPhotoCompleted: return "passport_photo_completed"
+        case .imageEditStarted: return "image_edit_started"
+        case .imageEditCompleted: return "image_edit_completed"
+        case .memeStarted: return "meme_started"
+        case .memeCompleted: return "meme_completed"
         case .folderSaved: return "folder_saved"
         case .folderDeleted: return "folder_deleted"
         case .pdfFiled: return "pdf_filed"
@@ -405,6 +414,15 @@ extension AnalyticsEvent {
                     AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination,
                     AnalyticsEventCustomParameters.passportOutput.rawValue: output,
                     AnalyticsEventCustomParameters.passportOutcome.rawValue: outcome]
+        case .imageEditStarted: return nil
+        case .imageEditCompleted(let shape, let destination):
+            return [AnalyticsEventCustomParameters.imageCropShape.rawValue: shape,
+                    AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination]
+        case .memeStarted: return nil
+        case .memeCompleted(let lines, let template, let destination):
+            return [AnalyticsEventCustomParameters.memeLineCount.rawValue: lines,
+                    AnalyticsEventCustomParameters.memeTemplate.rawValue: template,
+                    AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination]
         case .folderSaved: return nil
         case .folderDeleted: return nil
         case .pdfFiled: return nil
@@ -591,6 +609,8 @@ fileprivate extension HomeAction {
         case .openSignedDocument: return "open_signed_document"
         case .removeBackground: return "remove_background"
         case .passportPhoto: return "passport_photo"
+        case .editImage: return "edit_image"
+        case .memeMaker: return "meme_maker"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
         case .addPassword: return "add_password"

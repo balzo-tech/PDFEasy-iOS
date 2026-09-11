@@ -41,7 +41,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if !ProjectInfo.appleAttributionApiKey.isEmpty {
             AppleAttribution.configure(apiKey: ProjectInfo.appleAttributionApiKey)
         }
-        
+
+        // The same token, asked of Apple a second time and for a different
+        // purpose: the SDK above sends it to the backend for reporting, this
+        // reads the keyword back so the onboarding can answer what the person
+        // actually searched for. Started as early as possible because it is a
+        // race against the welcome screen — see `InstallKeywordService`.
+        Task { await Container.shared.installKeywordService().resolve() }
+
+
         self.setupAppearance()
         
         return true

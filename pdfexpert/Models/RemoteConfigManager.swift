@@ -17,6 +17,11 @@ struct RemoteConfigData {
     let chatGptMaxTokens: Int
     let chatMaxMessagesPerMonth: Int
     let stirlingApiEnabled: Bool
+    let memeTemplatesEnabled: Bool
+    /// Comma separated; empty means the list compiled into the app.
+    let memeTemplateIds: [String]
+    /// Comma separated Apple Search Ads keyword ids.
+    let memeKeywordIds: [String]
 
     init(remoteConfig: RemoteConfig) {
         let proxyBaseUrlValue = remoteConfig.configValue(forKey: RemoteConfigKey.proxyBaseUrl.rawValue).stringValue ?? ""
@@ -32,6 +37,21 @@ struct RemoteConfigData {
         self.chatMaxMessagesPerMonth = chatMaxMessagesPerMonthValue > 0 ? chatMaxMessagesPerMonthValue : K.ChatPdf.DefaultChatMaxMessagesPerMonth
 
         self.stirlingApiEnabled = remoteConfig.configValue(forKey: RemoteConfigKey.stirlingApiEnabled.rawValue).boolValue
+
+        self.memeTemplatesEnabled = remoteConfig.configValue(forKey: RemoteConfigKey.memeTemplatesEnabled.rawValue).boolValue
+        self.memeTemplateIds = RemoteConfigData.list(
+            remoteConfig.configValue(forKey: RemoteConfigKey.memeTemplateIds.rawValue).stringValue)
+        self.memeKeywordIds = RemoteConfigData.list(
+            remoteConfig.configValue(forKey: RemoteConfigKey.memeKeywordIds.rawValue).stringValue)
+    }
+
+    /// A comma separated remote value as a list, blanks dropped. Firebase has
+    /// no array type, and a stray space around a comma should not cost a tile.
+    static func list(_ value: String?) -> [String] {
+        (value ?? "")
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
     }
 
     /// Memberwise initializer used by non-Firebase call sites (e.g. unit tests / previews)
@@ -40,12 +60,18 @@ struct RemoteConfigData {
          chatGptModel: String = K.ChatPdf.DefaultChatGptModel,
          chatGptMaxTokens: Int = K.ChatPdf.DefaultChatGptMaxTokens,
          chatMaxMessagesPerMonth: Int = K.ChatPdf.DefaultChatMaxMessagesPerMonth,
-         stirlingApiEnabled: Bool = K.Stirling.DefaultEnabled) {
+         stirlingApiEnabled: Bool = K.Stirling.DefaultEnabled,
+         memeTemplatesEnabled: Bool = K.Meme.DefaultTemplatesEnabled,
+         memeTemplateIds: [String] = [],
+         memeKeywordIds: [String] = []) {
         self.proxyBaseUrl = proxyBaseUrl
         self.chatGptModel = chatGptModel
         self.chatGptMaxTokens = chatGptMaxTokens
         self.chatMaxMessagesPerMonth = chatMaxMessagesPerMonth
         self.stirlingApiEnabled = stirlingApiEnabled
+        self.memeTemplatesEnabled = memeTemplatesEnabled
+        self.memeTemplateIds = memeTemplateIds
+        self.memeKeywordIds = memeKeywordIds
     }
 }
 
@@ -199,6 +225,9 @@ fileprivate enum RemoteConfigKey : String, CaseIterable {
     case chatGptMaxTokens = "chat_gpt_max_tokens"
     case chatMaxMessagesPerMonth = "chat_max_messages_per_month"
     case stirlingApiEnabled = "stirling_api_enabled"
+    case memeTemplatesEnabled = "meme_templates_enabled"
+    case memeTemplateIds = "meme_template_ids"
+    case memeKeywordIds = "meme_keyword_ids"
 }
 
 fileprivate extension RemoteConfig {
@@ -217,6 +246,12 @@ fileprivate extension RemoteConfig {
                 result[key.rawValue] = NSNumber(value: K.ChatPdf.DefaultChatMaxMessagesPerMonth)
             case .stirlingApiEnabled:
                 result[key.rawValue] = NSNumber(value: K.Stirling.DefaultEnabled)
+            case .memeTemplatesEnabled:
+                result[key.rawValue] = NSNumber(value: K.Meme.DefaultTemplatesEnabled)
+            case .memeTemplateIds:
+                result[key.rawValue] = NSString(string: K.Meme.DefaultTemplateIds)
+            case .memeKeywordIds:
+                result[key.rawValue] = NSString(string: K.Meme.DefaultKeywordIds)
             }
         }
         return result

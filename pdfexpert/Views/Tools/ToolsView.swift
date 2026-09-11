@@ -111,6 +111,8 @@ struct ToolsView: View {
         .showCompareView(viewModel: self.viewModel.pdfCompareViewModel)
         .showBackgroundRemovalView(viewModel: self.viewModel.backgroundRemovalViewModel)
         .showPassportPhotoView(viewModel: self.viewModel.passportPhotoViewModel)
+        .showImageEditorView(viewModel: self.viewModel.imageEditorViewModel)
+        .showMemeMakerView(viewModel: self.viewModel.memeMakerViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
@@ -288,7 +290,8 @@ struct ToolsView: View {
     /// simulator where the file picker cannot be driven:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
     /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
-    /// `sort`, `read`, `editor`, `background`, `passport`, `passport-sheet`. The premium ones also need `debugPremium -bool YES`,
+    /// `sort`, `read`, `editor`, `background`, `passport`, `passport-sheet`,
+    /// `meme`, `meme-browse`, `image-edit`. The premium ones also need `debugPremium -bool YES`,
     /// or the paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
@@ -329,6 +332,16 @@ struct ToolsView: View {
                 if tool == "passport-sheet" {
                     self.viewModel.passportPhotoViewModel.output = .sheet
                 }
+            case "meme", "meme-browse":
+                // The only tool that needs no input to open: it starts on the
+                // template gallery. `meme-browse` goes one further and opens the
+                // full grid, which is the layout worth looking at.
+                self.viewModel.memeMakerViewModel.start(onCreatePdf: nil)
+                if tool == "meme-browse" {
+                    self.viewModel.memeMakerViewModel.browseAllShow = true
+                }
+            case "image-edit":
+                self.viewModel.imageEditorViewModel.run(image: Self.debugPhotograph(), onCreatePdf: nil)
             case "editor":
                 // The editor on a document nobody has named yet: `Pdf(data:)` keeps
                 // the generated filename, which is what the name suggestion needs.

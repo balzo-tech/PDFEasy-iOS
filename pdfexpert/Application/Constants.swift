@@ -174,6 +174,26 @@ struct K {
         static let RequestTimeout: TimeInterval = 120.0
     }
 
+    struct Meme {
+        // On by default: the tool ships with templates rather than waiting for
+        // someone to remember a Firebase flag. The kill switch matters more here
+        // than anywhere else — the pictures come from a third party whose rights
+        // to them are stated nowhere, so `meme_templates_enabled` has to be able
+        // to take the whole picker away without an app update, leaving the tool
+        // working on the user's own photograph.
+        static let DefaultTemplatesEnabled = true
+
+        // Empty means the curated list compiled into `MemeTemplateCatalog`.
+        // `meme_template_ids` replaces it wholesale, comma separated, so the
+        // list can be narrowed or widened from Firebase.
+        static let DefaultTemplateIds = ""
+
+        // Apple Search Ads keyword ids whose installs should be met by the meme
+        // walkthrough in onboarding. Empty until the keyword is actually bought:
+        // today every keyword we own is a PDF one.
+        static let DefaultKeywordIds = ""
+    }
+
     struct Review {
         static let MinimumRateForNativePopup: Int = 5
         static let FeedbackMaxCharacters: Int = 100

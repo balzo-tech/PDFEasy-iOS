@@ -26,6 +26,8 @@ enum OnboardingIllustration: CaseIterable, Hashable {
     case signature
     case chat
     case toolbox
+    /// Shown only to the installs that came looking for it.
+    case meme
 }
 
 struct OnboardingIllustrationView: View {
@@ -80,6 +82,7 @@ struct OnboardingIllustrationView: View {
         case .signature: SignatureProps()
         case .chat: ChatProps()
         case .toolbox: ToolboxProps()
+        case .meme: MemeProps()
         }
     }
 
@@ -92,6 +95,7 @@ struct OnboardingIllustrationView: View {
         case .signature: return ColorPalette.categoryEdit
         case .chat: return ColorPalette.categoryAi
         case .toolbox: return ColorPalette.categoryOrganize
+        case .meme: return ColorPalette.categoryImage
         }
     }
 
@@ -102,6 +106,7 @@ struct OnboardingIllustrationView: View {
         case .signature: return -2
         case .chat: return -5
         case .toolbox: return 0
+        case .meme: return 2
         }
     }
 
@@ -112,6 +117,7 @@ struct OnboardingIllustrationView: View {
         case .signature: return CGSize(width: 0, height: 0)
         case .chat: return CGSize(width: -62, height: -16)
         case .toolbox: return CGSize(width: 0, height: 0)
+        case .meme: return CGSize(width: 0, height: -6)
         }
     }
 
@@ -124,6 +130,7 @@ struct OnboardingIllustrationView: View {
         // Small enough for the ring of tools to close around it without
         // crowding: the document is what they are all for.
         case .toolbox: return 0.62
+        case .meme: return 1.04
         }
     }
 }
@@ -329,6 +336,49 @@ private struct ConvertProps: View {
 /// The signature is drawn, stroke by stroke, and then the document is stamped as
 /// signed. Watching a line being written is the one bit of this screen worth
 /// waiting a beat for.
+/// The two bands of shouting capitals that make a picture a meme. They land one
+/// after the other, because the format is a setup and a punchline and showing
+/// them together loses the joke.
+private struct MemeProps: View {
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var topIn = false
+    @State private var bottomIn = false
+
+    var body: some View {
+        ZStack {
+            self.band(width: 108, offset: -66, shown: self.topIn)
+            self.band(width: 92, offset: 66, shown: self.bottomIn)
+        }
+        .transition(.prop)
+        .onAppear {
+            guard !self.reduceMotion else {
+                self.topIn = true
+                self.bottomIn = true
+                return
+            }
+            withAnimation(.snappy(duration: 0.45, extraBounce: 0.3)) { self.topIn = true }
+            withAnimation(.snappy(duration: 0.45, extraBounce: 0.3).delay(0.45)) { self.bottomIn = true }
+        }
+    }
+
+    /// Bars rather than letters: real words here would need translating into
+    /// sixteen languages to say the one thing the shape already says.
+    private func band(width: CGFloat, offset: CGFloat, shown: Bool) -> some View {
+        VStack(spacing: 4) {
+            Capsule().fill(.white).frame(width: width, height: 9)
+            Capsule().fill(.white.opacity(0.85)).frame(width: width * 0.62, height: 9)
+        }
+        .shadow(color: .black.opacity(0.55), radius: 0.6, y: 1)
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .background(ColorPalette.categoryImage.opacity(0.28), in: .rect(cornerRadius: 8, style: .continuous))
+        .scaleEffect(shown ? 1 : 0.85)
+        .opacity(shown ? 1 : 0)
+        .offset(y: offset)
+    }
+}
+
 private struct SignatureProps: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

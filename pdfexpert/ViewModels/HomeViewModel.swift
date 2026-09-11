@@ -65,6 +65,12 @@ enum HomeAction: Hashable, Identifiable {
     /// The identity photo. Shares the segmentation engine with the one above and
     /// nothing else: it ends in a print, not in a document.
     case passportPhoto
+    /// Turn, crop and tone a photograph. The same operations the PDF tools have
+    /// always had, pointed at a picture instead of a page.
+    case editImage
+    /// A caption over a picture. The only tool here whose output is meant to
+    /// leave the phone rather than be filed on it.
+    case memeMaker
 
     case importPdf
     /// Opening a `.p7m` on purpose, rather than stumbling on one. The import path
@@ -116,6 +122,8 @@ enum HomeAction: Hashable, Identifiable {
         case .comparePdf: return nil
         case .removeBackground: return .image
         case .passportPhoto: return .image
+        case .editImage: return .image
+        case .memeMaker: return .image
         case .importPdf: return .pdf
         case .openSignedDocument: return .signedContainer
         case .readPdf: return .pdf
@@ -161,6 +169,8 @@ enum HomeAction: Hashable, Identifiable {
         case .comparePdf: return nil
         case .removeBackground: return nil
         case .passportPhoto: return nil
+        case .editImage: return nil
+        case .memeMaker: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -206,6 +216,8 @@ enum HomeAction: Hashable, Identifiable {
         case .comparePdf: return nil
         case .removeBackground: return nil
         case .passportPhoto: return nil
+        case .editImage: return nil
+        case .memeMaker: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -335,6 +347,10 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
 
     lazy var passportPhotoViewModel: PassportPhotoViewModel = Container.shared.passportPhotoViewModel()
 
+    lazy var imageEditorViewModel: ImageEditorViewModel = Container.shared.imageEditorViewModel()
+
+    lazy var memeMakerViewModel: MemeMakerViewModel = Container.shared.memeMakerViewModel()
+
     /// The outline the camera draws over its preview, when the tool that opened
     /// it has something to say about where the subject goes.
     var cameraGuide: CameraFrameGuide? {
@@ -380,10 +396,22 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         case .appExtension:
             assertionFailure("App Extension behaviour is not supposed to be triggered by a CTA")
             break
-        case .imageToPdf, .removeBackground, .passportPhoto:
+        case .imageToPdf, .removeBackground, .passportPhoto, .editImage:
             // The same three doors as Image to PDF — camera, library, file. What
             // happens to the picture afterwards is decided in `handleImportedImage`.
             self.importOptionGroup = .image
+        case .memeMaker:
+            // The only tool that does not begin at the picker. A meme starts from
+            // a template people already recognise, so the editor opens on the
+            // gallery and owns its own camera-roll tile — presenting the picker
+            // from here, underneath a full-screen cover, is the dropped
+            // presentation in `swiftui-presentation-traps`.
+            self.trackFullActionChosen(importOption: nil)
+            self.memeMakerViewModel.start(onCreatePdf: { [weak self] meme in
+                self?.convertUiImageToPdf(uiImage: meme, filename: nil)
+            }, onFinished: { [weak self] in
+                self?.trackFullActionCompleted()
+            })
         case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword,
                 .rotatePdf, .pageNumbers, .watermark, .removeBlankPages, .flattenPdf, .invertColors,
                 .openSignedDocument:
@@ -551,7 +579,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
             switch self.action {
-            case .imageToPdf, .removeBackground, .passportPhoto:
+            case .imageToPdf, .removeBackground, .passportPhoto, .editImage:
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
@@ -564,7 +592,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                 self.importPdf(pdfUrl: fileUrl)
             case .openSignedDocument:
                 self.openingSignedContainer(fileUrl)
-            case .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
+            case .memeMaker, .scan, .appExtension, .none, .merge, .split, .extractPages, .exportPdf, .readPdf,
                     .pdfToWord, .pdfToPowerpoint, .pdfToExcel, .pdfToPdfa, .repairPdf, .sanitizePdf,
                     .webToPdf, .markdownToPdf, .pdfPermissions, .redactPdf, .compressPdf, .comparePdf:
                 assertionFailure("Selected file url is not handled for the current action")
@@ -687,7 +715,8 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         // Removing a background is a one-photo job: the picker allows several
         // because Image to PDF wants them, and taking the first is kinder than
         // silently cutting out fifty subjects nobody asked for.
-        if self.action == .removeBackground || self.action == .passportPhoto {
+        if self.action == .removeBackground || self.action == .passportPhoto
+            || self.action == .editImage {
             guard let first = selections.first else { return }
             self.asyncImageLoading = AsyncOperation(status: .loading(Progress()))
             Task { @MainActor in
@@ -754,6 +783,19 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                 // A cut-out becomes a document through exactly the path a photo
                 // takes, so it lands in the editor with everything else.
                 self?.convertUiImageToPdf(uiImage: cutOut, filename: filename)
+                self?.trackFullActionCompleted()
+            })
+        case .editImage:
+            // Both of these end in a picture, and the PDF is only one of the
+            // three ways out they offer — so the document is built on request,
+            // not on the way through, and the home funnel is told the job is
+            // done from `onFinished` rather than from the PDF branch. Counting
+            // it there would have marked the two tools least likely to end in a
+            // document as the two that never finish.
+            self.imageEditorViewModel.run(image: uiImage,
+                                          onCreatePdf: { [weak self] edited in
+                self?.convertUiImageToPdf(uiImage: edited, filename: filename)
+            }, onFinished: { [weak self] in
                 self?.trackFullActionCompleted()
             })
         case .passportPhoto:
