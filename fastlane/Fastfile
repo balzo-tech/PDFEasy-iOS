@@ -1,3 +1,4 @@
+require 'tmpdir'
 default_platform(:ios)
 
 # --- Project-wide constants -------------------------------------------------
@@ -321,6 +322,40 @@ platform :ios do
       ),
       app_version: marketing_version
     )
+  end
+
+  desc "Upload the per-version texts, leaving the app info alone"
+  lane :metadata_texts do
+    # The same texts as `metadata`, minus the two fields that live in the **app
+    # info** rather than in the version: the name and the subtitle.
+    #
+    # The app info is shared by every platform of the app and is frozen while
+    # *any* version is in review. The Mac 1.28 has been in review since 20
+    # August, so deliver spends ten minutes on "Cannot find edit app info...
+    # Retrying" and then fails — and takes the description, the keywords, the
+    # release notes and the promotional text down with it, none of which were
+    # ever blocked. That is what happened to 1.32 on 2026-09-12.
+    #
+    # There is no flag for "skip the app info": deliver asks for it because it
+    # found a name.txt. So this copies the metadata folder without those two
+    # files and points deliver at the copy. Nothing in git is touched.
+    source = File.expand_path("metadata", __dir__)
+    staged = File.join(Dir.tmpdir, "pdfpro-metadata-texts")
+    FileUtils.rm_rf(staged)
+    FileUtils.cp_r(source, staged)
+    Dir.glob(File.join(staged, "*", "{name,subtitle}.txt")).each { |file| File.delete(file) }
+
+    upload_to_app_store(
+      api_key: app_store_connect_api_key(
+        key_id: ENV.fetch("ASC_KEY_ID"),
+        issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+        key_filepath: ENV.fetch("ASC_KEY_FILEPATH")
+      ),
+      metadata_path: staged,
+      app_version: marketing_version
+    )
+  ensure
+    FileUtils.rm_rf(File.join(Dir.tmpdir, "pdfpro-metadata-texts"))
   end
 
   desc "Upload the Mac screenshots (and nothing else)"

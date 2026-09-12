@@ -1,4 +1,6 @@
-FOTO 3 × 4, PELO CELULAR
-A foto para o passaporte, o RG ou a CNH, nas medidas do seu país: 3 × 4 cm no Brasil, 35 × 45 mm na Europa, quadrada nos Estados Unidos. O app encontra o rosto, mede a cabeça do queixo até o alto do cabelo e recorta sozinho. Depois diz o que está errado antes de você ir imprimir: cabeça inclinada, olhos semicerrados, sombra em um lado do rosto, fundo irregular. Você escolhe o fundo branco, cinza ou azul claro, move o enquadramento se quiser, e recebe uma folha 10 × 15 com várias fotos para recortar.
+FAÇA UM MEME
+Escolha uma imagem — um dos modelos que todo mundo conhece ou uma foto sua — e escreva em cima. Ponha as palavras onde a piada precisa delas: arraste, use dois dedos para aumentar ou diminuir, escolha a fonte (Impact está lá), o tamanho, a cor e o alinhamento. Depois salve nas suas fotos ou mande para alguém.
 
-Também novo: uma ferramenta para remover o fundo de uma foto.
+Também é novo o editor de imagens: recorte uma foto, gire, endireite e ajuste brilho, contraste e cor antes de virar PDF.
+
+E o app agora fala holandês.

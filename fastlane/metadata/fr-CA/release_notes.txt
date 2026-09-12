@@ -1,4 +1,6 @@
-PHOTO D'IDENTITÉ, AVEC VOTRE TÉLÉPHONE
-La photo pour le passeport, la carte d'identité ou le permis, aux mesures de votre pays : 50 × 70 mm au Canada, 35 × 45 en Europe, carrée aux États-Unis. L'app trouve le visage, mesure la tête du menton au sommet des cheveux et recadre toute seule. Puis elle vous dit ce qui ne va pas avant que vous alliez imprimer : tête penchée, yeux mi-clos, ombre sur un côté du visage, fond irrégulier. Vous choisissez le fond blanc, gris clair ou bleu clair, vous déplacez le cadre si vous le souhaitez, et vous obtenez une planche avec plusieurs photos à découper.
+FAITES UN MÈME
+Choisissez une image — un des modèles que tout le monde connaît, ou une de vos photos — et écrivez dessus. Mettez les mots là où la blague en a besoin : faites-les glisser, pincez pour les agrandir ou les réduire, choisissez la police (Impact est là), la taille, la couleur et l'alignement. Ensuite vous l'enregistrez dans vos photos ou vous l'envoyez à quelqu'un.
 
-Nouveau aussi : un outil pour retirer l'arrière-plan d'une photo.
+Nouveau aussi : l'éditeur d'images. Recadrez une photo, tournez-la, redressez-la et réglez la luminosité, le contraste et la couleur avant d'en faire un PDF.
+
+Et l'app parle désormais néerlandais.

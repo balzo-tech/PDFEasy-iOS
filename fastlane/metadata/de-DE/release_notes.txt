@@ -1,4 +1,6 @@
-PASSBILD, MIT DEM TELEFON
-Das Foto für Reisepass, Personalausweis oder Führerschein, in den Maßen Ihres Landes: 35 × 45 mm in Deutschland, 26 × 32 in Spanien, quadratisch in den USA. Die App findet das Gesicht, misst den Kopf vom Kinn bis zum Haaransatz oben und schneidet selbst zu. Dann sagt sie Ihnen, was nicht stimmt, bevor Sie drucken gehen: geneigter Kopf, halb geschlossene Augen, Schatten auf einer Gesichtshälfte, ungleichmäßiger Hintergrund. Sie wählen Hellgrau, Weiß oder Hellblau als Hintergrund, verschieben den Rahmen bei Bedarf und erhalten einen 10 × 15 cm Bogen mit sechs Fotos zum Ausschneiden.
+MACH EIN MEME
+Wähl ein Bild — eine der Vorlagen, die jeder kennt, oder ein eigenes Foto — und schreib darauf. Setz die Worte dorthin, wo der Witz sie braucht: ziehen, mit zwei Fingern größer oder kleiner machen, Schrift wählen (Impact ist dabei), dazu Größe, Farbe und Ausrichtung. Dann sicherst du es in deinen Fotos oder schickst es jemandem.
 
-Ebenfalls neu: ein Werkzeug, das den Hintergrund aus einem Foto entfernt.
+Neu ist auch der Bildeditor: ein Foto zuschneiden, drehen, gerade richten und Helligkeit, Kontrast und Farbe einstellen, bevor ein PDF daraus wird.
+
+Und die App spricht jetzt Niederländisch.

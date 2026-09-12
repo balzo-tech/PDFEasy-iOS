@@ -1,4 +1,6 @@
-PASSPORT PHOTOS, FROM YOUR PHONE
-The photo for a passport, an ID card or a driving licence, in your country's own measurements: 35 × 45 mm in Europe, 26 × 32 in Spain, square in the United States. The app finds the face, measures the head from the chin to the top of the hair and crops it for you. Then it tells you what is wrong before you go and print: head tilted, eyes half shut, a shadow down one side of the face, an uneven background. Pick a white, grey or light blue backdrop, move the frame if you want to, and get a 10 × 15 cm sheet with six photos to cut out.
+MAKE A MEME
+Pick a picture — one of the templates everybody already knows, or a photo of your own — and write on it. Put the words where the joke needs them: drag them, pinch them bigger or smaller, choose the face (Impact is in there), the size, the color and the alignment. Then save it to your photos or send it to someone.
 
-Also new: a tool that removes the background from a photo.
+Also new: the image editor. Crop a photo, turn it, straighten it and set the brightness, the contrast and the color before it becomes a PDF.
+
+And the app now speaks Dutch.

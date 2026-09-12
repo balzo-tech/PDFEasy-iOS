@@ -1,4 +1,6 @@
-FOTOTESSERA, COL TELEFONO
-La foto per il passaporto, la carta d'identità o la patente, con le misure del tuo paese: 35 × 45 mm in Italia, 26 × 32 in Spagna, quadrata negli Stati Uniti. L'app trova il viso, misura la testa dal mento alla sommità dei capelli e ritaglia da sola. Poi ti dice cosa non va prima che tu vada a stampare: testa inclinata, occhi socchiusi, ombra su un lato del viso, sfondo non uniforme. Scegli lo sfondo bianco, grigio o azzurro, sposti l'inquadratura se vuoi, e ottieni un foglio 10 × 15 con sei foto da ritagliare.
+FAI UN MEME
+Scegli un'immagine — uno dei template che conoscono tutti, o una tua foto — e scrivici sopra. Metti le parole dove servono alla battuta: le trascini, le pizzichi per farle più grandi o più piccole, scegli il carattere (c'è anche Impact), la dimensione, il colore e l'allineamento. Poi lo salvi nelle foto o lo mandi a qualcuno.
 
-Nuovo anche lo strumento per togliere lo sfondo da una foto.
+Nuovo anche l'editor di immagini: ritagli una foto, la ruoti, la raddrizzi e regoli luminosità, contrasto e colore prima di farne un PDF.
+
+E l'app ora parla anche olandese.
