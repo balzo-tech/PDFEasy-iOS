@@ -291,8 +291,8 @@ struct ToolsView: View {
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugRunTool -string compress
     /// Values: `compress`, `compare`, `redact`, `permissions`, `split`, `markdown`,
     /// `sort`, `read`, `editor`, `background`, `passport`, `passport-sheet`,
-    /// `meme`, `meme-browse`, `meme-filled`, `image-edit`. The premium ones also need `debugPremium -bool YES`,
-    /// or the paywall opens instead of the tool.
+    /// `meme`, `meme-browse`, `meme-filled`, `meme-photo`, `image-edit`. The premium ones
+    /// also need `debugPremium -bool YES`, or the paywall opens instead of the tool.
     private func runDebugToolIfNeeded() {
         guard let tool = UserDefaults.standard.string(forKey: "debugRunTool"),
               let pdf = K.Test.DebugPdf else { return }
@@ -332,6 +332,12 @@ struct ToolsView: View {
                 if tool == "passport-sheet" {
                     self.viewModel.passportPhotoViewModel.output = .sheet
                 }
+            case "meme-photo":
+                // The editor on a picture that needs no network. `meme-filled`
+                // waits for the template catalogue to arrive, which is fine for
+                // looking at a screenshot and no good at all for a UI test.
+                self.viewModel.memeMakerViewModel.start(onCreatePdf: nil)
+                self.viewModel.memeMakerViewModel.use(image: Self.debugPhotograph())
             case "meme", "meme-browse", "meme-filled":
                 // The only tool that needs no input to open: it starts on the
                 // template gallery. `meme-browse` goes one further and opens the

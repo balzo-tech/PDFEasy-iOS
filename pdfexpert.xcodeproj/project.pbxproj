@@ -91,6 +91,7 @@
 		702EFD3C7CCEAD86C6D04FB0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 29BC622550B8C12B8A2E47C4 /* Localizable.xcstrings */; };
 		70A3A03F2A704C5FE7B41D3D /* ScanCaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B9FF21B5BE8333D1705F4B /* ScanCaptureService.swift */; };
 		72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */; };
+		09CE3E35395AD20C751D408C /* MemeCaptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719F8E64F4483CA495B0A2F /* MemeCaptionTests.swift */; };
 		7411AFFA4FBD95199795C3AC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = BB067620CD38E3679DD4926B /* Localizable.xcstrings */; };
 		7732D64B5FBABEE7AA2016D2 /* ScanReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8B1EDBAF5C4D1107F4EFB /* ScanReviewView.swift */; };
 		7876C861142E468A82A6B578 /* MainSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA957B04E3057198E85988 /* MainSplitView.swift */; };
@@ -416,6 +417,7 @@
 		E90C46BC88C52CBDCA8FD00B /* CameraFrameGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A505026AF41443765CFC5C /* CameraFrameGuide.swift */; };
 		EA094BD1F3E65F32E9BE1747 /* PdfConvertViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */; };
 		EA488508BC0123744C866132 /* ArchiveFilingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D2B1368B6FEF557204D2A /* ArchiveFilingUITests.swift */; };
+		D04C234A35F833E44B292412 /* MemeMakerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B21C023430AD2343525FF1 /* MemeMakerUITests.swift */; };
 		EAAD2DD3A52A51DCD7173837 /* PdfAdvancedToolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6342025A7A979F2DFCD5421 /* PdfAdvancedToolViewModel.swift */; };
 		ED04324D5751F10FF0DD4D0C /* DocumentScanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B11B96C9AD602AD7E86ED6 /* DocumentScanViewModel.swift */; };
 		EFEAB40753F782DDEF4FAE1D /* Tag+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A130C45F0AE3DB1011B31E35 /* Tag+Persistable.swift */; };
@@ -524,6 +526,7 @@
 		43C83EFDC7E71F6B1337FEEC /* ScanFilterPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanFilterPickerView.swift; sourceTree = "<group>"; };
 		4711424791BADFA454DA7230 /* OpenPdfToolIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpenPdfToolIntent.swift; sourceTree = "<group>"; };
 		479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfOverlayUtilityTests.swift; sourceTree = "<group>"; };
+		2719F8E64F4483CA495B0A2F /* MemeCaptionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemeCaptionTests.swift; sourceTree = "<group>"; };
 		4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		487A5A6F6F32B19ABB984CD6 /* PdfRedactUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfRedactUtility.swift; sourceTree = "<group>"; };
 		4B6401AC744A4271821CDB87 /* PdfMetadataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMetadataViewModel.swift; sourceTree = "<group>"; };
@@ -564,6 +567,7 @@
 		8182CA141142B57D9B63CE37 /* PdfCleanupUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfCleanupUtilityTests.swift; sourceTree = "<group>"; };
 		83B6A024C1154318BD3FB239 /* ArchiveColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArchiveColor.swift; sourceTree = "<group>"; };
 		857D2B1368B6FEF557204D2A /* ArchiveFilingUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArchiveFilingUITests.swift; sourceTree = "<group>"; };
+		97B21C023430AD2343525FF1 /* MemeMakerUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemeMakerUITests.swift; sourceTree = "<group>"; };
 		87009AB8685943CBBEFB5345 /* PdfMetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfMetadataView.swift; sourceTree = "<group>"; };
 		88D945D88CB0FACAE63B3AC7 /* ToolCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolCatalog.swift; sourceTree = "<group>"; };
 		8902898C29DC1F10007E6372 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
@@ -1037,6 +1041,7 @@
 				79CD541326856671BDFB1D48 /* PaywallEntryUITests.swift */,
 				C3A0D5E2F1834B2CA4E60101 /* OnboardingUITests.swift */,
 				857D2B1368B6FEF557204D2A /* ArchiveFilingUITests.swift */,
+				97B21C023430AD2343525FF1 /* MemeMakerUITests.swift */,
 				F1A70C4E2E01A11100SIGN02 /* SignedDocumentToolUITests.swift */,
 				C1718ABBFD8979D43AE590BD /* ScannerSaveUITests.swift */,
 				A1B2C3D40001SIGPHOTO0001 /* SignatureFromPhotoUITests.swift */,
@@ -1887,6 +1892,7 @@
 				31A56A520C1AA285C2FEA012 /* SmokeTests.swift */,
 				D9B1FA525ECA21FEB2D8BC12 /* OcrUtilityTests.swift */,
 				479358A134DD4D5E93182BA7 /* PdfOverlayUtilityTests.swift */,
+				2719F8E64F4483CA495B0A2F /* MemeCaptionTests.swift */,
 				A1C0F10W7E57000000000002 /* ImageCropFlowTests.swift */,
 				E0F0A1B2C3D4E5F600000007 /* PdfExportUtilityTests.swift */,
 				6843768F779D7E59ED1A0B78 /* PdfConvertViewModelTests.swift */,
@@ -2302,6 +2308,7 @@
 				B22D61B0028D876AD1480CC3 /* PaywallEntryUITests.swift in Sources */,
 				C3A0D5E2F1834B2CA4E60102 /* OnboardingUITests.swift in Sources */,
 				EA488508BC0123744C866132 /* ArchiveFilingUITests.swift in Sources */,
+				D04C234A35F833E44B292412 /* MemeMakerUITests.swift in Sources */,
 				F1A70C4D2E01A11100SIGN01 /* SignedDocumentToolUITests.swift in Sources */,
 				78F6462C3AD1FDF5635BC02E /* ScannerSaveUITests.swift in Sources */,
 				A1B2C3D40002SIGPHOTO0002 /* SignatureFromPhotoUITests.swift in Sources */,
@@ -2644,6 +2651,7 @@
 				A1B2C3D4E5F600000000A007 /* ObfuscatedSecretTests.swift in Sources */,
 				49019C083DD918FD5FCF7324 /* OcrUtilityTests.swift in Sources */,
 				72032FB4CDF74162AE7AB6F6 /* PdfOverlayUtilityTests.swift in Sources */,
+				09CE3E35395AD20C751D408C /* MemeCaptionTests.swift in Sources */,
 				A1C0F10W7E57000000000001 /* ImageCropFlowTests.swift in Sources */,
 				E0F0A1B2C3D4E5F600000008 /* PdfExportUtilityTests.swift in Sources */,
 				EA094BD1F3E65F32E9BE1747 /* PdfConvertViewModelTests.swift in Sources */,

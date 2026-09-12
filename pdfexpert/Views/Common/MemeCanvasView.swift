@@ -2,13 +2,30 @@
 //  MemeCanvasView.swift
 //  PdfExpert
 //
-//  The picture with the words on it, and the words are the controls.
+//  The picture with the words on it. You select, drag and pinch here — you type
+//  in the panel below.
+//
+//  The first version held a `TextField` over each block and tried to focus it by
+//  putting `.focused` on the block's container. It never raised a keyboard, and
+//  it could not have: `.focused` binds a *focusable* view, and a `ZStack` is not
+//  one, so the binding had nothing to bind to. Worse, the same container carried
+//  `onTapGesture` and a `DragGesture(minimumDistance: 2)`, which between them ate
+//  every touch before a field underneath could have placed a caret anyway. The
+//  result was the bug as reported: a block you could add and move, and no way on
+//  earth to write in it.
+//
+//  Rather than untangle a caret from a drag handle, the typing left the canvas.
+//  One field, in the panel, always reachable, always able to take focus — and
+//  the comment the old field carried about "a caret behind eight copies of
+//  itself" stops being a problem to manage and becomes a thing that cannot
+//  happen. The canvas keeps what it is good at: showing exactly what the export
+//  will look like, and letting a finger put the words where the joke needs them.
 //
 //  Two things have to line up here, and only one of them is on screen: what the
 //  canvas draws with SwiftUI text, and what `ImageCanvasUtility` later burns in
 //  with UIKit. They agree because neither invents a number — both read the same
 //  `Caption`, whose place and size are fractions of the picture, and both use
-//  the same font and the same 92% line width. The canvas multiplies those
+//  the same face and the same 92% line width. The canvas multiplies those
 //  fractions by a few hundred points, the export by a few thousand.
 //
 //  The letterbox is handled by measuring rather than by `aspectRatio`: a fitted
@@ -24,8 +41,18 @@ struct MemeCanvasView: View {
 
     @ObservedObject var viewModel: MemeMakerViewModel
 
-    /// Which block the keyboard belongs to. Nil while nothing is being typed.
-    @FocusState.Binding var editing: UUID?
+    /// Whether a block with nothing written in it yet shows a stand-in.
+    ///
+    /// True while the user is making the thing — an empty block has to be
+    /// visible or there is nothing to aim at. False once they are looking at it
+    /// as a finished picture: the stand-in is never exported, so a preview that
+    /// still showed it would be promising words the file will not contain.
+    var showsPlaceholders: Bool = true
+
+    /// Raised when a block is picked up, so the panel can put the keyboard in
+    /// front of the field that writes into it. Selecting is the view's job;
+    /// deciding that selecting means typing is the panel's.
+    let onCaptionPicked: () -> Void
 
     var body: some View {
         GeometryReader { outer in
@@ -38,28 +65,34 @@ struct MemeCanvasView: View {
                         .frame(width: box.width, height: box.height)
 
                     ForEach(self.viewModel.captions) { caption in
+                        // An empty block is *drawn* with a placeholder, so it has
+                        // to be *measured* with one too: measured as the single
+                        // space it really holds, the box would be a few points
+                        // wide and the placeholder would spill out of it. The
+                        // stored caption is untouched — it stays blank, and
+                        // `captioned` still leaves it out of the file.
+                        let shown = Self.displayed(caption,
+                                                   showsPlaceholder: self.showsPlaceholders)
                         // The rect comes from the same measurement the export
                         // uses, so the live text and the file land in the same
                         // place — and neither can start half outside the picture.
-                        let frame = ImageCanvasUtility.captionFrame(caption,
+                        let frame = ImageCanvasUtility.captionFrame(shown,
                                                                     style: self.viewModel.style,
                                                                     in: box)
                         MemeCaptionView(
-                            caption: caption,
+                            caption: shown,
+                            isPlaceholder: caption.isBlank && self.showsPlaceholders,
                             box: box,
                             frame: frame,
                             style: self.viewModel.style,
                             isSelected: caption.id == self.viewModel.selectedCaptionId,
-                            isEditing: self.editing == caption.id,
-                            text: self.viewModel.textBinding(for: caption.id),
                             onSelect: {
                                 self.viewModel.select(captionId: caption.id)
-                                self.editing = caption.id
+                                self.onCaptionPicked()
                             },
                             onMove: { self.viewModel.move(captionId: caption.id, by: $0) },
                             onScale: { self.viewModel.scale(captionId: caption.id, to: $0) }
                         )
-                        .focused(self.$editing, equals: caption.id)
                         .position(x: frame.midX, y: frame.midY)
                     }
                 }
@@ -69,12 +102,24 @@ struct MemeCanvasView: View {
                 // how to see what the export will look like.
                 .contentShape(.rect)
                 .onTapGesture {
-                    self.editing = nil
                     self.viewModel.select(captionId: nil)
                 }
                 .position(x: outer.size.width / 2, y: outer.size.height / 2)
             }
         }
+    }
+
+    /// The caption as the canvas shows it: itself, or the placeholder when the
+    /// user has not written in it yet. Keeps the id, so selection and dragging
+    /// still reach the real block.
+    private static func displayed(
+        _ caption: ImageCanvasUtility.Caption,
+        showsPlaceholder: Bool
+    ) -> ImageCanvasUtility.Caption {
+        guard caption.isBlank, showsPlaceholder else { return caption }
+        var copy = caption
+        copy.text = String(localized: "Your text")
+        return copy
     }
 
     /// The largest box of the given proportions that fits in `available`.
@@ -85,19 +130,19 @@ struct MemeCanvasView: View {
     }
 }
 
-/// One block of words: outlined text, draggable, pinchable, and a field when it
-/// is being typed into.
+/// One block of words: outlined text, draggable and pinchable.
 private struct MemeCaptionView: View {
 
+    /// Already resolved for display by the canvas: a blank block arrives here
+    /// carrying the placeholder, with `isPlaceholder` saying so.
     let caption: ImageCanvasUtility.Caption
+    let isPlaceholder: Bool
     let box: CGSize
     /// Where this block sits and how big it is, measured once by the shared
     /// code so the canvas cannot drift from the export.
     let frame: CGRect
     let style: ImageCanvasUtility.CaptionStyle
     let isSelected: Bool
-    let isEditing: Bool
-    @Binding var text: String
     let onSelect: () -> Void
     /// A move, as a fraction of the box.
     let onMove: (CGSize) -> Void
@@ -115,28 +160,23 @@ private struct MemeCaptionView: View {
     private var fontSize: CGFloat { max(self.box.height * self.caption.scale, 1) }
     private var lineWidth: CGFloat { max(self.frame.width, 1) }
     private var font: Font { Font(ImageCanvasUtility.captionFont(forImageHeight: self.box.height,
-                                                                 scale: self.caption.scale)) }
+                                                                 scale: self.caption.scale,
+                                                                 face: self.style.face)) }
     private var shown: String {
-        self.style.isUppercased ? self.text.uppercased(with: .current) : self.text
+        self.style.isUppercased
+            ? self.caption.text.uppercased(with: .current)
+            : self.caption.text
     }
 
     var body: some View {
-        Group {
-            if self.isEditing {
-                self.field
-            } else {
-                self.outlinedText
-            }
-        }
-        .frame(width: self.lineWidth)
-        .overlay { self.handles }
-        .contentShape(.rect)
-        .onTapGesture { self.onSelect() }
-        .gesture(self.dragGesture)
-        .gesture(self.pinchGesture)
+        self.outlinedText
+            .frame(width: self.lineWidth)
+            .overlay { self.handles }
+            .contentShape(.rect)
+            .onTapGesture { self.onSelect() }
+            .gesture(self.dragGesture)
+            .gesture(self.pinchGesture)
     }
-
-    // MARK: - Reading
 
     /// SwiftUI has no text stroke, so the outline is the same string drawn eight
     /// times around the fill. It is not the glyph-accurate outline UIKit draws in
@@ -152,10 +192,11 @@ private struct MemeCaptionView: View {
             self.label
                 .foregroundStyle(Color(uiColor: self.style.fill))
         }
+        .opacity(self.isPlaceholder ? 0.55 : 1)
     }
 
     private var label: some View {
-        Text(self.shown.isEmpty ? " " : self.shown)
+        Text(self.shown)
             .font(self.font)
             .multilineTextAlignment(.center)
             .lineLimit(nil)
@@ -168,23 +209,6 @@ private struct MemeCaptionView: View {
         CGPoint(x: -1, y: 0),                        CGPoint(x: 1, y: 0),
         CGPoint(x: -1, y: 1), CGPoint(x: 0, y: 1), CGPoint(x: 1, y: 1)
     ]
-
-    // MARK: - Writing
-
-    /// While typing, a plain field in the same type. The outline is dropped for
-    /// the duration on purpose: a caret behind eight copies of itself is not
-    /// something anyone can aim with.
-    private var field: some View {
-        TextField("", text: self.$text, axis: .vertical)
-            .font(self.font)
-            .multilineTextAlignment(.center)
-            .textInputAutocapitalization(self.style.isUppercased ? .characters : .sentences)
-            .foregroundStyle(Color(uiColor: self.style.fill))
-            .tint(ColorPalette.accent)
-            .padding(.horizontal, 4)
-            .background(Color.black.opacity(0.45), in: .rect(cornerRadius: 6, style: .continuous))
-            .frame(width: self.lineWidth)
-    }
 
     @ViewBuilder private var handles: some View {
         if self.isSelected {

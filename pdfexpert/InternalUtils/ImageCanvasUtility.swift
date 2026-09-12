@@ -114,6 +114,75 @@ enum ImageCanvasUtility {
         }
     }
 
+    /// The faces the meme maker offers.
+    ///
+    /// Impact leads, and an earlier note here was simply wrong about it: it said
+    /// "Impact is not on the system and shipping a font for one tool is not worth
+    /// the binary", and settled for the system black condensed. Impact ships with
+    /// iOS — `UIFont.fontNames(forFamilyName: "Impact")` answers on a stock
+    /// device — and it is the face this format was born in. Nothing else looks
+    /// right at the top of a picture.
+    ///
+    /// Every case falls back to a system face rather than to `nil`: a font that
+    /// is missing must still draw something, or the export comes back blank on
+    /// the one device that does not have it.
+    enum CaptionFace: String, CaseIterable, Identifiable, Equatable {
+
+        /// The meme face.
+        case impact
+        /// The system's own black condensed — what this tool drew before Impact,
+        /// and still the cleanest option on a busy photograph.
+        case sans
+        case rounded
+        /// Hand-lettered, for the captions that are meant to read as an aside.
+        case marker
+        case serif
+
+        var id: String { self.rawValue }
+
+        /// Shown on the chip, and drawn *in the face itself* — a list of five
+        /// names in one font tells the user nothing about what they are picking.
+        var title: String {
+            switch self {
+            // Not localized: Impact is the name of a typeface, not a word.
+            case .impact: return "Impact"
+            case .sans: return String(localized: "Sans")
+            case .rounded: return String(localized: "Rounded")
+            case .marker: return String(localized: "Marker")
+            case .serif: return String(localized: "Serif")
+            }
+        }
+
+        func font(ofSize size: CGFloat) -> UIFont {
+            let size = max(size, 1)
+            switch self {
+            case .impact:
+                return UIFont(name: "Impact", size: size) ?? Self.systemCondensed(size)
+            case .sans:
+                return Self.systemCondensed(size)
+            case .rounded:
+                return Self.system(size, design: .rounded)
+            case .marker:
+                return UIFont(name: "MarkerFelt-Wide", size: size) ?? Self.systemCondensed(size)
+            case .serif:
+                return UIFont(name: "Georgia-Bold", size: size) ?? Self.system(size, design: .serif)
+            }
+        }
+
+        private static func systemCondensed(_ size: CGFloat) -> UIFont {
+            UIFont.systemFont(ofSize: size, weight: .black).withCondensedWidthIfAvailable()
+        }
+
+        /// The system face in one of its designs. A descriptor that the device
+        /// cannot satisfy gives back the plain black weight, which is the same
+        /// answer `systemFont` would have given anyway.
+        private static func system(_ size: CGFloat, design: UIFontDescriptor.SystemDesign) -> UIFont {
+            let base = UIFont.systemFont(ofSize: size, weight: .black)
+            guard let descriptor = base.fontDescriptor.withDesign(design) else { return base }
+            return UIFont(descriptor: descriptor, size: size)
+        }
+    }
+
     /// How the captions look. Shared by every block, because a meme with two
     /// different type treatments stops reading as a meme.
     struct CaptionStyle: Equatable {
@@ -122,6 +191,7 @@ enum ImageCanvasUtility {
         /// Outline width, as a fraction of the type height.
         var strokeScale: CGFloat = 0.09
         var isUppercased: Bool = true
+        var face: CaptionFace = .impact
     }
 
     /// The share of the width a block may use before it wraps. The same number is
@@ -147,7 +217,9 @@ enum ImageCanvasUtility {
                              in size: CGSize) -> CGRect {
         guard size.width > 0, size.height > 0 else { return .zero }
         let text = style.isUppercased ? caption.text.uppercased(with: .current) : caption.text
-        let font = Self.captionFont(forImageHeight: size.height, scale: caption.scale)
+        let font = Self.captionFont(forImageHeight: size.height,
+                                    scale: caption.scale,
+                                    face: style.face)
 
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
@@ -173,12 +245,13 @@ enum ImageCanvasUtility {
         return CGRect(origin: origin, size: CGSize(width: width, height: height))
     }
 
-    /// The font, at a size derived from the image. `.black` at a condensed width
-    /// is as close as iOS gets to the face this format was born in; Impact is not
-    /// on the system and shipping a font for one tool is not worth the binary.
-    static func captionFont(forImageHeight height: CGFloat, scale: CGFloat) -> UIFont {
-        UIFont.systemFont(ofSize: max(height * scale, 1), weight: .black)
-            .withCondensedWidthIfAvailable()
+    /// The chosen face, at a size derived from the image. The size is a fraction
+    /// of the picture and never a point value, for the reason `Caption` gives:
+    /// the canvas is a few hundred points tall and the export a few thousand.
+    static func captionFont(forImageHeight height: CGFloat,
+                            scale: CGFloat,
+                            face: CaptionFace) -> UIFont {
+        face.font(ofSize: height * scale)
     }
 
     /// Burns the captions into the picture at its own resolution.
@@ -205,7 +278,9 @@ enum ImageCanvasUtility {
 
     private static func draw(_ caption: Caption, style: CaptionStyle, in size: CGSize) {
         let text = style.isUppercased ? caption.text.uppercased(with: .current) : caption.text
-        let font = Self.captionFont(forImageHeight: size.height, scale: caption.scale)
+        let font = Self.captionFont(forImageHeight: size.height,
+                                    scale: caption.scale,
+                                    face: style.face)
 
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center

@@ -103,6 +103,7 @@ class MemeMakerViewModel: ObservableObject {
 
     @Published var color: MemeTextColor = .white
     @Published var isUppercased: Bool = true
+    @Published var face: ImageCanvasUtility.CaptionFace = .impact
 
     /// The picture, downscaled for the canvas, **without** captions: the editor
     /// draws those live on top, so this only changes when the picture does.
@@ -122,7 +123,15 @@ class MemeMakerViewModel: ObservableObject {
     var style: ImageCanvasUtility.CaptionStyle {
         ImageCanvasUtility.CaptionStyle(fill: self.color.fill,
                                         stroke: self.color.stroke,
-                                        isUppercased: self.isUppercased)
+                                        isUppercased: self.isUppercased,
+                                        face: self.face)
+    }
+
+    /// The block the controls are pointed at. The text field in the panel writes
+    /// into this one, and it is also the only one wearing handles on the canvas.
+    var selectedCaption: ImageCanvasUtility.Caption? {
+        guard let id = self.selectedCaptionId else { return nil }
+        return self.captions.first { $0.id == id }
     }
 
     @Injected(\.analyticsManager) private var analyticsManager
@@ -228,13 +237,19 @@ class MemeMakerViewModel: ObservableObject {
         self.captions.first { $0.id == id }
     }
 
-    /// A binding to one block's text, so the canvas can hold a field over it.
+    /// A binding to the selected block's text, for the field in the edit panel.
+    ///
+    /// It survives having nothing selected — reads as empty, writes nowhere —
+    /// because the field is on screen either way and a `Binding?` would mean
+    /// rebuilding it, and losing the keyboard, every time the selection changed.
     @MainActor
-    func textBinding(for id: UUID) -> Binding<String> {
+    var selectedCaptionText: Binding<String> {
         Binding(
-            get: { [weak self] in self?.captions.first(where: { $0.id == id })?.text ?? "" },
+            get: { [weak self] in self?.selectedCaption?.text ?? "" },
             set: { [weak self] newValue in
-                guard let self, let index = self.captions.firstIndex(where: { $0.id == id }) else { return }
+                guard let self,
+                      let id = self.selectedCaptionId,
+                      let index = self.captions.firstIndex(where: { $0.id == id }) else { return }
                 self.captions[index].text = newValue
             }
         )
@@ -422,6 +437,7 @@ class MemeMakerViewModel: ObservableObject {
         self.selectedCaptionId = nil
         self.color = .white
         self.isUppercased = true
+        self.face = .impact
         self.pendingExport = nil
         self.selectedTemplateId = nil
         self.isLoadingTemplate = false
