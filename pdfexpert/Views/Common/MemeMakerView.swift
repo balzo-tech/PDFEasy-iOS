@@ -2,23 +2,25 @@
 //  MemeMakerView.swift
 //  PdfExpert
 //
-//  A canvas, and two panels under it.
+//  A picture, and as little else as the job allows.
 //
-//  The first version put two text fields under the picture and locked one line
-//  to the top and one to the bottom. It was easy to build and wrong to use: a
-//  meme is made by putting words *where the joke needs them*. The second made
-//  the picture the biggest thing on screen and let the words be dragged, which
-//  was right — but it piled the styling, the gallery and the three ways out into
-//  one strip, and it tried to take typing onto the canvas itself, where the
-//  keyboard never came (see the note at the top of `MemeCanvasView`).
+//  Three goes at this screen. The first put two text fields under the image and
+//  locked one line to the top and one to the bottom — easy to build, wrong to
+//  use: a meme is made by putting words *where the joke needs them*. The second
+//  made the picture draggable but piled the styling, the gallery and three ways
+//  out into one strip under it. The third split that strip into two named panels
+//  — better, and still six groups of controls competing with the one thing the
+//  user came to look at.
 //
-//  So the controls are now two named panels and you are only ever in one of
-//  them. **Make** is everything that changes the picture: the words, the face,
-//  the colour, the template. **Share** is the three ways out, and nothing else.
+//  So this one keeps **one** control permanently on screen, the field you type
+//  in, and puts everything else behind three doors: `Picture`, `Text`, `Style`.
+//  Each opens one panel, each panel answers one question, and none of them costs
+//  the canvas a single point until it is asked for. What is left under the
+//  picture is a field and a row of three — against a strip, a segmented control,
+//  five face chips, four swatches and a gallery header, all at once.
 //
-//  The split is not only tidiness. Moving to Share drops the keyboard and clears
-//  the selection, so the canvas stops showing handles and dashed boxes and shows
-//  the thing that is about to leave — the last look before it goes, for free.
+//  The two ways out live in the navigation bar, where every other tool in this
+//  app puts its finishing action, and both pass the paywall.
 //
 
 import SwiftUI
@@ -37,22 +39,6 @@ struct MemeMakerView: ViewModifier {
     }
 }
 
-/// Which panel is under the canvas.
-private enum MemePanel: String, CaseIterable, Identifiable {
-
-    case make
-    case share
-
-    var id: String { self.rawValue }
-
-    var title: String {
-        switch self {
-        case .make: return String(localized: "Make")
-        case .share: return String(localized: "Share")
-        }
-    }
-}
-
 struct MemeMakerEditorView: View {
 
     @ObservedObject var viewModel: MemeMakerViewModel
@@ -60,8 +46,6 @@ struct MemeMakerEditorView: View {
     /// The one place text is typed. A single flag, not a per-block one: there is
     /// a single field and it always writes into whichever block is selected.
     @FocusState private var typing: Bool
-    @State private var panel: MemePanel = .make
-    @State private var pickedPhoto: PhotosPickerItem? = nil
 
     var body: some View {
         ToolScreen(title: String(localized: "Meme maker"),
@@ -70,33 +54,46 @@ struct MemeMakerEditorView: View {
                 ColorPalette.background.ignoresSafeArea()
                 VStack(spacing: DS.Spacing.sm) {
                     self.canvas
-                    self.panelPicker
-                    Group {
-                        switch self.panel {
-                        case .make: self.makePanel
-                        case .share: self.sharePanel
-                        }
+                    if !self.viewModel.isEmpty {
+                        self.captionField
+                        // Everything below the field is a choice made *before* or
+                        // *after* writing, never during — so while the keyboard
+                        // is up it stands down and gives the picture its room
+                        // back. The keyboard takes some 340 points; without this
+                        // the canvas was a thumbnail and you could type without
+                        // seeing what you were typing on.
+                        if !self.typing { self.toolRow }
                     }
                 }
+                .animation(DS.Motion.smooth, value: self.typing)
                 .padding(.horizontal, DS.Spacing.md)
                 .padding(.bottom, DS.Spacing.sm)
                 .readableColumn()
             }
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
-                Button("Done") { self.typing = false }
+            // Inside the content, so it reaches the navigation stack `ToolScreen`
+            // builds. Applied outside it would have nowhere to land — which is
+            // also true of the keyboard bar: hung on the cover rather than on
+            // the stack, it never appeared at all, and the only "Done" on screen
+            // was the keyboard's own return key.
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { self.exportMenu }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") { self.typing = false }
+                }
             }
+        }
+        .sheet(isPresented: self.$viewModel.styleShow) {
+            MemeStylePanel(viewModel: self.viewModel)
+        }
+        .sheet(isPresented: self.$viewModel.picturePickerShow) {
+            MemePicturePicker(viewModel: self.viewModel)
         }
         .sheet(item: self.$viewModel.shareUrl,
                onDismiss: { self.viewModel.onShareDismiss() }) { item in
             ActivityViewController(activityItems: [item.url],
                                    thumbnail: item.thumbnail,
                                    title: item.url.lastPathComponent)
-        }
-        .sheet(isPresented: self.$viewModel.browseAllShow) {
-            MemeTemplateBrowser(viewModel: self.viewModel)
         }
         .showSubscriptionView(self.$viewModel.monetizationShow,
                               onComplete: { self.viewModel.onMonetizationClose() })
@@ -106,13 +103,6 @@ struct MemeMakerEditorView: View {
             Text("The image has been saved to your photos.")
         })
         .alertPhotoLibraryPermission(isPresented: self.$viewModel.photosPermissionAlertShow)
-        // Leaving Make is also the preview: no keyboard, no handles, just the
-        // picture as it will be shared.
-        .onChange(of: self.panel) { _, panel in
-            guard panel == .share else { return }
-            self.typing = false
-            self.viewModel.select(captionId: nil)
-        }
         // Tapping the picture puts the handles away; it should put the keyboard
         // away too, or the field goes on claiming a block that is no longer
         // chosen and the canvas stays squeezed under a keyboard nobody wants.
@@ -123,32 +113,35 @@ struct MemeMakerEditorView: View {
 
     // MARK: - The canvas
 
-    /// Takes every point the panels do not need. It is the thing being made:
+    /// Takes every point the controls do not need. It is the thing being made:
     /// everything else on this screen is in service of it.
     private var canvas: some View {
         ZStack {
             RoundedRectangle(cornerRadius: DS.Radius.thumbnail, style: .continuous)
                 .fill(ColorPalette.surface)
             if self.viewModel.isEmpty {
-                VStack(spacing: DS.Spacing.xs) {
-                    Image(systemName: "photo.stack")
-                        .font(.system(size: 30, weight: .light))
-                        .foregroundStyle(ColorPalette.textTertiary)
-                    Text("Pick a template below, or one of your own photos.")
-                        .font(forCategory: .caption1)
-                        .foregroundStyle(ColorPalette.textSecondary)
-                        .multilineTextAlignment(.center)
+                // The empty canvas is the first door, not a notice: there is
+                // exactly one thing to do here and the whole rectangle does it.
+                Button {
+                    self.viewModel.picturePickerShow = true
+                } label: {
+                    VStack(spacing: DS.Spacing.xs) {
+                        Image(systemName: "photo.badge.plus")
+                            .font(.system(size: 34, weight: .light))
+                            .foregroundStyle(ColorPalette.accent)
+                        Text("Choose a picture")
+                            .font(forCategory: .body1)
+                            .foregroundStyle(ColorPalette.textSecondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(.rect)
                 }
-                .padding(DS.Spacing.md)
+                .buttonStyle(.plain)
             } else {
                 // Picking a block on the picture is the same request as tapping
                 // the field: it means "I want to write here".
                 MemeCanvasView(viewModel: self.viewModel,
-                               showsPlaceholders: self.panel == .make,
-                               onCaptionPicked: {
-                                   self.panel = .make
-                                   self.typing = true
-                               })
+                               onCaptionPicked: { self.typing = true })
                     .padding(DS.Spacing.xxs)
             }
             if self.viewModel.isLoadingTemplate {
@@ -160,59 +153,21 @@ struct MemeMakerEditorView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // `contain` rather than a plain label: the blocks on the picture are
+        // what a person navigates to, and a label on the container alone would
+        // swallow them.
+        .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("The meme being made"))
     }
 
-    private var panelPicker: some View {
-        Picker("", selection: self.$panel) {
-            ForEach(MemePanel.allCases) { panel in
-                Text(panel.title).tag(panel)
-            }
-        }
-        .pickerStyle(.segmented)
-        .labelsHidden()
-        .disabled(self.viewModel.isEmpty)
-    }
+    // MARK: - Writing
 
-    // MARK: - Make
-
-    /// While the keyboard is up the panel shrinks to the field alone.
-    ///
-    /// Not a flourish: the keyboard takes about 340 points, and with the face
-    /// chips, the swatches and the template strip all holding their ground the
-    /// canvas was squeezed to a thumbnail — you could type, and not see what you
-    /// were typing on. Everything below the field is a choice you make *before*
-    /// or *after* writing, never during, so it can wait under the keyboard and
-    /// give the picture its room back.
-    private var makePanel: some View {
-        VStack(spacing: DS.Spacing.sm) {
-            self.captionField
-            if !self.typing {
-                self.faceStrip
-                self.colourRow
-                self.gallery
-            }
-        }
-        .animation(DS.Motion.smooth, value: self.typing)
-    }
-
-    /// The field. It is the answer to the bug that started this: one text field,
-    /// in a fixed place, that can always take focus — rather than a field over
-    /// the canvas fighting a drag gesture for the same touch.
+    /// The field, and the only control that is always here. It is the answer to
+    /// the bug that started all this: one text field, in a fixed place, that can
+    /// always take focus — rather than a field over the canvas fighting a drag
+    /// gesture for the same touch.
     private var captionField: some View {
         HStack(spacing: DS.Spacing.xs) {
-            Button {
-                self.viewModel.addCaption()
-                self.typing = true
-            } label: {
-                Image(systemName: "plus")
-                    .font(.system(size: 16, weight: .semibold))
-                    .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
-            }
-            .buttonStyle(.glass)
-            .disabled(self.viewModel.isEmpty)
-            .accessibilityLabel(Text("Add text"))
-
             TextField(self.hasSelection
                       ? String(localized: "Type the caption")
                       : String(localized: "Tap the words on the picture"),
@@ -222,7 +177,11 @@ struct MemeMakerEditorView: View {
                 .font(forCategory: .body1)
                 .textInputAutocapitalization(self.viewModel.isUppercased ? .characters : .sentences)
                 .focused(self.$typing)
-                .submitLabel(.done)
+                // `.return`, not `.done`: the field takes up to three lines, so
+                // its return key writes a line break rather than finishing
+                // anything — and calling it "Done" put two buttons of that name
+                // on screen, one of which wrote a newline into the caption.
+                .submitLabel(.return)
                 .disabled(!self.hasSelection)
                 // A field is identified by its placeholder until something is
                 // typed into it, and then by its contents — which makes it
@@ -259,9 +218,137 @@ struct MemeMakerEditorView: View {
 
     private var hasSelection: Bool { self.viewModel.selectedCaptionId != nil }
 
+    // MARK: - The three doors
+
+    private var toolRow: some View {
+        HStack(spacing: DS.Spacing.xs) {
+            self.door(title: String(localized: "Picture"),
+                      systemImage: "photo.on.rectangle.angled",
+                      accessibilityLabel: String(localized: "Choose a picture")) {
+                self.typing = false
+                self.viewModel.picturePickerShow = true
+            }
+            self.door(title: String(localized: "Text"),
+                      systemImage: "plus.bubble",
+                      accessibilityLabel: String(localized: "Add text")) {
+                self.viewModel.addCaption()
+                self.typing = true
+            }
+            self.door(title: String(localized: "Style"),
+                      systemImage: "textformat",
+                      accessibilityLabel: String(localized: "Style")) {
+                self.typing = false
+                // The panel sets the size and the alignment of *a block*, so it
+                // needs one. Opened with nothing chosen it takes the first,
+                // rather than showing controls that quietly do nothing.
+                if self.viewModel.selectedCaptionId == nil {
+                    self.viewModel.select(captionId: self.viewModel.captions.first?.id)
+                }
+                self.viewModel.styleShow = true
+            }
+        }
+    }
+
+    private func door(title: String,
+                      systemImage: String,
+                      accessibilityLabel: String,
+                      action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 3) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 17, weight: .medium))
+                Text(title)
+                    .font(forCategory: .caption1)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 54)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.glass)
+        .accessibilityLabel(Text(accessibilityLabel))
+    }
+
+    // MARK: - The two ways out
+
+    /// Both doors in one menu, and both gated. A meme that stays on the phone
+    /// did not do its job, so sharing is offered first.
+    private var exportMenu: some View {
+        Menu {
+            Button {
+                self.typing = false
+                self.viewModel.share()
+            } label: {
+                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
+            }
+            Button {
+                self.typing = false
+                self.viewModel.saveToPhotos()
+            } label: {
+                Label(String(localized: "Save to Photos"), systemImage: "square.and.arrow.down")
+            }
+        } label: {
+            Text("Export").fontWeight(.semibold)
+        }
+        .disabled(!self.viewModel.canExport)
+        .accessibilityLabel(Text("Export"))
+    }
+}
+
+// MARK: - Style
+
+/// Face, size, alignment and colour — the four answers to "how do the words
+/// look", in the one place that asks the question.
+///
+/// A panel rather than a strip under the canvas. Each of these is set once and
+/// then left alone for the rest of the sitting, and a control that is used once
+/// has no business holding forty points of the picture's height for the other
+/// nine tenths of the time.
+private struct MemeStylePanel: View {
+
+    @ObservedObject var viewModel: MemeMakerViewModel
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DS.Spacing.lg) {
+                    self.section(String(localized: "Font")) { self.faces }
+                    self.section(String(localized: "Size")) { self.size }
+                    self.section(String(localized: "Alignment")) { self.alignment }
+                    self.section(String(localized: "Color")) { self.colours }
+                }
+                .padding(DS.Spacing.md)
+                .readableColumn()
+            }
+            .background(ColorPalette.background)
+            .navigationTitle(Text("Style"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "Done")) { self.dismiss() }
+                        .fontWeight(.semibold)
+                        .tint(ColorPalette.accent)
+                }
+            }
+        }
+        .presentationDetents([.height(380), .large])
+        .presentationDragIndicator(.visible)
+    }
+
+    private func section<Content: View>(_ title: String,
+                                        @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+            Text(title)
+                .font(forCategory: .caption1)
+                .foregroundStyle(ColorPalette.textSecondary)
+            content()
+        }
+    }
+
     /// Each chip is drawn in the face it offers. A row of five names all set in
     /// the same type would say nothing about what is being chosen.
-    private var faceStrip: some View {
+    private var faces: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: DS.Spacing.xs) {
                 ForEach(ImageCanvasUtility.CaptionFace.allCases) { face in
@@ -289,10 +376,34 @@ struct MemeMakerEditorView: View {
             }
             .padding(.horizontal, 1)
         }
-        .disabled(self.viewModel.isEmpty)
     }
 
-    private var colourRow: some View {
+    /// Pinching the block on the canvas does the same thing, and is quicker once
+    /// you know it is there. The slider is for everyone who does not.
+    private var size: some View {
+        HStack(spacing: DS.Spacing.sm) {
+            Text(verbatim: "A").font(.system(size: 13, weight: .black))
+            Slider(value: self.viewModel.selectedCaptionScale, in: 0.04...0.30)
+                .tint(ColorPalette.accent)
+                .accessibilityLabel(Text("Size"))
+            Text(verbatim: "A").font(.system(size: 24, weight: .black))
+        }
+        .foregroundStyle(ColorPalette.textSecondary)
+    }
+
+    private var alignment: some View {
+        Picker("", selection: self.viewModel.selectedCaptionAlignment) {
+            ForEach(ImageCanvasUtility.CaptionAlignment.allCases) { alignment in
+                Image(systemName: alignment.symbolName)
+                    .accessibilityLabel(Text(alignment.title))
+                    .tag(alignment)
+            }
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+    }
+
+    private var colours: some View {
         HStack(spacing: DS.Spacing.xs) {
             ForEach(MemeTextColor.allCases) { color in
                 Button {
@@ -327,199 +438,26 @@ struct MemeMakerEditorView: View {
 
             Spacer(minLength: 0)
         }
-        .disabled(self.viewModel.isEmpty)
-    }
-
-    // MARK: - The gallery
-
-    @ViewBuilder private var gallery: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.xxs) {
-            HStack {
-                Text("Template")
-                    .font(forCategory: .caption1)
-                    .foregroundStyle(ColorPalette.textSecondary)
-                Spacer()
-                // The strip holds a couple of dozen; the catalogue holds 174.
-                // Anything past the well-known ones is found by name, not by
-                // scrolling sideways past a hundred and fifty tiles.
-                if self.viewModel.templates.count > Self.stripCount {
-                    Button(String(localized: "See all")) {
-                        self.typing = false
-                        self.viewModel.browseAllShow = true
-                    }
-                    .font(forCategory: .caption1)
-                    .tint(ColorPalette.accent)
-                }
-            }
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: DS.Spacing.sm) {
-                    self.photoTile
-                    ForEach(self.viewModel.templates.prefix(Self.stripCount)) { template in
-                        Button {
-                            self.typing = false
-                            self.viewModel.select(template)
-                        } label: {
-                            self.templateTile(for: template)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text(template.name))
-                        .accessibilityAddTraits(
-                            template.id == self.viewModel.selectedTemplateId ? [.isButton, .isSelected] : .isButton)
-                    }
-                }
-                .padding(.horizontal, 1)
-            }
-        }
-    }
-
-    private var photoTile: some View {
-        PhotosPicker(selection: self.$pickedPhoto, matching: .images, photoLibrary: .shared()) {
-            VStack(spacing: DS.Spacing.xxs) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
-                        .fill(ColorPalette.surface)
-                    Image(systemName: "photo.on.rectangle.angled")
-                        .font(.system(size: 20, weight: .regular))
-                        .foregroundStyle(ColorPalette.textSecondary)
-                }
-                .frame(width: Self.tileSize, height: Self.tileSize)
-                .overlay {
-                    let isCurrent = self.viewModel.selectedTemplateId == nil && !self.viewModel.isEmpty
-                    RoundedRectangle(cornerRadius: DS.Radius.icon, style: .continuous)
-                        .strokeBorder(isCurrent ? ColorPalette.accent : ColorPalette.separator,
-                                      lineWidth: isCurrent ? 3 : 1)
-                }
-                Text("Your photo")
-                    .font(forCategory: .caption2)
-                    .foregroundStyle(ColorPalette.textSecondary)
-                    .lineLimit(1)
-            }
-            .frame(width: Self.tileSize)
-        }
-        .buttonStyle(.plain)
-        .onChange(of: self.pickedPhoto) { _, item in
-            guard let item else { return }
-            Task { @MainActor in
-                if let picked = try? await item.loadTransferable(type: PickedImage.self) {
-                    self.viewModel.use(image: picked.uiImage)
-                }
-                self.pickedPhoto = nil
-            }
-        }
-    }
-
-    private func templateTile(for template: MemeTemplate) -> some View {
-        let isSelected = template.id == self.viewModel.selectedTemplateId
-        return VStack(spacing: DS.Spacing.xxs) {
-            MemeTemplateThumbnail(url: template.thumbnailUrl, isSelected: isSelected)
-                .frame(width: Self.tileSize, height: Self.tileSize)
-            Text(template.name)
-                .font(forCategory: .caption2)
-                .foregroundStyle(isSelected ? ColorPalette.textPrimary : ColorPalette.textSecondary)
-                .lineLimit(1)
-                .truncationMode(.tail)
-        }
-        .frame(width: Self.tileSize)
-        .contentShape(.rect)
-    }
-
-    private static let tileSize: CGFloat = 64
-    /// How many fit in the strip before "See all" earns its place.
-    private static let stripCount: Int = 24
-
-    // MARK: - Share
-
-    /// The three ways out, each with its name on it. They used to be a
-    /// prominent button and two bare glyphs, which asked the user to guess what
-    /// a downward arrow and a sheet of paper did to their meme.
-    private var sharePanel: some View {
-        VStack(spacing: DS.Spacing.xs) {
-            if !self.viewModel.canExport {
-                Text("Write something on the picture first.")
-                    .font(forCategory: .caption1)
-                    .foregroundStyle(ColorPalette.textSecondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            // Sharing leads, unlike every other tool in this app: a meme that
-            // stays on the phone did not do its job.
-            self.exitRow(title: String(localized: "Share"),
-                         subtitle: String(localized: "Send it to someone"),
-                         systemImage: "square.and.arrow.up",
-                         isProminent: true) {
-                self.viewModel.share()
-            }
-            self.exitRow(title: String(localized: "Save to Photos"),
-                         subtitle: String(localized: "Keep it in your camera roll"),
-                         systemImage: "square.and.arrow.down",
-                         isProminent: false) {
-                self.viewModel.saveToPhotos()
-            }
-            self.exitRow(title: String(localized: "To PDF"),
-                         subtitle: String(localized: "Put it in a document"),
-                         systemImage: "doc",
-                         isProminent: false) {
-                self.viewModel.createPdf()
-            }
-        }
-        .disabled(!self.viewModel.canExport)
-    }
-
-    private func exitRow(title: String,
-                         subtitle: String,
-                         systemImage: String,
-                         isProminent: Bool,
-                         action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: DS.Spacing.sm) {
-                Image(systemName: systemImage)
-                    .font(.system(size: 17, weight: .semibold))
-                    .frame(width: 24)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(title)
-                        .font(forCategory: .button)
-                    Text(subtitle)
-                        .font(forCategory: .caption1)
-                        .opacity(0.75)
-                }
-                Spacer(minLength: 0)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .frame(minHeight: DS.Size.tapTarget)
-            .padding(.horizontal, DS.Spacing.sm)
-            .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
-        }
-        .accessibilityLabel(Text(title))
-        .accessibilityHint(Text(subtitle))
-        .memeExitStyle(isProminent: isProminent)
     }
 }
 
+// MARK: - Choosing the picture
 
-fileprivate extension View {
-
-    /// `buttonStyle` takes a concrete type, so the prominent and the plain row
-    /// cannot be chosen with a ternary — the two branches have different types.
-    /// A `ViewBuilder` can hold both.
-    @ViewBuilder func memeExitStyle(isProminent: Bool) -> some View {
-        if isProminent {
-            self.buttonStyle(.glassProminent)
-        } else {
-            self.buttonStyle(.glass)
-        }
-    }
-}
-
-/// The whole catalogue, found by name.
+/// Every picture the tool can start from, in one grid: the catalogue, found by
+/// name, with the camera roll at the top of it.
 ///
-/// A grid rather than a longer strip: at 174 templates the question stops being
-/// "which of these" and becomes "where is the one I am thinking of", and that is
-/// a search field, not a scroll.
-struct MemeTemplateBrowser: View {
+/// It replaced a strip of two dozen tiles under the canvas. At 174 templates the
+/// question stops being "which of these" and becomes "where is the one I am
+/// thinking of", and that is a search field, not a scroll — and the strip was
+/// answering neither while charging the canvas a hundred points for the
+/// privilege.
+struct MemePicturePicker: View {
 
     @ObservedObject var viewModel: MemeMakerViewModel
 
     @Environment(\.dismiss) private var dismiss
     @State private var query: String = ""
+    @State private var pickedPhoto: PhotosPickerItem? = nil
 
     private var templates: [MemeTemplate] { self.viewModel.templates }
 
@@ -538,16 +476,19 @@ struct MemeTemplateBrowser: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: self.columns, spacing: DS.Spacing.md) {
-                    ForEach(self.shown) { template in
-                        Button {
-                            self.viewModel.browseAllShow = false
-                            self.viewModel.select(template)
-                        } label: {
-                            self.tile(for: template)
+                VStack(spacing: DS.Spacing.md) {
+                    self.photoRow
+                    LazyVGrid(columns: self.columns, spacing: DS.Spacing.md) {
+                        ForEach(self.shown) { template in
+                            Button {
+                                self.viewModel.select(template)
+                                self.dismiss()
+                            } label: {
+                                self.tile(for: template)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(Text(template.name))
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text(template.name))
                     }
                 }
                 .padding(DS.Spacing.md)
@@ -563,13 +504,43 @@ struct MemeTemplateBrowser: View {
                 }
             }
             .searchable(text: self.$query, prompt: Text("Search templates"))
-            .navigationTitle(Text("Templates"))
+            .navigationTitle(Text("Picture"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Close")) { self.dismiss() }
                         .tint(ColorPalette.accent)
                 }
+            }
+        }
+    }
+
+    /// The camera roll, first and full width: a picture of your own is a
+    /// different kind of answer from a template, not the 175th template.
+    private var photoRow: some View {
+        PhotosPicker(selection: self.$pickedPhoto, matching: .images, photoLibrary: .shared()) {
+            HStack(spacing: DS.Spacing.sm) {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .font(.system(size: 17, weight: .semibold))
+                Text("Your photo")
+                    .font(forCategory: .button)
+                Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(minHeight: DS.Size.tapTarget)
+            .padding(.horizontal, DS.Spacing.sm)
+            .contentShape(.rect(cornerRadius: DS.Radius.control, style: .continuous))
+        }
+        .buttonStyle(.glass)
+        .accessibilityLabel(Text("Your photo"))
+        .onChange(of: self.pickedPhoto) { _, item in
+            guard let item else { return }
+            Task { @MainActor in
+                if let picked = try? await item.loadTransferable(type: PickedImage.self) {
+                    self.viewModel.use(image: picked.uiImage)
+                    self.dismiss()
+                }
+                self.pickedPhoto = nil
             }
         }
     }
@@ -612,8 +583,8 @@ struct MemeTemplateBrowser: View {
 ///
 /// So this one carries no opinion about its own size at all. It is a plain
 /// `Color`, which accepts any proposal, and **the caller states the frame** —
-/// a square in the strip, a fixed height across the cell in the grid. Deciding
-/// the size in one place is the whole fix.
+/// a fixed height across the cell in the grid. Deciding the size in one place is
+/// the whole fix.
 struct MemeTemplateThumbnail: View {
 
     let url: URL?

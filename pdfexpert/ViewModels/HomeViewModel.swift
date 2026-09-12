@@ -407,9 +407,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
             // from here, underneath a full-screen cover, is the dropped
             // presentation in `swiftui-presentation-traps`.
             self.trackFullActionChosen(importOption: nil)
-            self.memeMakerViewModel.start(onCreatePdf: { [weak self] meme in
-                self?.convertUiImageToPdf(uiImage: meme, filename: nil)
-            }, onFinished: { [weak self] in
+            self.memeMakerViewModel.start(onFinished: { [weak self] in
                 self?.trackFullActionCompleted()
             })
         case .wordToPdf, .excelToPdf, .powerpointToPdf, .importPdf, .formFill, .removePassword, .addPassword,

@@ -108,6 +108,78 @@ final class MemeCaptionTests: XCTestCase {
         XCTAssertGreaterThan(frame.height, 0)
     }
 
+    // MARK: - Alignment
+
+    /// An anchored block takes the margin and ignores `center.x` entirely: that
+    /// is what makes "put these words on the left" one control rather than two —
+    /// a paragraph setting plus a drag to the matching edge.
+    func testAnAlignedBlockTakesTheMarginWhateverItsCentreSays() {
+        let box = CGSize(width: 800, height: 800)
+        let style = ImageCanvasUtility.CaptionStyle()
+        let inset = box.width * (1 - ImageCanvasUtility.captionWidthFraction) / 2
+
+        for centreX in [0.2, 0.5, 0.8] {
+            var caption = ImageCanvasUtility.Caption(text: "LEFT",
+                                                     center: CGPoint(x: centreX, y: 0.5))
+            caption.alignment = .leading
+            let leading = ImageCanvasUtility.captionFrame(caption, style: style, in: box)
+            XCTAssertEqual(leading.minX, inset, accuracy: 0.5,
+                           "a left-aligned block moved with its centre")
+
+            caption.alignment = .trailing
+            let trailing = ImageCanvasUtility.captionFrame(caption, style: style, in: box)
+            XCTAssertEqual(trailing.maxX, box.width - inset, accuracy: 0.5,
+                           "a right-aligned block moved with its centre")
+        }
+    }
+
+    /// And a centred one still goes where it was dragged — the default is the
+    /// meme format's own and nothing about it changed.
+    func testACentredBlockStillFollowsItsCentre() {
+        let box = CGSize(width: 800, height: 800)
+        let caption = ImageCanvasUtility.Caption(text: "MIDDLE", center: CGPoint(x: 0.3, y: 0.5))
+        let frame = ImageCanvasUtility.captionFrame(caption, style: ImageCanvasUtility.CaptionStyle(),
+                                                    in: box)
+        XCTAssertEqual(frame.midX, box.width * 0.3, accuracy: 0.5)
+    }
+
+    /// Wherever it is anchored, it stays on the picture: the same invariant the
+    /// centred case has, checked on the two cases that bypass `center.x`.
+    func testAnAlignedBlockStaysOnThePicture() {
+        let box = CGSize(width: 500, height: 700)
+        for alignment in ImageCanvasUtility.CaptionAlignment.allCases {
+            var caption = ImageCanvasUtility.Caption(
+                text: "A CAPTION LONG ENOUGH TO WRAP OVER SEVERAL LINES AND THEN SOME",
+                center: CGPoint(x: 0.92, y: 0.5),
+                scale: 0.14)
+            caption.alignment = alignment
+            let frame = ImageCanvasUtility.captionFrame(caption,
+                                                        style: ImageCanvasUtility.CaptionStyle(),
+                                                        in: box)
+            XCTAssertGreaterThanOrEqual(frame.minX, 0, "\(alignment.rawValue) starts off the picture")
+            XCTAssertLessThanOrEqual(frame.maxX, box.width + 0.5, "\(alignment.rawValue) runs off the right")
+        }
+    }
+
+    /// The canvas and the export have to agree about alignment as they do about
+    /// everything else, and they can only do that by both reading the caption.
+    /// A block set to the left must not draw the same picture as one set to the
+    /// right.
+    func testAlignmentReachesTheExportedPicture() {
+        let source = self.makeImage()
+        var left = ImageCanvasUtility.Caption(text: "HELLO", center: CGPoint(x: 0.5, y: 0.5))
+        left.alignment = .leading
+        var right = left
+        right.alignment = .trailing
+
+        let one = ImageCanvasUtility.captioned(source, captions: [left],
+                                               style: ImageCanvasUtility.CaptionStyle())
+        let other = ImageCanvasUtility.captioned(source, captions: [right],
+                                                 style: ImageCanvasUtility.CaptionStyle())
+        XCTAssertNotEqual(one.pngData(), other.pngData(),
+                          "alignment never reached the file")
+    }
+
     // MARK: - Drawing
 
     /// Blank blocks are placeholders on the canvas and nothing at all in the

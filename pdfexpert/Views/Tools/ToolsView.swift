@@ -336,18 +336,26 @@ struct ToolsView: View {
                 // The editor on a picture that needs no network. `meme-filled`
                 // waits for the template catalogue to arrive, which is fine for
                 // looking at a screenshot and no good at all for a UI test.
-                self.viewModel.memeMakerViewModel.start(onCreatePdf: nil)
+                self.viewModel.memeMakerViewModel.start()
                 self.viewModel.memeMakerViewModel.use(image: Self.debugPhotograph())
-            case "meme", "meme-browse", "meme-filled":
+            case "meme", "meme-browse", "meme-filled", "meme-style":
                 // The only tool that needs no input to open: it starts on the
                 // template gallery. `meme-browse` goes one further and opens the
                 // full grid, which is the layout worth looking at.
-                self.viewModel.memeMakerViewModel.start(onCreatePdf: nil)
+                self.viewModel.memeMakerViewModel.start()
                 if tool == "meme-browse" {
-                    self.viewModel.memeMakerViewModel.browseAllShow = true
+                    self.viewModel.memeMakerViewModel.picturePickerShow = true
                 }
-                if tool == "meme-filled" {
+                if tool == "meme-filled" || tool == "meme-style" {
                     self.viewModel.memeMakerViewModel.debugFillForScreenshot()
+                }
+                if tool == "meme-style" {
+                    // After the fill, which is asynchronous: the panel wants a
+                    // block to point at.
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(3))
+                        self.viewModel.memeMakerViewModel.styleShow = true
+                    }
                 }
             case "image-edit":
                 self.viewModel.imageEditorViewModel.run(image: Self.debugPhotograph(), onCreatePdf: nil)

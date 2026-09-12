@@ -95,15 +95,27 @@ enum ImageCanvasUtility {
         var text: String
         /// Where the middle of the block sits, 0…1 across and down, origin at the
         /// top left — UIKit's orientation and SwiftUI's, so neither has to flip.
+        ///
+        /// Only `x` is ignored when the block is anchored to an edge: see
+        /// `CaptionAlignment`.
         var center: CGPoint
         /// Type height as a fraction of the image height.
         var scale: CGFloat
+        /// How the words sit across the picture. Per block, not per meme: the
+        /// caption at the top can hug the left while the one at the bottom is
+        /// centred.
+        var alignment: CaptionAlignment
 
-        init(id: UUID = UUID(), text: String = "", center: CGPoint, scale: CGFloat = 0.11) {
+        init(id: UUID = UUID(),
+             text: String = "",
+             center: CGPoint,
+             scale: CGFloat = 0.11,
+             alignment: CaptionAlignment = .center) {
             self.id = id
             self.text = text
             self.center = center
             self.scale = scale
+            self.alignment = alignment
         }
 
         /// True when there is nothing to draw. Kept as a property rather than
@@ -111,6 +123,55 @@ enum ImageCanvasUtility {
         /// about to type into.
         var isBlank: Bool {
             self.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+    }
+
+    /// Where a block sits across the picture, and how its own lines line up.
+    ///
+    /// One control doing two jobs, on purpose. Asking a person to set the
+    /// paragraph alignment *and* then drag the block to the matching edge is two
+    /// chores for one intention: "put these words on the left". So `leading`
+    /// pins the box against the left margin **and** ranges its lines left, and
+    /// `trailing` does the mirror. `center` is the meme format's own and leaves
+    /// the block wherever it was dragged.
+    ///
+    /// The anchored cases override `Caption.center.x` — which is why dragging an
+    /// anchored block hands it back to `center` first (`unanchor`), keeping it
+    /// exactly where it appears rather than letting it jump.
+    enum CaptionAlignment: String, CaseIterable, Identifiable, Equatable {
+
+        case leading
+        case center
+        case trailing
+
+        var id: String { self.rawValue }
+
+        /// Left and right rather than natural: a meme is a picture, and the
+        /// words go where the user points, not where the script direction wants
+        /// them.
+        var textAlignment: NSTextAlignment {
+            switch self {
+            case .leading: return .left
+            case .center: return .center
+            case .trailing: return .right
+            }
+        }
+
+        /// Spoken, not shown: the control is three glyphs.
+        var title: String {
+            switch self {
+            case .leading: return String(localized: "Align left")
+            case .center: return String(localized: "Align centre")
+            case .trailing: return String(localized: "Align right")
+            }
+        }
+
+        var symbolName: String {
+            switch self {
+            case .leading: return "text.alignleft"
+            case .center: return "text.aligncenter"
+            case .trailing: return "text.alignright"
+            }
         }
     }
 
@@ -222,7 +283,7 @@ enum ImageCanvasUtility {
                                     face: style.face)
 
         let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .center
+        paragraph.alignment = caption.alignment.textAlignment
         paragraph.lineBreakMode = .byWordWrapping
 
         let limit = size.width * Self.captionWidthFraction
@@ -238,8 +299,17 @@ enum ImageCanvasUtility {
         let width = min(ceil(measured.width) + font.pointSize * style.strokeScale * 2, limit)
         let height = ceil(measured.height)
 
-        var origin = CGPoint(x: size.width * caption.center.x - width / 2,
-                             y: size.height * caption.center.y - height / 2)
+        // An anchored block ignores `center.x` and takes the margin instead —
+        // the same margin the wrapping width leaves, so the words line up with
+        // the edge of the widest line a centred block could ever have.
+        let inset = size.width * (1 - Self.captionWidthFraction) / 2
+        let x: CGFloat
+        switch caption.alignment {
+        case .leading: x = inset
+        case .center: x = size.width * caption.center.x - width / 2
+        case .trailing: x = size.width - inset - width
+        }
+        var origin = CGPoint(x: x, y: size.height * caption.center.y - height / 2)
         origin.x = min(max(origin.x, 0), max(size.width - width, 0))
         origin.y = min(max(origin.y, 0), max(size.height - height, 0))
         return CGRect(origin: origin, size: CGSize(width: width, height: height))
@@ -283,7 +353,7 @@ enum ImageCanvasUtility {
                                     face: style.face)
 
         let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .center
+        paragraph.alignment = caption.alignment.textAlignment
         paragraph.lineBreakMode = .byWordWrapping
 
         // Stroke and fill in one run, with a negative width: positive would draw

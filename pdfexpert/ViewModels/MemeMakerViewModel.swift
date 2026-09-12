@@ -8,6 +8,12 @@
 //  meant to leave. Every other export here ends in a file the user keeps — this
 //  one ends in a share sheet, and that is the number worth watching.
 //
+//  There are two ways out and no third: the camera roll and the share sheet.
+//  A meme was once also offered "to PDF", which put the one export this app
+//  does everywhere on the one screen where nobody wants it — and, worse, was
+//  the only door here that skipped the paywall. Both ways out now pass through
+//  `gate`.
+//
 //  It began as a form — two text fields under the picture, one line locked to
 //  the top and one to the bottom — and that was wrong. A meme is not a document
 //  with a caption: the words belong *on* the image, wherever the joke needs
@@ -84,10 +90,15 @@ class MemeMakerViewModel: ObservableObject {
     }
 
     @Published var editorShow: Bool = false
-    /// Held here rather than in the view so the grid keeps reading the list as it
-    /// arrives: opened while the catalogue was still in flight, a view that had
-    /// captured an empty array stayed empty for good.
-    @Published var browseAllShow: Bool = false
+    /// The picture chooser: the template grid with the camera roll at the top of
+    /// it. Held here rather than in the view so the grid keeps reading the list
+    /// as it arrives: opened while the catalogue was still in flight, a view
+    /// that had captured an empty array stayed empty for good.
+    @Published var picturePickerShow: Bool = false
+    /// The style panel. Here for the same reason the picture chooser is: a
+    /// screenshot script has to be able to open it, and a `@State` inside a view
+    /// presented by a full-screen cover cannot be reached from outside.
+    @Published var styleShow: Bool = false
     @Published var monetizationShow: Bool = false
     @Published var savedToPhotosAlertShow: Bool = false
     @Published var photosPermissionAlertShow: Bool = false
@@ -142,7 +153,6 @@ class MemeMakerViewModel: ObservableObject {
     private var source: UIImage? = nil
 
     private var pendingExport: PendingExport? = nil
-    private var onCreatePdf: ((UIImage) -> Void)? = nil
     /// Called once for **any** export that worked, not just the PDF one.
     /// Without it the home funnel would count this tool as finished only when it
     /// ends in a document, which is the one ending it is least likely to have.
@@ -156,8 +166,7 @@ class MemeMakerViewModel: ObservableObject {
 
     /// Opens the editor on the gallery, with nothing chosen yet.
     @MainActor
-    func start(onCreatePdf: ((UIImage) -> Void)?, onFinished: (() -> Void)? = nil) {
-        self.onCreatePdf = onCreatePdf
+    func start(onFinished: (() -> Void)? = nil) {
         self.onFinished = onFinished
         self.reset()
         self.editorShow = true
@@ -233,8 +242,56 @@ class MemeMakerViewModel: ObservableObject {
         self.captions[index].scale = min(max(scale, 0.04), 0.30)
     }
 
+    /// Hands an anchored block back to free positioning, keeping it exactly
+    /// where it looks like it is.
+    ///
+    /// A block aligned left takes the margin and ignores `center.x` entirely, so
+    /// a drag would otherwise either do nothing or make the words jump back to
+    /// a `center.x` set who knows when. The canvas knows where the block really
+    /// sits — it measured it — so it passes that fraction in and the block
+    /// carries on from there.
+    @MainActor
+    func unanchor(captionId: UUID, atFractionX x: CGFloat) {
+        guard let index = self.captions.firstIndex(where: { $0.id == captionId }),
+              self.captions[index].alignment != .center else { return }
+        self.captions[index].center.x = min(max(x, 0.08), 0.92)
+        self.captions[index].alignment = .center
+    }
+
     func caption(id: UUID) -> ImageCanvasUtility.Caption? {
         self.captions.first { $0.id == id }
+    }
+
+    /// The selected block's type size, for the slider in the style panel.
+    ///
+    /// Per block rather than per meme: the punchline is often smaller than the
+    /// set-up, and a single size for the whole picture would make that
+    /// impossible. Reads as the default when nothing is selected, so the slider
+    /// never has to be conditional.
+    @MainActor
+    var selectedCaptionScale: Binding<CGFloat> {
+        Binding(
+            get: { [weak self] in self?.selectedCaption?.scale ?? 0.11 },
+            set: { [weak self] newValue in
+                guard let self, let id = self.selectedCaptionId else { return }
+                self.scale(captionId: id, to: newValue)
+            }
+        )
+    }
+
+    /// The selected block's alignment. Writing to it with nothing selected is a
+    /// no-op rather than a crash: the panel can be open with the selection gone.
+    @MainActor
+    var selectedCaptionAlignment: Binding<ImageCanvasUtility.CaptionAlignment> {
+        Binding(
+            get: { [weak self] in self?.selectedCaption?.alignment ?? .center },
+            set: { [weak self] newValue in
+                guard let self,
+                      let id = self.selectedCaptionId,
+                      let index = self.captions.firstIndex(where: { $0.id == id }) else { return }
+                self.captions[index].alignment = newValue
+            }
+        )
     }
 
     /// A binding to the selected block's text, for the field in the edit panel.
@@ -292,16 +349,6 @@ class MemeMakerViewModel: ObservableObject {
 
     @MainActor
     func share() { self.gate(.share) }
-
-    @MainActor
-    func createPdf() {
-        guard self.canExport else { return }
-        self.selectedCaptionId = nil
-        guard let image = self.fullResolutionResult() else { return }
-        self.trackCompletion(destination: "pdf")
-        self.editorShow = false
-        DispatchQueue.main.async { self.onCreatePdf?(image) }
-    }
 
     @MainActor
     func onMonetizationClose() {
@@ -441,7 +488,8 @@ class MemeMakerViewModel: ObservableObject {
         self.pendingExport = nil
         self.selectedTemplateId = nil
         self.isLoadingTemplate = false
-        self.browseAllShow = false
+        self.picturePickerShow = false
+        self.styleShow = false
     }
 }
 

@@ -28,6 +28,12 @@
 //  the same face and the same 92% line width. The canvas multiplies those
 //  fractions by a few hundred points, the export by a few thousand.
 //
+//  Alignment lives in the same two places for the same reason: the paragraph
+//  style the export draws with and the `multilineTextAlignment` the canvas draws
+//  with both come off `Caption.alignment`, and an anchored block takes its x from
+//  `captionFrame` rather than from `center` — so the words sit against the same
+//  margin on screen and in the file.
+//
 //  The letterbox is handled by measuring rather than by `aspectRatio`: a fitted
 //  box is computed from the picture's own proportions, and everything —
 //  the image, the text, the touches — is laid out inside that box. A caption
@@ -40,14 +46,6 @@ import SwiftUI
 struct MemeCanvasView: View {
 
     @ObservedObject var viewModel: MemeMakerViewModel
-
-    /// Whether a block with nothing written in it yet shows a stand-in.
-    ///
-    /// True while the user is making the thing — an empty block has to be
-    /// visible or there is nothing to aim at. False once they are looking at it
-    /// as a finished picture: the stand-in is never exported, so a preview that
-    /// still showed it would be promising words the file will not contain.
-    var showsPlaceholders: Bool = true
 
     /// Raised when a block is picked up, so the panel can put the keyboard in
     /// front of the field that writes into it. Selecting is the view's job;
@@ -71,8 +69,7 @@ struct MemeCanvasView: View {
                         // wide and the placeholder would spill out of it. The
                         // stored caption is untouched — it stays blank, and
                         // `captioned` still leaves it out of the file.
-                        let shown = Self.displayed(caption,
-                                                   showsPlaceholder: self.showsPlaceholders)
+                        let shown = Self.displayed(caption)
                         // The rect comes from the same measurement the export
                         // uses, so the live text and the file land in the same
                         // place — and neither can start half outside the picture.
@@ -81,7 +78,7 @@ struct MemeCanvasView: View {
                                                                     in: box)
                         MemeCaptionView(
                             caption: shown,
-                            isPlaceholder: caption.isBlank && self.showsPlaceholders,
+                            isPlaceholder: caption.isBlank,
                             box: box,
                             frame: frame,
                             style: self.viewModel.style,
@@ -91,6 +88,7 @@ struct MemeCanvasView: View {
                                 self.onCaptionPicked()
                             },
                             onMove: { self.viewModel.move(captionId: caption.id, by: $0) },
+                            onDragStart: { self.viewModel.unanchor(captionId: caption.id, atFractionX: $0) },
                             onScale: { self.viewModel.scale(captionId: caption.id, to: $0) }
                         )
                         .position(x: frame.midX, y: frame.midY)
@@ -113,10 +111,9 @@ struct MemeCanvasView: View {
     /// user has not written in it yet. Keeps the id, so selection and dragging
     /// still reach the real block.
     private static func displayed(
-        _ caption: ImageCanvasUtility.Caption,
-        showsPlaceholder: Bool
+        _ caption: ImageCanvasUtility.Caption
     ) -> ImageCanvasUtility.Caption {
-        guard caption.isBlank, showsPlaceholder else { return caption }
+        guard caption.isBlank else { return caption }
         var copy = caption
         copy.text = String(localized: "Your text")
         return copy
@@ -146,6 +143,11 @@ private struct MemeCaptionView: View {
     let onSelect: () -> Void
     /// A move, as a fraction of the box.
     let onMove: (CGSize) -> Void
+    /// Raised once when a drag begins, carrying where the block actually is —
+    /// `frame.midX` as a fraction of the box. A block anchored to an edge has no
+    /// meaningful `center.x`, and this is what gives it one back before it is
+    /// moved, so it carries on from where it looks rather than jumping.
+    let onDragStart: (CGFloat) -> Void
     /// A new absolute scale, as a fraction of the box height.
     let onScale: (CGFloat) -> Void
 
@@ -162,6 +164,14 @@ private struct MemeCaptionView: View {
     private var font: Font { Font(ImageCanvasUtility.captionFont(forImageHeight: self.box.height,
                                                                  scale: self.caption.scale,
                                                                  face: self.style.face)) }
+    private var textAlignment: TextAlignment {
+        switch self.caption.alignment {
+        case .leading: return .leading
+        case .center: return .center
+        case .trailing: return .trailing
+        }
+    }
+
     private var shown: String {
         self.style.isUppercased
             ? self.caption.text.uppercased(with: .current)
@@ -176,6 +186,13 @@ private struct MemeCaptionView: View {
             .onTapGesture { self.onSelect() }
             .gesture(self.dragGesture)
             .gesture(self.pinchGesture)
+            // One element for the block, not nine: the outline is the same
+            // string drawn eight times around the fill, and every one of those
+            // copies is a `Text` that VoiceOver would otherwise read out.
+            .accessibilityElement(children: .ignore)
+            .accessibilityIdentifier("memeCaptionBlock")
+            .accessibilityLabel(Text(self.shown))
+            .accessibilityAddTraits(self.isSelected ? [.isButton, .isSelected] : .isButton)
     }
 
     /// SwiftUI has no text stroke, so the outline is the same string drawn eight
@@ -198,7 +215,7 @@ private struct MemeCaptionView: View {
     private var label: some View {
         Text(self.shown)
             .font(self.font)
-            .multilineTextAlignment(.center)
+            .multilineTextAlignment(self.textAlignment)
             .lineLimit(nil)
             .fixedSize(horizontal: false, vertical: true)
             .frame(width: self.lineWidth)
@@ -226,6 +243,9 @@ private struct MemeCaptionView: View {
         DragGesture(minimumDistance: 2)
             .onChanged { value in
                 if !self.isSelected { self.onSelect() }
+                if self.lastTranslation == .zero, self.box.width > 0 {
+                    self.onDragStart(self.frame.midX / self.box.width)
+                }
                 let step = CGSize(width: value.translation.width - self.lastTranslation.width,
                                   height: value.translation.height - self.lastTranslation.height)
                 self.lastTranslation = value.translation
