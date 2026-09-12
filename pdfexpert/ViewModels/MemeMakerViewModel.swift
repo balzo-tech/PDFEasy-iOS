@@ -44,13 +44,26 @@ extension Container {
     }
 }
 
-/// The three fills that read on a photograph. White is the format's own, black
-/// is for pictures that are mostly bright, yellow is the subtitle look.
+/// The fills offered as a swatch. Nine, not three, and not the last word: the
+/// panel also carries the system colour picker, so the presets are a shortcut
+/// rather than the whole vocabulary — which is why the tool stores a colour and
+/// not a case of this.
+///
+/// White leads because it is the format's own; black is for pictures that are
+/// mostly bright; yellow is the subtitle look. The other six are here because
+/// captions are also jokes about colour, and a meme maker that can only write in
+/// three of them is answering a question nobody asked.
 enum MemeTextColor: String, CaseIterable, Identifiable {
 
     case white
     case black
     case yellow
+    case red
+    case orange
+    case green
+    case blue
+    case purple
+    case pink
 
     var id: String { self.rawValue }
 
@@ -59,27 +72,51 @@ enum MemeTextColor: String, CaseIterable, Identifiable {
         case .white: return String(localized: "White")
         case .black: return String(localized: "Black")
         case .yellow: return String(localized: "Yellow")
+        case .red: return String(localized: "Red")
+        case .orange: return String(localized: "Orange")
+        case .green: return String(localized: "Green")
+        case .blue: return String(localized: "Blue")
+        case .purple: return String(localized: "Purple")
+        case .pink: return String(localized: "Pink")
         }
     }
 
+    /// Saturated rather than tasteful: these are drawn at a hundred points over
+    /// a photograph, with an outline around them, and a muted tone reads as a
+    /// mistake at that size.
     var fill: UIColor {
         switch self {
         case .white: return .white
         case .black: return .black
         case .yellow: return UIColor(red: 1, green: 0.85, blue: 0.1, alpha: 1)
-        }
-    }
-
-    /// The outline is always the opposite, or the text disappears on the half of
-    /// photographs that happen to match it.
-    var stroke: UIColor {
-        switch self {
-        case .white, .yellow: return .black
-        case .black: return .white
+        case .red: return UIColor(red: 0.90, green: 0.16, blue: 0.16, alpha: 1)
+        case .orange: return UIColor(red: 1, green: 0.55, blue: 0, alpha: 1)
+        case .green: return UIColor(red: 0.20, green: 0.78, blue: 0.35, alpha: 1)
+        case .blue: return UIColor(red: 0.13, green: 0.45, blue: 0.95, alpha: 1)
+        case .purple: return UIColor(red: 0.62, green: 0.27, blue: 0.90, alpha: 1)
+        case .pink: return UIColor(red: 1, green: 0.35, blue: 0.62, alpha: 1)
         }
     }
 
     var swatch: Color { Color(uiColor: self.fill) }
+
+    /// Whether the tool's current fill *is* this preset.
+    ///
+    /// Compared by what it looks like, not by `==`: `Color.white` and
+    /// `Color(uiColor: .white)` are the same white and not the same value, and
+    /// a colour that came back off the system wheel is a third spelling again.
+    /// Left to `==` no swatch ever showed as chosen, including the default one.
+    func matches(_ color: Color) -> Bool {
+        var mine = (r: CGFloat(0), g: CGFloat(0), b: CGFloat(0), a: CGFloat(0))
+        var theirs = mine
+        guard self.fill.getRed(&mine.r, green: &mine.g, blue: &mine.b, alpha: &mine.a),
+              UIColor(color).getRed(&theirs.r, green: &theirs.g, blue: &theirs.b, alpha: &theirs.a)
+        else { return false }
+        let tolerance: CGFloat = 0.02
+        return abs(mine.r - theirs.r) < tolerance
+            && abs(mine.g - theirs.g) < tolerance
+            && abs(mine.b - theirs.b) < tolerance
+    }
 }
 
 class MemeMakerViewModel: ObservableObject {
@@ -112,7 +149,11 @@ class MemeMakerViewModel: ObservableObject {
     /// the picture alone, which is also how the export looks.
     @Published var selectedCaptionId: UUID? = nil
 
-    @Published var color: MemeTextColor = .white
+    /// The fill, as a colour rather than as one of the presets: the picker in
+    /// the style panel can land anywhere in the wheel, and a case would have had
+    /// to grow a `.custom(Color)` to say so. The swatches write into this like
+    /// anything else, and one of them reads as chosen when it matches.
+    @Published var color: Color = .white
     @Published var isUppercased: Bool = true
     @Published var face: ImageCanvasUtility.CaptionFace = .impact
 
@@ -132,8 +173,9 @@ class MemeMakerViewModel: ObservableObject {
     }
 
     var style: ImageCanvasUtility.CaptionStyle {
-        ImageCanvasUtility.CaptionStyle(fill: self.color.fill,
-                                        stroke: self.color.stroke,
+        let fill = UIColor(self.color)
+        return ImageCanvasUtility.CaptionStyle(fill: fill,
+                                        stroke: ImageCanvasUtility.outline(for: fill),
                                         isUppercased: self.isUppercased,
                                         face: self.face)
     }

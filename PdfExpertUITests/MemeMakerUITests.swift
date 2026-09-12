@@ -131,6 +131,12 @@ final class MemeMakerUITests: XCTestCase {
                       "there is no way to set the size")
         XCTAssertTrue(self.app.buttons["Align left"].waitForExistence(timeout: 5),
                       "there is no way to align the words")
+        // Nine swatches rather than three, and the wheel behind them for
+        // anything else.
+        for colour in ["White", "Red", "Green", "Pink"] {
+            XCTAssertTrue(self.app.buttons[colour].waitForExistence(timeout: 5),
+                          "\(colour) is not offered")
+        }
 
         // Picking one must not throw the user out of the panel.
         self.tap(self.app.buttons["Marker"])

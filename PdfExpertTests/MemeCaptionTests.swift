@@ -12,6 +12,7 @@
 //
 
 import XCTest
+import SwiftUI
 @testable import PdfExpert
 
 final class MemeCaptionTests: XCTestCase {
@@ -106,6 +107,63 @@ final class MemeCaptionTests: XCTestCase {
             style: ImageCanvasUtility.CaptionStyle(),
             in: CGSize(width: 400, height: 400))
         XCTAssertGreaterThan(frame.height, 0)
+    }
+
+    // MARK: - Colour
+
+    /// The outline is the only thing keeping a caption readable on a photograph
+    /// that happens to be its own colour, and it only works while it is the
+    /// opposite of the fill. It used to be hard-coded per preset; now that a
+    /// caption can be any colour off the system wheel, it is measured.
+    func testTheOutlineIsAlwaysTheOppositeOfTheFill() {
+        XCTAssertEqual(ImageCanvasUtility.outline(for: .white), .black)
+        XCTAssertEqual(ImageCanvasUtility.outline(for: .black), .white)
+
+        for preset in MemeTextColor.allCases {
+            let outline = ImageCanvasUtility.outline(for: preset.fill)
+            XCTAssertNotEqual(outline, preset.fill, "\(preset.rawValue) outlined itself")
+            var fill: CGFloat = 0, outlineWhite: CGFloat = 0, alpha: CGFloat = 0
+            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
+            XCTAssertTrue(preset.fill.getRed(&red, green: &green, blue: &blue, alpha: &alpha))
+            fill = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+            XCTAssertTrue(outline.getWhite(&outlineWhite, alpha: &alpha))
+            XCTAssertNotEqual(fill > 0.5, outlineWhite > 0.5,
+                              "\(preset.rawValue) took an outline of its own brightness")
+        }
+    }
+
+    /// Green reads far brighter than blue at the same number, and an average
+    /// would put a white outline under a green caption, where it is worth
+    /// nothing.
+    func testTheOutlineWeighsGreenMoreThanBlue() {
+        let green = UIColor(red: 0, green: 0.8, blue: 0, alpha: 1)
+        let blue = UIColor(red: 0, green: 0, blue: 0.8, alpha: 1)
+        XCTAssertEqual(ImageCanvasUtility.outline(for: green), .black)
+        XCTAssertEqual(ImageCanvasUtility.outline(for: blue), .white)
+    }
+
+    /// A swatch has to show as chosen when it is the colour in use, and the
+    /// three spellings of the same white are not `==` to each other.
+    func testAPresetRecognisesItsOwnColourHoweverItIsSpelt() {
+        XCTAssertTrue(MemeTextColor.white.matches(.white))
+        XCTAssertTrue(MemeTextColor.white.matches(Color(uiColor: .white)))
+        XCTAssertTrue(MemeTextColor.yellow.matches(MemeTextColor.yellow.swatch))
+        XCTAssertFalse(MemeTextColor.white.matches(.black))
+        XCTAssertFalse(MemeTextColor.red.matches(MemeTextColor.pink.swatch))
+    }
+
+    /// The fill reaches the file whatever it is: a colour off the wheel is not a
+    /// preset and must still be drawn.
+    func testAColourOffTheWheelIsDrawn() {
+        let source = self.makeImage()
+        var style = ImageCanvasUtility.CaptionStyle()
+        style.fill = UIColor(red: 0.31, green: 0.07, blue: 0.51, alpha: 1)
+        style.stroke = ImageCanvasUtility.outline(for: style.fill)
+        let result = ImageCanvasUtility.captioned(
+            source,
+            captions: [ImageCanvasUtility.Caption(text: "HELLO", center: CGPoint(x: 0.5, y: 0.5))],
+            style: style)
+        XCTAssertNotEqual(result.pngData(), source.pngData())
     }
 
     // MARK: - Alignment

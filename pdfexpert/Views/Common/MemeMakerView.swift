@@ -317,6 +317,7 @@ private struct MemeStylePanel: View {
                     self.section(String(localized: "Size")) { self.size }
                     self.section(String(localized: "Alignment")) { self.alignment }
                     self.section(String(localized: "Color")) { self.colours }
+                    self.capitals
                 }
                 .padding(DS.Spacing.md)
                 .readableColumn()
@@ -332,7 +333,7 @@ private struct MemeStylePanel: View {
                 }
             }
         }
-        .presentationDetents([.height(380), .large])
+        .presentationDetents([.height(460), .large])
         .presentationDragIndicator(.visible)
     }
 
@@ -403,41 +404,52 @@ private struct MemeStylePanel: View {
         .labelsHidden()
     }
 
+    /// Nine swatches and the system wheel, wrapped rather than scrolled: a row
+    /// that scrolls sideways hides half its colours behind an edge, and the
+    /// whole point of offering nine is that they can be compared at a glance.
     private var colours: some View {
-        HStack(spacing: DS.Spacing.xs) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: DS.Size.tapTarget), spacing: DS.Spacing.xxs)],
+                  alignment: .leading,
+                  spacing: DS.Spacing.xxs) {
             ForEach(MemeTextColor.allCases) { color in
+                let isSelected = color.matches(self.viewModel.color)
                 Button {
-                    self.viewModel.color = color
+                    self.viewModel.color = color.swatch
                 } label: {
                     Circle()
                         .fill(color.swatch)
                         .frame(width: 30, height: 30)
                         .overlay {
-                            Circle().strokeBorder(color == self.viewModel.color
-                                                  ? ColorPalette.accent : ColorPalette.separator,
-                                                  lineWidth: color == self.viewModel.color ? 3 : 1)
+                            Circle().strokeBorder(isSelected ? ColorPalette.accent : ColorPalette.separator,
+                                                  lineWidth: isSelected ? 3 : 1)
                         }
                         .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(color.title))
-                .accessibilityAddTraits(color == self.viewModel.color ? [.isButton, .isSelected] : .isButton)
+                .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
             }
 
-            Button {
-                self.viewModel.isUppercased.toggle()
-            } label: {
-                Text(verbatim: "AA")
-                    .font(.system(size: 15, weight: .black))
-                    .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
-            }
-            .buttonStyle(.glass)
-            .tint(self.viewModel.isUppercased ? ColorPalette.accent : ColorPalette.textSecondary)
-            .accessibilityLabel(Text("All capitals"))
-            .accessibilityAddTraits(self.viewModel.isUppercased ? [.isButton, .isSelected] : .isButton)
-
-            Spacer(minLength: 0)
+            // The wheel, last: the presets are the quick answer and this is the
+            // one for a colour nobody thought to put on the strip. It writes
+            // into the same place they do, so a colour picked here is a colour
+            // the outline is measured against like any other.
+            ColorPicker(String(localized: "Color"),
+                        selection: self.$viewModel.color,
+                        supportsOpacity: false)
+                .labelsHidden()
+                .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
         }
+    }
+
+    /// Its own row rather than an "AA" button at the end of the colours: it is
+    /// not a colour, and a switch says what it does without being learned.
+    private var capitals: some View {
+        Toggle(isOn: self.$viewModel.isUppercased) {
+            Text("All capitals")
+                .font(forCategory: .body1)
+        }
+        .tint(ColorPalette.accent)
     }
 }
 

@@ -255,6 +255,35 @@ enum ImageCanvasUtility {
         var face: CaptionFace = .impact
     }
 
+    /// The outline for a fill: black under a light colour, white under a dark
+    /// one.
+    ///
+    /// It used to be a property on the three presets — white and yellow took
+    /// black, black took white — which stopped working the moment the panel
+    /// grew a colour wheel and a caption could be any colour at all. So it is
+    /// measured instead: the outline exists because half the photographs in the
+    /// world are the same tone as the words on them, and it only does its job
+    /// while it is the opposite of the fill.
+    ///
+    /// Perceived brightness, not the plain average: the eye reads green as far
+    /// brighter than blue at the same number, and an average would put a white
+    /// outline under a green caption where it is worth nothing.
+    static func outline(for fill: UIColor) -> UIColor {
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        var white: CGFloat = 0
+        let brightness: CGFloat
+        if fill.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            brightness = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+        } else if fill.getWhite(&white, alpha: &alpha) {
+            brightness = white
+        } else {
+            // Nothing readable came back — a pattern colour, say. Black is the
+            // outline the format was born with.
+            return .black
+        }
+        return brightness > 0.5 ? .black : .white
+    }
+
     /// The share of the width a block may use before it wraps. The same number is
     /// used by the editor's live text, so a line that wraps on screen wraps in the
     /// file at the same word.
