@@ -456,6 +456,33 @@ enum ToolCatalog {
         return actions
     }
 
+    /// What an empty archive offers. Not the whole `create` family and not the
+    /// quick-action strip either: this is the first screen a new install lands
+    /// on, and it has exactly one job — answer "how do I get a document in
+    /// here?" — so it is ordered by what people actually pick rather than by
+    /// what reads best in a catalog.
+    ///
+    /// The order is the month to 2026-09-11, counted in users who chose each
+    /// action: image to PDF 446, a blank document 321, importing a PDF 152,
+    /// scanning 115, Word 83. Web page to PDF is last on 15 and is here as the
+    /// sixth tile rather than a seventh row.
+    ///
+    /// Scanning sits fourth despite having a tab of its own: that tab is where
+    /// people who already know they want it go, and this grid is for the ones
+    /// who do not know yet.
+    static var starterActions: [HomeAction] {
+        [.imageToPdf, .createPdf, .importPdf, .scan, .wordToPdf, .webToPdf]
+    }
+
+    /// `starterActions` as tools, skipping anything the catalog is not offering
+    /// right now — the online ones come and go with the service.
+    static var starterTools: [PdfTool] {
+        let catalog = Self.allTools
+        return Self.starterActions.compactMap { action in
+            catalog.first { $0.action == action }
+        }
+    }
+
     /// The device's own language, not the storefront and not the region: someone
     /// reading their phone in English is the audience this is aimed at, wherever
     /// they happen to be.

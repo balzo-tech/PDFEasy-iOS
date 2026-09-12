@@ -95,6 +95,14 @@ struct FilesView: View {
     /// bar would be a second copy of the same controls.
     private var showsFilterBar: Bool { self.selection == nil }
 
+    /// The archive itself holds nothing — not "the filters match nothing" and
+    /// not "the search found nothing". Only then does the starter grid take over
+    /// the screen.
+    private var isArchiveEmpty: Bool {
+        guard case .data(let items) = self.viewModel.asyncItems.status else { return false }
+        return items.isEmpty
+    }
+
     var body: some View {
         ZStack {
             ColorPalette.background.ignoresSafeArea()
@@ -103,7 +111,14 @@ struct FilesView: View {
                 AnimationType.dots.view.background(.black.opacity(0.25))
             }
         }
-        .searchable(text: self.$viewModel.searchText, prompt: Text("Search PDFs"))
+        // A search field over an archive with nothing in it asks the user to
+        // look for something that cannot be there, and it does so in the most
+        // valuable strip of the first screen they ever see. The identity change
+        // when the first document lands is harmless: the whole content is being
+        // swapped at that moment anyway.
+        .searchableWhen(!self.isArchiveEmpty,
+                        text: self.$viewModel.searchText,
+                        prompt: Text("Search PDFs"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 self.viewOptionsMenu
@@ -121,7 +136,13 @@ struct FilesView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            self.newDocumentButton
+            // While the starter grid is on screen it already offers the same
+            // four actions, in tiles the size of a thumb: a glass capsule
+            // floating over them would be a second copy of the menu, covering
+            // the tiles it duplicates.
+            if !self.isArchiveEmpty {
+                self.newDocumentButton
+            }
         }
         // Dropping a file here imports it, the same as picking it from the
         // "New" menu — on an iPad running two apps side by side that is the
@@ -203,7 +224,7 @@ struct FilesView: View {
             } else if self.viewModel.filter.isFiltering {
                 self.noMatchesView
             } else {
-                self.emptyView
+                FilesStarterView(onShowImportGuide: { self.importTutorialShow = true })
             }
         } else {
             ScrollView {
@@ -349,23 +370,6 @@ struct FilesView: View {
 
     // MARK: - States
 
-    private var emptyView: some View {
-        ContentUnavailableView {
-            Label("You haven’t converted any files yet", systemImage: "tray")
-        } description: {
-            Text("Scan a document, turn photos into a PDF, or import a file to get started.")
-        } actions: {
-            PrimaryActionButton(title: String(localized: "Scan"), systemImage: "doc.viewfinder") {
-                self.mainCoordinator.runTool(.scan)
-            }
-            .frame(maxWidth: 260)
-            Button("Convert from any file") {
-                self.importTutorialShow = true
-            }
-            .font(forCategory: .linkText)
-        }
-    }
-
     private var noMatchesView: some View {
         ContentUnavailableView {
             Label("Nothing filed here yet", systemImage: "folder")
@@ -389,6 +393,22 @@ struct FilesView: View {
                 self.viewModel.refresh()
             }
             .frame(maxWidth: 220)
+        }
+    }
+}
+
+fileprivate extension View {
+
+    /// `searchable` has no "off" value, so the choice has to be made one level
+    /// up. Both branches are the same view with the same state — only the search
+    /// field appears or does not.
+    @ViewBuilder func searchableWhen(_ condition: Bool,
+                                     text: Binding<String>,
+                                     prompt: Text) -> some View {
+        if condition {
+            self.searchable(text: text, prompt: prompt)
+        } else {
+            self
         }
     }
 }

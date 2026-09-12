@@ -380,6 +380,7 @@
 		C809F1EAF86E61149EB90C20 /* BackgroundRemovalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7ADB6BD313763F1C07268 /* BackgroundRemovalUtility.swift */; };
 		C8C3DAFBE8B6E6A5433D8102 /* MemeTemplateCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D1352D35DEC36927AF95 /* MemeTemplateCatalog.swift */; };
 		CA4D0A36A0B9134A9B17290C /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CBC6496C308494982DBF43 /* FilesView.swift */; };
+		917B9DB0BD78E09059050EA5 /* FilesStarterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8C291915E2B40E6CB20031 /* FilesStarterView.swift */; };
 		CB61C3B77576397A3C053FE5 /* MemeCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD963372AF5615EBF59B789 /* MemeCanvasView.swift */; };
 		CB9E4A0D18C0678C5E9F0F02 /* PdfExtractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEC26104F59A1229C145C29 /* PdfExtractView.swift */; };
 		CD81BEFD471AD97FD6526894 /* PdfExtractViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D42FBB6AF209B41EBD76049 /* PdfExtractViewModel.swift */; };
@@ -517,6 +518,7 @@
 		3F0BD25A18C74E9AB6512D07 /* RemoteConfigStartupTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteConfigStartupTests.swift; sourceTree = "<group>"; };
 		3F9B9BF13B20A579E20B3AA3 /* PdfConvertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfConvertViewModel.swift; sourceTree = "<group>"; };
 		42CBC6496C308494982DBF43 /* FilesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
+		AF8C291915E2B40E6CB20031 /* FilesStarterView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesStarterView.swift; sourceTree = "<group>"; };
 		42DBD8755216D9D4FB53A30D /* PdfWebImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfWebImportView.swift; sourceTree = "<group>"; };
 		4384D65DC8EC49A89C7979E2 /* PdfTitleUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfTitleUtility.swift; sourceTree = "<group>"; };
 		43C83EFDC7E71F6B1337FEEC /* ScanFilterPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScanFilterPickerView.swift; sourceTree = "<group>"; };
@@ -1826,6 +1828,7 @@
 			children = (
 				3A5B05C3170D6CAE7D56A7BF /* DocumentTileView.swift */,
 				42CBC6496C308494982DBF43 /* FilesView.swift */,
+				AF8C291915E2B40E6CB20031 /* FilesStarterView.swift */,
 				5A3BAA028F5A791EAA31A3B1 /* DocumentActions.swift */,
 				4832EA7558B1F031C3ECBCE4 /* DocumentDetailView.swift */,
 			);
@@ -2555,6 +2558,7 @@
 				F844F1753C60D4BD27E9B6C3 /* ToolsView.swift in Sources */,
 				2473648B07EC4B7DCCB0D1FE /* DocumentTileView.swift in Sources */,
 				CA4D0A36A0B9134A9B17290C /* FilesView.swift in Sources */,
+				917B9DB0BD78E09059050EA5 /* FilesStarterView.swift in Sources */,
 				53CD16D3BF28FC2D7F6CA417 /* GlobalSearchView.swift in Sources */,
 				BB5C576A879C815D4E3C43CF /* PdfToolEntity.swift in Sources */,
 				DC9C51B16B8E108268878FA5 /* OpenPdfToolIntent.swift in Sources */,
