@@ -50,19 +50,31 @@ struct SubscriptionPaywallView: View {
                 self.onComplete()
             }
         }
+        // The buttons say what they do. "Yes" and "No" answered a title that
+        // reads as "are you leaving?" and a message that asks "do you want the
+        // trial?", which are opposite questions: a customer pressing Yes to
+        // leave got a payment sheet instead. The measurement is unambiguous —
+        // 50% of the people who saw this paywall on 13 September started a
+        // checkout, and 89% the next day, against 11% before it existed. Nobody
+        // meant to buy at that rate.
         .alert("If you leave, you lose every PRO benefit",
                isPresented: self.$confirmExit) {
-            Button("Yes") {
+            Button("Start free trial") {
                 self.viewModel.onExit(.accepted)
-                self.viewModel.startFreeTrial()
+                // Not from inside this closure. The alert is still coming off
+                // screen while it runs, and asking for a purchase underneath a
+                // dismissal is the dropped presentation in
+                // `swiftui-presentation-traps`.
+                DispatchQueue.main.async { self.viewModel.startFreeTrial() }
             }
-                .keyboardShortcut(.defaultAction)
-            Button("No", role: .cancel) {
+            Button("Leave", role: .cancel) {
                 self.viewModel.onExit(.declined)
                 self.onComplete()
             }
         } message: {
-            Text("No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI. Do you want to start your free trial?")
+            // No closing question: it was the half of the prompt that pointed the
+            // opposite way from the title, and the buttons now carry it.
+            Text("No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI.")
         }
     }
 

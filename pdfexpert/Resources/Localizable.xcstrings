@@ -3407,6 +3407,46 @@
         }
       }
     },
+    "Leave" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlassen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitter"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esci"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sluiten"
+          }
+        }
+      }
+    },
     "Location and camera details are removed from the compressed copies. The originals are left untouched." : {
       "localizations" : {
         "de" : {
@@ -3563,6 +3603,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voor chat"
+          }
+        }
+      }
+    },
+    "No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine unbegrenzten Bearbeitungen, keine Unterschriften, keine Umwandlung in Word, Excel oder PowerPoint, kein Scannen, kein Passwortschutz, keine KI."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin edición sin límites, sin firmas, sin conversiones a Word, Excel o PowerPoint, sin escáner, sin protección con contraseña, sin IA."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas de modifications sans limites, pas de signatures, pas de conversions en Word, Excel ou PowerPoint, pas de numérisation, pas de protection par mot de passe, pas d'IA."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niente modifiche senza limiti, niente firme, niente conversioni in Word, Excel o PowerPoint, niente scansioni, niente protezione con password, niente AI."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen onbeperkt bewerken, geen handtekeningen, geen conversies naar Word, Excel of PowerPoint, geen scannen, geen wachtwoordbeveiliging, geen AI."
           }
         }
       }
@@ -3925,6 +4005,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klein"
+          }
+        }
+      }
+    },
+    "Start free trial" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostenlos testen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start free trial"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empezar la prueba gratuita"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer l’essai gratuit"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inizia la prova gratuita"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start gratis proefperiode"
           }
         }
       }
