@@ -1,5 +1,5 @@
 """Minimal App Store Connect client for this repo's key (fastlane/.env)."""
-import json, os, time, urllib.request, urllib.parse, urllib.error
+import json, os, ssl, time, urllib.request, urllib.parse, urllib.error
 import jwt
 
 ROOT = "/Users/giuslape/Development/Balzo/PdfPro/PDFEasy-iOS"
@@ -29,6 +29,13 @@ def token():
 
 BASE = "https://api.appstoreconnect.apple.com/v1/"
 
+# Apple's endpoint drops connections mid-handshake often enough to matter: a
+# seventeen-locale text push makes seventeen calls in a row, and one dropped
+# socket used to end the run halfway through — some locales written, some not.
+# The API errors themselves are not retried, only the transport.
+ATTEMPTS = 4
+
+
 def call(path, method="GET", body=None, params=None):
     # A full URL passes through: a couple of endpoints (availability, and every
     # "next page" link) live on /v2 or come back already spelt out.
@@ -36,17 +43,24 @@ def call(path, method="GET", body=None, params=None):
     if params:
         url += "?" + urllib.parse.urlencode(params, doseq=True)
     data = json.dumps(body).encode() if body is not None else None
-    request = urllib.request.Request(url, data=data, method=method)
-    request.add_header("Authorization", "Bearer " + token())
-    if data:
-        request.add_header("Content-Type", "application/json")
-    try:
-        with urllib.request.urlopen(request) as response:
-            raw = response.read()
-            return json.loads(raw) if raw else {}
-    except urllib.error.HTTPError as error:
-        detail = error.read().decode()
-        raise SystemExit(f"{error.code} {method} {url}\n{detail}")
+    for attempt in range(1, ATTEMPTS + 1):
+        request = urllib.request.Request(url, data=data, method=method)
+        # A fresh token on every attempt: minting one is cheap, and a token
+        # made twenty minutes ago is not worth retrying with.
+        request.add_header("Authorization", "Bearer " + token())
+        if data:
+            request.add_header("Content-Type", "application/json")
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                raw = response.read()
+                return json.loads(raw) if raw else {}
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode()
+            raise SystemExit(f"{error.code} {method} {url}\n{detail}")
+        except (urllib.error.URLError, ssl.SSLError, TimeoutError, ConnectionError) as error:
+            if attempt == ATTEMPTS:
+                raise SystemExit(f"{method} {url}\nrete: {error}")
+            time.sleep(2 ** attempt)
 
 
 def upload_part(operation, chunk):
