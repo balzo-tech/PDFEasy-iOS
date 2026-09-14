@@ -71,6 +71,9 @@ enum HomeAction: Hashable, Identifiable {
     /// A caption over a picture. The only tool here whose output is meant to
     /// leave the phone rather than be filed on it.
     case memeMaker
+    /// Make photographs smaller, several at a time. The only tool in this family
+    /// that is free, and the only one that works on a whole selection at once.
+    case compressImage
 
     case importPdf
     /// Opening a `.p7m` on purpose, rather than stumbling on one. The import path
@@ -124,6 +127,7 @@ enum HomeAction: Hashable, Identifiable {
         case .passportPhoto: return .image
         case .editImage: return .image
         case .memeMaker: return .image
+        case .compressImage: return .image
         case .importPdf: return .pdf
         case .openSignedDocument: return .signedContainer
         case .readPdf: return .pdf
@@ -171,6 +175,7 @@ enum HomeAction: Hashable, Identifiable {
         case .passportPhoto: return nil
         case .editImage: return nil
         case .memeMaker: return nil
+        case .compressImage: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -218,6 +223,7 @@ enum HomeAction: Hashable, Identifiable {
         case .passportPhoto: return nil
         case .editImage: return nil
         case .memeMaker: return nil
+        case .compressImage: return nil
         case .importPdf: return nil
         case .openSignedDocument: return nil
         case .readPdf: return nil
@@ -351,6 +357,8 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
 
     lazy var memeMakerViewModel: MemeMakerViewModel = Container.shared.memeMakerViewModel()
 
+    lazy var imageCompressViewModel: ImageCompressViewModel = Container.shared.imageCompressViewModel()
+
     /// The outline the camera draws over its preview, when the tool that opened
     /// it has something to say about where the subject goes.
     var cameraGuide: CameraFrameGuide? {
@@ -396,7 +404,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         case .appExtension:
             assertionFailure("App Extension behaviour is not supposed to be triggered by a CTA")
             break
-        case .imageToPdf, .removeBackground, .passportPhoto, .editImage:
+        case .imageToPdf, .removeBackground, .passportPhoto, .editImage, .compressImage:
             // The same three doors as Image to PDF — camera, library, file. What
             // happens to the picture afterwards is decided in `handleImportedImage`.
             self.importOptionGroup = .image
@@ -579,6 +587,11 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
             switch self.action {
             case .imageToPdf, .removeBackground, .passportPhoto, .editImage:
                 self.convertFileImageByURL(fileImageUrl: fileUrl)
+            case .compressImage:
+                // Not through `convertFileImageByURL`: decoding the file into a
+                // `UIImage` and re-encoding it would throw away the original
+                // bytes, which are the very thing this tool measures against.
+                self.compressImages(fileUrls: [fileUrl])
             case .wordToPdf, .excelToPdf, .powerpointToPdf, .sign, .formFill, .addText, .createPdf:
                 self.convertFileByUrl(fileUrl: fileUrl)
             case .importPdf, .removePassword, .addPassword, .ocr, .rotatePdf, .pageNumbers, .watermark,
@@ -710,6 +723,36 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     /// A photo the library cannot hand over does not take the others down with it —
     /// the document is only refused if *nothing* could be read.
     private func loadImages(from selections: [PhotosPickerItem]) {
+        // The one tool here that wants the whole selection. It also wants the
+        // bytes rather than a decoded picture: what it reports is how much
+        // smaller the file got, and a `UIImage` no longer knows how big the file
+        // was. They are written to disk as they arrive, so fifty photographs are
+        // never in memory together.
+        if self.action == .compressImage {
+            let progress = Progress(totalUnitCount: Int64(selections.count))
+            self.asyncImageLoading = AsyncOperation(status: .loading(progress))
+            Task { @MainActor in
+                var sources: [ImageCompressSource] = []
+                for (index, selection) in selections.enumerated() {
+                    guard selections == self.imageSelections else { return }
+                    if let data = try? await selection.loadTransferable(type: Data.self),
+                       let source = ImageCompressViewModel.makeSource(data: data,
+                                                                      filename: nil,
+                                                                      index: index) {
+                        sources.append(source)
+                    }
+                    progress.completedUnitCount += 1
+                }
+                guard !sources.isEmpty else {
+                    self.asyncImageLoading = AsyncOperation(status: .empty)
+                    return
+                }
+                self.asyncImageLoading = AsyncOperation(status: .data(()))
+                self.startImageCompression(sources: sources)
+            }
+            return
+        }
+
         // Removing a background is a one-photo job: the picker allows several
         // because Image to PDF wants them, and taking the first is kinder than
         // silently cutting out fifty subjects nobody asked for.
@@ -796,6 +839,16 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
             }, onFinished: { [weak self] in
                 self?.trackFullActionCompleted()
             })
+        case .compressImage:
+            // A photograph straight from the camera has no file behind it yet, so
+            // one is written at full quality: the tool needs something to measure
+            // its own result against.
+            guard let data = uiImage.jpegData(compressionQuality: 1.0),
+                  let source = ImageCompressViewModel.makeSource(data: data, filename: filename, index: 0) else {
+                self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
+                return
+            }
+            self.startImageCompression(sources: [source])
         case .passportPhoto:
             // Not through `convertUiImageToPdf`: an identity photo is only
             // correct at one physical size, and that path makes the page as big
@@ -809,6 +862,30 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         default:
             self.convertUiImageToPdf(uiImage: uiImage, filename: filename)
         }
+    }
+
+    /// Files chosen in the browser rather than in the photo library.
+    @MainActor
+    private func compressImages(fileUrls: [URL]) {
+        let sources = fileUrls.enumerated().compactMap { index, url -> ImageCompressSource? in
+            guard let data = try? Data(contentsOf: url) else { return nil }
+            return ImageCompressViewModel.makeSource(data: data, filename: url.filename, index: index)
+        }
+        guard !sources.isEmpty else {
+            self.asyncImageLoading = AsyncOperation(status: .error(.unknownError))
+            return
+        }
+        self.startImageCompression(sources: sources)
+    }
+
+    @MainActor
+    private func startImageCompression(sources: [ImageCompressSource]) {
+        self.imageCompressViewModel.run(sources: sources, onFinished: { [weak self] in
+            // Like the other two tools that end in a picture: the job is done when
+            // something left the screen, not when a document was made — this one
+            // never makes a document at all.
+            self?.trackFullActionCompleted()
+        })
     }
 
     private func convertUiImageToPdf(uiImage: UIImage, filename: String?) {

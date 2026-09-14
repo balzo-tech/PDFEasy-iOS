@@ -54,6 +54,34 @@ enum PhotoLibrarySaver {
         }
     }
 
+    /// Saves files that are **already** encoded, by handing Photos the file itself.
+    ///
+    /// Not `save(images:)` with the pictures loaded back in: that re-encodes at a
+    /// fixed quality, which for "Compress images" would throw away the exact thing
+    /// the tool was asked to produce and replace it with a number of its own. It
+    /// also never decodes the pictures, so saving fifty of them costs no memory.
+    static func save(imageFiles urls: [URL]) async throws {
+        guard !urls.isEmpty else { return }
+        guard await self.requestAddOnlyAuthorization() else {
+            throw PhotoLibrarySaveError.notAuthorized
+        }
+
+        do {
+            try await PHPhotoLibrary.shared().performChanges {
+                for url in urls {
+                    let request = PHAssetCreationRequest.forAsset()
+                    let options = PHAssetResourceCreationOptions()
+                    // Photos keeps the file where it is and copies it itself; the
+                    // working directory is emptied when the tool closes.
+                    options.shouldMoveFile = false
+                    request.addResource(with: .photo, fileURL: url, options: options)
+                }
+            }
+        } catch {
+            throw PhotoLibrarySaveError.failed
+        }
+    }
+
     private static func requestAddOnlyAuthorization() async -> Bool {
         let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
         switch status {

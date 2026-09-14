@@ -371,6 +371,17 @@ enum ToolCatalog {
                     keywords: ["meme", String(localized: "meme maker"),
                                String(localized: "meme generator"), String(localized: "caption"),
                                String(localized: "funny"), String(localized: "text on photo")]),
+            // Free, and the only tool in this family that takes the whole
+            // selection at once. The keywords are the words people use for the
+            // problem — a photo too heavy to send — rather than for the tool.
+            PdfTool(action: .compressImage,
+                    title: String(localized: "Compress images"),
+                    subtitle: String(localized: "Make photos smaller, several at once"),
+                    systemImage: "arrow.down.right.and.arrow.up.left",
+                    category: .image,
+                    keywords: [String(localized: "compress image"), String(localized: "resize image"),
+                               String(localized: "reduce photo size"), String(localized: "shrink"),
+                               String(localized: "optimize"), "jpg", "kb", "mb"]),
 
             // MARK: Read
             PdfTool(action: .readPdf,

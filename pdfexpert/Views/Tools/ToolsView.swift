@@ -113,6 +113,7 @@ struct ToolsView: View {
         .showPassportPhotoView(viewModel: self.viewModel.passportPhotoViewModel)
         .showImageEditorView(viewModel: self.viewModel.imageEditorViewModel)
         .showMemeMakerView(viewModel: self.viewModel.memeMakerViewModel)
+        .showImageCompressView(viewModel: self.viewModel.imageCompressViewModel)
         .alertCameraPermission(isPresented: self.$viewModel.cameraPermissionDeniedShow)
         .addPasswordView(show: self.$viewModel.addPasswordShow,
                          addPasswordCallback: { self.viewModel.setPassword($0) })
@@ -359,6 +360,18 @@ struct ToolsView: View {
                 }
             case "image-edit":
                 self.viewModel.imageEditorViewModel.run(image: Self.debugPhotograph(), onCreatePdf: nil)
+            case "image-compress":
+                // Three drawn photographs of different sizes, standing in for a
+                // selection: this tool's screen is a list, and a list of one says
+                // nothing about how it looks.
+                let sources = (0..<3).compactMap { index -> ImageCompressSource? in
+                    let photo = Self.debugPhotograph(scale: 1.0 - CGFloat(index) * 0.25)
+                    guard let data = photo.jpegData(compressionQuality: 1.0) else { return nil }
+                    return ImageCompressViewModel.makeSource(data: data,
+                                                             filename: "Photo \(index + 1)",
+                                                             index: index)
+                }
+                self.viewModel.imageCompressViewModel.run(sources: sources)
             case "editor":
                 // The editor on a document nobody has named yet: `Pdf(data:)` keeps
                 // the generated filename, which is what the name suggestion needs.
@@ -371,14 +384,17 @@ struct ToolsView: View {
         }
     }
 
-    /// A stand-in photograph for `debugRunTool background`.
-    private static func debugPhotograph() -> UIImage {
-        let size = CGSize(width: 900, height: 1200)
+    /// A stand-in photograph for `debugRunTool background`. `scale` is for
+    /// `image-compress`, whose list is worth looking at with pictures of
+    /// different sizes in it.
+    private static func debugPhotograph(scale: CGFloat = 1.0) -> UIImage {
+        let size = CGSize(width: 900 * scale, height: 1200 * scale)
         return UIGraphicsImageRenderer(size: size).image { context in
             UIColor.systemTeal.setFill()
             context.fill(CGRect(origin: .zero, size: size))
             UIColor.systemOrange.setFill()
-            context.cgContext.fillEllipse(in: CGRect(x: 180, y: 180, width: 540, height: 840))
+            context.cgContext.fillEllipse(in: CGRect(x: 180 * scale, y: 180 * scale,
+                                                     width: 540 * scale, height: 840 * scale))
         }
     }
     #endif

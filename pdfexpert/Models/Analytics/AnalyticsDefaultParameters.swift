@@ -50,6 +50,8 @@ enum AnalyticsEventCustomParameters: String {
     case checkoutFailureReason = "checkout_failure_reason"
     case checkoutErrorCode = "checkout_error_code"
     case imageCropShape = "image_crop_shape"
+    case imageCompressSize = "image_compress_size"
+    case imageCompressCount = "image_compress_count"
     case memeLineCount = "meme_line_count"
     case memeTemplate = "meme_template"
 }
@@ -150,6 +152,7 @@ extension AnalyticsScreen {
         case .backgroundRemoval: return "BackgroundRemoval"
         case .passportPhoto: return "PassportPhoto"
         case .imageEditor: return "ImageEditor"
+        case .imageCompress: return "ImageCompress"
         case .memeMaker: return "MemeMaker"
         case .scan: return "Scan"
         case .scanReview: return "ScanReview"
@@ -254,6 +257,8 @@ extension AnalyticsEvent {
         case .passportPhotoCompleted: return "passport_photo_completed"
         case .imageEditStarted: return "image_edit_started"
         case .imageEditCompleted: return "image_edit_completed"
+        case .imageCompressStarted: return "image_compress_started"
+        case .imageCompressCompleted: return "image_compress_completed"
         case .memeStarted: return "meme_started"
         case .memeCompleted: return "meme_completed"
         case .folderSaved: return "folder_saved"
@@ -418,6 +423,18 @@ extension AnalyticsEvent {
         case .imageEditCompleted(let shape, let destination):
             return [AnalyticsEventCustomParameters.imageCropShape.rawValue: shape,
                     AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination]
+        case .imageCompressStarted(let imageCount):
+            return [AnalyticsEventCustomParameters.imageCompressCount.rawValue: imageCount]
+        case .imageCompressCompleted(let quality, let size, let destination, let savedPercent, let imageCount):
+            // `compression_preset` and `compression_saved_percent` are the
+            // parameters "Compress PDF" already sends: the same question about
+            // the same trade, asked of a picture instead of a page, belongs in
+            // the same series rather than in a second one spelled differently.
+            return [AnalyticsEventCustomParameters.compressionPreset.rawValue: quality.trackingParameterValue,
+                    AnalyticsEventCustomParameters.imageCompressSize.rawValue: size.trackingParameterValue,
+                    AnalyticsEventCustomParameters.backgroundDestination.rawValue: destination,
+                    AnalyticsEventCustomParameters.compressionSavedPercent.rawValue: savedPercent,
+                    AnalyticsEventCustomParameters.imageCompressCount.rawValue: imageCount]
         case .memeStarted: return nil
         case .memeCompleted(let lines, let template, let destination):
             return [AnalyticsEventCustomParameters.memeLineCount.rawValue: lines,
@@ -611,6 +628,7 @@ fileprivate extension HomeAction {
         case .passportPhoto: return "passport_photo"
         case .editImage: return "edit_image"
         case .memeMaker: return "meme_maker"
+        case .compressImage: return "compress_image"
         case .readPdf: return "read_pdf"
         case .removePassword: return "remove_password"
         case .addPassword: return "add_password"

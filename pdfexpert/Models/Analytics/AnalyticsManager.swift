@@ -61,6 +61,7 @@ enum AnalyticsScreen {
     case backgroundRemoval
     case passportPhoto
     case imageEditor
+    case imageCompress
     case memeMaker
     case scan
     case scanReview
@@ -196,6 +197,17 @@ enum AnalyticsEvent {
     /// `shape` is which frame people actually crop for; `destination` is
     /// whether the edit ends in a file or in a shrug.
     case imageEditCompleted(shape: String, destination: String)
+    /// How many photographs were handed to the tool at once — the number that
+    /// says whether this is a one-picture job, as it was built assuming it is not.
+    case imageCompressStarted(imageCount: Int)
+    /// `quality` and `size` are the two dials, and which of them people move is
+    /// the question the tool is there to answer; `savedPercent` says whether the
+    /// answer was worth having, `destination` whether it ended in a file.
+    case imageCompressCompleted(quality: ImageCompressionQuality,
+                                size: ImageCompressionSize,
+                                destination: String,
+                                savedPercent: Int,
+                                imageCount: Int)
     case memeStarted
     /// The tool exists to be shared out of, so `destination` is the whole
     /// experiment: a meme saved to the camera roll is not the same result as
