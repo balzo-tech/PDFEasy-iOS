@@ -21,6 +21,7 @@ struct ToolsView: View {
     @InjectedObject(\.mainCoordinator) private var mainCoordinator
 
     @State private var searchText: String = ""
+    @State private var importTutorialShow: Bool = false
 
     private static let gridColumns: [GridItem] = [
         GridItem(.adaptive(minimum: 158, maximum: 260), spacing: DS.Spacing.sm)
@@ -78,6 +79,18 @@ struct ToolsView: View {
         }, onCancelled: {
             self.viewModel.onFilePickerCancelled()
         })
+        // The browser closed on a Word, Excel or PowerPoint conversion without a
+        // document: the likeliest reason is that the document is not in Files at
+        // all, and the way in that does work already has a guide.
+        .alert("Can't find the document?", isPresented: self.$viewModel.emptyPickerHintShow) {
+            Button("Show me how") { self.importTutorialShow = true }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("A document that arrived by mail or by chat is not in Files. Open it where it is, tap Share, and choose \(K.Misc.AppTitle).")
+        }
+        .fullScreenCover(isPresented: self.$importTutorialShow) {
+            ImportTutorialView()
+        }
         // Camera / scanner modal flows, driven by a single activeSheet state machine.
         .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in
             switch sheet {

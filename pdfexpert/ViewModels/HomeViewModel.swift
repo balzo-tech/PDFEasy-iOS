@@ -86,6 +86,17 @@ enum HomeAction: Hashable, Identifiable {
     case removePassword
     case addPassword
     
+    /// True for the conversions that can only start from a document the user
+    /// already has somewhere. Those are the ones where an empty file browser is
+    /// the likely ending: a `.docx` arrives by mail or by chat and stays there,
+    /// and Files never sees it.
+    var startsFromStoredDocument: Bool {
+        switch self {
+        case .wordToPdf, .excelToPdf, .powerpointToPdf: return true
+        default: return false
+        }
+    }
+
     var importFileOption: ImportFileOption? {
         switch self {
         case .appExtension: return nil
@@ -261,6 +272,11 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     
     @Published var importOptionGroup: ImportOptionGroup? = nil
     @Published var importFileOption: ImportFileOption? = nil
+    /// Offered when the file browser closes with nothing chosen on a conversion
+    /// that has to start from a document someone already has. The way in that
+    /// works is the share sheet — 82 documents a month arrive that way, without
+    /// ever touching this screen — and nothing was telling anybody.
+    @Published var emptyPickerHintShow: Bool = false
     
     @Published var imagePickerShow: Bool = false
     /// Every photo chosen, in the order they were chosen: "Image to PDF" makes one
@@ -522,6 +538,9 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         self.importFileOption = nil
         guard let action = self.action else { return }
         self.analyticsManager.track(event: .filePickerCancelled(homeAction: action))
+        if action.startsFromStoredDocument {
+            self.emptyPickerHintShow = true
+        }
     }
 
     @MainActor

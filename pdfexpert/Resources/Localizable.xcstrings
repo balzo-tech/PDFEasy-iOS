@@ -1883,6 +1883,46 @@
         }
       }
     },
+    "A document that arrived by mail or by chat is not in Files. Open it where it is, tap Share, and choose %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Dokument aus einer E-Mail oder einem Chat liegt nicht in «Dateien». Öffne es dort, wo es ist, tippe auf «Teilen» und wähle %@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A document that arrived by mail or by chat is not in Files. Open it where it is, tap Share, and choose %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un documento que llegó por correo o por chat no está en Archivos. Ábrelo donde está, toca Compartir y elige %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un document reçu par e-mail ou par message ne se trouve pas dans Fichiers. Ouvrez-le là où il est, touchez Partager, puis choisissez %@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un documento arrivato per email o in chat non è nell'app File. Aprilo dov'è, tocca Condividi e scegli %@."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een document uit een e-mail of chat staat niet in Bestanden. Open het waar het is, tik op Deel en kies %@."
+          }
+        }
+      }
+    },
     "A neutral light grey is what the German fotomuster shows; a strong white can wash the outline out." : {
       "localizations" : {
         "de" : {
@@ -3085,6 +3125,46 @@
         }
       }
     },
+    "Can't find the document?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokument nicht gefunden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't find the document?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿No encuentras el documento?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous ne trouvez pas le document ?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non trovi il documento?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kun je het document niet vinden?"
+          }
+        }
+      }
+    },
     "Choose a picture" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3162,6 +3242,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kies minstens één afbeelding om te comprimeren."
+          }
+        }
+      }
+    },
+    "Show me how" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeig mir wie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show me how"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muéstrame cómo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Montrez-moi comment"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrami come"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laat me zien hoe"
           }
         }
       }
