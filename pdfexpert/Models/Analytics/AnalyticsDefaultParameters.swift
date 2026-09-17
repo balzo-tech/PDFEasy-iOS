@@ -187,6 +187,7 @@ extension AnalyticsEvent {
         case .filePickerCancelled: return "file_picker_cancelled"
         case .documentIndexed: return "document_indexed"
         case .documentAutoNamed: return "document_auto_named"
+        case .imageUprighted: return "image_uprighted"
         case .pageAdded: return "page_added"
         case .pageRemoved: return "page_remove"
         case .pageDuplicated: return "page_duplicated"
@@ -302,7 +303,7 @@ extension AnalyticsEvent {
             return parameters
         case .filePickerCancelled(let homeAction):
             return [AnalyticsEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
-        case .documentIndexed, .documentAutoNamed: return nil
+        case .documentIndexed, .documentAutoNamed, .imageUprighted: return nil
         case .homeFullActionCompleted(let homeAction, let importOption, let fileExtension):
             var parameters = [AnalyticsEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
             if let fileExtension = fileExtension {

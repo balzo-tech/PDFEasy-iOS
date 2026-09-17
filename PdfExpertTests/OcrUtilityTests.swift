@@ -209,3 +209,147 @@ final class OcrUtilityTests: XCTestCase {
         return PDFDocument(data: data) ?? PDFDocument()
     }
 }
+
+/// The index behind the archive's search: what the app can read out of a
+/// document it just made, and what it decides to call it.
+final class ArchiveIndexerTests: XCTestCase {
+
+    private func makeScannedPdf(text: String) -> PDFDocument {
+        let size = CGSize(width: 1000, height: 1400)
+        let image = UIGraphicsImageRenderer(size: size).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            (text as NSString).draw(
+                in: CGRect(x: 80, y: 600, width: 840, height: 240),
+                withAttributes: [
+                    .font: UIFont.boldSystemFont(ofSize: 110),
+                    .foregroundColor: UIColor.black
+                ]
+            )
+        }
+        let bounds = CGRect(origin: .zero, size: size)
+        let data = UIGraphicsPDFRenderer(bounds: bounds).pdfData { context in
+            context.beginPage()
+            image.draw(in: bounds)
+        }
+        return PDFDocument(data: data) ?? PDFDocument()
+    }
+
+    /// The case the whole thing exists for: a document built from a photograph,
+    /// which `PDFUtility.extractText` reads as empty.
+    func testRecognizedTextReadsAnImageOnlyDocument() {
+        let document = makeScannedPdf(text: "Invoice")
+        XCTAssertTrue(PDFUtility.extractText(from: document).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                      "fixture should be image-only")
+
+        let text = OcrUtility.recognizedText(from: document)
+        XCTAssertTrue(text.localizedCaseInsensitiveContains("Invoice"),
+                      "recognized text was: \(text)")
+    }
+
+    func testRecognizedTextStopsAtThePageLimit() {
+        let document = makeScannedPdf(text: "First")
+        if let second = makeScannedPdf(text: "Second").page(at: 0) {
+            document.insert(second, at: 1)
+        }
+        let text = OcrUtility.recognizedText(from: document, pageLimit: 1)
+        XCTAssertTrue(text.localizedCaseInsensitiveContains("First"))
+        XCTAssertFalse(text.localizedCaseInsensitiveContains("Second"))
+    }
+
+    // MARK: - Naming
+
+    func testSuggestsATitleForAGeneratedName() {
+        let name = ArchiveIndexer.suggestedFilename(from: "Rental agreement\n12/09/2026\nTotal 450",
+                                                    currentFilename: "File-09-17-2026")
+        XCTAssertEqual(name, "Rental agreement")
+    }
+
+    /// A document the user has named is called that on purpose.
+    func testLeavesAUserChosenNameAlone() {
+        XCTAssertNil(ArchiveIndexer.suggestedFilename(from: "Rental agreement",
+                                                      currentFilename: "Contratto casa"))
+    }
+
+    func testSkipsLinesThatAreMostlyNumbers() {
+        let name = ArchiveIndexer.suggestedFilename(from: "12/09/2026 – 450,00 €\nElectricity bill",
+                                                    currentFilename: "Scan 2026-09-17 14.49.26")
+        XCTAssertEqual(name, "Electricity bill")
+    }
+
+    /// A form shouting its heading becomes a title, not a shout.
+    func testCapitalizesAShoutedHeading() {
+        let name = ArchiveIndexer.suggestedFilename(from: "MEDICAL CERTIFICATE",
+                                                    currentFilename: "File-09-17-2026")
+        XCTAssertEqual(name, "Medical Certificate")
+    }
+
+    /// Short capitals are acronyms and are left as they are.
+    func testKeepsAShortAcronym() {
+        let name = ArchiveIndexer.suggestedFilename(from: "ISEE 2026",
+                                                    currentFilename: "File-09-17-2026")
+        XCTAssertEqual(name, "ISEE 2026")
+    }
+
+    func testDropsCharactersAFilenameCannotHold() {
+        let name = ArchiveIndexer.suggestedFilename(from: "Invoice 12/2026: final",
+                                                    currentFilename: "File-09-17-2026")
+        XCTAssertEqual(name, "Invoice 12 2026 final")
+    }
+
+    func testGivesUpWhenNothingReadsLikeATitle() {
+        XCTAssertNil(ArchiveIndexer.suggestedFilename(from: "12/09/2026\n450,00\n---",
+                                                      currentFilename: "File-09-17-2026"))
+    }
+}
+
+/// Turning a photographed page the right way up — the hand-work 208 people a
+/// month are doing instead.
+final class ImageOrientationUtilityTests: XCTestCase {
+
+    private func makePage(text: String, rotatedByQuarterTurns turns: Int) -> UIImage {
+        let size = CGSize(width: 1000, height: 1400)
+        let upright = UIGraphicsImageRenderer(size: size).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            (text as NSString).draw(
+                in: CGRect(x: 60, y: 500, width: 880, height: 400),
+                withAttributes: [
+                    .font: UIFont.boldSystemFont(ofSize: 90),
+                    .foregroundColor: UIColor.black
+                ]
+            )
+        }
+        guard turns % 4 != 0, let cgImage = upright.cgImage else { return upright }
+        let orientation: UIImage.Orientation = turns % 4 == 1 ? .right : (turns % 4 == 2 ? .down : .left)
+        return UIImage(cgImage: cgImage, scale: upright.scale, orientation: orientation)
+    }
+
+    func testTurnsASidewaysPageUpright() {
+        let sideways = makePage(text: "Rental agreement for the flat", rotatedByQuarterTurns: 1)
+        XCTAssertGreaterThan(sideways.size.width, sideways.size.height, "fixture should be landscape")
+
+        let corrected = ImageOrientationUtility.uprightedSynchronously(sideways)
+        XCTAssertGreaterThan(corrected.size.height, corrected.size.width,
+                             "a page of text should come back portrait")
+    }
+
+    func testLeavesAnUprightPageAlone() {
+        let upright = makePage(text: "Rental agreement for the flat", rotatedByQuarterTurns: 0)
+        let corrected = ImageOrientationUtility.uprightedSynchronously(upright)
+        XCTAssertTrue(corrected === upright, "an upright page must be handed back untouched")
+    }
+
+    /// A photograph with no writing in it is nobody's document: every turn reads
+    /// the same nothing, so none of them wins.
+    func testLeavesAPictureWithNoTextAlone() {
+        let picture = UIGraphicsImageRenderer(size: CGSize(width: 800, height: 600)).image { context in
+            UIColor.systemTeal.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 800, height: 600))
+            UIColor.systemOrange.setFill()
+            context.fill(CGRect(x: 200, y: 150, width: 400, height: 300))
+        }
+        let corrected = ImageOrientationUtility.uprightedSynchronously(picture)
+        XCTAssertTrue(corrected === picture, "a picture with no writing must be handed back untouched")
+    }
+}

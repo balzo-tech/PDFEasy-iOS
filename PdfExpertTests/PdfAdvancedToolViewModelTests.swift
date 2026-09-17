@@ -281,6 +281,7 @@ private final class RepositoryMock: Repository {
         self.savedPdfs.append(pdf)
         return pdf
     }
+    func applyIndex(searchableText: String, filename: String?, for pdf: Pdf) throws -> Pdf { pdf }
     func getDoPdfExist() throws -> Bool { false }
     func loadPdfs() throws -> [Pdf] { [] }
     func delete(pdf: Pdf) throws {}

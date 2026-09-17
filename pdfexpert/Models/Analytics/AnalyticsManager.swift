@@ -121,6 +121,8 @@ enum AnalyticsEvent {
     /// index is for finding things again, the name is for recognizing them.
     case documentIndexed
     case documentAutoNamed
+    /// A photograph that came in on its side and went into the document upright.
+    case imageUprighted
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
     case pageRemoved
     case pageDuplicated

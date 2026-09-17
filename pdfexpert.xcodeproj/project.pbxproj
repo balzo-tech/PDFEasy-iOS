@@ -379,6 +379,7 @@
 		C1C9ABACC0684A0BC47BC30D /* ArchiveFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55A583AE59555978FA3002 /* ArchiveFilter.swift */; };
 		C3A0D5E2F1834B2CA4E60102 /* OnboardingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A0D5E2F1834B2CA4E60101 /* OnboardingUITests.swift */; };
 		C3B0B01EC4E52311A5B765D3 /* OcrUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B741298CFD66C4AA2310F784 /* OcrUtility.swift */; };
+		76B22813839B49E29B3D5728 /* ImageOrientationUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B83841F92F461996E69E75 /* ImageOrientationUtility.swift */; };
 		A5269730DB5449528DAA6FF9 /* ArchiveIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2684EDBC1FE4F3799A94903 /* ArchiveIndexer.swift */; };
 		C443B890349E858D04682E9D /* PdfRedactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D6989FE8D5E01C705E98BF /* PdfRedactViewModel.swift */; };
 		C7CE88087170FECAB05C82D1 /* PdfEditToolbars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8E8C949219CEBCDA1E856F /* PdfEditToolbars.swift */; };
@@ -845,6 +846,7 @@
 		B6342025A7A979F2DFCD5421 /* PdfAdvancedToolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfAdvancedToolViewModel.swift; sourceTree = "<group>"; };
 		B69B1F3743727DA07A4DA8A4 /* PhotoLibrarySaver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoLibrarySaver.swift; sourceTree = "<group>"; };
 		B741298CFD66C4AA2310F784 /* OcrUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OcrUtility.swift; path = ../../pdfexpert/InternalUtils/OcrUtility.swift; sourceTree = "<group>"; };
+		45B83841F92F461996E69E75 /* ImageOrientationUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageOrientationUtility.swift; path = ../../pdfexpert/InternalUtils/ImageOrientationUtility.swift; sourceTree = "<group>"; };
 		F2684EDBC1FE4F3799A94903 /* ArchiveIndexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArchiveIndexer.swift; path = ../../pdfexpert/InternalUtils/ArchiveIndexer.swift; sourceTree = "<group>"; };
 		B7887A98265D88D87F8D58BC /* DesignSystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		B9174E633BB07ACAF38D957F /* CDFolder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CDFolder.swift; sourceTree = "<group>"; };
@@ -1740,6 +1742,7 @@
 				895C1BBF2A051261005EA190 /* SharedStorage.swift */,
 				89407EFF2AA8D54800169801 /* ImageCropper.swift */,
 				B741298CFD66C4AA2310F784 /* OcrUtility.swift */,
+				45B83841F92F461996E69E75 /* ImageOrientationUtility.swift */,
 				F2684EDBC1FE4F3799A94903 /* ArchiveIndexer.swift */,
 				0F76D922605F497582E22531 /* PdfOverlayUtility.swift */,
 				B3F0F52B481D297B421A74EC /* PdfCompressUtility.swift */,
@@ -2555,6 +2558,7 @@
 				E0F0A1B2C3D4E5F600000002 /* PdfExportUtility.swift in Sources */,
 				D4B1E6F3A2945C3DB5F70102 /* OnboardingIllustrationView.swift in Sources */,
 				C3B0B01EC4E52311A5B765D3 /* OcrUtility.swift in Sources */,
+				76B22813839B49E29B3D5728 /* ImageOrientationUtility.swift in Sources */,
 				A5269730DB5449528DAA6FF9 /* ArchiveIndexer.swift in Sources */,
 				6D4F1BA7DCC34BBBBE528796 /* PdfOverlayUtility.swift in Sources */,
 				7FB9F5502FC5B0DFE1173081 /* DocumentRenderUtility.swift in Sources */,

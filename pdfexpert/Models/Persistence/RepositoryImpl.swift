@@ -38,7 +38,7 @@ class RepositoryImpl: Repository {
         // carries no text layer: `CDPdf.update` indexes what PDFKit can extract,
         // which for those is nothing. Reading them is deferred to the indexer so
         // that saving stays as fast as it was.
-        self.archiveIndexer.indexIfNeeded(pdf: pdf)
+        self.archiveIndexer.indexIfNeeded(pdf: pdf, storingWith: self)
         return pdf
     }
 

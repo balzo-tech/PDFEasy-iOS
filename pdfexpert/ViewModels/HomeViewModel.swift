@@ -804,8 +804,9 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                 guard selections == self.imageSelections else { return }
                 do {
                     if let picked = try await selection.loadTransferable(type: PickedImage.self) {
+                        let upright = await self.uprightedIfDocument(picked.uiImage)
                         PDFUtility.appendImageToPdfDocument(pdfDocument: pdfDocument,
-                                                            uiImage: picked.uiImage)
+                                                            uiImage: upright)
                     }
                 } catch {
                     failure = error
@@ -876,8 +877,25 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                 self?.trackFullActionCompleted()
             })
         default:
-            self.convertUiImageToPdf(uiImage: uiImage, filename: filename)
+            // Deliberately not inside `convertUiImageToPdf`: the three cases
+            // above reach it too, and a cut-out, an edited picture and a meme
+            // are the user's own framing — nothing in them should be turned.
+            Task { @MainActor in
+                let upright = await self.uprightedIfDocument(uiImage)
+                self.convertUiImageToPdf(uiImage: upright, filename: filename)
+            }
         }
+    }
+
+    /// A photographed page, turned the right way up. Reports the turn so it can
+    /// be weighed against `page_rotated`, which is the hand-work this is meant
+    /// to remove.
+    private func uprightedIfDocument(_ image: UIImage) async -> UIImage {
+        let upright = await ImageOrientationUtility.uprighted(image)
+        if upright !== image {
+            self.analyticsManager.track(event: .imageUprighted)
+        }
+        return upright
     }
 
     /// Files chosen in the browser rather than in the photo library.

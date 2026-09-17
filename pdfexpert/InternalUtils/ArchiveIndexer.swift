@@ -40,7 +40,6 @@ class ArchiveIndexer {
     /// noise once a line of a scanned form ends up as a title.
     private static let illegalFilenameCharacters = CharacterSet(charactersIn: "/\\:*?\"<>|\n\r\t")
 
-    @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
 
     /// Documents being read right now. Every edit saves, and saving is what asks
@@ -50,7 +49,11 @@ class ArchiveIndexer {
     private let inFlightLock = NSLock()
 
     /// Fire and forget: the caller has just saved and must not wait for Vision.
-    func indexIfNeeded(pdf: Pdf) {
+    ///
+    /// The store arrives as an argument rather than through the container: the
+    /// repository is what asks for an index, and injecting it back here is a
+    /// dependency cycle Factory refuses to resolve.
+    func indexIfNeeded(pdf: Pdf, storingWith repository: Repository) {
         guard pdf.storeId != nil,
               (pdf.searchableText ?? "").isEmpty,
               pdf.pageCount > 0,
@@ -71,14 +74,14 @@ class ArchiveIndexer {
             guard !text.isEmpty else { return }
 
             let filename = Self.suggestedFilename(from: text, currentFilename: pdf.filename)
-            await self.store(text: text, filename: filename, for: pdf)
+            await self.store(text: text, filename: filename, for: pdf, in: repository)
         }
     }
 
     @MainActor
-    private func store(text: String, filename: String?, for pdf: Pdf) {
+    private func store(text: String, filename: String?, for pdf: Pdf, in repository: Repository) {
         do {
-            _ = try self.repository.applyIndex(searchableText: text, filename: filename, for: pdf)
+            _ = try repository.applyIndex(searchableText: text, filename: filename, for: pdf)
             self.analyticsManager.track(event: .documentIndexed)
             if filename != nil {
                 self.analyticsManager.track(event: .documentAutoNamed)
@@ -119,14 +122,18 @@ class ArchiveIndexer {
         guard Self.titleLengthRange.contains(cleaned.count) else { return nil }
         let letters = cleaned.filter { $0.isLetter }
         guard letters.count >= 3 else { return nil }
-        // Mostly digits is a date, an amount or an invoice number: true of the
-        // top line of a receipt, and a bad name for it.
-        guard Double(letters.count) / Double(cleaned.count) > 0.5 else { return nil }
+        // More digits than letters is a date, an amount or an invoice number —
+        // the top line of a receipt, and a bad name for it. Counted against the
+        // letters rather than against the whole line, so `ISEE 2026` survives
+        // and `12/09/2026 450,00` does not.
+
+        guard cleaned.filter({ $0.isNumber }).count <= letters.count else { return nil }
 
         // A form shouting its heading in capitals becomes a title, not a shout —
-        // but only when it is long enough that it cannot be an acronym.
+        // but only when there are more letters in it than any acronym has. `ISEE
+        // 2026` keeps its capitals, `MEDICAL CERTIFICATE` does not.
         let isAllCaps = cleaned == cleaned.uppercased()
-        return isAllCaps && cleaned.count > 8 ? cleaned.localizedCapitalized : cleaned
+        return isAllCaps && letters.count > 8 ? cleaned.localizedCapitalized : cleaned
     }
 
     // MARK: - In-flight bookkeeping

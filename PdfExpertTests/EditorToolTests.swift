@@ -464,6 +464,7 @@ private final class AnalyticsManagerMock: AnalyticsManager {
 
 private final class RepositoryMock: Repository {
     func savePdf(pdf: Pdf) throws -> Pdf { pdf }
+    func applyIndex(searchableText: String, filename: String?, for pdf: Pdf) throws -> Pdf { pdf }
     func getDoPdfExist() throws -> Bool { false }
     func loadPdfs() throws -> [Pdf] { [] }
     func delete(pdf: Pdf) throws {}
