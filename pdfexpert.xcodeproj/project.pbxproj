@@ -2873,7 +2873,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfProWidget/PdfProWidget.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfProWidget/PdfProWidget-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2943,7 +2943,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "ShareFileExtension/ShareFileExtension-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -2975,7 +2975,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "ShareFileExtension/ShareFileExtension-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3072,7 +3072,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3122,7 +3122,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "ShareFileExtension/ShareFileExtension-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3214,7 +3214,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3264,7 +3264,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareFileExtension/ShareFileExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "ShareFileExtension/ShareFileExtension-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3418,7 +3418,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3471,7 +3471,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3522,7 +3522,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfProWidget/PdfProWidget.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfProWidget/PdfProWidget-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3558,7 +3558,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfProWidget/PdfProWidget.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfProWidget/PdfProWidget-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3593,7 +3593,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfProWidget/PdfProWidget.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfProWidget/PdfProWidget-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
 				GENERATE_INFOPLIST_FILE = YES;
