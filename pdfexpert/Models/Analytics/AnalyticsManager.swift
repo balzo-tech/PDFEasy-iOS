@@ -110,6 +110,17 @@ enum AnalyticsEvent {
     case homeActionChosen(homeAction: HomeAction)
     case homeFullActionChosen(homeAction: HomeAction, importOption: ImportOption?)
     case homeFullActionCompleted(homeAction: HomeAction, importOption: ImportOption?, fileExtension: String?)
+    /// The two halves of the file browser, which until now reported neither: the
+    /// funnel marked the picker as *opened* and then went quiet, so a tool people
+    /// walked away from and a tool whose conversion failed looked identical.
+    case filePicked(homeAction: HomeAction, fileExtension: String?)
+    case filePickerCancelled(homeAction: HomeAction)
+    /// A document that had no text layer came back with one: it can be searched
+    /// for now, and if it was still called `File-09-17-2026` it is called
+    /// something else. Two events because they are two different bets — the
+    /// index is for finding things again, the name is for recognizing them.
+    case documentIndexed
+    case documentAutoNamed
     case pageAdded(pdfInputType: AnalyticsPdfInputType, fileExtension: String?)
     case pageRemoved
     case pageDuplicated

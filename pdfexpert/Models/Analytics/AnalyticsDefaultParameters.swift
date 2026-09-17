@@ -183,6 +183,10 @@ extension AnalyticsEvent {
         case .homeActionChosen: return "home_action_chosen"
         case .homeFullActionChosen: return "home_full_action_chosen"
         case .homeFullActionCompleted: return "home_full_action_completed"
+        case .filePicked: return "file_picked"
+        case .filePickerCancelled: return "file_picker_cancelled"
+        case .documentIndexed: return "document_indexed"
+        case .documentAutoNamed: return "document_auto_named"
         case .pageAdded: return "page_added"
         case .pageRemoved: return "page_remove"
         case .pageDuplicated: return "page_duplicated"
@@ -290,6 +294,15 @@ extension AnalyticsEvent {
                 parameters[AnalyticsEventCustomParameters.importOption.rawValue] = importOption.trackingParameterValue
             }
             return parameters
+        case .filePicked(let homeAction, let fileExtension):
+            var parameters = [AnalyticsEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
+            if let fileExtension = fileExtension {
+                parameters[AnalyticsEventCustomParameters.pdfInputTypeExtension.rawValue] = fileExtension
+            }
+            return parameters
+        case .filePickerCancelled(let homeAction):
+            return [AnalyticsEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
+        case .documentIndexed, .documentAutoNamed: return nil
         case .homeFullActionCompleted(let homeAction, let importOption, let fileExtension):
             var parameters = [AnalyticsEventCustomParameters.homeActionType.rawValue: homeAction.trackingParameterValue]
             if let fileExtension = fileExtension {

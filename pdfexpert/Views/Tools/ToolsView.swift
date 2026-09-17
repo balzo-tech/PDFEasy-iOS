@@ -75,6 +75,8 @@ struct ToolsView: View {
         }
         .filePicker(item: self.$viewModel.importFileOption, onPickedFiles: {
             self.viewModel.processPickedFileUrl($0.first)
+        }, onCancelled: {
+            self.viewModel.onFilePickerCancelled()
         })
         // Camera / scanner modal flows, driven by a single activeSheet state machine.
         .fullScreenCover(item: self.$viewModel.activeSheet) { sheet in

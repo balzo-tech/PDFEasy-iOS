@@ -512,6 +512,18 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         }
     }
     
+    /// The browser closed with nothing chosen. Worth its own event: `word_to_pdf`
+    /// opens this picker 112 times a month and finishes 18 documents, and until
+    /// now the funnel could not tell a conversion that failed from a folder that
+    /// had no document in it. A `.docx` usually lives in a mail, a chat or a
+    /// computer — not in Files — so this is the likely half.
+    @MainActor
+    func onFilePickerCancelled() {
+        self.importFileOption = nil
+        guard let action = self.action else { return }
+        self.analyticsManager.track(event: .filePickerCancelled(homeAction: action))
+    }
+
     @MainActor
     func openFilePicker(fileSource: FileSource) {
         self.trackFullActionChosen(importOption: .file(fileSource: fileSource))
@@ -580,7 +592,11 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
             self.asyncPdf = AsyncOperation(status: .error(.unknownError))
             return
         }
-        
+
+        if let action = self.action {
+            self.analyticsManager.track(event: .filePicked(homeAction: action,
+                                                           fileExtension: fileUrl.pathExtension))
+        }
         self.importFileOption = nil
         Task {
             try await Task.sleep(until: .now + .seconds(0.25), clock: .continuous)
@@ -1020,6 +1036,11 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     
     private func trackActionChosen(action: HomeAction) {
         self.analyticsManager.track(event: .homeActionChosen(homeAction: action))
+        // The shortcut strip learns from every door into a tool except this one,
+        // which is the door nine out of ten people use: the Tools screen, search
+        // and the Mac menu all registered their picks, the home tiles never did.
+        // So "most used" was built from everything but the main flow.
+        ToolUsageTracker.registerUse(of: action)
     }
     
     private func trackFullActionChosen(importOption: ImportOption?) {

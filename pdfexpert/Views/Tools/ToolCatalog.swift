@@ -443,26 +443,31 @@ enum ToolCatalog {
         self.allTools.first { $0.action == action }
     }
 
-    /// The shortcuts offered at the top of the Tools screen, before the user
-    /// has built any history of their own.
     /// What fills the shortcut strip before the app has learned what this user
     /// reaches for. `ToolUsageTracker` keeps five, so anything past the fifth
     /// place here is never seen.
     ///
-    /// The meme maker is in that list **only on an English device**. It is a bet
-    /// on a market, not a feature everyone asked for: the search data has a
-    /// buyable term for it in the United States and nowhere else
-    /// (`image-tools-demand`), and a tool nobody can find is a tool that measures
-    /// the drawer it was put in rather than itself — which is what happened to
-    /// the passport photo, at one user a month.
+    /// Ordered by what people choose, month to 2026-09-16, counted in users:
+    /// image to PDF 537, a blank document 370, importing a PDF 179, scanning 145,
+    /// Word 112. Everything that used to sit here instead — merge 40, sign 20,
+    /// read 17 — is an order of magnitude below the five that took its place; the
+    /// strip was advertising the tail of the catalog on the screen where the head
+    /// of it belongs.
     ///
-    /// Third place, not first: `scan` and `imageToPdf` are what people actually
-    /// open this app to do, and displacing them to advertise an experiment would
-    /// cost more than the experiment can return.
+    /// Scanning is fourth despite having a tab of its own, for the same reason it
+    /// is fourth in `starterActions`: that tab is where the people who already
+    /// know they want it go.
+    ///
+    /// The meme maker takes the fifth place **only on an English device**. It is a
+    /// bet on a market, not a feature everyone asked for: the search data has a
+    /// buyable term for it in the United States and nowhere else
+    /// (`image-tools-demand`). It displaces Word rather than any of the first
+    /// four, and Word is the one conversion that mostly fails to finish anyway
+    /// (18 completions out of 112 starts).
     static var defaultQuickActions: [HomeAction] {
-        var actions: [HomeAction] = [.scan, .imageToPdf, .merge, .sign, .readPdf]
+        var actions: [HomeAction] = [.imageToPdf, .createPdf, .importPdf, .scan, .wordToPdf]
         if Self.prefersEnglish {
-            actions.insert(.memeMaker, at: 2)
+            actions[4] = .memeMaker
         }
         return actions
     }
