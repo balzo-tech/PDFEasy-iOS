@@ -1,4 +1,6 @@
-ẢNH NHẸ HƠN — VÀ MIỄN PHÍ
-Chọn bao nhiêu ảnh tuỳ bạn và thu nhỏ tất cả cùng lúc. Quyết định ảnh cần giữ kích thước nào — để in, để gửi email, để nhắn tin — và giữ lại bao nhiêu chất lượng. Trước khi lưu, bạn thấy mỗi ảnh trước đây nặng bao nhiêu và bây giờ nặng bao nhiêu.
+TRANG THẲNG, TÊN THẬT VÀ TÌM KIẾM RA ĐÚNG THỨ
+Ảnh chụp bị nghiêng tự trở thành trang thẳng: khi chữ nằm ngang, ứng dụng nhận ra và xoay lại.
 
-Ảnh gốc không bị đụng đến, và bản sao không mang theo vị trí hay thông tin máy ảnh.
+Tài liệu ghép từ ảnh không còn tên "File-09-17-2026". Nó lấy tiêu đề viết trên đó, và bạn có thể tìm theo những chữ bên trong chứ không chỉ theo tên.
+
+Ở đầu mục Công cụ giờ là những công cụ bạn thực sự dùng.
