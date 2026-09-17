@@ -9,6 +9,11 @@ import Foundation
 
 protocol Repository {
     func savePdf(pdf: Pdf) throws -> Pdf
+    /// Writes what the indexer found: the recognized text and, when the document
+    /// is still carrying a generated name, a better one. Like the filing methods
+    /// below it deliberately does not rewrite the document blob — the file the
+    /// user made is not changed by having been read.
+    func applyIndex(searchableText: String, filename: String?, for pdf: Pdf) throws -> Pdf
     func getDoPdfExist() throws -> Bool
     func loadPdfs() throws -> [Pdf]
     func delete(pdf: Pdf) throws

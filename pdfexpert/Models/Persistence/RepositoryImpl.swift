@@ -23,6 +23,7 @@ class RepositoryImpl: Repository {
     
     @Injected(\.persistence) var persistence
     @Injected(\.analyticsManager) var analyticsMananger
+    @Injected(\.archiveIndexer) var archiveIndexer
     
     private var sharedManagedContext: NSManagedObjectContext {
         return self.persistence.container.viewContext
@@ -33,7 +34,31 @@ class RepositoryImpl: Repository {
     func savePdf(pdf: Pdf) throws -> Pdf {
         let pdf = try self.save(pdf)
         self.analyticsMananger.track(event: .pdfSaved)
+        // Six documents out of ten are built from photographs, and a photograph
+        // carries no text layer: `CDPdf.update` indexes what PDFKit can extract,
+        // which for those is nothing. Reading them is deferred to the indexer so
+        // that saving stays as fast as it was.
+        self.archiveIndexer.indexIfNeeded(pdf: pdf)
         return pdf
+    }
+
+    func applyIndex(searchableText: String, filename: String?, for pdf: Pdf) throws -> Pdf {
+        guard let storedPdf = pdf.getSavedCoreDataEntity(context: self.sharedManagedContext) else {
+            debugPrint(for: self, message: "Cannot index a pdf that isn't in the archive yet")
+            throw SaveError.unknownError
+        }
+        storedPdf.searchableText = searchableText
+        if let filename {
+            storedPdf.filename = filename
+        }
+        try self.saveChanges()
+
+        var updatedPdf = pdf
+        updatedPdf.updateSearchableText(searchableText)
+        if let filename {
+            updatedPdf.updateFilename(filename)
+        }
+        return updatedPdf
     }
     
     func getDoPdfExist() throws -> Bool {

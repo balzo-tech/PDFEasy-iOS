@@ -243,6 +243,38 @@ class OcrUtility {
         return (request.results as? [VNRecognizedTextObservation]) ?? []
     }
 
+    /// The text Vision can read out of a document, without touching the document
+    /// itself. `makeSearchable` exists to hand the *user* a searchable file and
+    /// rewrites every image-only page to do it; this one is for the archive's
+    /// index, which only ever needed the words.
+    ///
+    /// Pages that already carry extractable text are read straight from PDFKit —
+    /// rasterizing them to recognize what is already written there would be slow
+    /// and worse. `pageLimit` caps how far into a long document this goes: an
+    /// index is for finding a file again, and the first pages are what people
+    /// remember.
+    static func recognizedText(from document: PDFDocument,
+                               pageLimit: Int = 10,
+                               languages: [String] = defaultLanguages) -> String {
+        var lines: [String] = []
+        for pageIndex in 0..<min(document.pageCount, pageLimit) {
+            guard let page = document.page(at: pageIndex) else { continue }
+            if let pageText = page.string?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !pageText.isEmpty {
+                lines.append(pageText)
+                continue
+            }
+            guard let image = Self.renderPageImage(page: page, scale: Self.defaultRenderScale),
+                  let cgImage = image.cgImage else { continue }
+            let observations = Self.recognizeText(in: cgImage, languages: languages)
+            let pageLines = observations.compactMap { $0.topCandidates(1).first?.string }
+            if !pageLines.isEmpty {
+                lines.append(pageLines.joined(separator: "\n"))
+            }
+        }
+        return lines.joined(separator: "\n")
+    }
+
     // MARK: - Private helpers
 
     /// Renders a page to a bitmap, scaled by `scale` but capped so the long edge

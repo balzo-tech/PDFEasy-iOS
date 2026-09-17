@@ -124,6 +124,12 @@ struct Pdf {
         self.filename = filename
     }
 
+    /// Mirrors an index written by the repository, so a document already on
+    /// screen starts matching searches without being read back from the store.
+    mutating func updateSearchableText(_ searchableText: String?) {
+        self.searchableText = searchableText
+    }
+
     /// Mirrors a filing change already persisted by the repository, so callers
     /// get an up-to-date value without re-reading (and re-parsing) the document.
     mutating func updateFolder(_ folder: Folder?) {
