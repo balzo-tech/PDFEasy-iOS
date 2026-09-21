@@ -1,6 +1,4 @@
-TRANG THẲNG, TÊN THẬT VÀ TÌM KIẾM RA ĐÚNG THỨ
-Ảnh chụp bị nghiêng tự trở thành trang thẳng: khi chữ nằm ngang, ứng dụng nhận ra và xoay lại.
+ỨNG DỤNG MỞ LÊN, CHỈ VẬY THÔI
+Không còn bảng giá trước khi bạn làm bất cứ điều gì. Ứng dụng giờ mở thẳng vào tệp của bạn, và lời mời chờ đến khi một tài liệu hoàn tất.
 
-Tài liệu ghép từ ảnh không còn tên "File-09-17-2026". Nó lấy tiêu đề viết trên đó, và bạn có thể tìm theo những chữ bên trong chứ không chỉ theo tên.
-
-Ở đầu mục Công cụ giờ là những công cụ bạn thực sự dùng.
+Ở những nơi có, bạn có thể mở khóa mọi thứ trong 24 giờ chỉ với một lần thanh toán: không đăng ký, không gia hạn, không có gì phải hủy.
