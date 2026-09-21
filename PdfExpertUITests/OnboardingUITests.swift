@@ -48,7 +48,7 @@ final class OnboardingUITests: XCTestCase {
         self.app.launch()
     }
 
-    func testEveryPageIsReachableAndTheLastOneOpensThePaywall() {
+    func testEveryPageIsReachableAndTheLastOneOpensTheApp() {
         self.launch()
 
         // The welcome screen comes first; onboarding is pushed on top of it.
@@ -67,9 +67,15 @@ final class OnboardingUITests: XCTestCase {
             self.tap(self.app.buttons[isLast ? "Get started" : "Continue"].firstMatch)
         }
 
-        XCTAssertTrue(self.app.buttons["Try for free"].firstMatch.waitForExistence(timeout: 20),
-                      "the last page did not open the paywall")
-        self.attachScreenshot(named: "Onboarding-paywall")
+        // The tour ends in the app, not at a price list. Until 1.35 the last
+        // step handed the customer straight to the paywall — asking for money
+        // before the app had done anything for them. The offer now waits until
+        // a piece of work is finished; `PaywallPrompter` makes it.
+        XCTAssertTrue(self.app.buttons["Upgrade to PRO"].firstMatch.waitForExistence(timeout: 20),
+                      "the last page did not open the app")
+        XCTAssertFalse(self.app.buttons["Try for free"].firstMatch.exists,
+                       "the tour still ends at the paywall")
+        self.attachScreenshot(named: "Onboarding-ends-in-the-app")
     }
 
     /// Whether the page carrying this title is the one on screen — matched on a

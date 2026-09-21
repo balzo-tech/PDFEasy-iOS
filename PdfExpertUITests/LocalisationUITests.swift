@@ -158,7 +158,11 @@ final class LocalisationUITests: XCTestCase {
         self.launch(language: "it")
         // From the tools tab, a tool that needs a document asks where it comes from.
         self.tap(self.app.buttons["Strumenti"].firstMatch)
-        self.tap(self.app.buttons["Firma PDF"].firstMatch)
+        // Since 1.34 the catalogue opens on the five shortcuts people actually
+        // use, and the categories follow below: a tool that is not one of the
+        // five has to be scrolled to before it exists at all — the grids are
+        // lazy, and what is not built is not in the tree.
+        self.tap(self.scrollToTool(named: "Firma PDF"))
 
         guard self.app.staticTexts["Importa da"].waitForExistence(timeout: 15) else {
             print("UITREE-BEGIN\n\(self.app.debugDescription)\nUITREE-END")
@@ -170,6 +174,19 @@ final class LocalisationUITests: XCTestCase {
                           "manca la voce «\(option)»")
         }
         self.attach("importa-da-it")
+    }
+
+    /// Scrolls the tool catalogue until the tool is on screen, and hands it back.
+    private func scrollToTool(named name: String,
+                              file: StaticString = #filePath,
+                              line: UInt = #line) -> XCUIElement {
+        let tool = self.app.buttons[name].firstMatch
+        for _ in 0..<12 {
+            if tool.exists, tool.isHittable { return tool }
+            self.app.swipeUp()
+        }
+        XCTAssertTrue(tool.exists, "«\(name)» non si trova scorrendo il catalogo", file: file, line: line)
+        return tool
     }
 
     private func openSettings() {

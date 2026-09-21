@@ -59,18 +59,22 @@ final class PaywallEntryUITests: XCTestCase {
         // wall. The archive is behind it, untouched — nothing was started.
         //
         // The door asks one question on the way out — the free trial, offered a
-        // last time — and "No" is what actually opens it. That the question is
-        // asked at all is half of what this checks: a close button that walks
+        // last time — and "Leave" is what actually opens it. That the question
+        // is asked at all is half of what this checks: a close button that walks
         // straight out is the old behaviour.
+        //
+        // The buttons say what they do rather than answering yes or no: that
+        // was 1.33, after half the people who saw this prompt on 13 September
+        // started a checkout they had not asked for.
         let close = self.app.buttons["Close"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 10), "the paywall cannot be closed")
         self.tap(close)
 
-        let no = self.app.alerts.buttons["No"].firstMatch
-        XCTAssertTrue(no.waitForExistence(timeout: 10),
+        let leave = self.app.alerts.buttons["Leave"].firstMatch
+        XCTAssertTrue(leave.waitForExistence(timeout: 10),
                       "closing the paywall did not offer the free trial one last time")
         self.attachScreenshot(named: "Paywall-exit-prompt")
-        self.tap(no)
+        self.tap(leave)
         XCTAssertTrue(self.app.buttons["Upgrade to PRO"].firstMatch.waitForExistence(timeout: 10),
                       "closing the paywall did not come back to the header")
     }
