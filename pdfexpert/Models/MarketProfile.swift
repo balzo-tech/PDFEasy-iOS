@@ -60,6 +60,18 @@ final class MarketProfile: ObservableObject {
     }
 
     func refresh() async {
+        #if DEBUG
+        // The paywall a South African sees cannot be reached from a simulator
+        // signed in to anything else, and it is the one that has to be looked at
+        // and photographed for App Review:
+        //   xcrun simctl spawn booted defaults write <bundle-id> debugStorefront ZAF
+        // The same shape as `debugPremium` in `StoreImpl`, and gone from release
+        // builds for the same reason.
+        if let forced = UserDefaults.standard.string(forKey: "debugStorefront"), !forced.isEmpty {
+            self.storefront = forced
+            return
+        }
+        #endif
         self.storefront = await Storefront.current?.countryCode
     }
 

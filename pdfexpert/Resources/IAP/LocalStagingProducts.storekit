@@ -13,7 +13,7 @@
           "locale": "en_US"
         }
       ],
-      "productID": "eu.balzo.pdfexpert.daypass",
+      "productID": "eu.balzo.pdfexpert.staging.daypass",
       "referenceName": "24-Hour Pass",
       "type": "Consumable"
     }
