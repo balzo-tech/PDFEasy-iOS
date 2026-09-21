@@ -109,3 +109,7 @@ proxy/.secrets/
 # and .dSYM; this catches the exported bundle that `build_app` and the debug
 # capture leave in the working tree — 30 MB that look like source to git status.
 *.app/
+
+# Python bytecode from the store scripts in fastlane/scripts
+__pycache__/
+*.pyc
