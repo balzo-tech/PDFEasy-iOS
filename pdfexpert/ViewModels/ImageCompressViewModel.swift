@@ -123,6 +123,7 @@ class ImageCompressViewModel: ObservableObject {
     var canExport: Bool { !self.items.isEmpty && !self.isCompressing }
 
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.paywallPrompter) private var paywallPrompter
 
     private var onFinished: (() -> Void)? = nil
     /// True while Photos is copying the files in. Closing the screen throws the
@@ -342,6 +343,7 @@ class ImageCompressViewModel: ObservableObject {
             savedPercent: Int((self.savedFraction * 100).rounded()),
             imageCount: self.items.count
         ))
+        Task { @MainActor in self.paywallPrompter.actionCompleted() }
         self.onFinished?()
     }
 

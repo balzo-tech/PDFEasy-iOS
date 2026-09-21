@@ -23,6 +23,10 @@ struct MainSidebarView: View {
 
     @ObservedObject var archive: ArchiveViewModel
 
+    /// ChatPDF is left out of the list in the storefronts `MarketProfile` names,
+    /// the same as it is left out of the phone's tab bar.
+    @InjectedObject(\.marketProfile) private var marketProfile
+
     @Binding var tab: MainTab
     let onManageFiling: () -> Void
     let onShowSettings: () -> Void
@@ -62,7 +66,8 @@ struct MainSidebarView: View {
     var body: some View {
         List(selection: self.selection) {
             Section {
-                ForEach(MainTab.sidebarCases, id: \.self) { tab in
+                ForEach(MainTab.sidebarCases.filter { $0 != .chat || self.marketProfile.offersChat },
+                        id: \.self) { tab in
                     Label(tab.title, systemImage: tab.systemImage)
                         .tag(SidebarSelection.section(tab))
                 }

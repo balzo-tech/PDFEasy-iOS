@@ -22,6 +22,9 @@ struct RemoteConfigData {
     let memeTemplateIds: [String]
     /// Comma separated Apple Search Ads keyword ids.
     let memeKeywordIds: [String]
+    /// Comma separated ISO 3166-1 alpha-3 storefront codes ("ZAF") whose
+    /// paywall sells a week and a day instead of three subscriptions.
+    let dayPassStorefronts: [String]
 
     init(remoteConfig: RemoteConfig) {
         let proxyBaseUrlValue = remoteConfig.configValue(forKey: RemoteConfigKey.proxyBaseUrl.rawValue).stringValue ?? ""
@@ -43,6 +46,9 @@ struct RemoteConfigData {
             remoteConfig.configValue(forKey: RemoteConfigKey.memeTemplateIds.rawValue).stringValue)
         self.memeKeywordIds = RemoteConfigData.list(
             remoteConfig.configValue(forKey: RemoteConfigKey.memeKeywordIds.rawValue).stringValue)
+        self.dayPassStorefronts = RemoteConfigData.list(
+            remoteConfig.configValue(forKey: RemoteConfigKey.dayPassStorefronts.rawValue).stringValue)
+            .map { $0.uppercased() }
     }
 
     /// A comma separated remote value as a list, blanks dropped. Firebase has
@@ -63,7 +69,8 @@ struct RemoteConfigData {
          stirlingApiEnabled: Bool = K.Stirling.DefaultEnabled,
          memeTemplatesEnabled: Bool = K.Meme.DefaultTemplatesEnabled,
          memeTemplateIds: [String] = [],
-         memeKeywordIds: [String] = []) {
+         memeKeywordIds: [String] = [],
+         dayPassStorefronts: [String] = []) {
         self.proxyBaseUrl = proxyBaseUrl
         self.chatGptModel = chatGptModel
         self.chatGptMaxTokens = chatGptMaxTokens
@@ -72,6 +79,7 @@ struct RemoteConfigData {
         self.memeTemplatesEnabled = memeTemplatesEnabled
         self.memeTemplateIds = memeTemplateIds
         self.memeKeywordIds = memeKeywordIds
+        self.dayPassStorefronts = dayPassStorefronts
     }
 }
 
@@ -228,6 +236,7 @@ fileprivate enum RemoteConfigKey : String, CaseIterable {
     case memeTemplatesEnabled = "meme_templates_enabled"
     case memeTemplateIds = "meme_template_ids"
     case memeKeywordIds = "meme_keyword_ids"
+    case dayPassStorefronts = "day_pass_storefronts"
 }
 
 fileprivate extension RemoteConfig {
@@ -252,6 +261,8 @@ fileprivate extension RemoteConfig {
                 result[key.rawValue] = NSString(string: K.Meme.DefaultTemplateIds)
             case .memeKeywordIds:
                 result[key.rawValue] = NSString(string: K.Meme.DefaultKeywordIds)
+            case .dayPassStorefronts:
+                result[key.rawValue] = NSString(string: K.DayPass.DefaultStorefronts)
             }
         }
         return result

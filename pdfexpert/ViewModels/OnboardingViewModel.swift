@@ -96,20 +96,14 @@ public class OnboardingViewModel : ObservableObject {
         self.wantsMemeStep ? [self.memeStep] + self.baseItems : self.baseItems
     }
 
-    @Published var monetizationShow: Bool = false
     @Published var pageIndex = 0
     
-    @Injected(\.store) private var store
     @Injected(\.mainCoordinator) private var coordinator
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.analyticsManager) private var analyticsManager
     @Injected(\.appTrackingTransparancy) private var appTrackingTransparency
     @Injected(\.installKeywordService) private var installKeywordService
     @Injected(\.configService) private var configService
-    
-    func onMonetizationClose() {
-        self.coordinator.goToMain()
-    }
     
     func continueButtonPressed() {
         if self.pageIndex >= self.items.count - 1 {
@@ -129,24 +123,23 @@ public class OnboardingViewModel : ObservableObject {
     /// every activation of the app as it used to be. Two reasons: by this point
     /// the five steps have said what the app is for, and a system alert that
     /// arrives on a launch the user did not initiate reads as a demand from
-    /// nowhere. Awaiting it also keeps the two presentations in single file —
-    /// the alert is answered before the paywall is asked for, instead of both
-    /// being requested in the same runloop.
+    /// nowhere.
     ///
     /// It returns immediately when the status is already decided, which is every
     /// launch after the first, and on the simulator, where there is no
     /// advertising identifier to ask about.
+    ///
+    /// **The paywall no longer follows it.** Asking for money at the end of a
+    /// tour asks before the app has done anything: the first thing a new
+    /// customer met was a price list, and it was the price list 97% of installs
+    /// saw. The offer is now made by `PaywallPrompter`, once a piece of work is
+    /// actually finished.
     private func closeOnboarding() {
         self.cacheManager.onboardingShown = true
 
         Task { @MainActor in
             await self.appTrackingTransparency.requestPermissionIfNeeded()
-
-            if self.store.isPremium.value {
-                self.coordinator.goToMain()
-            } else {
-                self.monetizationShow = true
-            }
+            self.coordinator.goToMain()
         }
     }
 }

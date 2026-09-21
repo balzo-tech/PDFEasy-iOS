@@ -57,6 +57,7 @@ class PdfCompressViewModel: ObservableObject {
     var canSave: Bool { self.result?.isSmaller == true && !self.isCompressing }
 
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.paywallPrompter) private var paywallPrompter
     @Injected(\.repository) private var repository
 
     lazy var pdfImportViewModel: PdfImportViewModel = {
@@ -166,6 +167,7 @@ class PdfCompressViewModel: ObservableObject {
         }
         let savedPercent = Int((result.savedFraction * 100).rounded())
         self.analyticsManager.track(event: .compressionCompleted(preset: self.preset, savedPercent: savedPercent))
+        self.paywallPrompter.actionCompleted()
         self.editorShow = false
         self.successAlertShow = true
         self.cleanUp()

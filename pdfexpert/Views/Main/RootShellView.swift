@@ -24,6 +24,7 @@ struct RootShellView: View {
     @InjectedObject(\.archiveViewModel) private var archive
     @InjectedObject(\.homeViewModel) private var tools
     @InjectedObject(\.chatPdfSelectionViewModel) private var chat
+    @InjectedObject(\.paywallPrompter) private var paywallPrompter
 
     /// The Mac keeps the split whatever the window is doing. A narrow window
     /// there reports a compact size class exactly as an iPad in Slide Over does,
@@ -33,6 +34,17 @@ struct RootShellView: View {
     private var isRegularWidth: Bool { UIDevice.isMac || self.horizontalSizeClass == .regular }
 
     @State private var isDropTargeted: Bool = false
+
+    /// The offer is owed and the screen is free to carry it. Everything in this
+    /// list covers the shell, so asking while any of them is up would put the
+    /// paywall behind a full screen cover — or have SwiftUI drop it outright.
+    private var canPromptForSubscription: Bool {
+        self.paywallPrompter.isPending
+        && self.mainCoordinator.pdfEditFlowData == nil
+        && !self.mainCoordinator.scanFlowShow
+        && !self.mainCoordinator.settingsShow
+        && !self.mainCoordinator.subscriptionShow
+    }
 
     var body: some View {
         Group {
@@ -56,6 +68,18 @@ struct RootShellView: View {
             ScanFlowView(mode: .newDocument, onSaved: { _ in
                 self.archive.refresh()
             })
+        }
+        .onChange(of: self.canPromptForSubscription, initial: true) { _, canPrompt in
+            guard canPrompt else { return }
+            // A beat, and then the question asked again: this runs as a cover is
+            // coming off screen, and presenting underneath a dismissal is the
+            // dropped presentation of `swiftui-presentation-traps`.
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(400))
+                guard self.canPromptForSubscription else { return }
+                self.paywallPrompter.markPrompted()
+                self.mainCoordinator.subscriptionShow = true
+            }
         }
     }
 }

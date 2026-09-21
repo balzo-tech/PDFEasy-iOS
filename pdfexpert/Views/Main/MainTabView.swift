@@ -7,6 +7,10 @@
 //  pulls back as the user scrolls into content. `RootShellView` swaps it for
 //  `MainSplitView` as soon as the window is wide enough for columns.
 //
+//  ChatPDF is missing from the bar in the storefronts `MarketProfile` names:
+//  there the assistant is not sold, so offering a tab that leads to a paywall
+//  for something we have decided not to serve would be a door onto a wall.
+//
 
 import SwiftUI
 import Factory
@@ -18,6 +22,7 @@ struct MainTabView: View {
     @ObservedObject var chat: ChatPdfSelectionViewModel
 
     @InjectedObject(\.mainCoordinator) private var mainCoordinator
+    @InjectedObject(\.marketProfile) private var marketProfile
 
     var body: some View {
         TabView(selection: self.$mainCoordinator.tab) {
@@ -39,10 +44,12 @@ struct MainTabView: View {
                 self.rootView(for: .scanner)
             }
 
-            Tab(MainTab.chat.title,
-                systemImage: MainTab.chat.systemImage,
-                value: MainTab.chat) {
-                self.rootView(for: .chat)
+            if self.marketProfile.offersChat {
+                Tab(MainTab.chat.title,
+                    systemImage: MainTab.chat.systemImage,
+                    value: MainTab.chat) {
+                    self.rootView(for: .chat)
+                }
             }
 
             Tab(MainTab.search.title,
@@ -54,6 +61,19 @@ struct MainTabView: View {
         }
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(ColorPalette.accent)
+        // The storefront answers a moment after launch, and a deep link can ask
+        // for the chat at any time. Either way, a selected tab that is no longer
+        // in the bar shows an empty shell — so it gives way to the archive.
+        .onChange(of: self.marketProfile.offersChat, initial: true) { _, offersChat in
+            if !offersChat, self.mainCoordinator.tab == .chat {
+                self.mainCoordinator.tab = .files
+            }
+        }
+        .onChange(of: self.mainCoordinator.tab) { _, tab in
+            if tab == .chat, !self.marketProfile.offersChat {
+                self.mainCoordinator.tab = .files
+            }
+        }
     }
 
     @MainActor @ViewBuilder private func rootView(for tab: MainTab) -> some View {

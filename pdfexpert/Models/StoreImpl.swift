@@ -52,7 +52,14 @@ final class StoreImpl: Store {
 
     private let productIdToProduct: [String: Any]
 
+    /// What the subscription alone says. `isPremium` is this or a running day
+    /// pass, and the two arrive from different places at different times, so
+    /// neither may overwrite the other — see `publishIsPremium`.
+    private var isSubscribed: Bool = false
+    private var dayPassCancellable: AnyCancellable?
+
     @Injected(\.analyticsManager) var analyticsManager
+    @Injected(\.dayPass) var dayPass
 
     nonisolated init() {
         self.productIdToProduct = Self.loadProductIdToProductData().reduce([:], {
@@ -67,6 +74,14 @@ final class StoreImpl: Store {
 
         //Start a transaction listener as close to app launch as possible so you don't miss any transactions.
         self.updateListenerTask = self.listenForTransactions()
+
+        // A day pass ends while the app is open as often as not, and nothing
+        // else would notice: no receipt arrives, no status changes, the clock
+        // simply passes the hour. `DayPass` publishes that moment.
+        Task { @MainActor in
+            self.dayPassCancellable = self.dayPass.isActive
+                .sink { [weak self] _ in self?.publishIsPremium() }
+        }
 
         #if DEBUG
         // Sent here as well as honoured in subscriptionStatusToIsPremium, because
@@ -107,7 +122,7 @@ final class StoreImpl: Store {
                     let transaction = try self.checkVerified(result)
 
                     //Deliver products to the user.
-                    await self.updateCustomerProductStatus()
+                    await self.deliver(transaction: transaction)
 
                     //Always finish a transaction.
                     await transaction.finish()
@@ -124,7 +139,27 @@ final class StoreImpl: Store {
         //During store initialization, request products from the App Store.
         try await self.requestProducts()
 
+        // A pass may have run out while the app was in the background, where no
+        // timer fires. Reading the clock is the whole check.
+        self.dayPass.forgetIfExpired()
+        self.dayPass.refresh()
+
         //Deliver products that the customer purchases.
+        await self.updateCustomerProductStatus()
+    }
+
+    /// Hands over whatever was just bought, whichever kind it is.
+    ///
+    /// Subscriptions are read back from `Transaction.currentEntitlements`, which
+    /// is the source of truth for them and knows about other devices. A
+    /// consumable is never in there: this delivery is the only moment it is ever
+    /// seen, so the day it buys is written down before the transaction is
+    /// finished — after `finish()` it is gone for good.
+    @MainActor
+    private func deliver(transaction: Transaction) async {
+        if transaction.productType == .consumable {
+            self.dayPass.grant(transactionId: transaction.id, purchaseDate: transaction.purchaseDate)
+        }
         await self.updateCustomerProductStatus()
     }
 
@@ -203,7 +238,7 @@ final class StoreImpl: Store {
             }
 
             //The transaction is verified. Deliver content to the user.
-            await self.updateCustomerProductStatus()
+            await self.deliver(transaction: transaction)
 
             //Always finish a transaction.
             await transaction.finish()
@@ -249,6 +284,11 @@ final class StoreImpl: Store {
         case .nonConsumable:
             debugPrint("Unexpected non consumable found")
             return false
+        case .consumable:
+            // Not "has it ever been bought" — a consumable can be bought again.
+            // The question the app asks is whether the day it paid for is still
+            // running.
+            return self.dayPass.isActive.value
         case .autoRenewable:
             return self.purchasedSubscriptions.contains(product)
         default:
@@ -319,7 +359,23 @@ final class StoreImpl: Store {
         })
         self.subscriptionGroupStatus = (entitlingStatus ?? groupStatuses?.first)?.state
 
-        self.isPremium.send(Self.subscriptionStatusToIsPremium(subscriptionStatus: self.subscriptionGroupStatus))
+        self.isSubscribed = Self.subscriptionStatusToIsPremium(subscriptionStatus: self.subscriptionGroupStatus)
+        self.publishIsPremium()
+    }
+
+    /// PRO is a subscription that is running **or** a day pass that has not run
+    /// out. Assembled in one place because the two halves are answered by
+    /// different systems — Apple's renewal state and this app's own clock — and
+    /// whichever answers second must not wipe out the first.
+    @MainActor
+    private func publishIsPremium() {
+        #if DEBUG
+        if Self.isDebugPremiumForced {
+            self.isPremium.send(true)
+            return
+        }
+        #endif
+        self.isPremium.send(self.isSubscribed || self.dayPass.isActive.value)
     }
 
     nonisolated func getProductData(forProductId productId: String) -> Any? {

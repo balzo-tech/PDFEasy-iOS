@@ -1,7 +1,23 @@
 {
   "identifier": "4F24126A",
   "nonRenewingSubscriptions": [],
-  "products": [],
+  "products": [
+    {
+      "displayPrice": "2.49",
+      "familyShareable": false,
+      "internalID": "6814428128",
+      "localizations": [
+        {
+          "description": "Every PRO tool, unlocked for 24 hours.",
+          "displayName": "24-Hour Pass",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "eu.balzo.pdfexpert.daypass",
+      "referenceName": "24-Hour Pass",
+      "type": "Consumable"
+    }
+  ],
   "settings": {},
   "subscriptionGroups": [
     {

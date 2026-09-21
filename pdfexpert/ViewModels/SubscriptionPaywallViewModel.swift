@@ -15,6 +15,12 @@
 //  and `offered` picks the variant on sale. Since 1.30 only the yearly plan is
 //  sold in its trial variant; the weekly and monthly ones charge on the spot.
 //
+//  One set of storefronts sees something else entirely: a week or a day, both
+//  charged on the spot, and no year and no trial. Which ones is `day_pass_
+//  storefronts` in Firebase, and the reason is measured — in those markets the
+//  free trial is taken and never converts, while the only money that has ever
+//  arrived came from small amounts paid immediately. See `K.DayPass`.
+//
 
 import Foundation
 import StoreKit
@@ -71,6 +77,12 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
     }
 
     @Injected(\.store) private var store
+    @Injected(\.marketProfile) private var marketProfile
+
+    /// True on the paywall that sells a week and a day. The banner about the
+    /// yearly renewal has nothing to say there, and the view reads this rather
+    /// than guessing from the number of cards.
+    @Published private(set) var sellsDayPass: Bool = false
 
     @MainActor
     override func refresh() {
@@ -80,7 +92,13 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
         Task {
             do {
                 try await self.store.refreshAll()
-                let plans = self.productsToSubscriptionPlans(products: self.store.subscriptions)
+                // The storefront, not the locale and not the IP: it is the
+                // country whose App Store will take the money, which is the only
+                // one that decides what may be sold and at what price. Asked
+                // again here rather than trusted from launch, because it changes
+                // when the customer changes their Apple Account.
+                await self.marketProfile.refresh()
+                let plans = self.plans()
                 if plans.isEmpty {
                     self.asyncSubscriptionPlans = AsyncOperation(status: .error(.missingExpectedSubscriptionPlanError))
                 } else {
@@ -95,13 +113,58 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
         }
     }
 
-    private func productsToSubscriptionPlans(products: [Product]) -> [SubscriptionPaywallPlan] {
-        let offered = getOfferedSubscriptions(products: products, store: self.store)
+    /// The cards this storefront is shown.
+    ///
+    /// Everywhere else that is every plan `Products.plist` offers, shortest
+    /// first. In a day-pass storefront it is two: the pass, then the weekly
+    /// plan — a day and a week, both paid today.
+    ///
+    /// If the consumable has not loaded, the ordinary paywall is shown instead.
+    /// A screen offering one subscription and nothing to compare it with sells
+    /// less than the one we already have, and a product can fail to arrive for
+    /// reasons that have nothing to do with this decision — review state, a
+    /// dropped request, a territory it was never released in.
+    @MainActor
+    private func plans() -> [SubscriptionPaywallPlan] {
+        let offered = getOfferedSubscriptions(products: self.store.subscriptions, store: self.store)
             .sorted { ($0.subscription?.subscriptionPeriod.days ?? 0) < ($1.subscription?.subscriptionPeriod.days ?? 0) }
+
+        if self.marketProfile.sellsDayPass,
+           // One consumable exists, and it is the pass.
+           let pass = self.store.consumables.first,
+           let weekly = offered.first(where: { Self.isWeekly($0) }) {
+            self.sellsDayPass = true
+            return [Self.dayPassPlan(product: pass),
+                    weekly.getSubscriptionPaywallPlan(comparedTo: [])]
+        }
+
+        self.sellsDayPass = false
         return offered.map { $0.getSubscriptionPaywallPlan(comparedTo: offered) }
     }
 
-    /// The plan that saves the most, or the longest one when nothing stands out.
+    private static func isWeekly(_ product: Product) -> Bool {
+        guard let period = product.subscription?.subscriptionPeriod.normalized else { return false }
+        return period.unit == .week && period.value == 1
+    }
+
+    /// The pass's card. Nothing on it comes from `SubscriptionViewUtility`: a
+    /// consumable has no period, so there is no name to derive, no price to
+    /// restate per week and no renewal to describe — only what it costs and
+    /// what it buys.
+    private static func dayPassPlan(product: Product) -> SubscriptionPaywallPlan {
+        SubscriptionPaywallPlan(
+            product: product,
+            title: String(localized: "24-hour pass"),
+            trialDuration: nil,
+            priceText: product.displayPrice,
+            savingBadge: nil,
+            fullDescriptionText: String(localized: "\(product.displayPrice) once. Not a subscription: nothing renews."))
+    }
+
+    /// The plan that saves the most, or the longest one when nothing stands out
+    /// — which on the day-pass paywall is the week rather than the day, and is
+    /// meant to be: the pass is the way in for someone who will not subscribe,
+    /// not the offer to lead with.
     private static func defaultPlanIndex(forPlans plans: [SubscriptionPaywallPlan]) -> Int {
         if let index = plans.firstIndex(where: { $0.savingBadge != nil }) {
             return index

@@ -145,7 +145,9 @@ struct SubscriptionPaywallView: View {
                 .minimumScaleFactor(0.7)
                 .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Edit, sign, convert and protect your PDFs. No limits, on every device.")
+            Text(self.viewModel.sellsDayPass
+                 ? "Edit, sign, convert and protect your PDFs. Take a day or a week — you pay today, and it is done."
+                 : "Edit, sign, convert and protect your PDFs. No limits, on every device.")
                 .font(forCategory: .body2)
                 .foregroundStyle(ColorPalette.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -158,7 +160,14 @@ struct SubscriptionPaywallView: View {
     private var footer: some View {
         VStack(spacing: DS.Spacing.sm) {
             self.plans
-            SubscriptionRenewalNoticeView()
+            // The renewal banner answers the objection the yearly plan raises.
+            // Where nothing renews it would be answering a question nobody
+            // asked, so the pass explains itself instead.
+            if self.viewModel.sellsDayPass {
+                self.dayPassNotice
+            } else {
+                SubscriptionRenewalNoticeView()
+            }
             self.getDefaultButton(text: self.buttonTitle,
                                   onButtonPressed: { self.viewModel.subscribe() })
             Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
@@ -181,6 +190,35 @@ struct SubscriptionPaywallView: View {
                                              onTap: { self.viewModel.selectedPlanIndex = index })
                 }
             }
+        }
+    }
+
+    /// What the pass is, said once and plainly: it is the unusual half of this
+    /// paywall, and a customer who thinks they are starting a subscription asks
+    /// for the money back.
+    private var dayPassNotice: some View {
+        HStack(alignment: .center, spacing: DS.Spacing.sm) {
+            Image(systemName: "clock.badge.checkmark")
+                .font(.system(size: 18, weight: .semibold))
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(ColorPalette.premium)
+                .accessibilityHidden(true)
+            Text("The pass unlocks everything for 24 hours. No subscription, no renewal, nothing to cancel.")
+                .font(forCategory: .body3)
+                .fontWeight(.semibold)
+                .foregroundStyle(ColorPalette.textPrimary)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, DS.Spacing.md)
+        .padding(.vertical, DS.Spacing.sm)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(ColorPalette.premium.opacity(0.15),
+                    in: .rect(cornerRadius: DS.Radius.control, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: DS.Radius.control, style: .continuous)
+                .strokeBorder(ColorPalette.premium.opacity(0.45), lineWidth: 1)
         }
     }
 

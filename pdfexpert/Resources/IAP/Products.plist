@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>daypass</key>
+	<dict>
+		<key>name</key>
+		<string>day_pass</string>
+		<key>offered</key>
+		<true/>
+	</dict>
 	<key>monthly</key>
 	<dict>
 		<key>name</key>

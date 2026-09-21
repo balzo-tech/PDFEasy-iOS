@@ -4,12 +4,26 @@
 
   ],
   "products" : [
-
+    {
+      "displayPrice" : "2.49",
+      "familyShareable" : false,
+      "internalID" : "6814428128",
+      "localizations" : [
+        {
+          "description" : "Every PRO tool, unlocked for 24 hours.",
+          "displayName" : "24-Hour Pass",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "eu.balzo.pdfexpert.daypass",
+      "referenceName" : "24-Hour Pass",
+      "type" : "Consumable"
+    }
   ],
   "settings" : {
     "_applicationInternalID" : "1659625843",
     "_developerTeamID" : "G6RAKRKZPR",
-    "_lastSynchronizedDate" : 706463782.07062304
+    "_lastSynchronizedDate" : 706463782.070623
   },
   "subscriptionGroups" : [
     {

@@ -77,6 +77,46 @@
         }
       }
     },
+    "%@ once. Not a subscription: nothing renews." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einmalig %@. Kein Abo: Es verlängert sich nichts."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ once. Not a subscription: nothing renews."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ una sola vez. No es una suscripción: no se renueva nada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ une seule fois. Ce n’est pas un abonnement : rien ne se renouvelle."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ una volta sola. Non è un abbonamento: non si rinnova nulla."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eenmalig %@. Geen abonnement: er wordt niets verlengd."
+          }
+        }
+      }
+    },
     "%@ · already small · %@" : {
       "localizations" : {
         "de" : {
@@ -1680,6 +1720,46 @@
         }
       }
     },
+    "24-hour pass" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24-Stunden-Pass"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24-hour pass"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pase de 24 horas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pass 24 heures"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pass 24 ore"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24-uurspas"
+          }
+        }
+      }
+    },
     "3 × 4 document photo" : {
       "localizations" : {
         "de" : {
@@ -3243,6 +3323,46 @@
         }
       }
     },
+    "Edit, sign, convert and protect your PDFs. Take a day or a week — you pay today, and it is done." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten, unterschreiben, konvertieren und schützen Sie Ihre PDFs. Einen Tag oder eine Woche — Sie zahlen heute, und das war’s."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit, sign, convert and protect your PDFs. Take a day or a week — you pay today, and it is done."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edita, firma, convierte y protege tus PDF. Elige un día o una semana: pagas hoy y ya está."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifiez, signez, convertissez et protégez vos PDF. Un jour ou une semaine : vous payez aujourd’hui, et c’est tout."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifica, firma, converti e proteggi i tuoi PDF. Prendi un giorno o una settimana: paghi oggi e finisce lì."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewerk, onderteken, converteer en beveilig uw PDF’s. Een dag of een week — u betaalt vandaag en klaar."
+          }
+        }
+      }
+    },
     "Show me how" : {
       "localizations" : {
         "de" : {
@@ -3279,6 +3399,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Laat me zien hoe"
+          }
+        }
+      }
+    },
+    "The pass unlocks everything for 24 hours. No subscription, no renewal, nothing to cancel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Pass schaltet 24 Stunden lang alles frei. Kein Abo, keine Verlängerung, nichts zu kündigen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The pass unlocks everything for 24 hours. No subscription, no renewal, nothing to cancel."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El pase lo desbloquea todo durante 24 horas. Sin suscripción, sin renovación, nada que cancelar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le pass débloque tout pendant 24 heures. Sans abonnement, sans renouvellement, rien à résilier."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il pass sblocca tutto per 24 ore. Nessun abbonamento, nessun rinnovo, niente da disdire."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De pas ontgrendelt alles 24 uur lang. Geen abonnement, geen verlenging, niets op te zeggen."
           }
         }
       }

@@ -52,6 +52,7 @@ class OfficeImportCoordinator: ObservableObject {
     @Injected(\.store) private var store
     @Injected(\.cacheManager) private var cacheManager
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.paywallPrompter) private var paywallPrompter
 
     private let asyncPdf: Binding<AsyncOperation<Pdf, PdfError>>
     /// Held while the fallback alert / disclosure / paywall are up, so the conversion
@@ -198,6 +199,7 @@ class OfficeImportCoordinator: ObservableObject {
         pdf.updateFilename(filename)
         self.pendingFileUrl = nil
         self.analyticsManager.track(event: .officeConvertCompleted(engine: engine))
+        self.paywallPrompter.actionCompleted()
         self.asyncPdf.wrappedValue = .init(status: .data(pdf))
     }
 

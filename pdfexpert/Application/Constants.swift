@@ -194,6 +194,26 @@ struct K {
         static let DefaultKeywordIds = ""
     }
 
+    struct DayPass {
+        // The storefronts that are sold a week or a day instead of the three
+        // subscriptions. In these markets the yearly plan with its free trial
+        // has been measured selling nothing at all — 38 South African trials
+        // reached their end and one converted — while the only money that ever
+        // arrived came from small amounts charged on the spot. So the paywall
+        // offers exactly that, and nothing that is free today and billed later.
+        //
+        // Comma separated ISO 3166-1 alpha-3 codes, the spelling
+        // `Storefront.countryCode` uses. Empty puts every storefront back on
+        // the ordinary paywall, which is the way to call the experiment off
+        // without an app update.
+        static let DefaultStorefronts = "ZAF"
+
+        // What the pass buys. Apple sells no subscription shorter than a week,
+        // so a day is a consumable and this app is what decides when it runs
+        // out — see `DayPass`.
+        static let Duration: TimeInterval = 24 * 60 * 60
+    }
+
     struct Review {
         static let MinimumRateForNativePopup: Int = 5
         static let FeedbackMaxCharacters: Int = 100

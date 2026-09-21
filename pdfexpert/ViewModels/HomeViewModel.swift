@@ -327,6 +327,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
     
     @Injected(\.store) private var store
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.paywallPrompter) private var paywallPrompter
     @Injected(\.repository) private var repository
     @Injected(\.mainCoordinator) private var mainCoordinator
     @Injected(\.pdfShareCoordinator) var pdfShareCoordinator
@@ -1031,6 +1032,7 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         }
         
         self.analyticsManager.track(event: .homeFullActionCompleted(homeAction: .appExtension, importOption: nil, fileExtension: "pdf"))
+        Task { @MainActor in self.paywallPrompter.actionCompleted() }
         self.asyncPdf = AsyncOperation(status: .data(pdf))
     }
     
@@ -1093,6 +1095,11 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
                                                                         importOption: self.currentAnalyticsImportOption,
                                                                         fileExtension: self.currentAnalyticsFileExtension))
         }
+        // The job the customer came for is done. `PaywallPrompter` decides
+        // whether that is a moment to ask for the sale, and waits for a screen
+        // that is free to carry the question. Hopped onto the main actor because
+        // this is called from wherever a tool happened to finish.
+        Task { @MainActor in self.paywallPrompter.actionCompleted() }
         self.currentAnalyticsImportOption = nil
         self.currentAnalyticsFileExtension = nil
     }

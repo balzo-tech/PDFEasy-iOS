@@ -66,11 +66,6 @@ struct OnboardingView: View {
         .onAppear() {
             Container.shared.analyticsManager().track(event: .reportScreen(.onboarding))
         }
-        .fullScreenCover(isPresented: self.$viewModel.monetizationShow) {
-            self.getSubscriptionView(onComplete: {
-                self.viewModel.onMonetizationClose()
-            })
-        }
     }
 
     /// Title and sentence, replaced rather than crossfaded: the outgoing words

@@ -82,6 +82,7 @@ class DocumentScanViewModel: ObservableObject {
 
     @Injected(\.repository) private var repository
     @Injected(\.analyticsManager) private var analyticsManager
+    @Injected(\.paywallPrompter) private var paywallPrompter
     @Injected(\.mainCoordinator) private var mainCoordinator
 
     /// Rendered pages, keyed by `ScannedPage.renderKey`.
@@ -382,6 +383,7 @@ class DocumentScanViewModel: ObservableObject {
         let pages = self.pages
 
         self.analyticsManager.track(event: .scanSaved(format: .pdf, pageCount: pages.count))
+        Task { @MainActor in self.paywallPrompter.actionCompleted() }
         PdfScanUtility.convertScan(pages: pages,
                                    filename: name,
                                    asyncOperation: self.asyncSubject(\.asyncPdf))
@@ -416,6 +418,7 @@ class DocumentScanViewModel: ObservableObject {
             do {
                 try await PhotoLibrarySaver.save(images: images)
                 self.analyticsManager.track(event: .scanSaved(format: .image, pageCount: images.count))
+                Task { @MainActor in self.paywallPrompter.actionCompleted() }
                 self.asyncSave = .idle
                 self.savedToPhotosCount = images.count
                 self.saveSheetShow = false
