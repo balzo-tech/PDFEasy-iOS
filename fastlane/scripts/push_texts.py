@@ -48,11 +48,29 @@ def texts(locale: str) -> dict:
     return values
 
 
+def urls(localizations: list) -> dict:
+    """The two link fields a *new* locale cannot be created without.
+
+    App Store Connect answers a POST that leaves `supportUrl` out with
+    ENTITY_ERROR.ATTRIBUTE.REQUIRED — the locales already on the version were
+    never missing it, so it only shows up the first time a language is added.
+    Both are the same for every locale here, so they are read off a sibling
+    instead of being typed in again.
+    """
+    for row in localizations:
+        support = (row.get("attributes") or {}).get("supportUrl")
+        if support:
+            marketing = (row["attributes"] or {}).get("marketingUrl")
+            return {"supportUrl": support, **({"marketingUrl": marketing} if marketing else {})}
+    return {}
+
+
 def main(version_string: str) -> None:
     version_id = version(version_string)
-    existing = {d["attributes"]["locale"]: d["id"] for d in
-                asc.call(f"appStoreVersions/{version_id}/appStoreVersionLocalizations",
-                         params={"limit": 50})["data"]}
+    rows = asc.call(f"appStoreVersions/{version_id}/appStoreVersionLocalizations",
+                    params={"limit": 50})["data"]
+    existing = {d["attributes"]["locale"]: d["id"] for d in rows}
+    links = urls(rows)
     locales = sorted(d for d in os.listdir(ROOT) if os.path.isdir(os.path.join(ROOT, d)))
     for locale in locales:
         values = texts(locale)
@@ -66,7 +84,7 @@ def main(version_string: str) -> None:
             print(f"{locale:8} updated  ({', '.join(sorted(values))})")
         else:
             body = {"data": {"type": "appStoreVersionLocalizations",
-                             "attributes": {**values, "locale": locale},
+                             "attributes": {**links, **values, "locale": locale},
                              "relationships": {"appStoreVersion": {
                                  "data": {"type": "appStoreVersions", "id": version_id}}}}}
             asc.call("appStoreVersionLocalizations", method="POST", body=body)

@@ -1,0 +1,1 @@
+skanna,dokument,konvertera,slå ihop,komprimera,dela upp,signatur,lösenord,foto,ocr,passfoto
