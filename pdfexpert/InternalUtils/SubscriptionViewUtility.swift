@@ -99,6 +99,18 @@ extension Product {
         return formatter.string(from: components) ?? offer.period.localizedDuration
     }
 
+    /// The same trial counted in days — 3 for "3 days", 7 for a week. The exit
+    /// prompt interpolates a number rather than a phrase, and StoreKit
+    /// normalises "7 days" into "1 week", so the count has to be rebuilt from
+    /// the unit instead of read off `periodCount`.
+    var freeTrialDays: Int? {
+        guard let offer = self.subscription?.introductoryOffer, offer.paymentMode == .freeTrial else {
+            return nil
+        }
+        let days = offer.period.days * offer.periodCount
+        return days > 0 ? days : nil
+    }
+
     /// "9,99 €/week" — what the plan charges once any trial is over.
     var recurringPriceText: String {
         guard let period = self.subscription?.subscriptionPeriod else { return self.displayPrice }

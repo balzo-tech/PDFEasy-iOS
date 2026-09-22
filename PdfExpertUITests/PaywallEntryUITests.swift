@@ -59,22 +59,23 @@ final class PaywallEntryUITests: XCTestCase {
         // wall. The archive is behind it, untouched — nothing was started.
         //
         // The door asks one question on the way out — the free trial, offered a
-        // last time — and "Leave" is what actually opens it. That the question
-        // is asked at all is half of what this checks: a close button that walks
+        // last time — and "No" is what actually opens it. That the question is
+        // asked at all is half of what this checks: a close button that walks
         // straight out is the old behaviour.
         //
-        // The buttons say what they do rather than answering yes or no: that
-        // was 1.33, after half the people who saw this prompt on 13 September
-        // started a checkout they had not asked for.
+        // Title, message and buttons are Radiolive's exit offer, taken over
+        // word for word: the question is in the message, and Yes and No answer
+        // that one rather than the title.
         let close = self.app.buttons["Close"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 10), "the paywall cannot be closed")
         self.tap(close)
 
-        let leave = self.app.alerts.buttons["Leave"].firstMatch
-        XCTAssertTrue(leave.waitForExistence(timeout: 10),
+        let prompt = self.app.alerts["Really?"].firstMatch
+        XCTAssertTrue(prompt.waitForExistence(timeout: 10),
                       "closing the paywall did not offer the free trial one last time")
+        XCTAssertTrue(prompt.buttons["Yes"].exists, "the exit offer cannot be accepted")
         self.attachScreenshot(named: "Paywall-exit-prompt")
-        self.tap(leave)
+        self.tap(prompt.buttons["No"].firstMatch)
         XCTAssertTrue(self.app.buttons["Upgrade to PRO"].firstMatch.waitForExistence(timeout: 10),
                       "closing the paywall did not come back to the header")
     }

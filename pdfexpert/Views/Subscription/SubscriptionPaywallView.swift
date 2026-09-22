@@ -50,16 +50,14 @@ struct SubscriptionPaywallView: View {
                 self.onComplete()
             }
         }
-        // The buttons say what they do. "Yes" and "No" answered a title that
-        // reads as "are you leaving?" and a message that asks "do you want the
-        // trial?", which are opposite questions: a customer pressing Yes to
-        // leave got a payment sheet instead. The measurement is unambiguous —
-        // 50% of the people who saw this paywall on 13 September started a
-        // checkout, and 89% the next day, against 11% before it existed. Nobody
-        // meant to buy at that rate.
-        .alert("If you leave, you lose every PRO benefit",
-               isPresented: self.$confirmExit) {
-            Button("Start free trial") {
+        // Radiolive's exit offer, word for word — the same title, the same
+        // message and the same two buttons it has carried since its UIKit days.
+        // The question lives in the message ("do you want to take advantage of
+        // it?"), so Yes and No answer that one question rather than the title:
+        // the ambiguity that made 89% of a day's paywalls start a checkout in
+        // September came from a title and a message asking opposite things.
+        .alert("Really?", isPresented: self.$confirmExit) {
+            Button("Yes") {
                 self.viewModel.onExit(.accepted)
                 // Not from inside this closure. The alert is still coming off
                 // screen while it runs, and asking for a purchase underneath a
@@ -67,15 +65,24 @@ struct SubscriptionPaywallView: View {
                 // `swiftui-presentation-traps`.
                 DispatchQueue.main.async { self.viewModel.startFreeTrial() }
             }
-            Button("Leave", role: .cancel) {
+            Button("No", role: .cancel) {
                 self.viewModel.onExit(.declined)
                 self.onComplete()
             }
         } message: {
-            // No closing question: it was the half of the prompt that pointed the
-            // opposite way from the title, and the buttons now carry it.
-            Text("No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI.")
+            Text(self.exitOfferMessage)
         }
+    }
+
+    /// The offer's wording. With a trial it names its length in days, which is
+    /// the version Radiolive ships; without a countable length it falls back to
+    /// the same sentence with the number taken out, so the prompt never says
+    /// "0 days".
+    private var exitOfferMessage: String {
+        guard let days = self.viewModel.freeTrialDays else {
+            return String(localized: "This special offer with a free trial is only available right now.\nWant to take advantage of it?\n\nIt's free!")
+        }
+        return String(format: String(localized: "This special offer with a %d-day free trial is only available now.\nDo you want to take advantage of it?\n\nIt's Free!!"), days)
     }
 
     /// Closing: while a free trial is still on the table and the question has not

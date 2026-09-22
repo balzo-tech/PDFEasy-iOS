@@ -16593,6 +16593,7 @@
       }
     },
     "Keep it in your camera roll" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17274,6 +17275,7 @@
       }
     },
     "Make" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -20179,6 +20181,7 @@
       }
     },
     "No unlimited editing, no signatures, no conversions to Word, Excel or PowerPoint, no scanning, no password protection, no AI. Do you want to start your free trial?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -25566,6 +25569,7 @@
       }
     },
     "Put it in a document" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -25911,6 +25915,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klaar om af te drukken"
+          }
+        }
+      }
+    },
+    "Really?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wirklich?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Really?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿De verdad?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vraiment ?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Davvero?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkelijk?"
           }
         }
       }
@@ -28195,6 +28239,7 @@
       }
     },
     "Scan a document, turn photos into a PDF, or import a file to get started." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -28627,6 +28672,7 @@
       }
     },
     "Send it to someone" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -32358,6 +32404,7 @@
       }
     },
     "Template" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -32398,6 +32445,7 @@
       }
     },
     "Templates" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -36404,6 +36452,86 @@
         }
       }
     },
+    "This special offer with a %d-day free trial is only available now.\nDo you want to take advantage of it?\n\nIt's Free!!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Sonderangebot mit einer %d-tägigen kostenlosen Testphase ist nur jetzt verfügbar.\nWollen Sie davon profitieren?\n\nEs ist kostenlos!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This special offer with a %d-day free trial is only available now.\nDo you want to take advantage of it?\n\nIt's Free!!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta oferta especial con una prueba gratuita de %d días sólo está disponible en este momento.\n¿Desea beneficiarse?\n\n¡Es gratis!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette offre spéciale avec %d jours d'essai gratuit n'est disponible que maintenant.\nVoulez-vous en profiter ?\n\nC'est Gratuit!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa offerta speciale con %d giorni di prova gratuita è disponibile solo ora.\nVuoi approfittarne?\n\nÈ gratis!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deze speciale aanbieding met een %d-daagse gratis proefversie is alleen nu beschikbaar.\nWil je ervan profiteren?\n\nHet is gratis!"
+          }
+        }
+      }
+    },
+    "This special offer with a free trial is only available right now.\nWant to take advantage of it?\n\nIt's free!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Sonderangebot mit kostenloser Testphase ist nur jetzt verfügbar.\nMöchtest du es nutzen?\n\nEs ist kostenlos!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This special offer with a free trial is only available right now.\nWant to take advantage of it?\n\nIt's free!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta oferta especial con prueba gratuita solo está disponible ahora.\n¿Quieres aprovecharla?\n\n¡Es gratis!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette offre spéciale avec essai gratuit n’est disponible que maintenant.\nVoulez-vous en profiter ?\n\nC’est gratuit !"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa offerta speciale con prova gratuita è disponibile solo ora.\nVuoi approfittarne?\n\nÈ gratis!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deze speciale aanbieding met gratis proefperiode is alleen nu beschikbaar.\nWil je er gebruik van maken?\n\nHet is gratis!"
+          }
+        }
+      }
+    },
     "This text could not be converted." : {
       "localizations" : {
         "de" : {
@@ -39248,6 +39376,7 @@
       }
     },
     "Write something on the picture first." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -39809,6 +39938,7 @@
       }
     },
     "You haven’t converted any files yet" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

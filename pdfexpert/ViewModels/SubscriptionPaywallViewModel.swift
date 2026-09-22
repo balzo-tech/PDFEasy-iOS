@@ -179,6 +179,18 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
         self.asyncSubscriptionPlans.data?.firstIndex { $0.hasFreeTrial }
     }
 
+    /// How long that trial lasts, in days, for the exit prompt's copy: the
+    /// offer names the length rather than calling it "free", and the length is
+    /// whatever App Store Connect is selling today — three days since
+    /// 19 September, seven before that.
+    var freeTrialDays: Int? {
+        guard let index = self.freeTrialPlanIndex,
+              let plan = self.asyncSubscriptionPlans.data?[index] else {
+            return nil
+        }
+        return plan.product?.freeTrialDays
+    }
+
     /// The "Yes" of the exit prompt: select the plan with the trial and buy it,
     /// in that order, so the card the customer sees behind the alert is the one
     /// Apple is about to charge for.
