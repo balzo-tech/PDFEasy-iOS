@@ -14,7 +14,7 @@
 		<key>name</key>
 		<string>standard_subscription</string>
 		<key>offered</key>
-		<true/>
+		<false/>
 	</dict>
 	<key>monthly.freetrial</key>
 	<dict>

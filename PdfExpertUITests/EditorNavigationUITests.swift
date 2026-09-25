@@ -171,27 +171,17 @@ final class EditorNavigationUITests: XCTestCase {
         XCTAssertTrue(self.editorIsShowing, "closing the paywall left the document behind")
     }
 
-    /// The shape of the paywall since the monthly plan came back: three cards,
-    /// the yearly one still preselected, and nothing selected alongside it.
-    ///
-    /// The monthly plan was retired once and is on sale again at 7,99 € —
-    /// deliberately above a twelfth of the yearly one, because the paywall ranks
-    /// the plans by what a year on each costs and would otherwise hand the
-    /// "Save …" badge, and the preselection with it, to the plan that brings in
-    /// a fraction of the money. Twelve monthly charges come to 95,88 €, against
-    /// 69,99 € for a year.
-    ///
-    /// That is the price of `monthly`, the variant without an introductory
-    /// offer, and it has been live since 2023: unlike `monthly.freetrial` there
-    /// is no price change to wait for, so this test no longer doubles as a
-    /// release gate.
+    /// The shape of the paywall since 1.35 (2): a day, a week and a year, the
+    /// yearly plan still preselected, and no monthly plan — it gave its place to
+    /// the 24-hour pass, which App Review could not find while it was sold in
+    /// South Africa alone.
     ///
     /// What the paywall has to sell comes from App Store Connect at run time, so
     /// this cannot insist on the weekly card being there — a product that is not
     /// yet approved simply does not arrive. It checks the weekly card only when
-    /// StoreKit hands it over, and always checks the two things that are ours:
-    /// the monthly plan is on sale and exactly one card is chosen.
-    func testThePaywallOffersTheMonthlyPlanWithTheYearlyStillPreselected() {
+    /// StoreKit hands it over, and always checks the things that are ours: the
+    /// pass is on sale, the monthly plan is not, and exactly one card is chosen.
+    func testThePaywallSellsADayAWeekAndAYearWithTheYearlyPreselected() {
         self.launch(premium: false)
         self.openTheFirstDocument()
 
@@ -207,21 +197,25 @@ final class EditorNavigationUITests: XCTestCase {
         XCTAssertTrue(yearly.exists, "the yearly plan is missing")
         XCTAssertTrue(yearly.isSelected, "the yearly plan is not the one preselected")
 
-        let monthly = self.card(named: "Monthly")
-        XCTAssertTrue(monthly.exists, "the monthly plan is not on sale")
-        XCTAssertFalse(monthly.isSelected, "the monthly plan took the preselection")
+        let pass = self.card(named: "24-hour pass")
+        XCTAssertTrue(pass.exists, "the 24-hour pass is not on sale")
+        XCTAssertFalse(pass.isSelected, "the pass took the preselection")
+
+        XCTAssertFalse(self.card(named: "Monthly").exists, "the monthly plan is still on sale")
 
         let weekly = self.card(named: "Weekly")
         if weekly.exists {
             XCTAssertFalse(weekly.isSelected, "two plans are selected at once")
         }
+
+        self.attachScreenshot(named: "Paywall-day-week-year")
     }
 
     /// The free trial is what the yearly plan has and the other two do not.
     ///
     /// Every plan exists in App Store Connect twice, with an introductory offer
     /// and without, and `Products.plist` picks the variant on sale. Since 1.30
-    /// the weekly and monthly cards are the no-trial ones: they charge on the
+    /// the weekly card is the no-trial one, and the pass has none to give: they charge on the
     /// spot, which leaves the trial as a reason to take the yearly plan rather
     /// than something every card gives away.
     ///
@@ -239,10 +233,10 @@ final class EditorNavigationUITests: XCTestCase {
         XCTAssertTrue(yearly.label.localizedCaseInsensitiveContains("free"),
                       "the yearly plan stopped offering the free trial: \(yearly.label)")
 
-        let monthly = self.card(named: "Monthly")
-        XCTAssertTrue(monthly.exists, "the monthly plan is not on sale")
-        XCTAssertFalse(monthly.label.localizedCaseInsensitiveContains("free"),
-                       "the monthly plan still promises a free trial: \(monthly.label)")
+        let pass = self.card(named: "24-hour pass")
+        XCTAssertTrue(pass.exists, "the 24-hour pass is not on sale")
+        XCTAssertFalse(pass.label.localizedCaseInsensitiveContains("free"),
+                       "the pass promises a free trial: \(pass.label)")
 
         // As above: the weekly plan is checked only if StoreKit hands it over.
         let weekly = self.card(named: "Weekly")

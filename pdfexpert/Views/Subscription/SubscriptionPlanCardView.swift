@@ -2,9 +2,9 @@
 //  SubscriptionPlanCardView.swift
 //  PdfExpert
 //
-//  One plan on the paywall. Name and trial promise on the left, what it costs
-//  on the right, so the eye can run down the right-hand edge and compare the
-//  two numbers without reading a sentence.
+//  One plan on the paywall. Name and trial promise on the left, what it bills
+//  on the right, so the eye can run down the right-hand edge and read the
+//  amounts that will actually be charged.
 //
 
 import SwiftUI
@@ -30,15 +30,20 @@ struct SubscriptionPlanCardView: View {
                     }
                 }
                 Spacer(minLength: DS.Spacing.xs)
+                // The billed amount leads, in the card's largest type and its
+                // strongest colour; the per-week restatement sits under it,
+                // smaller and greyed. App Review rejects the other way round
+                // (3.1.2(c)), and the trial's length is left to the small print
+                // under the button for the same reason.
                 VStack(alignment: .trailing, spacing: 2) {
-                    if let trialDuration = self.plan.trialDuration {
-                        Text(trialDuration)
-                            .font(forCategory: .headline)
-                            .foregroundStyle(ColorPalette.accent)
-                    }
                     Text(self.plan.priceText)
-                        .font(forCategory: .caption1)
-                        .foregroundStyle(ColorPalette.textSecondary)
+                        .font(forCategory: .title3)
+                        .foregroundStyle(ColorPalette.textPrimary)
+                    if let weeklyEquivalentText = self.plan.weeklyEquivalentText {
+                        Text(weeklyEquivalentText)
+                            .font(forCategory: .caption1)
+                            .foregroundStyle(ColorPalette.textSecondary)
+                    }
                 }
                 .multilineTextAlignment(.trailing)
             }
@@ -91,15 +96,17 @@ struct SubscriptionPlanCardView: View {
     let yearly = SubscriptionPaywallPlan(product: nil,
                                          title: "Yearly",
                                          trialDuration: "7 days",
-                                         priceText: "then 1,54 €/week",
+                                         priceText: "79,99 €/year",
+                                         weeklyEquivalentText: "1,54 €/week",
                                          savingBadge: "Save 73%",
                                          fullDescriptionText: "Free for 7 days, then 79,99 €/year")
     let weekly = SubscriptionPaywallPlan(product: nil,
                                          title: "Weekly",
-                                         trialDuration: "7 days",
-                                         priceText: "then 5,99 €/week",
+                                         trialDuration: nil,
+                                         priceText: "5,99 €/week",
+                                         weeklyEquivalentText: nil,
                                          savingBadge: nil,
-                                         fullDescriptionText: "Free for 7 days, then 5,99 €/week")
+                                         fullDescriptionText: "5,99 €/week")
     return VStack(spacing: DS.Spacing.sm) {
         SubscriptionPlanCardView(plan: weekly, isSelected: false, onTap: {})
         SubscriptionPlanCardView(plan: yearly, isSelected: true, onTap: {})

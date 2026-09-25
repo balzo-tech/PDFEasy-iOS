@@ -6,7 +6,7 @@
 //  picker — which existed to be A/B tested against each other and, between
 //  them, sold five products through a free-trial toggle nobody explained.
 //
-//  What is left is one screen with one decision on it: weekly, monthly or
+//  What is left is one screen with one decision on it: a day pass, weekly or
 //  yearly. Only the yearly plan opens on a free trial — the shorter two charge
 //  today — so the trial is something this screen still has to offer rather than
 //  the default on every card. The collage overhead says what is being sold, the
@@ -178,7 +178,7 @@ struct SubscriptionPaywallView: View {
             self.getDefaultButton(text: self.buttonTitle,
                                   onButtonPressed: { self.viewModel.subscribe() })
             Text(self.viewModel.currentSubscriptionPlan?.fullDescriptionText ?? "")
-                .font(forCategory: .caption1)
+                .font(forCategory: .body2)
                 .foregroundStyle(ColorPalette.textSecondary)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.7)

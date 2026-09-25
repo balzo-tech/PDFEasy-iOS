@@ -7,13 +7,14 @@
 //  customer the most, which is also the one the renewal notice speaks about.
 //
 //  How many cards there are is decided by `Products.plist` (`offered`), not
-//  here: it was two for a long time, and is three since the monthly plan came
-//  back. Nothing in this file or in the view caps the count.
+//  here: it was two for a long time, three once the monthly plan came back,
+//  and two again since 1.35 (2) took it off — the 24-hour pass is added in
+//  front of them. Nothing in this file or in the view caps the count.
 //
 //  The same flag decides which cards promise a free trial, because every plan
 //  exists in App Store Connect twice — with an introductory offer and without —
 //  and `offered` picks the variant on sale. Since 1.30 only the yearly plan is
-//  sold in its trial variant; the weekly and monthly ones charge on the spot.
+//  sold in its trial variant; the weekly one charges on the spot.
 //
 //  One set of storefronts sees something else entirely: a week or a day, both
 //  charged on the spot, and no year and no trial. Which ones is `day_pass_
@@ -40,10 +41,14 @@ struct SubscriptionPaywallPlan: SubscriptionPlan {
     let title: String
     /// "7 days" when the plan opens with a free trial.
     let trialDuration: String?
-    /// Always per week — "then 1,54 €/week" on the yearly plan as much as on the
-    /// weekly one. Two prices in different units are not a comparison, and the
-    /// yearly plan's real charge is spelled out under the button.
+    /// What the customer is billed — "79,99 €/year". The card's biggest number,
+    /// and it has to be: App Review rejected 1.35 (3.1.2(c)) for leading with
+    /// the per-week restatement instead of the amount actually charged.
     let priceText: String
+    /// The same price per week — "1,54 €/week" — as a smaller line under the
+    /// billed amount, so the cards can still be compared at a glance. Nil on a
+    /// plan that is already weekly and on the pass.
+    let weeklyEquivalentText: String?
     /// "Save 73%", on the cheaper plan only.
     let savingBadge: String?
     /// "Free for 7 days, then 79,99 €/year" — the small print under the button.
@@ -54,14 +59,12 @@ struct SubscriptionPaywallPlan: SubscriptionPlan {
 
 fileprivate extension Product {
     func getSubscriptionPaywallPlan(comparedTo products: [Product]) -> SubscriptionPaywallPlan {
-        // The weekly restatement where there is one, the plan's own price where
-        // the plan is already weekly.
-        let price = self.weeklyEquivalentPriceText ?? self.recurringPriceText
-        return SubscriptionPaywallPlan(
+        SubscriptionPaywallPlan(
             product: self,
             title: self.planTitle,
             trialDuration: self.freeTrialDuration,
-            priceText: self.freeTrialDuration != nil ? String(localized: "then \(price)") : price,
+            priceText: self.recurringPriceText,
+            weeklyEquivalentText: self.weeklyEquivalentPriceText,
             savingBadge: self.savingBadge(comparedTo: products),
             fullDescriptionText: self.fullDescriptionText
         )
@@ -115,11 +118,12 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
 
     /// The cards this storefront is shown.
     ///
-    /// Everywhere else that is every plan `Products.plist` offers, shortest
-    /// first. In a day-pass storefront it is two: the pass, then the weekly
-    /// plan — a day and a week, both paid today.
+    /// Everywhere else that is the pass, then every plan `Products.plist`
+    /// offers, shortest first — a day, a week, a year. In a day-pass storefront
+    /// it is two: the pass, then the weekly plan — a day and a week, both paid
+    /// today.
     ///
-    /// If the consumable has not loaded, the ordinary paywall is shown instead.
+    /// If the consumable has not loaded, the subscriptions are shown alone.
     /// A screen offering one subscription and nothing to compare it with sells
     /// less than the one we already have, and a product can fail to arrive for
     /// reasons that have nothing to do with this decision — review state, a
@@ -138,8 +142,14 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
                     weekly.getSubscriptionPaywallPlan(comparedTo: [])]
         }
 
+        // Everywhere else the pass leads the list too, ahead of the week and the
+        // year. Since 1.35 (2) it is on sale in every storefront — App Review
+        // could not find it while it lived in South Africa alone — and it took
+        // the monthly plan's place, which almost nobody bought.
         self.sellsDayPass = false
-        return offered.map { $0.getSubscriptionPaywallPlan(comparedTo: offered) }
+        let subscriptions = offered.map { $0.getSubscriptionPaywallPlan(comparedTo: offered) }
+        guard let pass = self.store.consumables.first else { return subscriptions }
+        return [Self.dayPassPlan(product: pass)] + subscriptions
     }
 
     private static func isWeekly(_ product: Product) -> Bool {
@@ -157,6 +167,7 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
             title: String(localized: "24-hour pass"),
             trialDuration: nil,
             priceText: product.displayPrice,
+            weeklyEquivalentText: nil,
             savingBadge: nil,
             fullDescriptionText: String(localized: "\(product.displayPrice) once. Not a subscription: nothing renews."))
     }
