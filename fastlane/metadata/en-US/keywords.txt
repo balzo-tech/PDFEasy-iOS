@@ -1,1 +1,1 @@
-converter,compress,merge,split,rotate,ocr,protect,esign,annotate,resize,extract,passport,photo,visa
+scanner,editor,reader,converter,app,photo,passport,merge,esign,word,maker,fill,image,jpg,form,ocr

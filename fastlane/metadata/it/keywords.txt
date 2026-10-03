@@ -1,1 +1,1 @@
-scansione,unire,comprimere,dividere,ruotare,modulo,password,foto,fototessera,word,ocr,convertitore
+scansione,lettore,unire,comprimere,foto,fototessera,word,convertitore,documento,immagine

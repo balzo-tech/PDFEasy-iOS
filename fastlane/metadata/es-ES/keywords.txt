@@ -1,1 +1,1 @@
-escanear,escaner,unir,comprimir,dividir,girar,formulario,contraseña,foto,ocr,convertidor,carnet,dni
+scanner,escaner,scaner,escanear,digital,dni,foto,convertidor,unir,comprimir,lector,imagen
