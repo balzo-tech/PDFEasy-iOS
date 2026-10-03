@@ -119,6 +119,13 @@ final class RemoteConfigStartupTests: XCTestCase {
         XCTAssertEqual(source.fetchCount, 2, "a later activation is a fresh chance to update")
     }
 
+    /// Until Firebase says otherwise, closing the paywall asks nothing: the exit
+    /// prompt doubled the trials cancelled within the hour (K.ExitOffer).
+    func testTheExitOfferIsOffUntilFirebaseTurnsItOn() {
+        XCTAssertFalse(RemoteConfigData().exitOfferEnabled)
+        XCTAssertTrue(RemoteConfigData(exitOfferEnabled: true).exitOfferEnabled)
+    }
+
     func testTheSourceIsPreparedOnceBeforeAnyFetch() {
         let source = SpyConfigSource(fetched: RemoteConfigData())
         _ = RemoteConfigManager(source: source)

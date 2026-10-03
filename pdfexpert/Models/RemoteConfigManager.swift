@@ -25,6 +25,8 @@ struct RemoteConfigData {
     /// Comma separated ISO 3166-1 alpha-3 storefront codes ("ZAF") whose
     /// paywall sells a week and a day instead of three subscriptions.
     let dayPassStorefronts: [String]
+    /// Whether closing the paywall offers the free trial one last time.
+    let exitOfferEnabled: Bool
 
     init(remoteConfig: RemoteConfig) {
         let proxyBaseUrlValue = remoteConfig.configValue(forKey: RemoteConfigKey.proxyBaseUrl.rawValue).stringValue ?? ""
@@ -49,6 +51,7 @@ struct RemoteConfigData {
         self.dayPassStorefronts = RemoteConfigData.list(
             remoteConfig.configValue(forKey: RemoteConfigKey.dayPassStorefronts.rawValue).stringValue)
             .map { $0.uppercased() }
+        self.exitOfferEnabled = remoteConfig.configValue(forKey: RemoteConfigKey.exitOfferEnabled.rawValue).boolValue
     }
 
     /// A comma separated remote value as a list, blanks dropped. Firebase has
@@ -70,7 +73,8 @@ struct RemoteConfigData {
          memeTemplatesEnabled: Bool = K.Meme.DefaultTemplatesEnabled,
          memeTemplateIds: [String] = [],
          memeKeywordIds: [String] = [],
-         dayPassStorefronts: [String] = []) {
+         dayPassStorefronts: [String] = [],
+         exitOfferEnabled: Bool = K.ExitOffer.DefaultEnabled) {
         self.proxyBaseUrl = proxyBaseUrl
         self.chatGptModel = chatGptModel
         self.chatGptMaxTokens = chatGptMaxTokens
@@ -80,6 +84,7 @@ struct RemoteConfigData {
         self.memeTemplateIds = memeTemplateIds
         self.memeKeywordIds = memeKeywordIds
         self.dayPassStorefronts = dayPassStorefronts
+        self.exitOfferEnabled = exitOfferEnabled
     }
 }
 
@@ -237,6 +242,7 @@ fileprivate enum RemoteConfigKey : String, CaseIterable {
     case memeTemplateIds = "meme_template_ids"
     case memeKeywordIds = "meme_keyword_ids"
     case dayPassStorefronts = "day_pass_storefronts"
+    case exitOfferEnabled = "exit_offer_enabled"
 }
 
 fileprivate extension RemoteConfig {
@@ -263,6 +269,8 @@ fileprivate extension RemoteConfig {
                 result[key.rawValue] = NSString(string: K.Meme.DefaultKeywordIds)
             case .dayPassStorefronts:
                 result[key.rawValue] = NSString(string: K.DayPass.DefaultStorefronts)
+            case .exitOfferEnabled:
+                result[key.rawValue] = NSNumber(value: K.ExitOffer.DefaultEnabled)
             }
         }
         return result

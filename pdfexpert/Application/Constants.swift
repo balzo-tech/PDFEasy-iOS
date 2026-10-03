@@ -194,6 +194,17 @@ struct K {
         static let DefaultKeywordIds = ""
     }
 
+    struct ExitOffer {
+        // Off by default since 1.36. The prompt that offers the trial once more
+        // when the paywall is closed (1.32 onwards) doubled the trials cancelled
+        // within an hour of starting — 24% → 53% in the same weeks, with the
+        // same seven-day trial (Fisher p≈0.03) — and none of the extra ones
+        // paid. They were exits that became checkouts. It stays in the app
+        // behind `exit_offer_enabled`, so it can be turned back on for a test
+        // without shipping a version.
+        static let DefaultEnabled = false
+    }
+
     struct DayPass {
         // The storefronts that are sold a week or a day instead of the three
         // subscriptions. In these markets the yearly plan with its free trial

@@ -81,6 +81,7 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
 
     @Injected(\.store) private var store
     @Injected(\.marketProfile) private var marketProfile
+    @Injected(\.configService) private var configService
 
     /// True on the paywall that sells a week and a day. The banner about the
     /// yearly renewal has nothing to say there, and the view reads this rather
@@ -181,6 +182,20 @@ class SubscriptionPaywallViewModel: SubscribeViewModel<SubscriptionPaywallPlan> 
             return index
         }
         return max(0, plans.count - 1)
+    }
+
+    /// Whether closing the paywall asks about the trial at all. Off unless
+    /// `exit_offer_enabled` turns it on in Firebase: the prompt doubled the
+    /// trials cancelled within the hour and brought no payment — see
+    /// `K.ExitOffer`.
+    var exitOfferEnabled: Bool {
+        #if DEBUG
+        // The UI test that photographs the prompt cannot reach Firebase:
+        //   xcrun simctl spawn booted defaults write <bundle-id> debugExitOffer -bool YES
+        // Same shape as `debugPremium` in `StoreImpl`.
+        if UserDefaults.standard.bool(forKey: "debugExitOffer") { return true }
+        #endif
+        return self.configService.remoteConfigData.value.exitOfferEnabled
     }
 
     /// The plan the exit prompt sells: the only one that opens on a free trial.

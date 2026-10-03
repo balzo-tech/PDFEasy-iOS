@@ -33,18 +33,41 @@ final class PaywallEntryUITests: XCTestCase {
 
     /// Pinned to English: the button is found by what VoiceOver reads out, and
     /// the paywall by the button on it.
-    private func launch(premium: Bool) {
+    private func launch(premium: Bool, exitOffer: Bool = false) {
         self.app.launchArguments = ["-AppleLanguages", "(en)",
                                     "-onboardingShown", "YES",
                                     "-debugSeedArchive", "YES"]
         if premium {
             self.app.launchArguments += ["-debugPremium", "YES"]
         }
+        // The exit prompt is off unless Firebase turns it on (`exit_offer_enabled`),
+        // and a UI test cannot reach Firebase: this stands in for the flag.
+        if exitOffer {
+            self.app.launchArguments += ["-debugExitOffer", "YES"]
+        }
         self.app.launch()
     }
 
-    func testTheHeaderButtonOpensThePaywallWithoutTouchingADocument() {
+    /// The default since 1.36: closing the paywall asks nothing and lets go. The
+    /// prompt doubled the trials cancelled within an hour and brought no payment.
+    func testClosingThePaywallAsksNothingByDefault() {
         self.launch(premium: false)
+
+        let pro = self.app.buttons["Upgrade to PRO"].firstMatch
+        XCTAssertTrue(pro.waitForExistence(timeout: 20), "the PRO button is not in the header")
+        self.tap(pro)
+        let close = self.app.buttons["Close"].firstMatch
+        XCTAssertTrue(close.waitForExistence(timeout: 15), "the paywall cannot be closed")
+        self.tap(close)
+
+        XCTAssertTrue(pro.waitForExistence(timeout: 10),
+                      "closing the paywall did not come back to the header")
+        XCTAssertFalse(self.app.alerts["Really?"].exists,
+                       "the exit prompt showed although the flag is off")
+    }
+
+    func testTheHeaderButtonOpensThePaywallWithoutTouchingADocument() {
+        self.launch(premium: false, exitOffer: true)
 
         let pro = self.app.buttons["Upgrade to PRO"].firstMatch
         XCTAssertTrue(pro.waitForExistence(timeout: 20),

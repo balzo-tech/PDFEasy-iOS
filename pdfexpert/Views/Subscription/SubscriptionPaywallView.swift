@@ -85,15 +85,17 @@ struct SubscriptionPaywallView: View {
         return String(format: String(localized: "This special offer with a %d-day free trial is only available now.\nDo you want to take advantage of it?\n\nIt's Free!!"), days)
     }
 
-    /// Closing: while a free trial is still on the table and the question has not
-    /// been asked yet, ask it. Otherwise the door opens straight away.
+    /// Closing: while a free trial is still on the table, the question has not
+    /// been asked yet and Firebase wants it asked, ask it. Otherwise the door
+    /// opens straight away — which, since 1.36, is the default.
     private func leave() {
-        if !self.askedExit, self.viewModel.freeTrialPlanIndex != nil {
+        if !self.askedExit, self.viewModel.exitOfferEnabled, self.viewModel.freeTrialPlanIndex != nil {
             self.askedExit = true
             self.confirmExit = true
         } else {
-            // Nothing was asked this time: either the question has already been
-            // put and answered, or there is no trial left to put it about.
+            // Nothing was asked this time: the prompt is switched off, the
+            // question has already been put and answered, or there is no trial
+            // left to put it about.
             self.viewModel.onExit(.notShown)
             self.onComplete()
         }
