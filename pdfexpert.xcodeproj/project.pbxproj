@@ -435,8 +435,8 @@
 		EFEAB40753F782DDEF4FAE1D /* Tag+Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A130C45F0AE3DB1011B31E35 /* Tag+Persistable.swift */; };
 		F1A70C4D2E01A11100SIGN01 /* SignedDocumentToolUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A70C4E2E01A11100SIGN02 /* SignedDocumentToolUITests.swift */; };
 		F5AEA6C96103E1F70DFC4FFB /* MacWindowSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1126C3388FA967AFDF1C8790 /* MacWindowSupport.swift */; };
-		F5D2B7C310A4597E9B3D0102 /* AppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */; };
-		F5D2B7C310A4597E9B3D0202 /* ProxyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */; };
+		F5D2B7C310A4597E9B3D0102 /* ../Proxy/AppCheckProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0101 /* ../Proxy/AppCheckProviderFactory.swift */; };
+		F5D2B7C310A4597E9B3D0202 /* ../Proxy/ProxyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2B7C310A4597E9B3D0201 /* ../Proxy/ProxyCredentials.swift */; };
 		F6924B5618834A8A2E0D31B1 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979C29D2C39489CDE3B1B29A /* Folder.swift */; };
 		F844F1753C60D4BD27E9B6C3 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD905A352026CF62BB13FCF /* ToolsView.swift */; };
 /* End PBXBuildFile section */
@@ -909,8 +909,8 @@
 		F2684EDBC1FE4F3799A94903 /* ArchiveIndexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArchiveIndexer.swift; path = ../../pdfexpert/InternalUtils/ArchiveIndexer.swift; sourceTree = "<group>"; };
 		F3FBA03C38F5DA0D568AFD36 /* PassportPhotoCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PassportPhotoCatalog.swift; sourceTree = "<group>"; };
 		F5742172FA7238E8CDB2AA56 /* AppGroupIdentifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppGroupIdentifier.swift; sourceTree = "<group>"; };
-		F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/AppCheckProviderFactory.swift; sourceTree = "<group>"; };
-		F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/ProxyCredentials.swift; sourceTree = "<group>"; };
+		F5D2B7C310A4597E9B3D0101 /* ../Proxy/AppCheckProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/AppCheckProviderFactory.swift; sourceTree = "<group>"; };
+		F5D2B7C310A4597E9B3D0201 /* ../Proxy/ProxyCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Proxy/ProxyCredentials.swift; sourceTree = "<group>"; };
 		F728ABDE8248A2CFA3BE619B /* MemeMakerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemeMakerView.swift; sourceTree = "<group>"; };
 		F80058F70B9C08B8ADAFD3A4 /* PdfExpertShortcuts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PdfExpertShortcuts.swift; sourceTree = "<group>"; };
 		F8A505026AF41443765CFC5C /* CameraFrameGuide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraFrameGuide.swift; sourceTree = "<group>"; };
@@ -1984,8 +1984,8 @@
 			children = (
 				A65E9F655F2EFFEFFECC15A7 /* StirlingApiManager.swift */,
 				C9325B560D0D9E13F66FB650 /* StirlingApiManagerImpl.swift */,
-				F5D2B7C310A4597E9B3D0201 /* ProxyCredentials.swift */,
-				F5D2B7C310A4597E9B3D0101 /* AppCheckProviderFactory.swift */,
+				F5D2B7C310A4597E9B3D0201 /* ../Proxy/ProxyCredentials.swift */,
+				F5D2B7C310A4597E9B3D0101 /* ../Proxy/AppCheckProviderFactory.swift */,
 				E9D1FB40CA7A8BD79ECF1E30 /* StirlingApiManagerMock.swift */,
 			);
 			path = Stirling;
@@ -2453,8 +2453,8 @@
 				879A6D165BB4EC7325C83BC3 /* OpenAiChatPdfManagerImpl.swift in Sources */,
 				437028E1F0DB00419857B9E8 /* StirlingApiManager.swift in Sources */,
 				D6A10B15DE1DED21968EB5CB /* StirlingApiManagerImpl.swift in Sources */,
-				F5D2B7C310A4597E9B3D0202 /* ProxyCredentials.swift in Sources */,
-				F5D2B7C310A4597E9B3D0102 /* AppCheckProviderFactory.swift in Sources */,
+				F5D2B7C310A4597E9B3D0202 /* ../Proxy/ProxyCredentials.swift in Sources */,
+				F5D2B7C310A4597E9B3D0102 /* ../Proxy/AppCheckProviderFactory.swift in Sources */,
 				9B25C07179A1543FDC67C7E7 /* StirlingApiManagerMock.swift in Sources */,
 				E35B856D9118590A1E93AFAE /* ChatUsageTracker.swift in Sources */,
 				894C4A702AA0CCFC0001F51E /* ReviewFlowView.swift in Sources */,
@@ -2911,7 +2911,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				OTHER_SWIFT_FLAGS = " \"-D\" \"STAGING\"";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.staging.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3075,7 +3075,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3096,7 +3096,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3217,7 +3217,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
@@ -3238,7 +3238,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3364,7 +3364,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3421,7 +3421,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
@@ -3442,7 +3442,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3495,7 +3495,7 @@
 				CODE_SIGN_ENTITLEMENTS = PdfExpert/PdfExpert.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "PdfExpert/PdfExpert-Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"PdfExpert/Preview Content\"";
 				DEVELOPMENT_TEAM = G6RAKRKZPR;
@@ -3560,7 +3560,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3596,7 +3596,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3631,7 +3631,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				OTHER_SWIFT_FLAGS = " \"-D\" \"STAGING\"";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.balzo.pdfexpert.staging.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
