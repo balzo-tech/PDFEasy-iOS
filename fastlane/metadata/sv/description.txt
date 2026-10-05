@@ -27,7 +27,7 @@ En layout för den större skärmen — och på Mac ett riktigt fönster: sidopa
 INTEGRITET FRÅN BÖRJAN
 Skanning, konvertering och redigering sker i telefonen: dina dokument laddas inte upp för det. Två funktioner använder en säker nättjänst, och bara när du ber om det — att ställa frågor om ett dokument, och de enstaka konverteringar som en iPhone inte klarar ensam.
 
-Appen finns på engelska, franska, italienska, nederländska, spanska och tyska.
+Appen finns på engelska, franska, italienska, nederländska, portugisiska, spanska och tyska.
 
 PDF PRO-PRENUMERATION
 En prenumeration låser upp delning, export och utskrift av dina dokument, utan begränsning av antalet. Det finns en vecko- och en årsprenumeration; årsprenumerationen börjar med en gratis provperiod. Det finns också ett 24-timmarspass: ett engångsköp som inte förnyas.

@@ -32,6 +32,12 @@
             "state": "translated",
             "value": "%lld pagina's"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld páginas"
+          }
         }
       }
     },
@@ -65,6 +71,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Samenvoegen"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combinar"
           }
         }
       }
@@ -100,6 +112,12 @@
             "state": "translated",
             "value": "Nog geen documenten"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum documento ainda"
+          }
         }
       }
     },
@@ -133,6 +151,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Foto's"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotos"
           }
         }
       }
@@ -168,6 +192,12 @@
             "state": "translated",
             "value": "Snelle acties"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ações rápidas"
+          }
         }
       }
     },
@@ -201,6 +231,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Recent"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recentes"
           }
         }
       }
@@ -236,6 +272,12 @@
             "state": "translated",
             "value": "Recente documenten"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documentos recentes"
+          }
         }
       }
     },
@@ -269,6 +311,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Scannen"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digitalizar"
           }
         }
       }
@@ -304,6 +352,12 @@
             "state": "translated",
             "value": "Ondertekenen"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assinar"
+          }
         }
       }
     },
@@ -338,6 +392,12 @@
             "state": "translated",
             "value": "Start een scan of een conversie rechtstreeks vanaf het beginscherm."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inicie uma digitalização ou uma conversão direto da Tela de Início."
+          }
         }
       }
     },
@@ -371,6 +431,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uw nieuwste PDF's, met één tik bereikbaar."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seus PDFs mais recentes, a um toque de distância."
           }
         }
       }
