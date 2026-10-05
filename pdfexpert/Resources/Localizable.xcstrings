@@ -2221,7 +2221,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uma cópia comprimida foi salva no seu arquivo."
+            "value" : "Uma cópia comprimida foi salva no seu acervo."
           }
         }
       }
@@ -2405,7 +2405,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uma cópia protegida foi salva no seu arquivo."
+            "value" : "Uma cópia protegida foi salva no seu acervo."
           }
         }
       }
@@ -2451,7 +2451,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uma cópia com tarjas foi salva no seu arquivo."
+            "value" : "Uma cópia com tarjas foi salva no seu acervo."
           }
         }
       }
@@ -2543,7 +2543,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uma cópia com marca-d'água foi salva no seu arquivo. Este documento não foi alterado."
+            "value" : "Uma cópia com marca-d'água foi salva no seu acervo. Este documento não foi alterado."
           }
         }
       }
@@ -6781,7 +6781,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Traga um arquivo para o seu arquivo"
+            "value" : "Traga um arquivo para o seu acervo"
           }
         }
       }
@@ -15439,7 +15439,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nivelar PDF"
+            "value" : "Achatar PDF"
           }
         }
       }
@@ -19142,7 +19142,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Guarde-o no seu rolo da câmera"
+            "value" : "Guarde-o no app Fotos"
           }
         }
       }
@@ -38994,7 +38994,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O arquivo chega ao seu arquivo já convertido, pronto para assinar, comprimir ou enviar."
+            "value" : "O arquivo chega ao seu acervo já convertido, pronto para assinar, comprimir ou enviar."
           }
         }
       }
@@ -46227,7 +46227,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seu PDF foi nivelado. As anotações e os campos de formulário agora fazem parte da página."
+            "value" : "Seu PDF foi achatado. As anotações e os campos de formulário agora fazem parte da página."
           }
         }
       }
@@ -46964,7 +46964,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seu arquivo PDF/A foi salvo no seu arquivo."
+            "value" : "Seu arquivo PDF/A foi salvo no seu acervo."
           }
         }
       }
@@ -47056,7 +47056,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seu arquivo reparado foi salvo no seu arquivo."
+            "value" : "Seu arquivo reparado foi salvo no seu acervo."
           }
         }
       }
@@ -47102,7 +47102,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seu arquivo higienizado foi salvo no seu arquivo."
+            "value" : "Seu arquivo higienizado foi salvo no seu acervo."
           }
         }
       }
