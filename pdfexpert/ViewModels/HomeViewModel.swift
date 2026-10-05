@@ -918,6 +918,28 @@ public class HomeViewModel : ObservableObject, SignedContainerImporting {
         return upright
     }
 
+    #if DEBUG
+    /// Image to PDF on pictures read from disk, for `debugRunTool images`: the
+    /// system photo picker cannot be driven from a store-screenshot run. Same
+    /// pages as the picker would make — uprighted, one per photo, in order.
+    @MainActor
+    func debugConvertImages(urls: [URL], filename: String?) {
+        self.action = .imageToPdf
+        Task { @MainActor in
+            let pdfDocument = PDFDocument()
+            for url in urls {
+                guard let image = UIImage(contentsOfFile: url.path) else { continue }
+                let upright = await self.uprightedIfDocument(image)
+                PDFUtility.appendImageToPdfDocument(pdfDocument: pdfDocument, uiImage: upright)
+            }
+            guard pdfDocument.pageCount > 0 else { return }
+            var pdf = Pdf(pdfDocument: pdfDocument)
+            if let filename { pdf.updateFilename(filename) }
+            self.asyncPdf = AsyncOperation(status: .data(pdf))
+        }
+    }
+    #endif
+
     /// Files chosen in the browser rather than in the photo library.
     @MainActor
     private func compressImages(fileUrls: [URL]) {

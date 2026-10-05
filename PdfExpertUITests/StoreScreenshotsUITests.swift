@@ -60,21 +60,23 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// which is the right failure, because the alternative is photographing
     /// whatever screen the app happened to land on.
     private static let labels: [String: [String: String]] = [
-        "Files":                ["it": "File",                      "es": "Archivos", "de": "Dateien", "fr": "Fichiers", "nl": "Bestanden"],
-        "Tools":                ["it": "Strumenti",                 "es": "Herramientas", "de": "Werkzeuge", "fr": "Outils", "nl": "Hulpmiddelen"],
-        "Scanner":              ["it": "Scanner",                   "es": "Escáner", "de": "Scanner", "fr": "Scanner", "nl": "Scanner"],
-        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF", "de": "PDF unterschreiben", "fr": "Signer le PDF", "nl": "PDF ondertekenen"],
-        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF", "de": "Ein PDF wählen", "fr": "Choisir un PDF", "nl": "Kies een PDF"],
-        "Finish":               ["it": "Fine",                      "es": "Finalizar", "de": "Abschließen", "fr": "Terminer", "nl": "Voltooien"],
-        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas", "de": "Werkzeuge suchen", "fr": "Rechercher des outils", "nl": "Hulpmiddelen zoeken"],
-        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje...", "de": "Schreiben Sie Ihre Nachricht...", "fr": "Écrivez votre message...", "nl": "Typ uw bericht..."],
-        "Edit":                 ["it": "Modifica",                  "es": "Editar", "de": "Bearbeiten", "fr": "Modifier", "nl": "Bewerken"],
-        "Password":             ["it": "Password",                  "es": "Contraseña", "de": "Passwort", "fr": "Mot de passe", "nl": "Wachtwoord"],
-        "Your Signatures":      ["it": "Le tue firme",              "es": "Tus firmas", "de": "Ihre Unterschriften", "fr": "Vos signatures", "nl": "Uw handtekeningen"],
+        "Files":                ["it": "File",                      "es": "Archivos", "de": "Dateien", "fr": "Fichiers", "nl": "Bestanden", "pt-BR": "Arquivos"],
+        "Tools":                ["it": "Strumenti",                 "es": "Herramientas", "de": "Werkzeuge", "fr": "Outils", "nl": "Hulpmiddelen", "pt-BR": "Ferramentas"],
+        "Scanner":              ["it": "Scanner",                   "es": "Escáner", "de": "Scanner", "fr": "Scanner", "nl": "Scanner", "pt-BR": "Scanner"],
+        "Sign PDF":             ["it": "Firma PDF",                 "es": "Firmar PDF", "de": "PDF unterschreiben", "fr": "Signer le PDF", "nl": "PDF ondertekenen", "pt-BR": "Assinar PDF"],
+        "Choose a PDF":         ["it": "Scegli un PDF",             "es": "Elige un PDF", "de": "Ein PDF wählen", "fr": "Choisir un PDF", "nl": "Kies een PDF", "pt-BR": "Escolha um PDF"],
+        "Finish":               ["it": "Fine",                      "es": "Finalizar", "de": "Abschließen", "fr": "Terminer", "nl": "Voltooien", "pt-BR": "Concluir"],
+        "Search tools":         ["it": "Cerca strumenti",           "es": "Buscar herramientas", "de": "Werkzeuge suchen", "fr": "Rechercher des outils", "nl": "Hulpmiddelen zoeken", "pt-BR": "Buscar ferramentas"],
+        "Type your Message...": ["it": "Scrivi il tuo messaggio...", "es": "Escribe tu mensaje...", "de": "Schreiben Sie Ihre Nachricht...", "fr": "Écrivez votre message...", "nl": "Typ uw bericht...", "pt-BR": "Digite sua mensagem..."],
+        "Edit":                 ["it": "Modifica",                  "es": "Editar", "de": "Bearbeiten", "fr": "Modifier", "nl": "Bewerken", "pt-BR": "Editar"],
+        "Password":             ["it": "Password",                  "es": "Contraseña", "de": "Passwort", "fr": "Mot de passe", "nl": "Wachtwoord", "pt-BR": "Senha"],
+        "Share":                ["it": "Condividi",                 "es": "Compartir", "de": "Teilen", "fr": "Partager", "nl": "Delen", "pt-BR": "Compartilhar"],
+        "Your Signatures":      ["it": "Le tue firme",              "es": "Tus firmas", "de": "Ihre Unterschriften", "fr": "Vos signatures", "nl": "Uw handtekeningen", "pt-BR": "Suas assinaturas"],
         "Tap where you wish to sign": ["it": "Tocca dove vuoi firmare",
                                        "es": "Toca donde quieras firmar",
                                        "de": "Tippen Sie dorthin, wo Sie unterschreiben möchten",
-                                       "fr": "Touchez l'endroit où vous voulez signer", "nl": "Tik waar u wilt ondertekenen"],
+                                       "fr": "Touchez l'endroit où vous voulez signer", "nl": "Tik waar u wilt ondertekenen",
+                                       "pt-BR": "Toque onde você quer assinar"],
     ]
 
     /// The document the screenshots are taken over: a lease agreement, seeded
@@ -87,6 +89,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         case "de": return "Mietvertrag.pdf"
         case "fr": return "Contrat de location.pdf"
         case "nl": return "Huurovereenkomst.pdf"
+        case "pt-BR": return "Contrato de locação.pdf"
         default:   return "Rental agreement.pdf"
         }
     }
@@ -101,6 +104,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         case "de": return "Daniel Markwart"
         case "fr": return "Daniel Marchand"
         case "nl": return "Daan Markwijk"
+        case "pt-BR": return "Daniel Marques"
         default:   return "Daniel R. Marsh"
         }
     }
@@ -115,6 +119,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         "de": "Worum geht es in diesem Dokument?",
         "fr": "De quoi parle ce document ?",
         "nl": "Waar gaat dit document over?",
+        "pt-BR": "Do que trata este documento?",
     ]
 
     /// English in, the running language out. Words that are the same in all
@@ -175,6 +180,100 @@ final class StoreScreenshotsUITests: XCTestCase {
         self.settle()
         self.shoot("05-protect")
 
+    }
+
+    // MARK: - The October set (index-v2.html)
+
+    /// `fastlane/screenshots-src` on the Mac, where the props live: photos of
+    /// documents for Image to PDF, and text PDFs for the archive. A simulator
+    /// app can read a path on the Mac.
+    ///
+    ///     TEST_RUNNER_SHOTS_SRC=$PWD/fastlane/screenshots-src xcodebuild test …
+    private var propsRoot: String {
+        ProcessInfo.processInfo.environment["SHOTS_SRC"] ?? ""
+    }
+
+    /// The name of the PDF the photos make: the school form on top of them, in
+    /// the language of the run. It is in the editor's title bar.
+    private var photosPdfName: String {
+        switch self.language {
+        case "it": return "Autorizzazione gita.pdf"
+        case "es": return "Permiso de excursión.pdf"
+        case "de": return "Einverständnis Ausflug.pdf"
+        case "fr": return "Autorisation de sortie.pdf"
+        case "nl": return "Toestemming schoolreis.pdf"
+        case "pt-BR": return "Autorização do passeio.pdf"
+        default:   return "Field trip form.pdf"
+        }
+    }
+
+    /// The word searched in the archive shot: it is in the text of the lease
+    /// (`seed-docs/<language>`) and not in its name.
+    private var searchedWord: String {
+        switch self.language {
+        case "it": return "cauzione"
+        case "es": return "depósito"
+        case "de": return "Kaution"
+        case "fr": return "caution"
+        case "nl": return "borg"
+        case "pt-BR": return "caução"
+        default:   return "deposit"
+        }
+    }
+
+    /// Image to PDF on three photographed documents, as if picked in the
+    /// library: the editor opens on the PDF they made.
+    private func launchOnPhotosPdf() {
+        self.launch(extraArguments: ["-debugRunTool", "images",
+                                     "-debugImagesDir", "\(self.propsRoot)/photo-docs/\(self.language)",
+                                     "-debugImagesName", self.photosPdfName])
+        XCTAssertTrue(self.app.buttons[self.t("Sign PDF")].waitForExistence(timeout: 30),
+                      "the editor never opened on the photos")
+    }
+
+    /// The screens of the October slides that are not in the set above. Shots
+    /// 1, 2 and 5 of that set come from `launchOnPhotosPdf` (taken by hand,
+    /// see the README), `01-scan` and `03-sign`.
+    func testTakesTheOctoberScreenshots() {
+        // 3 — searching the archive finds words inside documents, not only in
+        // their names: "deposit" brings up the lease, whose name does not say it.
+        self.launch(extraArguments: ["-debugSeedDir", "\(self.propsRoot)/seed-docs/\(self.language)"])
+        self.show(.files)
+        let search = self.app.searchFields.firstMatch
+        self.tap(search)
+        search.typeText(self.searchedWord + "\n")
+        self.settle()
+        self.shoot("v2-03-search")
+
+        // 1 — the PDF the photos made, open in the editor. The status bar comes
+        // out white on white: `statusbar.py` draws it back in black.
+        self.launchOnPhotosPdf()
+        self.settle()
+        self.shoot("v2-01-photos")
+
+        // 4 — sharing the PDF the photos made.
+        self.openToolPanel()
+        // Through the panel's search even though the tile is in the tree: it
+        // sits under the floating search bar, and a tap there lands on the bar.
+        // Two fields answer to this name: the Tools tab's, behind the editor,
+        // and the panel's, floating at the bottom. The lower one.
+        let tools = self.app.searchFields
+            .matching(NSPredicate(format: "label == %@", self.t("Search tools")))
+            .allElementsBoundByIndex
+            .max { $0.frame.minY < $1.frame.minY }!
+        self.tap(tools)
+        tools.typeText(self.t("Share"))
+        self.tap(self.app.buttons["editorTool.share"].firstMatch)
+        self.settle()
+        self.shoot("v2-04-share")
+
+        // 6 — the tool panel on the same three pages, opened on its page tools.
+        // Not the reorder screen: three rows of "Page 1, Page 2" say nothing
+        // in a picture.
+        self.launchOnPhotosPdf()
+        self.openToolPanel()
+        self.settle()
+        self.shoot("v2-06-pages")
     }
 
     /// The sixth shot, which only comes out on a device.
@@ -270,7 +369,12 @@ final class StoreScreenshotsUITests: XCTestCase {
         // rail and gives its toolbars a smaller share of a taller screen.
         let wideScreen = self.app.frame.width / self.app.frame.height > 0.7
         let grab = wideScreen ? CGVector(dx: 0.51, dy: 0.495) : CGVector(dx: 0.50, dy: 0.43)
-        let drop = wideScreen ? CGVector(dx: 0.68, dy: 0.66) : CGVector(dx: 0.68, dy: 0.57)
+        // The Spanish, German and Dutch leases run longer, and on the phone
+        // their signing lines sit lower — the Dutch one lowest (measured on the
+        // October captures): dropped at 0.57 the ink covered the last clause.
+        // The Brazilian one is shorter, and at 0.57 the ink fell on its label.
+        let phoneDrop: CGFloat = ["es": 0.582, "de": 0.582, "nl": 0.595, "pt-BR": 0.56][self.language] ?? 0.57
+        let drop = wideScreen ? CGVector(dx: 0.68, dy: 0.66) : CGVector(dx: 0.68, dy: phoneDrop)
         self.app.coordinate(withNormalizedOffset: grab)
             .press(forDuration: 0.25,
                    thenDragTo: self.app.coordinate(withNormalizedOffset: drop))

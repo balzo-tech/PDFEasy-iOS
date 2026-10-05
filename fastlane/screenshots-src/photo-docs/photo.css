@@ -1,0 +1,22 @@
+/* Un foglio fotografato dall'alto col telefono: carta non proprio bianca, luce
+   che cala verso un angolo, bordi del foglio appena fuori quadro. Le pagine
+   finte si vedono finte quando sono bianche come uno schermo. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1200px; height: 1600px; overflow: hidden; }
+body {
+  background: #d9d3c7;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #1d1d1f;
+}
+.paper {
+  position: absolute; inset: 26px 30px 22px 24px;
+  background: #f7f4ed;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18);
+  padding: 90px 96px;
+  transform: rotate(-.35deg);
+}
+.paper::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(130deg, rgba(255,255,255,.18) 0%, rgba(0,0,0,0) 40%, rgba(60,40,10,.10) 100%);
+}
+.hand { font-family: "Bradley Hand", "Noteworthy", cursive; color: #1f3a8a; }

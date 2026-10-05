@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF Pro — App Store screenshots, ottobre</title>
+<style>
+  /* Il set di ottobre 2026. Tutta la categoria usa un verbo in maiuscolo, un
+     iPhone al centro e il blu: qui crema e inchiostro, un titolo con grazie, e
+     in alto una persona nel momento in cui le serve l'app. Il telefono sotto
+     mostra l'interfaccia vera, catturata dal simulatore. */
+  :root {
+    --w: 1290px;
+    --h: 2796px;
+    --paper: #F3EEE4;
+    --ink: #1C1B19;
+    --muted: #5E5A52;
+    --accent: #2F5D50;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #2a2925;
+    font-family: "SF Pro Text", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .slide {
+    width: var(--w);
+    height: var(--h);
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .copy { position: absolute; left: 96px; right: 96px; top: 150px; }
+
+  /* New York, il serif di sistema: `ui-serif` in Chrome su macOS. */
+  h1 {
+    font-family: ui-serif, "New York", Georgia, serif;
+    font-weight: 500;
+    font-size: 150px;
+    line-height: 1.0;
+    letter-spacing: -3px;
+  }
+
+  .photo {
+    position: absolute;
+    left: 70px; right: 70px;
+    top: 640px;
+    height: 1330px;
+    border-radius: 44px;
+    overflow: hidden;
+    background: #ddd5c7;
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Il telefono si appoggia sulla foto e scende fino al fondo: entra intero,
+     dritto, perché la schermata deve leggersi anche in piccolo. 1320x2868 è
+     la cattura; la cornice tiene lo stesso rapporto. */
+  .phone {
+    position: absolute;
+    width: 690px;
+    height: 1464px;     /* (690 - 2×15) × 2868 / 1320 + 2×15 */
+    right: 96px;
+    bottom: 80px;
+    border-radius: 92px;
+    background: #111;
+    padding: 15px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.25), 0 60px 110px rgba(40,30,10,.38);
+  }
+  .screen { width: 100%; height: 100%; border-radius: 78px; overflow: hidden; background: #fff; position: relative; }
+  /* La Dynamic Island la disegna la cornice: le catture di XCTest non ce
+     l'hanno, quelle di `simctl io` sì, e una slide con e una senza si nota. */
+  .screen::after {
+    content: ""; position: absolute; top: 20px; left: 50%;
+    width: 196px; height: 56px; margin-left: -98px;
+    border-radius: 28px; background: #000;
+  }
+  .screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+
+  /* Una riga nel vuoto a sinistra del telefono: il dettaglio che il titolo
+     non dice. */
+  .note {
+    position: absolute; left: 96px; width: 380px; bottom: 150px;
+    font-size: 46px; line-height: 1.25; color: var(--muted); font-weight: 500;
+  }
+
+  body.preview { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; }
+  body.preview .slide { zoom: .3; }
+</style>
+</head>
+<body class="preview">
+
+<!-- Le slide si costruiscono dallo script qui sotto, da SLIDES: una riga per
+     slide, nell'ordine dei dati GA4 (vedi la memoria «Screenshot nuovi»). -->
+
+<script>
+  // Titoli piani, che dicono cosa fa l'app con le parole di chi la cerca.
+  // Niente frasi spezzate col punto, niente corsivo a effetto: si leggevano
+  // come testo generato.
+  var SLIDES = {
+    en: [
+      { title: "Turn photos into a PDF",
+        note: "Each photo becomes a page, in the order you chose." },
+      { title: "Scan paper with your camera",
+        note: "The edges are found and straightened for you." },
+      { title: "Search inside every document",
+        note: "Files get a name and an index of their text when you save them." },
+      { title: "Send it by email or message",
+        note: "Save to Files, or share from any app." },
+      { title: "Sign a lease on your phone",
+        note: "Draw your signature once and reuse it." },
+      { title: "Rotate, reorder and add pages",
+        note: "Fix a document without starting over." }
+    ],
+    // Le parole sono quelle che la gente cerca nello store in ogni lingua
+    // (non traduzioni letterali); nella 5 il documento è il contratto d'affitto
+    // di quel paese, lo stesso di seed-docs/<lingua>/.
+    it: [
+      { title: "Converti foto in PDF",
+        note: "Ogni foto diventa una pagina, nell'ordine che scegli." },
+      { title: "Scansiona documenti con la fotocamera",
+        note: "I bordi vengono trovati e raddrizzati da soli." },
+      { title: "Cerca dentro ogni documento",
+        note: "Al salvataggio i file ricevono un nome e un indice del testo." },
+      { title: "Invia il PDF via email o messaggio",
+        note: "Salva in File o condividi da qualsiasi app." },
+      { title: "Firma il contratto d'affitto",
+        note: "Disegna la firma una volta e riusala." },
+      { title: "Ruota, riordina e aggiungi pagine",
+        note: "Correggi un documento senza ricominciare." }
+    ],
+    es: [
+      { title: "Convierte fotos en PDF",
+        note: "Cada foto se vuelve una página, en el orden que elijas." },
+      { title: "Escanea documentos con la cámara",
+        note: "Los bordes se detectan y se enderezan solos." },
+      { title: "Busca dentro de cada documento",
+        note: "Al guardar, cada archivo recibe un nombre y un índice de su texto." },
+      { title: "Envía el PDF por correo o mensaje",
+        note: "Guarda en Archivos o comparte desde cualquier app." },
+      { title: "Firma tu contrato de renta en el celular",
+        note: "Dibuja tu firma una vez y úsala siempre." },
+      { title: "Rota, ordena y agrega páginas",
+        note: "Corrige un documento sin empezar de nuevo." }
+    ],
+    de: [
+      { title: "Fotos in PDF umwandeln",
+        note: "Jedes Foto wird zu einer Seite, in der Reihenfolge deiner Wahl." },
+      { title: "Dokumente mit der Kamera scannen",
+        note: "Die Ränder werden automatisch erkannt und begradigt." },
+      { title: "In jedem Dokument suchen",
+        note: "Beim Sichern bekommt jede Datei einen Namen und einen Textindex." },
+      { title: "PDF per E-Mail oder Nachricht senden",
+        note: "In Dateien sichern oder aus jeder App teilen." },
+      { title: "Mietvertrag am Handy unterschreiben",
+        note: "Zeichne deine Unterschrift einmal und nutze sie immer wieder." },
+      { title: "Seiten drehen, sortieren und hinzufügen",
+        note: "Korrigiere ein Dokument, ohne neu anzufangen." }
+    ],
+    fr: [
+      { title: "Convertir des photos en PDF",
+        note: "Chaque photo devient une page, dans l'ordre choisi." },
+      { title: "Scanner un document avec la caméra",
+        note: "Les bords sont détectés et redressés pour vous." },
+      { title: "Rechercher dans chaque document",
+        note: "Chaque fichier enregistré reçoit un nom et un index de son texte." },
+      { title: "Envoyer le PDF par e-mail ou message",
+        note: "Enregistrez dans Fichiers ou partagez depuis n'importe quelle app." },
+      { title: "Signer un bail depuis le téléphone",
+        note: "Dessinez votre signature une fois et réutilisez-la." },
+      { title: "Pivoter, réorganiser et ajouter des pages",
+        note: "Corrigez un document sans tout refaire." }
+    ],
+    nl: [
+      { title: "Foto's omzetten naar PDF",
+        note: "Elke foto wordt een pagina, in de volgorde die je kiest." },
+      { title: "Documenten scannen met je camera",
+        note: "De randen worden automatisch gevonden en rechtgezet." },
+      { title: "Zoek in elk document",
+        note: "Bij het bewaren krijgt elk bestand een naam en een index van de tekst." },
+      { title: "Verstuur de pdf per e-mail of bericht",
+        note: "Bewaar in Bestanden of deel vanuit elke app." },
+      { title: "Huurcontract tekenen op je telefoon",
+        note: "Teken je handtekening één keer en gebruik hem steeds opnieuw." },
+      { title: "Pagina's draaien, ordenen en toevoegen",
+        note: "Pas een document aan zonder opnieuw te beginnen." }
+    ],
+    "pt-BR": [
+      { title: "Transforme fotos em PDF",
+        note: "Cada foto vira uma página, na ordem que você escolher." },
+      { title: "Escaneie documentos com a câmera",
+        note: "As bordas são encontradas e endireitadas para você." },
+      { title: "Pesquise dentro de cada documento",
+        note: "Ao salvar, cada arquivo ganha um nome e um índice do texto." },
+      { title: "Envie o PDF por e-mail ou mensagem",
+        note: "Salve em Arquivos ou compartilhe de qualquer app." },
+      { title: "Assine o contrato de aluguel no celular",
+        note: "Desenhe sua assinatura uma vez e use sempre." },
+      { title: "Gire, reordene e adicione páginas",
+        note: "Corrija um documento sem começar do zero." }
+    ]
+  };
+  // La foto della persona e il punto su cui centrarla, per slide.
+  var PHOTOS = [
+    ["people/1-photos-to-pdf.jpg", "35% 28%"],
+    ["people/2-scan.jpg", "62% 50%"],
+    ["people/3-search.jpg", "55% 30%"],
+    ["people/4-send.jpg", "55% 35%"],
+    ["people/5-sign.jpg", "30% 50%"],
+    ["people/6-pages.jpg", "40% 40%"]
+  ];
+
+  var params = new URLSearchParams(location.search);
+  var lang = params.get("lang") || "en";
+  document.documentElement.lang = lang;
+  (SLIDES[lang] || SLIDES.en).forEach(function (t, i) {
+    var el = document.createElement("section");
+    el.className = "slide";
+    el.innerHTML =
+      '<div class="copy"><h1></h1></div>' +
+      '<div class="photo"><img alt=""></div>' +
+      '<div class="note"></div>' +
+      '<div class="phone"><div class="screen"><img alt=""></div></div>';
+    el.querySelector("h1").textContent = t.title;
+    el.querySelector(".note").textContent = t.note;
+    var photo = el.querySelector(".photo img");
+    // Una foto diversa per lingua: se esiste people/<lingua>/<stesso nome>
+    // si usa quella, altrimenti la foto comune. Stesso punto di centratura.
+    var common = PHOTOS[i][0];
+    photo.onerror = function () { photo.onerror = null; photo.src = common; };
+    photo.src = "people/" + lang + "/" + common.split("/").pop();
+    photo.style.objectPosition = PHOTOS[i][1];
+    el.querySelector(".screen img").src = "shots-v2/" + lang + "/" + (i + 1) + ".png";
+    document.body.insertBefore(el, document.currentScript);
+  });
+
+  var only = new URLSearchParams(location.search).get("only");
+  if (only) {
+    document.body.classList.remove("preview");
+    document.querySelectorAll(".slide").forEach(function (s, i) {
+      if (i !== Number(only) - 1) s.remove();
+    });
+  }
+</script>
+</body>
+</html>

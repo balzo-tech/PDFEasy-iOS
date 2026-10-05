@@ -161,6 +161,21 @@ class ArchiveViewModel: ObservableObject {
         var toSave: [(name: String, pdf: Pdf?)] = K.Test.DebugSeedFilenames
             .map { ($0, K.Test.DebugPdf) }
         toSave.append((K.Test.DebugContractFilename, K.Test.DebugContractPdf))
+        // debugSeedDir=<path on the Mac> seeds the PDFs in that folder instead,
+        // named after their files, in name order (the last lands on top): the
+        // store shot of the search needs documents with real text in them.
+        if let dir = UserDefaults.standard.string(forKey: "debugSeedDir") {
+            let urls = ((try? FileManager.default.contentsOfDirectory(
+                at: URL(fileURLWithPath: dir), includingPropertiesForKeys: nil)) ?? [])
+                .filter { $0.pathExtension.lowercased() == "pdf" }
+                .sorted { $0.lastPathComponent < $1.lastPathComponent }
+            toSave = urls.map { url in
+                let name = url.deletingPathExtension().lastPathComponent
+                // "1 Lease" → "Lease": the number only sets the order.
+                let shown = name.replacingOccurrences(of: #"^\d+\s+"#, with: "", options: .regularExpression)
+                return (shown, (try? Data(contentsOf: url)).flatMap { Pdf(data: $0) })
+            }
+        }
 
         var saved: [Pdf] = []
         for entry in toSave {
@@ -173,9 +188,10 @@ class ArchiveViewModel: ObservableObject {
 
         // Some filing too, so the filter bar and the tag dots have something to
         // show on a simulator where nothing can be tapped.
-        let work = try? self.repository.save(folder: Folder(name: "Work", color: .blue))
-        let home = try? self.repository.save(folder: Folder(name: "Home", color: .green))
-        let urgent = try? self.repository.save(tag: Tag(name: "Urgent", color: .red))
+        let filing = K.Test.DebugSeedFiling
+        let work = try? self.repository.save(folder: Folder(name: filing.work, color: .blue))
+        let home = try? self.repository.save(folder: Folder(name: filing.home, color: .green))
+        let urgent = try? self.repository.save(tag: Tag(name: filing.urgent, color: .red))
         let year = try? self.repository.save(tag: Tag(name: "2026", color: .purple))
 
         for (index, pdf) in saved.enumerated() {

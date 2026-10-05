@@ -373,6 +373,16 @@ struct ToolsView: View {
                         self.viewModel.memeMakerViewModel.styleShow = true
                     }
                 }
+            case "images":
+                // Image to PDF on the pictures in `debugImagesDir` (a path on the
+                // Mac: a simulator app can read it), in name order, named after
+                // `debugImagesName` if given.
+                let dir = URL(fileURLWithPath: UserDefaults.standard.string(forKey: "debugImagesDir") ?? "")
+                let urls = ((try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)) ?? [])
+                    .filter { ["jpg", "jpeg", "png"].contains($0.pathExtension.lowercased()) }
+                    .sorted { $0.lastPathComponent < $1.lastPathComponent }
+                self.viewModel.debugConvertImages(urls: urls,
+                                                  filename: UserDefaults.standard.string(forKey: "debugImagesName"))
             case "image-edit":
                 self.viewModel.imageEditorViewModel.run(image: Self.debugPhotograph(), onCreatePdf: nil)
             case "image-compress":

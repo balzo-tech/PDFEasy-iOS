@@ -130,6 +130,7 @@ ALLOWED_RAW_STRINGS = {
     "Mietvertrag": "same stage prop, in German",
     "Contrat de location": "same stage prop, in French",
     "Huurovereenkomst": "same stage prop, in Dutch",
+    "Contrato de locação": "same stage prop, in Brazilian Portuguese",
     "Rental agreement": "same stage prop, the fallback for every other language",
     "Impact": "the name of a typeface, not a word — the font picker lists the "
               "faces by their own names, and a translated one would name a font "

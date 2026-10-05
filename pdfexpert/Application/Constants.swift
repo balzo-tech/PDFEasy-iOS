@@ -57,7 +57,7 @@ struct K {
         /// answer quotes the deposit and the notice period straight out of it.
         static var DebugContractName: String {
             let code = Locale.current.language.languageCode?.identifier ?? "en"
-            return ["it", "es", "de", "fr", "nl"].contains(code) ? "contract-\(code)" : "contract-en"
+            return ["it", "es", "de", "fr", "nl", "pt"].contains(code) ? "contract-\(code)" : "contract-en"
         }
 
         static var DebugContractDocument: PDFDocument? {
@@ -80,6 +80,7 @@ struct K {
             case "de": return "Mietvertrag"
             case "fr": return "Contrat de location"
             case "nl": return "Huurovereenkomst"
+            case "pt": return "Contrato de locação"
             default:   return "Rental agreement"
             }
         }
@@ -103,8 +104,25 @@ struct K {
                                "Scan du passeport", "Notes de réunion"]
             case "nl": return ["Factuur 2026-07", "Gescande bon",
                                "Scan paspoort", "Vergadernotities"]
+            case "pt": return ["Nota fiscal 2026-07", "Recibo digitalizado",
+                               "Passaporte digitalizado", "Ata de reunião"]
             default:   return ["Invoice 2026-07", "Scanned receipt",
                                "Passport scan", "Meeting notes"]
+            }
+        }
+
+        /// The two folders and the tag the seeded archive is filed under: work,
+        /// home, urgent. They show as chips over the archive, so in the store
+        /// shot they speak the language of the run, like the file names above.
+        static var DebugSeedFiling: (work: String, home: String, urgent: String) {
+            switch Locale.current.language.languageCode?.identifier {
+            case "it": return ("Lavoro", "Casa", "Urgente")
+            case "es": return ("Trabajo", "Casa", "Urgente")
+            case "de": return ("Arbeit", "Zuhause", "Dringend")
+            case "fr": return ("Travail", "Maison", "Urgent")
+            case "nl": return ("Werk", "Thuis", "Dringend")
+            case "pt": return ("Trabalho", "Casa", "Urgente")
+            default:   return ("Work", "Home", "Urgent")
             }
         }
 

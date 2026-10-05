@@ -13,3 +13,10 @@ out-mac/
 # Store Connect. Il README di incoming/ resta, perche' dice dove vanno i file.
 ipad-shots/
 incoming/*/
+
+# Il set di ottobre: catture e slide montate si rifanno con ./make-v2.sh e
+# ./export-v2.sh. Si committano i sorgenti (index-v2.html, people/, photo-docs/,
+# seed-docs/), non i PNG che ne escono.
+raw-v2/
+shots-v2/
+out-v2/
