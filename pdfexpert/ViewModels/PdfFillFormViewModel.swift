@@ -97,7 +97,9 @@ class PdfFillFormViewModel: ObservableObject {
                     annotation.page = page
                 }
                 // Render page
-                pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
+                // The crop box, as in `PdfSignatureViewModel`: the `PDFView` that
+                // converts the taps measures the page by it.
+                pageImages.append(page.thumbnail(of: page.bounds(for: .cropBox).size, for: .cropBox))
                 
                 let pdfView = PDFView()
                 pdfView.document = pdfDocumentCopy

@@ -193,7 +193,9 @@ class OcrUtility {
                                    renderScale: CGFloat = defaultRenderScale,
                                    preset: CompressionPreset = defaultPreset) -> PDFPage? {
 
-        let pageRect = page.bounds(for: .mediaBox)
+        // The crop box: the page is rebuilt as it is shown, so a cropped page
+        // stays cropped and the text layer only holds what can be seen.
+        let pageRect = page.bounds(for: .cropBox)
         guard pageRect.width > 0, pageRect.height > 0 else { return nil }
 
         // 1. Rasterize the page: serves both as OCR input and as the visible layer.
@@ -280,12 +282,12 @@ class OcrUtility {
     /// Renders a page to a bitmap, scaled by `scale` but capped so the long edge
     /// never exceeds `maxRenderDimension`.
     private static func renderPageImage(page: PDFPage, scale: CGFloat) -> UIImage? {
-        let pageRect = page.bounds(for: .mediaBox)
+        let pageRect = page.bounds(for: .cropBox)
         let longEdge = max(pageRect.width, pageRect.height)
         let clampedScale = longEdge > 0 ? min(scale, Self.maxRenderDimension / longEdge) : scale
         let targetSize = CGSize(width: pageRect.width * clampedScale,
                                 height: pageRect.height * clampedScale)
-        return page.thumbnail(of: targetSize, for: .mediaBox)
+        return page.thumbnail(of: targetSize, for: .cropBox)
     }
 
     /// The bitmap that goes back into the page: bounded by the preset's pixel

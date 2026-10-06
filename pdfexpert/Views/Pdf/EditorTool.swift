@@ -44,6 +44,10 @@ enum EditorTool: String, CaseIterable, Identifiable {
     case signature
     case addText
     case fillForm
+    /// Cutting a page down to part of itself — the margin of a scan, the table
+    /// off a photo. In the bar under the page, where "Fill in" used to be: a
+    /// photographed page needs cropping far more often than a form needs filling.
+    case cropPage
 
     // Organize
     case rotateAllPages
@@ -96,7 +100,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
         // entry covers the whole of rotating — one page or all of them — while
         // this is only the second half, next to a bar that already does the first.
         case .rotateLeft, .rotateRight, .rotateAllPages, .duplicatePage, .deletePage,
-             .reorderPages, .addPage, .password, .metadata, .share:
+             .reorderPages, .addPage, .cropPage, .password, .metadata, .share:
             return nil
         }
     }
@@ -116,6 +120,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
         case .deletePage: return String(localized: "Delete page")
         case .reorderPages: return String(localized: "Reorder pages")
         case .addPage: return String(localized: "Add page")
+        case .cropPage: return String(localized: "Crop page")
         case .password: return String(localized: "Password")
         case .metadata: return String(localized: "Document info")
         case .share: return String(localized: "Share")
@@ -130,6 +135,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
     var barTitle: String {
         switch self {
         case .fillForm: return String(localized: "Fill in")
+        case .cropPage: return String(localized: "Crop")
         default: return self.title
         }
     }
@@ -143,6 +149,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
         case .deletePage: return "trash"
         case .reorderPages: return "arrow.up.arrow.down"
         case .addPage: return "plus"
+        case .cropPage: return "crop"
         case .password: return "lock"
         case .metadata: return "info.circle"
         case .share: return "square.and.arrow.up"
@@ -154,7 +161,8 @@ enum EditorTool: String, CaseIterable, Identifiable {
         if let category = self.catalogTool?.category { return category }
         // Listed in the panel next to the catalog's own organize tools, so it is
         // tinted like them rather than falling back to the accent color.
-        return self == .rotateAllPages ? .organize : nil
+        // Cropping sits in the same group, so it takes the same tint.
+        return [.rotateAllPages, .cropPage].contains(self) ? .organize : nil
     }
 
     var tint: Color { self.category?.tint ?? ColorPalette.accent }
@@ -169,7 +177,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
         // the form is a screen, and a screen is a screen wherever it came from.
         // Their view models still own the sequence; what they no longer own is
         // where the form appears (see `prepare` on each of them).
-        case .reorderPages, .pageNumbers, .watermark, .metadata,
+        case .reorderPages, .cropPage, .pageNumbers, .watermark, .metadata,
              .split, .extractPages, .export, .compress, .permissions:
             return .push
         case .signature, .addText, .fillForm, .redact,
@@ -182,6 +190,7 @@ enum EditorTool: String, CaseIterable, Identifiable {
     var route: EditorRoute? {
         switch self {
         case .reorderPages: return .reorderPages
+        case .cropPage: return .cropPage
         case .pageNumbers: return .pageNumbers
         case .watermark: return .watermark
         case .metadata: return .metadata
@@ -220,15 +229,17 @@ struct EditorToolGroup: Identifiable {
 
     /// Everything reachable from the panel, in the order it is shown. The page
     /// actions are deliberately absent: they live in the bar under the page,
-    /// where they are one tap rather than three.
+    /// where they are one tap rather than three. Crop is in both — it is a page
+    /// tool as much as a frequent one — and Fill in is here since it gave its
+    /// place in the bar to Crop.
     static var all: [EditorToolGroup] {
         [
             EditorToolGroup(id: "pages",
                             title: String(localized: "Organize pages"),
-                            tools: [.rotateAllPages, .reorderPages, .split, .extractPages, .removeBlankPages]),
+                            tools: [.rotateAllPages, .cropPage, .reorderPages, .split, .extractPages, .removeBlankPages]),
             EditorToolGroup(id: "content",
                             title: String(localized: "Edit content"),
-                            tools: [.ocr, .pageNumbers, .watermark, .invertColors, .flatten]),
+                            tools: [.fillForm, .ocr, .pageNumbers, .watermark, .invertColors, .flatten]),
             EditorToolGroup(id: "protect",
                             title: String(localized: "Protect"),
                             tools: [.password, .permissions, .redact]),

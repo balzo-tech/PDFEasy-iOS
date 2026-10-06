@@ -72,20 +72,21 @@ class PdfPermissionsUtility {
         for pageNumber in 1...sourceDocument.numberOfPages {
             guard let page = sourceDocument.page(at: pageNumber) else { continue }
 
-            let mediaBox = page.getBoxRect(.mediaBox)
+            // The crop box, so a cropped page stays cropped once protected.
+            let cropBox = page.getBoxRect(.cropBox)
             // /Rotate is a page attribute that does not survive `drawPDFPage`, so the
             // output box is the rotated one and the rotation is baked into the drawing
             // transform. Without this, a landscape (90°-rotated) page comes out portrait
             // and clipped.
             let isQuarterTurned = abs(page.rotationAngle) % 180 != 0
             var targetBox = isQuarterTurned
-                ? CGRect(x: 0, y: 0, width: mediaBox.height, height: mediaBox.width)
-                : CGRect(x: 0, y: 0, width: mediaBox.width, height: mediaBox.height)
+                ? CGRect(x: 0, y: 0, width: cropBox.height, height: cropBox.width)
+                : CGRect(x: 0, y: 0, width: cropBox.width, height: cropBox.height)
 
             context.beginPage(mediaBox: &targetBox)
             context.saveGState()
             // `getDrawingTransform` accounts for the page's own rotation.
-            context.concatenate(page.getDrawingTransform(.mediaBox,
+            context.concatenate(page.getDrawingTransform(.cropBox,
                                                          rect: targetBox,
                                                          rotate: 0,
                                                          preserveAspectRatio: true))

@@ -123,14 +123,14 @@ class PdfCompareViewModel: ObservableObject {
         let index = side == .left ? comparison.leftPageIndex : comparison.rightPageIndex
         guard let document, let index, let page = document.page(at: index) else { return nil }
 
-        let bounds = page.bounds(for: .mediaBox)
+        let bounds = page.bounds(for: .cropBox)
         let isQuarterTurned = abs(page.rotation) % 180 != 0
         let size = isQuarterTurned
             ? CGSize(width: bounds.height, height: bounds.width)
             : bounds.size
         guard size.width > 0 else { return nil }
         let height = width / size.width * size.height
-        return page.thumbnail(of: CGSize(width: width, height: height), for: .mediaBox)
+        return page.thumbnail(of: CGSize(width: width, height: height), for: .cropBox)
     }
 
     #if DEBUG

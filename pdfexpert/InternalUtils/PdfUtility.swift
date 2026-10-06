@@ -117,7 +117,10 @@ class PDFUtility {
         if let size = size {
             let nativeScale = UIScreen.main.nativeScale
             let nativeSize = CGSize(width: size.width * nativeScale, height: size.height * nativeScale)
-            return pdfDocumentPage.thumbnail(of: nativeSize, for: PDFDisplayBox.trimBox)
+            // The crop box: what the page shows. Not the trim box, which PDFKit
+            // writes out at the full media box when it saves — a cropped page
+            // came back whole in the strip after the first save.
+            return pdfDocumentPage.thumbnail(of: nativeSize, for: .cropBox)
         } else {
             return self.generatePageImage(pdfDocumentPage)
         }
@@ -131,11 +134,106 @@ class PDFUtility {
         // height swapped; size the target box to the rotation-adjusted bounds so the
         // image keeps the correct aspect instead of being squeezed into the
         // unrotated media box.
-        let mediaBoxSize = page.bounds(for: .mediaBox).size
+        //
+        // The crop box rather than the media box: a cropped page is drawn as it
+        // was cropped, here as everywhere else the page is shown.
+        let cropBoxSize = page.bounds(for: .cropBox).size
         let targetSize = (page.rotation % 180 != 0)
-            ? CGSize(width: mediaBoxSize.height, height: mediaBoxSize.width)
-            : mediaBoxSize
-        return page.thumbnail(of: targetSize, for: .mediaBox)
+            ? CGSize(width: cropBoxSize.height, height: cropBoxSize.width)
+            : cropBoxSize
+        return page.thumbnail(of: targetSize, for: .cropBox)
+    }
+
+    // MARK: - Cropping
+
+    /// The crop box that keeps `normalizedRect` of a page as it is drawn.
+    ///
+    /// `normalizedRect` is measured on the page *as the user sees it* — the media
+    /// box, turned by `rotation` — in unit coordinates with the origin at the top
+    /// left, which is how a rectangle dragged over a picture of the page arrives.
+    /// The crop box lives in the page's own space: unturned, origin at the bottom
+    /// left, and starting wherever the media box starts, which is not always 0,0.
+    /// A quarter turn swaps which side of the picture is which side of the page,
+    /// so each rotation gets its own mapping.
+    static func cropBox(forNormalizedRect normalizedRect: CGRect,
+                        mediaBox: CGRect,
+                        rotation: Int) -> CGRect {
+        let unit = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let rect = normalizedRect.standardized.intersection(unit)
+        guard !rect.isNull, rect.width > 0, rect.height > 0 else { return mediaBox }
+        let (left, top, right, bottom) = (rect.minX, rect.minY, rect.maxX, rect.maxY)
+
+        // In fractions of the media box, measured from its bottom-left corner.
+        let x0, x1, y0, y1: CGFloat
+        switch ((rotation % 360) + 360) % 360 {
+        case 90:
+            // Turned clockwise: the page's left edge is along the top of the
+            // picture, and its bottom edge down the picture's left side.
+            (x0, x1) = (top, bottom)
+            (y0, y1) = (left, right)
+        case 180:
+            (x0, x1) = (1 - right, 1 - left)
+            (y0, y1) = (top, bottom)
+        case 270:
+            (x0, x1) = (1 - bottom, 1 - top)
+            (y0, y1) = (1 - right, 1 - left)
+        default:
+            (x0, x1) = (left, right)
+            (y0, y1) = (1 - bottom, 1 - top)
+        }
+        return CGRect(x: mediaBox.minX + x0 * mediaBox.width,
+                      y: mediaBox.minY + y0 * mediaBox.height,
+                      width: (x1 - x0) * mediaBox.width,
+                      height: (y1 - y0) * mediaBox.height)
+    }
+
+    /// The other direction: where a crop box sits on the page as the user sees it,
+    /// in the same unit, top-left coordinates `cropBox(forNormalizedRect:…)` takes.
+    /// It is what the crop screen opens on, so a page cropped before shows its
+    /// current crop rather than the whole page.
+    static func normalizedRect(forCropBox cropBox: CGRect,
+                               mediaBox: CGRect,
+                               rotation: Int) -> CGRect {
+        let unit = CGRect(x: 0, y: 0, width: 1, height: 1)
+        guard mediaBox.width > 0, mediaBox.height > 0 else { return unit }
+        let x0 = (cropBox.minX - mediaBox.minX) / mediaBox.width
+        let x1 = (cropBox.maxX - mediaBox.minX) / mediaBox.width
+        let y0 = (cropBox.minY - mediaBox.minY) / mediaBox.height
+        let y1 = (cropBox.maxY - mediaBox.minY) / mediaBox.height
+
+        let left, top, right, bottom: CGFloat
+        switch ((rotation % 360) + 360) % 360 {
+        case 90:
+            (top, bottom) = (x0, x1)
+            (left, right) = (y0, y1)
+        case 180:
+            (left, right) = (1 - x1, 1 - x0)
+            (top, bottom) = (y0, y1)
+        case 270:
+            (top, bottom) = (1 - x1, 1 - x0)
+            (left, right) = (1 - y1, 1 - y0)
+        default:
+            (left, right) = (x0, x1)
+            (top, bottom) = (1 - y1, 1 - y0)
+        }
+        let rect = CGRect(x: left, y: top, width: right - left, height: bottom - top).intersection(unit)
+        return rect.isNull || rect.isEmpty ? unit : rect
+    }
+
+    /// Crops a page to `normalizedRect` of the page as drawn (see
+    /// `cropBox(forNormalizedRect:…)`). The whole page — or near enough that the
+    /// difference is a rounding error — puts the crop box back on the media box,
+    /// which is how a crop is undone.
+    static func cropPage(_ page: PDFPage, toNormalizedRect normalizedRect: CGRect) {
+        let mediaBox = page.bounds(for: .mediaBox)
+        let cropBox = Self.cropBox(forNormalizedRect: normalizedRect,
+                                   mediaBox: mediaBox,
+                                   rotation: page.rotation)
+        let isWholePage = abs(cropBox.minX - mediaBox.minX) < 0.5
+            && abs(cropBox.minY - mediaBox.minY) < 0.5
+            && abs(cropBox.maxX - mediaBox.maxX) < 0.5
+            && abs(cropBox.maxY - mediaBox.maxY) < 0.5
+        page.setBounds(isWholePage ? mediaBox : cropBox, for: .cropBox)
     }
 
     /// A page that can be drawn on another queue without holding the document
@@ -207,18 +305,19 @@ class PDFUtility {
     static func pageInkRatio(_ page: PDFPage,
                              sampleLongSide: CGFloat = 100,
                              inkLevel: UInt8 = 250) -> CGFloat {
-        let mediaBoxSize = page.bounds(for: .mediaBox).size
+        // What the page shows, so a page cropped down to its blank margin is blank.
+        let cropBoxSize = page.bounds(for: .cropBox).size
         // `thumbnail(of:for:)` applies /Rotate, so size the target box accordingly.
         let pageSize = (page.rotation % 180 != 0)
-            ? CGSize(width: mediaBoxSize.height, height: mediaBoxSize.width)
-            : mediaBoxSize
+            ? CGSize(width: cropBoxSize.height, height: cropBoxSize.width)
+            : cropBoxSize
         guard pageSize.width > 0, pageSize.height > 0 else { return 0 }
 
         let scale = sampleLongSide / max(pageSize.width, pageSize.height)
         let width = max(1, Int((pageSize.width * scale).rounded()))
         let height = max(1, Int((pageSize.height * scale).rounded()))
 
-        let thumbnail = page.thumbnail(of: CGSize(width: width, height: height), for: .mediaBox)
+        let thumbnail = page.thumbnail(of: CGSize(width: width, height: height), for: .cropBox)
         guard let cgImage = thumbnail.cgImage else { return 0 }
 
         var pixels = [UInt8](repeating: 255, count: width * height)
@@ -319,7 +418,16 @@ class PDFUtility {
 
             for index in 1...pageCount {
                 guard let page = pdf.page(at: index) else { continue }
-                let pageRect = page.getBoxRect(CGPDFBox.mediaBox)
+                // The crop box, turned the way the page is turned: what the page
+                // shows is what the unlocked copy shows. `drawPDFPage` draws in the
+                // page's own space and drops /Rotate, so the drawing transform puts
+                // the box at the corner of the new page and bakes the turn in
+                // (the same approach as `PdfPermissionsUtility`).
+                let cropBox = page.getBoxRect(.cropBox)
+                let isQuarterTurned = abs(page.rotationAngle) % 180 != 0
+                let pageRect = isQuarterTurned
+                    ? CGRect(x: 0, y: 0, width: cropBox.height, height: cropBox.width)
+                    : CGRect(x: 0, y: 0, width: cropBox.width, height: cropBox.height)
 
                 UIGraphicsBeginPDFPageWithInfo(pageRect, nil)
                 guard let ctx = UIGraphicsGetCurrentContext() else { continue }
@@ -328,6 +436,10 @@ class PDFUtility {
                 ctx.saveGState()
                 ctx.scaleBy(x: 1, y: -1)
                 ctx.translateBy(x: 0, y: -pageRect.size.height)
+                ctx.concatenate(page.getDrawingTransform(.cropBox,
+                                                         rect: pageRect,
+                                                         rotate: 0,
+                                                         preserveAspectRatio: true))
                 ctx.drawPDFPage(page)
                 ctx.restoreGState()
             }

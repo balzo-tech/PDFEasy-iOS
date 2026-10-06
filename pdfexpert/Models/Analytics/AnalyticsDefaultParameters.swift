@@ -192,6 +192,7 @@ extension AnalyticsEvent {
         case .pageRemoved: return "page_remove"
         case .pageDuplicated: return "page_duplicated"
         case .pageRotated: return "page_rotated"
+        case .pageCropped: return "page_cropped"
         case .pdfRenamed: return "pdf_renamed"
         case .passwordAdded: return "password_added"
         case .passwordRemoved: return "password_remove"
@@ -325,6 +326,7 @@ extension AnalyticsEvent {
         case .pageDuplicated: return nil
         case .pageRotated(let rotationType):
             return [AnalyticsEventCustomParameters.rotationType.rawValue: rotationType.trackingParameterValue]
+        case .pageCropped: return nil
         case .pdfRenamed: return nil
         case .passwordAdded: return nil
         case .passwordRemoved: return nil

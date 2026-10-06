@@ -49,6 +49,8 @@ struct PdfEditPageBar: View {
                     .buttonStyle(.plain)
                     .floatingGlass(radius: DS.Radius.control, interactive: true)
                     .accessibilityLabel(Text(tool.title))
+                    // Language-independent, for UI tests that run in more than one.
+                    .accessibilityIdentifier("editorBar.\(tool.rawValue)")
                 }
             }
         }
@@ -63,7 +65,8 @@ struct PdfEditPrimaryBar: View {
 
     let onTool: (EditorTool) -> Void
 
-    static let tools: [EditorTool] = [.addPage, .signature, .addText, .fillForm]
+    /// Crop took the place of Fill in, which is still in the panel.
+    static let tools: [EditorTool] = [.addPage, .signature, .addText, .cropPage]
 
     var body: some View {
         GlassEffectContainer(spacing: DS.Spacing.sm) {
@@ -88,6 +91,8 @@ struct PdfEditPrimaryBar: View {
                     .buttonStyle(.plain)
                     .floatingGlass(radius: DS.Radius.control, interactive: true)
                     .accessibilityLabel(Text(tool.title))
+                    // Language-independent, for UI tests that run in more than one.
+                    .accessibilityIdentifier("editorBar.\(tool.rawValue)")
                 }
             }
         }

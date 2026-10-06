@@ -383,10 +383,11 @@ class PdfCompareUtility {
     }
 
     private static func displaySize(of page: PDFPage) -> CGSize {
-        let mediaBox = page.bounds(for: .mediaBox)
+        // What the page shows: a cropped page is compared as it was cropped.
+        let cropBox = page.bounds(for: .cropBox)
         return abs(page.rotation) % 180 != 0
-            ? CGSize(width: mediaBox.height, height: mediaBox.width)
-            : mediaBox.size
+            ? CGSize(width: cropBox.height, height: cropBox.width)
+            : cropBox.size
     }
 
     private static func grayscalePixels(of page: PDFPage, width: Int, height: Int) -> [UInt8]? {
@@ -411,7 +412,7 @@ class PdfCompareUtility {
         // coordinate space starts at the bottom, so drawing the page as-is already
         // puts the top of the page in row 0 — which is the order the grid, and the
         // overlay drawn from it, are read in.
-        page.draw(with: .mediaBox, to: context)
+        page.draw(with: .cropBox, to: context)
         context.restoreGState()
         return pixels
     }

@@ -576,6 +576,11 @@ struct PageImage: View {
                 .aspectRatio(contentMode: .fit)
                 .clipShape(.rect(cornerRadius: DS.Radius.thumbnail, style: .continuous))
                 .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
+                // The shape of the page on screen, for the UI test that crops
+                // it — what a crop changes. In the identifier, which VoiceOver
+                // does not read, because the element's frame is the pager's and
+                // not the drawn page's.
+                .accessibilityIdentifier(String(format: "editor.page@%.3f", image.size.width / max(image.size.height, 1)))
         } else {
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -41,6 +41,7 @@ final class EditorNavigationUITests: XCTestCase {
     /// the screen it opens: "Split PDF" opens "Split pages into ranges".
     private static let pushedTools: [(tool: String, title: String, query: String)] = [
         ("reorderPages", "Reorder pages", "Reorder"),
+        ("cropPage", "Crop page", "Crop"),
         ("split", "Split pages into ranges", "Split"),
         ("extractPages", "Extract pages", "Extract"),
         ("pageNumbers", "Page numbers", "Page numbers"),
@@ -59,12 +60,15 @@ final class EditorNavigationUITests: XCTestCase {
     /// A UI test bundle installs the app fresh every time, so onboarding is
     /// waiting on the other side of every launch and the archive is empty.
     /// Pinned to English, because the screens are recognised by their titles.
-    private func launch(premium: Bool = true) {
+    private func launch(premium: Bool = true, resetArchive: Bool = false) {
         self.app.launchArguments = ["-AppleLanguages", "(en)",
                                     "-onboardingShown", "YES",
                                     "-debugSeedArchive", "YES"]
         if premium {
             self.app.launchArguments += ["-debugPremium", "YES"]
+        }
+        if resetArchive {
+            self.app.launchArguments += ["-debugResetArchive", "YES"]
         }
         self.app.launch()
     }
@@ -93,6 +97,80 @@ final class EditorNavigationUITests: XCTestCase {
             XCTAssertTrue(self.editorIsShowing,
                           "the back button did not come back from \(tool.title)")
         }
+    }
+
+    /// Crop, from the bar under the page where Fill in used to be, all the way to
+    /// the outcome: the right side of the page dragged in to about half, Apply,
+    /// and the page the editor shows afterwards is that much narrower. Asserted
+    /// on the page on screen rather than on the crop screen closing — a screen
+    /// can close having done nothing.
+    func testCroppingFromTheBarNarrowsThePageOnScreen() {
+        // Fresh: a page cropped by an earlier run would already be narrow.
+        self.launch(resetArchive: true)
+        self.openTheFirstDocument()
+
+        guard let before = self.visiblePageShape() else {
+            return XCTFail("the editor shows no page")
+        }
+
+        // The bar's button is labelled with the tool's full name.
+        self.tap(self.app.buttons["Crop page"].firstMatch)
+        XCTAssertTrue(self.screenIsShowing("Crop page"), "Crop did not open its screen")
+
+        let page = self.app.images.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cropPage.page@")).firstMatch
+        XCTAssertTrue(page.waitForExistence(timeout: 15), "the crop screen never drew the page")
+        let frame = self.drawnPageFrame(of: page)
+        // From just inside the right edge, where the right side's handle is, to
+        // the middle of the page.
+        let origin = self.app.coordinate(withNormalizedOffset: .zero)
+        let start = origin.withOffset(CGVector(dx: frame.maxX - 4, dy: frame.midY))
+        let end = origin.withOffset(CGVector(dx: frame.minX + frame.width * 0.5, dy: frame.midY))
+        start.press(forDuration: 0.2, thenDragTo: end)
+
+        self.attachScreenshot(named: "Crop-screen")
+        self.tap(self.app.buttons["cropPage.apply"])
+
+        XCTAssertTrue(self.editorIsShowing, "Apply did not come back to the document")
+        let deadline = Date().addingTimeInterval(10)
+        var after = self.visiblePageShape()
+        while let current = after, Date() < deadline,
+              current.width / current.height > before.width / before.height * 0.75 {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+            after = self.visiblePageShape()
+        }
+        guard let after else { return XCTFail("the page disappeared after the crop") }
+        self.attachScreenshot(named: "Cropped-page")
+        XCTAssertLessThan(after.width / after.height, before.width / before.height * 0.75,
+                          "the page on screen is the same shape: \(before) then \(after)")
+    }
+
+    /// Where the crop screen draws the page. The element's frame is the whole
+    /// canvas; the page's shape is in its identifier (`cropPage.page@<ratio>`),
+    /// and the page is fitted into the canvas the way the screen fits it.
+    private func drawnPageFrame(of element: XCUIElement) -> CGRect {
+        let canvas = element.frame
+        guard let ratio = Double(element.identifier.replacingOccurrences(of: "cropPage.page@", with: "")),
+              ratio > 0 else { return canvas }
+        let scale = min(canvas.width / ratio, canvas.height)
+        let size = CGSize(width: ratio * scale, height: scale)
+        return CGRect(x: canvas.midX - size.width / 2, y: canvas.midY - size.height / 2,
+                      width: size.width, height: size.height)
+    }
+
+    /// The shape — width over height — of the page the pager is showing. The
+    /// page carries it in its identifier (`editor.page@<ratio>`), since the
+    /// element's frame is the whole pager's; of the pager's pages, the one on
+    /// screen is the one inside the window.
+    private func visiblePageShape() -> CGRect? {
+        let window = self.app.windows.firstMatch.frame
+        let pages = self.app.images.matching(NSPredicate(format: "identifier BEGINSWITH %@", "editor.page@"))
+        guard pages.firstMatch.waitForExistence(timeout: 15) else { return nil }
+        guard let page = pages.allElementsBoundByIndex.first(where: {
+            $0.frame.minX >= window.minX - 1 && $0.frame.maxX <= window.maxX + 1 && $0.frame.width > 0
+        }), let ratio = Double(page.identifier.replacingOccurrences(of: "editor.page@", with: "")) else {
+            return nil
+        }
+        return CGRect(x: 0, y: 0, width: ratio, height: 1)
     }
 
     /// The tools that answer with an alert rather than a screen. Same journey

@@ -148,13 +148,15 @@ class PdfCompressUtility {
     private static func recompressedPage(_ page: PDFPage, preset: CompressionPreset) -> PDFPage? {
         guard self.pageIsWorthRecompressing(page) else { return nil }
 
-        let mediaBox = page.bounds(for: .mediaBox)
+        // The crop box: a cropped page stays cropped. Drawn from the media box,
+        // compressing gave back everything the user had cut away.
+        let cropBox = page.bounds(for: .cropBox)
         // `bounds(for:)` ignores /Rotate while `draw(with:to:)` applies it, so the
         // canvas is sized on the rotated (as-displayed) geometry.
         let isQuarterTurned = abs(page.rotation) % 180 != 0
         let pageSize = isQuarterTurned
-            ? CGSize(width: mediaBox.height, height: mediaBox.width)
-            : mediaBox.size
+            ? CGSize(width: cropBox.height, height: cropBox.width)
+            : cropBox.size
         guard pageSize.width > 0, pageSize.height > 0 else { return nil }
 
         // The page keeps its physical size; only the pixels behind it shrink. The
@@ -173,7 +175,7 @@ class PdfCompressUtility {
             cgContext.fill(CGRect(origin: .zero, size: pageSize))
             cgContext.translateBy(x: 0, y: pageSize.height)
             cgContext.scaleBy(x: 1, y: -1)
-            page.draw(with: .mediaBox, to: cgContext)
+            page.draw(with: .cropBox, to: cgContext)
         }
 
         let compressedImage = image.jpegData(compressionQuality: preset.jpegQuality)

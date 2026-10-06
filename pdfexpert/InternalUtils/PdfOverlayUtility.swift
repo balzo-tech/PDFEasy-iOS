@@ -117,7 +117,10 @@ class PdfOverlayUtility {
         for pageIndex in 0..<document.pageCount {
             guard let page = document.page(at: pageIndex) else { continue }
 
-            let pageRect = page.bounds(for: .mediaBox)
+            // The crop box: what the page shows. Redrawn from the media box, a
+            // cropped page came out of flatten, invert, page numbers and the
+            // watermark with everything it had been cropped to hide.
+            let pageRect = page.bounds(for: .cropBox)
 
             // PDFKit's `bounds(for:)` ignores /Rotate, so swap width/height for
             // quarter-turn rotations to size the canvas as it renders (landscape).
@@ -136,11 +139,14 @@ class PdfOverlayUtility {
                 underlay?(cg, pageSize)
 
                 // 1) Draw the original page content. Flip into PDF (bottom-left,
-                //    y-up) space, honoring the media-box origin.
+                //    y-up) space. No translation for the box's origin:
+                //    `draw(with:to:)` already puts the box's corner at 0,0 — the
+                //    offset this used to subtract moved the page off its canvas
+                //    whenever the box did not start at 0,0, as a crop never does.
                 cg.saveGState()
-                cg.translateBy(x: -pageRect.origin.x, y: pageSize.height - pageRect.origin.y)
+                cg.translateBy(x: 0, y: pageSize.height)
                 cg.scaleBy(x: 1, y: -1)
-                page.draw(with: .mediaBox, to: cg)
+                page.draw(with: .cropBox, to: cg)
                 cg.restoreGState()
 
                 // 2) Paint the overlay in the renderer's native UIKit coordinates.

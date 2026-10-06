@@ -127,6 +127,8 @@ enum AnalyticsEvent {
     case pageRemoved
     case pageDuplicated
     case pageRotated(rotationType: AnalyticsPageRotationType)
+    /// A page cut down to an area of itself, or given its whole area back.
+    case pageCropped
     case pdfRenamed
     case passwordAdded
     case passwordRemoved

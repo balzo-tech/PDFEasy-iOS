@@ -331,7 +331,7 @@ class PdfEditViewModel: ObservableObject, SignedContainerImporting {
     /// Opens one of the editor's own tool screens, which are otherwise behind a tap
     /// in the tool panel that a simulator cannot deliver:
     ///   xcrun simctl spawn booted defaults write <bundle-id> debugEditorSheet -string watermark
-    /// Values: `pageNumbers`, `watermark`, `metadata`, `tools`, `reorder`, `split`,
+    /// Values: `pageNumbers`, `watermark`, `metadata`, `tools`, `reorder`, `crop`, `split`,
     /// `extract`, `export`, `compress`, `permissions`, `addText`, `signature`. Page
     /// numbers, watermark and permissions are premium, so `debugPremium -bool YES` is
     /// needed too; split and extract need a document of more than one page.
@@ -347,6 +347,7 @@ class PdfEditViewModel: ObservableObject, SignedContainerImporting {
         case "metadata": self.push(.metadata)
         case "tools": self.toolPanelShow = true
         case "reorder": self.push(.reorderPages)
+        case "crop": self.push(.cropPage)
         case "split": self.startSplit()
         case "extract": self.startExtract()
         case "export": self.startExport()
@@ -468,6 +469,60 @@ class PdfEditViewModel: ObservableObject, SignedContainerImporting {
         self.regenerateThumbnailEntries(at: self.pdfCurrentPageIndex)
         self.shouldShowCloseWarning.wrappedValue = true
         self.analyticsManager.track(event: .pageRotated(rotationType: .single))
+    }
+
+    /// Crops the page on screen to `normalizedRect` of the page as it is drawn
+    /// whole — its media box, turned by its rotation — in unit coordinates with
+    /// the origin at the top left, which is what the crop screen hands back. The
+    /// whole page undoes a crop. Same shape as `rotateCurrentPage`: one page
+    /// changed, one page redrawn.
+    @MainActor
+    func cropCurrentPage(toNormalizedRect normalizedRect: CGRect) {
+        guard self.canEditPages,
+              let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
+            return
+        }
+        PDFUtility.cropPage(page, toNormalizedRect: normalizedRect)
+        self.regenerateThumbnailEntries(at: self.pdfCurrentPageIndex)
+        self.shouldShowCloseWarning.wrappedValue = true
+        self.analyticsManager.track(event: .pageCropped)
+    }
+
+    /// Where the current crop of the page on screen sits on the whole page, in the
+    /// coordinates `cropCurrentPage(toNormalizedRect:)` takes. The crop screen
+    /// opens on it, so a page cropped before shows that crop, ready to adjust.
+    func currentPageCropRect() -> CGRect {
+        guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex) else {
+            return CGRect(x: 0, y: 0, width: 1, height: 1)
+        }
+        return PDFUtility.normalizedRect(forCropBox: page.bounds(for: .cropBox),
+                                         mediaBox: page.bounds(for: .mediaBox),
+                                         rotation: page.rotation)
+    }
+
+    /// The page on screen, drawn whole — media box, not crop box — and turned the
+    /// way it is shown: the crop screen needs to show what lies outside the
+    /// current crop, or a crop could only ever get smaller. Drawn off the main
+    /// thread from a detached copy, as the pager's own pages are (a scan takes the
+    /// best part of a second).
+    func currentPageUncroppedImage(maxLongSide: CGFloat = 1600, completion: @escaping (UIImage?) -> Void) {
+        guard let page = self.pdf.pdfDocument.page(at: self.pdfCurrentPageIndex),
+              let copy = PDFUtility.detachedPage(from: page) else {
+            completion(nil)
+            return
+        }
+        DispatchQueue.global(qos: .userInitiated).async {
+            let mediaBox = copy.bounds(for: .mediaBox)
+            let drawnSize = (copy.rotation % 180 != 0)
+                ? CGSize(width: mediaBox.height, height: mediaBox.width)
+                : mediaBox.size
+            let longSide = max(drawnSize.width, drawnSize.height)
+            let scale = longSide > 0 ? min(1, maxLongSide / longSide) : 1
+            let image = copy.thumbnail(of: CGSize(width: drawnSize.width * scale,
+                                                  height: drawnSize.height * scale),
+                                       for: .mediaBox)
+            DispatchQueue.main.async { completion(image) }
+        }
     }
 
     /// Rotates every page in the document, then does the full images+thumbnails refresh
@@ -691,19 +746,22 @@ class PdfEditViewModel: ObservableObject, SignedContainerImporting {
     /// space has its origin at the bottom left while a tap arrives with y going
     /// down. Returns nil for a tap in the letterbox — that is the background, not
     /// the page.
+    ///
+    /// Measured on the crop box, which is what the pager draws: on a cropped page
+    /// the media box would put every tap somewhere the user cannot see.
     static func pointInPage(_ point: CGPoint, viewSize: CGSize, page: PDFPage) -> CGPoint? {
-        let mediaBox = page.bounds(for: .mediaBox)
+        let cropBox = page.bounds(for: .cropBox)
         // A quarter-turned page is drawn with its sides swapped.
         let drawnSize = (page.rotation % 180 != 0)
-            ? CGSize(width: mediaBox.height, height: mediaBox.width)
-            : mediaBox.size
+            ? CGSize(width: cropBox.height, height: cropBox.width)
+            : cropBox.size
         let fitted = ScanPreviewGeometry.fittedRect(imageSize: drawnSize, in: viewSize)
         guard fitted.width > 0, fitted.height > 0, fitted.contains(point) else { return nil }
 
         let across = (point.x - fitted.minX) / fitted.width
         let down = (point.y - fitted.minY) / fitted.height
-        return CGPoint(x: mediaBox.minX + across * mediaBox.width,
-                       y: mediaBox.maxY - down * mediaBox.height)
+        return CGPoint(x: cropBox.minX + across * cropBox.width,
+                       y: cropBox.maxY - down * cropBox.height)
     }
 
     func showAddSignature() {
@@ -735,6 +793,7 @@ class PdfEditViewModel: ObservableObject, SignedContainerImporting {
         case .deletePage: break // the view asks first
         case .addPage: break    // the view asks where from
         case .reorderPages: self.push(.reorderPages)
+        case .cropPage: self.push(.cropPage)
         case .signature: self.showAddSignature()
         case .addText: self.showFillForm()
         case .fillForm: self.showFillWidget()

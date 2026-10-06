@@ -77,14 +77,17 @@ class PdfRedactUtility {
                                        boxes: [RedactionBox],
                                        renderScale: CGFloat,
                                        jpegQuality: CGFloat) -> PDFPage? {
-        let mediaBox = page.bounds(for: .mediaBox)
+        // The crop box, which is what the redaction screen shows (its pictures come
+        // from `generatePdfThumbnails`), so the boxes land where they were drawn
+        // and a cropped page stays cropped.
+        let cropBox = page.bounds(for: .cropBox)
         // `bounds(for:)` ignores /Rotate while `draw(with:to:)` applies it, so the canvas
         // is sized on the rotated (as-displayed) geometry — which is also the space the
         // normalized boxes were measured in.
         let isQuarterTurned = abs(page.rotation) % 180 != 0
         let pageSize = isQuarterTurned
-            ? CGSize(width: mediaBox.height, height: mediaBox.width)
-            : mediaBox.size
+            ? CGSize(width: cropBox.height, height: cropBox.width)
+            : cropBox.size
         guard pageSize.width > 0, pageSize.height > 0 else { return nil }
 
         let format = UIGraphicsImageRendererFormat.default()
@@ -101,7 +104,7 @@ class PdfRedactUtility {
             cgContext.saveGState()
             cgContext.translateBy(x: 0, y: pageSize.height)
             cgContext.scaleBy(x: 1, y: -1)
-            page.draw(with: .mediaBox, to: cgContext)
+            page.draw(with: .cropBox, to: cgContext)
             cgContext.restoreGState()
 
             cgContext.setFillColor(UIColor.black.cgColor)

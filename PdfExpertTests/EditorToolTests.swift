@@ -18,6 +18,7 @@ import Combine
 import StoreKit
 import Factory
 import PDFKit
+import SwiftUI
 @testable import PdfExpert
 
 final class EditorToolTests: XCTestCase {
@@ -96,13 +97,27 @@ final class EditorToolTests: XCTestCase {
         let listed = Set(EditorToolGroup.all.flatMap(\.tools))
         // The page bar's own actions are deliberately not in the panel.
         let expectedAbsent: Set<EditorTool> = [.rotateLeft, .rotateRight, .duplicatePage,
-                                               .deletePage, .addPage, .signature, .addText, .fillForm]
+                                               .deletePage, .addPage, .signature, .addText]
         for tool in expectedAbsent {
             XCTAssertFalse(listed.contains(tool), "\(tool) belongs in a bar, not the panel")
         }
         for tool in [EditorTool.split, .ocr, .watermark, .password, .compress, .share, .rotateAllPages] {
             XCTAssertTrue(listed.contains(tool), "\(tool) is not reachable from the panel")
         }
+    }
+
+    /// Crop took Fill in's place in the bar under the page. Fill in must not
+    /// have gone with it: the panel is where it is now.
+    func testCropIsInTheBarAndFillInMovedToThePanel() {
+        XCTAssertEqual(PdfEditPrimaryBar.tools, [.addPage, .signature, .addText, .cropPage])
+        let listed = Set(EditorToolGroup.all.flatMap(\.tools))
+        XCTAssertTrue(listed.contains(.fillForm), "Fill in left the bar and is reachable from nowhere")
+        // Crop is a page tool too, so it is also with the others in the panel.
+        let pages = EditorToolGroup.all.first { $0.id == "pages" }?.tools ?? []
+        XCTAssertTrue(pages.contains(.cropPage))
+        XCTAssertEqual(EditorTool.cropPage.route, .cropPage)
+        XCTAssertEqual(EditorTool.cropPage.barTitle, "Crop")
+        XCTAssertEqual(EditorTool.cropPage.title, "Crop page")
     }
 
     func testNoToolIsListedTwice() {
@@ -291,6 +306,60 @@ final class EditorToolTests: XCTestCase {
         XCTAssertEqual(viewModel.pages.count, 3)
     }
 
+    // MARK: - Cropping
+
+    @MainActor
+    func testCroppingPushesTheCropScreen() {
+        let viewModel = self.makeViewModel(pageCount: 2)
+
+        viewModel.run(.cropPage)
+
+        XCTAssertEqual(viewModel.path, [.cropPage])
+    }
+
+    /// The outcome, not the call: the document's page has the crop box, the
+    /// other page does not, the strip's thumbnail is redrawn at the new shape,
+    /// and closing now would lose work.
+    @MainActor
+    func testCroppingCropsOnlyThePageOnScreen() throws {
+        var dirty = false
+        let viewModel = self.makeViewModel(pageCount: 2,
+                                           shouldShowCloseWarning: Binding(get: { dirty }, set: { dirty = $0 }))
+        viewModel.pdfCurrentPageIndex = 1
+        let before = try XCTUnwrap(viewModel.pages[1].thumbnail)
+
+        // The left half of the page, top to bottom.
+        viewModel.cropCurrentPage(toNormalizedRect: CGRect(x: 0, y: 0, width: 0.5, height: 1))
+
+        let page = try XCTUnwrap(viewModel.pdf.pdfDocument.page(at: 1))
+        let mediaBox = page.bounds(for: .mediaBox)
+        XCTAssertEqual(page.bounds(for: .cropBox).width, mediaBox.width / 2, accuracy: 0.5)
+        XCTAssertEqual(page.bounds(for: .cropBox).height, mediaBox.height, accuracy: 0.5)
+        XCTAssertEqual(viewModel.pdf.pdfDocument.page(at: 0)?.bounds(for: .cropBox),
+                       viewModel.pdf.pdfDocument.page(at: 0)?.bounds(for: .mediaBox),
+                       "the other page was cropped too")
+        let after = try XCTUnwrap(viewModel.pages[1].thumbnail)
+        XCTAssertLessThan(after.size.width / after.size.height,
+                          before.size.width / before.size.height * 0.75,
+                          "the thumbnail still shows the whole page")
+        XCTAssertTrue(dirty)
+        // And the screen opens on the crop just made.
+        let reopened = viewModel.currentPageCropRect()
+        XCTAssertEqual(reopened.width, 0.5, accuracy: 0.001)
+        XCTAssertEqual(reopened.height, 1, accuracy: 0.001)
+    }
+
+    @MainActor
+    func testCroppingToTheWholePageUndoesACrop() throws {
+        let viewModel = self.makeViewModel(pageCount: 1)
+        viewModel.cropCurrentPage(toNormalizedRect: CGRect(x: 0.2, y: 0.2, width: 0.5, height: 0.5))
+
+        viewModel.cropCurrentPage(toNormalizedRect: CGRect(x: 0, y: 0, width: 1, height: 1))
+
+        let page = try XCTUnwrap(viewModel.pdf.pdfDocument.page(at: 0))
+        XCTAssertEqual(page.bounds(for: .cropBox), page.bounds(for: .mediaBox))
+    }
+
     // MARK: - The pushed flows
 
     @MainActor
@@ -424,7 +493,8 @@ final class EditorToolTests: XCTestCase {
     /// `waitForPages: false` for the tests that never look at a page.
     private func makeViewModel(pageCount: Int,
                                startAction: PdfEditStartAction? = nil,
-                               waitForPages: Bool = true) -> PdfEditViewModel {
+                               waitForPages: Bool = true,
+                               shouldShowCloseWarning: Binding<Bool> = .constant(false)) -> PdfEditViewModel {
         let store = StoreMock()
         self.store = store
 
@@ -435,7 +505,7 @@ final class EditorToolTests: XCTestCase {
         let pdf = Pdf(pdfDocument: self.makeDocument(pageCount: pageCount))
         let parameter = PdfEditViewModel.InputParameter(pdf: pdf,
                                                         startAction: startAction,
-                                                        shouldShowCloseWarning: .constant(false))
+                                                        shouldShowCloseWarning: shouldShowCloseWarning)
         let viewModel = PdfEditViewModel(inputParameter: parameter)
         if waitForPages { self.waitForPages(viewModel) }
         return viewModel
@@ -497,7 +567,7 @@ private final class StoreMock: Store {
 
     func refreshAll() async throws {}
     func requestProducts() async throws {}
-    func purchase(_ product: Product) async throws -> Transaction? { nil }
+    func purchase(_ product: Product) async throws -> StoreKit.Transaction? { nil }
     func isPurchased(_ product: Product) async throws -> Bool { false }
     nonisolated func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
         throw StoreError.failedVerification

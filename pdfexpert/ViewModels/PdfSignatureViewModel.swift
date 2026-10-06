@@ -94,7 +94,10 @@ class PdfSignatureViewModel: ObservableObject {
                     annotation.page = page
                 }
                 // Render page
-                pageImages.append(page.thumbnail(of: page.bounds(for: .mediaBox).size, for: .mediaBox))
+                // The crop box, which is also what the `PDFView` below converts
+                // against: drawn from the media box, a cropped page put the
+                // signature somewhere other than under the finger.
+                pageImages.append(page.thumbnail(of: page.bounds(for: .cropBox).size, for: .cropBox))
                 
                 let pdfView = PDFView()
                 pdfView.document = pdfDocumentCopy

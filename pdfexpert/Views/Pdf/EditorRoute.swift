@@ -17,6 +17,7 @@ import Factory
 /// opens it: a route nothing reaches is a screen nobody can get to.
 enum EditorRoute: Hashable, CaseIterable {
     case reorderPages
+    case cropPage
     case pageNumbers
     case watermark
     case metadata
@@ -42,6 +43,8 @@ struct EditorDestinationView: View {
             switch self.route {
             case .reorderPages:
                 PdfPageReorderView(viewModel: self.viewModel)
+            case .cropPage:
+                PdfPageCropView(viewModel: self.viewModel)
             case .pageNumbers:
                 let parameter = PdfPageNumberViewModel
                     .InputParameter(pdf: self.viewModel.pdf,

@@ -137,7 +137,7 @@ class PdfCompressViewModel: ObservableObject {
             // The preview is the first page of the *result*, so what the user
             // judges the quality on is what will be saved.
             let preview = result?.document.page(at: 0).map {
-                $0.thumbnail(of: CGSize(width: 600, height: 800), for: .mediaBox)
+                $0.thumbnail(of: CGSize(width: 600, height: 800), for: .cropBox)
             }
             DispatchQueue.main.async {
                 guard token == self.runToken else { return }
