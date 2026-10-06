@@ -1,4 +1,4 @@
-FERMEZ ET RETROUVEZ VOS FICHIERS
-Fermer l'offre vous ramène maintenant directement à vos documents, sans autre question.
+ENREGISTRER, TOUJOURS EN VUE
+Un nom de fichier long ne cache plus le bouton Enregistrer : le nom se raccourcit désormais au milieu, et il suffit de le toucher pour renommer le document. L'heure et la batterie sont de nouveau lisibles sur les écrans clairs.
 
 Et quelques petites corrections et améliorations.

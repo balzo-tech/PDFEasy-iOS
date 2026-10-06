@@ -1,4 +1,4 @@
-STÄNG OCH DU ÄR TILLBAKA BLAND DINA FILER
-När du stänger erbjudandet kommer du nu direkt tillbaka till dina dokument, utan fler frågor.
+SPARA SYNS ALLTID
+Ett långt filnamn döljer inte längre knappen Spara: namnet kortas nu av i mitten, och du kan trycka på det för att byta namn på dokumentet. Klockan och batteriet syns igen på ljusa skärmar.
 
 Dessutom små rättningar och förbättringar.

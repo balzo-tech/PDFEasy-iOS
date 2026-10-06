@@ -1,4 +1,4 @@
-CIÉRRALA Y VUELVES A TUS ARCHIVOS
-Al cerrar la oferta vuelves directamente a tus documentos, sin más preguntas.
+GUARDAR, SIEMPRE A LA VISTA
+Un nombre de archivo largo ya no esconde el botón Guardar: ahora el nombre se acorta por el centro y, al tocarlo, puedes cambiar el nombre del documento. La hora y la batería vuelven a leerse bien en las pantallas claras.
 
 Además, pequeñas correcciones y mejoras.

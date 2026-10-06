@@ -1,4 +1,5 @@
-FECHE E VOLTE AOS SEUS ARQUIVOS
-Ao fechar a oferta, você volta direto aos seus documentos, sem mais perguntas.
+AGORA EM PORTUGUÊS
+O PDF Pro agora fala português do Brasil, no app inteiro e no widget.
+O botão Salvar não some mais com nomes de arquivo longos: o nome é encurtado no meio e, com um toque, você pode renomear o documento. A hora e a bateria voltam a ficar legíveis nas telas claras.
 
 Além de pequenas correções e melhorias.

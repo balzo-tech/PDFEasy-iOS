@@ -1,4 +1,4 @@
-CLOSE IT AND YOU ARE BACK IN YOUR FILES
-Closing the offer now takes you straight back to your documents, with no more questions.
+SAVE STAYS IN SIGHT
+A long file name no longer pushes the Save button out of view: the name now shortens in the middle, and you can tap it to rename the document. The clock and battery are readable again on light screens.
 
 Plus small fixes and improvements.
