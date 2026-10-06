@@ -1,4 +1,5 @@
-ENREGISTRER, TOUJOURS EN VUE
-Un nom de fichier long ne cache plus le bouton Enregistrer : le nom se raccourcit désormais au milieu, et il suffit de le toucher pour renommer le document. L'heure et la batterie sont de nouveau lisibles sur les écrans clairs.
+ROGNER UNE PAGE
+Ne gardez que la partie utile : faites glisser les coins et touchez Appliquer. Cela fonctionne avec les photos, les scans et n'importe quel PDF.
+Aussi : un nom de fichier long ne cache plus le bouton Enregistrer, et l'heure et la batterie sont de nouveau lisibles sur les écrans clairs.
 
 Et quelques petites corrections et améliorations.

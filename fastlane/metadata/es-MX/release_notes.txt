@@ -1,4 +1,5 @@
-GUARDAR, SIEMPRE A LA VISTA
-Un nombre de archivo largo ya no esconde el botón Guardar: ahora el nombre se acorta por el centro y, al tocarlo, puedes cambiar el nombre del documento. La hora y la batería vuelven a leerse bien en las pantallas claras.
+RECORTA UNA PÁGINA
+Quédate solo con la parte que necesitas: arrastra las esquinas y toca Aplicar. Funciona con fotos, escaneos y cualquier PDF.
+Además: un nombre de archivo largo ya no esconde el botón Guardar, y la hora y la batería vuelven a leerse en las pantallas claras.
 
 Además, pequeñas correcciones y mejoras.

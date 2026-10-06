@@ -1,4 +1,5 @@
-NÚT LƯU LUÔN HIỂN THỊ
-Tên tệp dài không còn che mất nút Lưu: tên giờ được rút gọn ở giữa và bạn có thể chạm vào để đổi tên tài liệu. Giờ và pin lại dễ đọc trên màn hình sáng.
+CẮT TRANG
+Chỉ giữ lại phần bạn cần: kéo các góc và chạm Áp dụng. Dùng được với ảnh, bản quét và mọi tệp PDF.
+Ngoài ra, tên tệp dài không còn che mất nút Lưu, và giờ cùng pin lại dễ đọc trên màn hình sáng.
 
 Cùng một số sửa lỗi và cải tiến nhỏ.

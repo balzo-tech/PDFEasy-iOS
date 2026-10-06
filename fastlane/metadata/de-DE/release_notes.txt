@@ -1,4 +1,5 @@
-SICHERN IMMER IM BLICK
-Ein langer Dateiname verdrängt die Taste zum Sichern nicht mehr: Der Name wird jetzt in der Mitte gekürzt, und mit einem Tippen darauf kannst du das Dokument umbenennen. Uhrzeit und Akku sind auf hellen Bildschirmen wieder lesbar.
+SEITEN ZUSCHNEIDEN
+Behalte nur den Teil, den du brauchst: Ecken ziehen und auf „Anwenden“ tippen. Das klappt mit Fotos, Scans und jedem PDF.
+Außerdem: Ein langer Dateiname verdeckt die Taste zum Sichern nicht mehr, und Uhrzeit und Akku sind auf hellen Bildschirmen wieder lesbar.
 
 Dazu kleine Korrekturen und Verbesserungen.

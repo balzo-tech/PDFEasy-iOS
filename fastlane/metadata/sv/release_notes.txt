@@ -1,4 +1,5 @@
-SPARA SYNS ALLTID
-Ett långt filnamn döljer inte längre knappen Spara: namnet kortas nu av i mitten, och du kan trycka på det för att byta namn på dokumentet. Klockan och batteriet syns igen på ljusa skärmar.
+BESKÄR EN SIDA
+Behåll bara den del du behöver: dra i hörnen och tryck på Använd. Det fungerar med foton, skanningar och alla PDF-filer.
+Dessutom döljer ett långt filnamn inte längre knappen Spara, och klockan och batteriet syns igen på ljusa skärmar.
 
 Dessutom små rättningar och förbättringar.

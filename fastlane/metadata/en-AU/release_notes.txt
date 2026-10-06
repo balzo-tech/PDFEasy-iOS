@@ -1,4 +1,5 @@
-SAVE STAYS IN SIGHT
-A long file name no longer pushes the Save button out of view: the name now shortens in the middle, and you can tap it to rename the document. The clock and battery are readable again on light screens.
+CROP A PAGE
+Keep only the part you need: drag the corners and tap Apply. It works on photos, scans and any PDF.
+Also: a long file name no longer hides the Save button, and the clock and battery are readable again on light screens.
 
 Plus small fixes and improvements.

@@ -1,5 +1,5 @@
 AGORA EM PORTUGUÊS
 O PDF Pro agora fala português do Brasil, no app inteiro e no widget.
-O botão Salvar não some mais com nomes de arquivo longos: o nome é encurtado no meio e, com um toque, você pode renomear o documento. A hora e a bateria voltam a ficar legíveis nas telas claras.
+E chegou o recorte de página: arraste os cantos e toque em Aplicar para ficar só com a parte que você precisa, em fotos, digitalizações ou qualquer PDF. O botão Salvar também não some mais com nomes de arquivo longos.
 
 Além de pequenas correções e melhorias.
