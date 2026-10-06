@@ -234,7 +234,10 @@ final class StoreScreenshotsUITests: XCTestCase {
     /// The screens of the October slides that are not in the set above. Shots
     /// 1, 2 and 5 of that set come from `launchOnPhotosPdf` (taken by hand,
     /// see the README), `01-scan` and `03-sign`.
-    func testTakesTheOctoberScreenshots() {
+    func testTakesTheOctoberScreenshots() throws {
+        // Its props (photos, seeded archive) live on disk, outside the bundle:
+        // without them, as in `fastlane test`, there is nothing to photograph.
+        try XCTSkipIf(self.propsRoot.isEmpty, "TEST_RUNNER_SHOTS_SRC not set: run it from make-v2.sh")
         // 3 — searching the archive finds words inside documents, not only in
         // their names: "deposit" brings up the lease, whose name does not say it.
         self.launch(extraArguments: ["-debugSeedDir", "\(self.propsRoot)/seed-docs/\(self.language)"])
@@ -245,8 +248,7 @@ final class StoreScreenshotsUITests: XCTestCase {
         self.settle()
         self.shoot("v2-03-search")
 
-        // 1 — the PDF the photos made, open in the editor. The status bar comes
-        // out white on white: `statusbar.py` draws it back in black.
+        // 1 — the PDF the photos made, open in the editor.
         self.launchOnPhotosPdf()
         self.settle()
         self.shoot("v2-01-photos")

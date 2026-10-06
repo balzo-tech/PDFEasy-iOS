@@ -140,6 +140,9 @@ struct CameraView: View {
                 self.getCloseButton(color: .white, onClose: { self.dismiss() })
             }
         }
+        // Black all over: the status bar has to be told, now that it follows
+        // the screen instead of being white everywhere.
+        .preferredColorScheme(.dark)
     }
 }
 

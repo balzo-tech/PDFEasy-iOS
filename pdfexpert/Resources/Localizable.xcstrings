@@ -2445,7 +2445,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Een geredigeerde kopie is opgeslagen in uw archief."
+            "value" : "Een zwartgelakte kopie is opgeslagen in uw archief."
           }
         },
         "pt-BR" : {
@@ -5258,7 +5258,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Redacties toepassen?"
+            "value" : "Zwartlakken toepassen?"
           }
         },
         "pt-BR" : {
@@ -14806,6 +14806,52 @@
         }
       }
     },
+    "Fill in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausfüllen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill in"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rellenar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplir"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compila"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invullen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preencher"
+          }
+        }
+      }
+    },
     "Fill in a form" : {
       "localizations" : {
         "de" : {
@@ -21152,7 +21198,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Samenvoegen, splitsen, comprimeren, beveiligen, redigeren, voorlezen — en dat allemaal op uw telefoon."
+            "value" : "Samenvoegen, splitsen, comprimeren, beveiligen, zwartlakken, voorlezen — en dat allemaal op uw telefoon."
           }
         },
         "pt-BR" : {
@@ -26508,7 +26554,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wachtwoorden, rechten en redactie"
+            "value" : "Wachtwoorden, rechten en zwartlakken"
           }
         },
         "pt-BR" : {
@@ -30097,7 +30143,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "PDF redigeren"
+            "value" : "PDF zwartlakken"
           }
         },
         "pt-BR" : {
@@ -30570,6 +30616,52 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Rename" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbenennen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar nombre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinomina"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naam wijzigen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renomear"
           }
         }
       }
@@ -40233,7 +40325,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De geredigeerde pagina's worden omgezet in afbeeldingen: op die pagina's is de tekst niet langer selecteerbaar of doorzoekbaar. Er wordt een nieuwe kopie opgeslagen en uw origineel blijft ongemoeid."
+            "value" : "De zwartgelakte pagina's worden omgezet in afbeeldingen: op die pagina's is de tekst niet langer selecteerbaar of doorzoekbaar. Er wordt een nieuwe kopie opgeslagen en uw origineel blijft ongemoeid."
           }
         },
         "pt-BR" : {

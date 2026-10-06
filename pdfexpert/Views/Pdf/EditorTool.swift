@@ -125,6 +125,15 @@ enum EditorTool: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The name on the primary bar, a quarter of the width. The catalog's own
+    /// is a sentence ("Ein Formular ausfüllen") and came out cut short there.
+    var barTitle: String {
+        switch self {
+        case .fillForm: return String(localized: "Fill in")
+        default: return self.title
+        }
+    }
+
     var systemImage: String {
         if let symbol = self.catalogTool?.systemImage { return symbol }
         switch self {

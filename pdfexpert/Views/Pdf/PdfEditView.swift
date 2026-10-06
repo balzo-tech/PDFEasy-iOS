@@ -47,6 +47,9 @@ struct PdfEditView: View {
 
     @State private var draggedPageId: EditorPage.ID? = nil
 
+    @State private var renameShow = false
+    @State private var renameDraft = ""
+
     private var isWideLayout: Bool { self.horizontalSizeClass == .regular }
 
     /// Asked of the document, not of the images of it: the pages are drawn in
@@ -96,7 +99,24 @@ struct PdfEditView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        // The name is drawn by `titleItem` on a phone and an iPad, not by the
+        // system: a long one, centred, took the room of the buttons on its right
+        // and sent Tools and Save into a "…" menu. The plain title stays, for the
+        // window on a Mac and for the bar's identity in UI tests.
+        #if targetEnvironment(macCatalyst)
         .navigationTitle(self.$viewModel.pdfFilename)
+        #else
+        .navigationTitle(self.viewModel.pdfFilename)
+        .alert("Rename", isPresented: self.$renameShow) {
+            TextField("File name", text: self.$renameDraft)
+                .autocorrectionDisabled()
+            Button("Cancel", role: .cancel) {}
+            Button("Save") {
+                let name = self.renameDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !name.isEmpty { self.viewModel.pdfFilename = name }
+            }
+        }
+        #endif
         .ignoresSafeArea(.keyboard)
         .toolbar { self.toolbarContent }
         .onAppear(perform: self.viewModel.onAppear)
@@ -371,6 +391,9 @@ struct PdfEditView: View {
     }
 
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
+        #if !targetEnvironment(macCatalyst)
+        self.titleItem
+        #endif
         if let onClose = self.onClose {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: onClose) {
@@ -409,6 +432,33 @@ struct PdfEditView: View {
             .tint(ColorPalette.accent)
             .keyboardShortcut("s", modifiers: [.command])
         }
+    }
+
+    /// The document's name, shortened in the middle when the bar is short of
+    /// room, so the extension and the buttons both stay in sight. Tapping it
+    /// renames, as the system title did.
+    private var titleItem: some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Button {
+                self.renameDraft = self.viewModel.pdfFilename
+                self.renameShow = true
+            } label: {
+                HStack(spacing: DS.Spacing.xxs) {
+                    Text(self.viewModel.pdfFilename)
+                        .font(.headline)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                    Image(systemName: "chevron.down.circle.fill")
+                        .font(.subheadline)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(ColorPalette.textSecondary)
+                }
+                .foregroundStyle(ColorPalette.textPrimary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(Text("Rename"))
+        }
+        .sharedBackgroundVisibility(.hidden)
     }
 
     private func goToPage(_ index: Int) {

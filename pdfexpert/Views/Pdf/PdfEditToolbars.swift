@@ -75,7 +75,7 @@ struct PdfEditPrimaryBar: View {
                         VStack(spacing: 4) {
                             Image(systemName: tool.systemImage)
                                 .font(.system(size: 18, weight: .medium))
-                            Text(tool.title)
+                            Text(tool.barTitle)
                                 .font(forCategory: .caption2)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)

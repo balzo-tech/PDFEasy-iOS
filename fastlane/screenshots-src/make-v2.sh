@@ -16,8 +16,8 @@
 #   6  v2-06-pages   (testTakesTheOctoberScreenshots)
 # La 4 (condivisione) non esce in simulatore: il foglio non ha Mail né Messaggi.
 #
-# Nell'editor la barra di stato esce bianca su bianco: 1 e 3 passano da
-# statusbar.py, che la ridisegna in nero prendendo i glifi dalla 2 (fondo nero).
+# Le catture escono pulite: la barra di stato segue la schermata (nera sul
+# bianco, nascosta nello scanner), non serve più ritoccarle.
 # Poi ./export-v2.sh <lingua> monta le slide.
 set -e
 cd "$(dirname "$0")"
@@ -84,7 +84,8 @@ PY
 for lang in $LANGS; do
   [ "$ONLY" = "october" ] || run "$lang" testTakesTheStoreScreenshots
   [ "$ONLY" = "store" ] || run "$lang" testTakesTheOctoberScreenshots
-  # Barra di stato: «Run With» nella 2, bianco su bianco in 1, 3 e 5.
-  ./fix-shots-v2.py "$lang"
+  for n in 1 2 3 5; do
+    [ -f "shots-v2/$lang/$n-raw.png" ] && cp "shots-v2/$lang/$n-raw.png" "shots-v2/$lang/$n.png"
+  done
 done
 echo "fatto. Poi: ./export-v2.sh $LANGS"

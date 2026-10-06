@@ -172,6 +172,10 @@ struct ScanReviewView: View {
             } label: {
                 Label("Add page", systemImage: "plus")
                     .font(forCategory: .button)
+                    // On one line, at its own width: Save takes what is left.
+                    // Otherwise "Pagina toevoegen" broke in two.
+                    .lineLimit(1)
+                    .fixedSize()
                     .foregroundStyle(.white)
                     .padding(.horizontal, DS.Spacing.md)
                     .frame(height: 50)
